@@ -1,0 +1,11 @@
+jQuery(document).ready(function(){jQuery('#dashboard-sidenav').sidenav();jQuery("html").css("cssText",'margin-top:0px !important;');var urlParams=new URLSearchParams(location.search);var pages=['write','profile','stats','edit-chapter','messages','chat','settings','edit-book','bookmarks','collections'];var page_to=window.location.href.replace(window.location.origin+'/dashboard','').replace(/\//g,'').split('?')[0];if(page_to!=''){if(pages.includes(page_to)){if(page_to=='edit-chapter'){load_page(page_to,urlParams.get('chap'));}
+else if(page_to=='edit-book'){load_page(page_to,urlParams.get('edit-book'));}
+else if(page_to=='chat'){load_page(page_to,urlParams.get('id'));}
+else{load_page(page_to);}}}});function load_page(page,extra=null){if(page!='collections'){M.Toast.dismissAll();}
+if(typeof intervalID!=='undefined'){clearInterval(intervalID);}
+jQuery("#page-main").html('<main><div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></main>');if(jQuery('[data-target=dashboard-sidenav]').css('display')!='none'){jQuery('#dashboard-sidenav').sidenav('close');}
+var construct='/dashboard/'+page;var data={ajax:1,page:page};if(extra!==null){if(page=='edit-chapter'){data['chap']=extra;construct+='?chap='+extra;}
+else if(page=='chat'){data['id']=extra;construct+='?id='+extra;}
+else if(page=='edit-book'){data['edit-book']=extra;construct+='?edit-book='+extra;}}
+window.history.pushState("object or string",document.getElementsByTagName("title")[0].innerHTML,construct);jQuery.ajax({url:'/wp-content/themes/book-writer/php/load_page.php',type:'post',data:data,success:function(response){jQuery("#page-main").html(response);var children=jQuery('#dashboard-sidenav').children();for(var i=0;i<children.length;i++){jQuery(children[i]).removeClass("selected");}
+jQuery("."+page+"_li").addClass("selected");jQuery('.collapsible').collapsible();jQuery('.modal').modal();M.updateTextFields();recaptchaOnload();}});};
