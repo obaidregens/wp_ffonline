@@ -471,19 +471,12 @@ function myplugin_register_query_vars( $vars ) {
 	if (is_admin()){
 		return $vars;
 	}
-	
-	unset($vars[7]);
-	unset($vars[27]);
-	unset($vars[8]);
-	unset($vars[28]);
-	unset($vars[47]);
-	unset($vars[48]);
-	unset($vars[49]);
-	unset($vars[50]);
-	unset($vars[51]);
-	unset($vars[52]);
-	unset($vars[55]);
-	unset($vars[56]);
+	$to_remove = array('search','rating','language','character','pairing','status','category_name','page','paged','s');
+	foreach($vars as $key => $var){
+		if (in_array($var,$to_remove)){
+			unset($vars[$key]);
+		}
+	}
     return $vars;
 }
 add_filter( 'query_vars', 'myplugin_register_query_vars' );
