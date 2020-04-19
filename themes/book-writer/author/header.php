@@ -19,7 +19,7 @@ $author_base = get_author_posts_url($author) . '/';
 		</div>
 		<div class="author-actions">
 			<!--<a><i class="fas fa-user-plus"></i></a>-->
-			<a target="_blank" href="/dashboard/chat?id=<?php echo $author; ?>"><i class="fas fa-envelope"></i></a>
+			<a target="_blank" href="/dashboard/chat/<?php echo $author; ?>"><i class="fas fa-envelope"></i></a>
 		</div>
 	</div>
 </div>

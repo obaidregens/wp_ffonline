@@ -71,6 +71,7 @@ $author_base = get_author_posts_url($author) . '/';
 				$posts = array(
 					'post_type'      => array( 'book' ),
 					'orderby'        => 'modified',
+					'author__in'	 => $author,
 					'posts_per_page' => 3,
 					'order'          => 'DESC',
 				);

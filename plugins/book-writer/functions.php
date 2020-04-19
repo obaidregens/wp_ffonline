@@ -88,10 +88,24 @@ function run_at_activation(){
 		  KEY parameter (parameter),
 		  KEY value (value),
 		) $charset_collate;";
-
+    
+    
+    //Add Cache Table
+    $custom_cache_table_name = 'custom_cache';
+	$custom_cache_table = "CREATE TABLE $custom_cache_table_name (
+	  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+	  `field` VARCHAR(100) NOT NULL ,
+	  `value` LONGTEXT NOT NULL ,
+	  `timestamp` BIGINT NOT NULL ,
+	  PRIMARY KEY (`ID`),
+	  KEY field (field),
+	) $charset_collate;";
+	
+    //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $searches_table );
 	dbDelta( $searchparams_table );
+	dbDelta( $custom_cache_table );
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
@@ -128,3 +142,5 @@ include('write/order-book.php');
 include('custom-login.php');
 
 include('searches.php');
+
+include('custom_cache.php');

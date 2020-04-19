@@ -1,4 +1,23 @@
 <?php
+add_filter( 'script_loader_tag', 'add_asyn_to_script', 10, 3 );
+
+function add_asyn_to_script( $tag, $handle, $src ) {
+	if (is_admin()){
+		return $tag;
+	}
+    //you can use this to make all async
+    $tag = str_replace( ' src', ' defer src', $tag );
+
+    // You can use this to make it work as below for a specific script
+//    if ( 'dropbox.js' === $handle ) 
+  //      $tag = '<script async type="text/javascript" src="' . esc_url( $src ) . '"></script>';
+    //}
+
+    return $tag;
+}
+
+remove_action( 'set_comment_cookies', 'wp_set_comment_cookies' );
+
 function username_possible($username){
 	if (strlen($username) < 5 || strlen($username) > 20){
 		return false;

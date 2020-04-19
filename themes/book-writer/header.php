@@ -27,12 +27,11 @@ if (! headers_sent() && ! isset($_SESSION) ){
 	  <!--Import Google Icon Font-->
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css in functions.php-->
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 	  <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 
 	  <script>
 		  function recaptchaOnload(){
-			  if (jQuery('#reCAPTCHA_div').length){
+			  if (document.getElementById('reCAPTCHA_div')){
 				  grecaptcha.render("reCAPTCHA_div", {
 					  sitekey: '6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth',
 				  });				  

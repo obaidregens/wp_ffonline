@@ -27,7 +27,7 @@ function chapter_navigator()
 			break;
 		}
 	}
-	if (isset($prev_chapter) && isset($next_chapter)){
+	if (isset($prev_chapter) || isset($next_chapter)){
 	    ?>
 	    <div class="row valign-wrapper" style="z-index:50;margin:0;position:fixed;bottom:0;left:0;height:35px;width:100%;background-color:var(--theme-color);">
 	        <?php if(isset($prev_chapter)){ ?><a style="margin:0;padding-left:10px;color:white !important;" href="<?php echo get_permalink($prev_chapter->ID); ?>" class="col s6 left-align"><i style="padding-right:10px;" class="fas fa-arrow-left"></i><?php echo $prev_chapter->post_title; ?></a><?php } else{echo '<div class="col s6"></div>';} ?>

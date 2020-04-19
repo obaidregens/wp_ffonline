@@ -1,3 +1,5 @@
+<?php
+?>
 <div class="fixed-action-btn">
     <a class="btn-floating btn-small modal-trigger" style="background-color:var(--theme-color);" href="#accessibility">
         <i class="fas fa-sliders-h"></i>

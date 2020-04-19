@@ -1,4 +1,5 @@
 <?php
+wp_enqueue_script('chapter', get_stylesheet_directory_uri() .'/js/chapter.js', array('jquery'), null, true);
 record_landing(); 
 ?>
 <div id="define" style="box-shadow:0 24px 38px 3px var(--text-color), 0 35px 46px 8px rgba(0,0,0,.32), 0 11px 15px -7px rgba(0,0,0,.2);display:none;margin:0;width: 100%;height: fit-content;position: fixed;bottom: 0;padding: 10px;left: 0;border-radius: 5px 5px 0px 0px;color: var(--text-color);background-color: var(--background-color);z-index: 1000;" class="row">
@@ -56,76 +57,3 @@ record_landing();
 		<?php get_template_part('template-parts/content','index'); ?>
     </div>
   </div>
-<script>
-function reply_to(id){
-	if (id != 'cancel'){
-		document.getElementById('reply-wrapper').innerHTML = '<div style="padding-bottom:2px;">Replying to ' + jQuery('#comment-' + id + ' .comment-author')[0].innerHTML + ' <a style="padding-left:4px;" onclick="reply_to(\'cancel\')">Cancel</a></div><blockquote style="margin:0;font-size:14px;">' + jQuery('#comment-' + id + ' .comment-content')[0].innerHTML + '</blockquote>';
-		jQuery('#reply_id').val(id);
-	}
-	else{
-		document.getElementById('reply-wrapper').innerHTML = '';
-		jQuery('#reply_id').val(0);
-	}
-}
-function submit_comment() {
-	document.getElementById("submit-comment-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
-	var comment = jQuery('#comment').val();
-	var chapter_id = jQuery('#chapter_id').val();
-	var data = {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),id:chapter_id,comment:comment,action:'insert'};
-	var reply = jQuery('#reply_id').val();
-	if (reply != 0){
-		var data = {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),id:reply,comment:comment,action:'reply'};
-	}
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/post_comment.php',
-		type: 'post',
-		data: data,
-		success: function(response){
-			M.Toast.dismissAll();
-			if (response == '3'){
-				jQuery('#login-modal').modal('open');
-			}
-			else if (response == '2' || response == '4'){
-				M.toast({html: 'An error occurred.'});
-			}
-			else if (response == '8'){
-			    M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
-			    document.getElementById("submit-comment-wrapper").innerHTML = '<button onclick="submit_comment()" class="waves-effect waves-light btn">Submit</button>';
-			}
-			else{
-				M.toast({html: 'Your comment has been posted.'});
-				jQuery('#comments-wrapper').html(response);
-				jQuery('.dropdown-trigger').dropdown();
-				recaptchaOnload();
-			}
-		}
-	});
-}
-function delete_comment(id){
-	document.getElementById("submit-comment-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/post_comment.php',
-		type: 'post',
-		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),id:id,action:'delete'},
-		success: function(response){
-			M.Toast.dismissAll();
-			if (response == '3'){
-				jQuery('#login-modal').modal('open');
-			}
-			if (response == '2'){
-				M.toast({html: 'An error occured.'});
-			}
-			else if (response == '8'){
-			    M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
-			    document.getElementById("submit-comment-wrapper").innerHTML = '<button onclick="submit_comment()" class="waves-effect waves-light btn">Submit</button>';
-			}
-			else{
-				M.toast({html: 'Your comment has been deleted.'});
-				jQuery('#comments-wrapper').html(response);
-				jQuery('.dropdown-trigger').dropdown();
-				recaptchaOnload();
-			}
-		}
-	});
-}
-</script>

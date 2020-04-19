@@ -64,26 +64,3 @@ if (!empty(preg_replace('/\s+/', '', get_post_meta($post->ID,'pre-chapter_notes'
 	</li>
   </ul>
 <?php } ?>
-<script>
-	function bookmark_this(para,chapter){
-		jQuery('#p-' + para + ' .bookmark-wrapper')[0].innerHTML = '<div class="loader" style="width:21px;height:21px;"></div>';
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/bookmark_this.php',
-			type: 'post',
-			data: {ajax:1,para:para,chapter:chapter},
-			success: function(response){
-				jQuery('#p-' + para + ' .bookmark-wrapper')[0].innerHTML = '<i onclick="bookmark_this(' + para + ',\'' + chapter + '\')" class="btn-bookmark btn-favorite far fa-bookmark"></i>';
-				if (response == 0){
-					jQuery('#p-' + para + ' .btn-bookmark').removeClass('active');
-				}
-				else if (response == 1){
-					jQuery('#p-' + para + ' .btn-bookmark').addClass('active');
-				}
-				else if (response == 3){
-				    jQuery('#p-' + para + ' .btn-bookmark').removeClass('active');
-				    jQuery('#login-modal').modal('open');
-				}
-			}
-		});			
-	}
-</script>

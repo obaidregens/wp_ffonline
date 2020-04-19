@@ -5,6 +5,11 @@
  * Search page
  *
  */
+$front_cache = get_front_cache();
+if (! is_null($front_cache) && !is_user_logged_in() && empty($_GET)){
+    print_r($front_cache);
+    exit();
+}
 get_header();
 ?>
 <div id="primary" class="content-area">

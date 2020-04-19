@@ -38,7 +38,7 @@ foreach($fandoms as $fandom){
 				$current_book['title'] = $title->plaintext;
 				$link = $title->href;
 			}
-			foreach($divClass->find(".stitle + a + a") as $author ) {
+			foreach($divClass->find("a.stitle ~ a") as $author ) {
 				$author_name = $author->plaintext;
 				$author_link = $author->href;
 				$current_book['author'] = '<a href="https://www.fanfiction.net' . $author_link . '">' . $author_name .'</a>';
@@ -188,6 +188,7 @@ foreach($fandoms as $fandom){
 		}
 	}
 	foreach ($existing as $book){
+	    update_post_meta($book['ID'],'source_author',$book['author']);
 		$start = count(get_posts( array(
 			'post_type'		 => 'chapter',
 			'posts_per_page' => -1,
@@ -210,3 +211,4 @@ foreach($fandoms as $fandom){
 		}
 	}
 }
+add_front_cache();

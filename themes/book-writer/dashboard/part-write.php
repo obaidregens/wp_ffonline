@@ -12,7 +12,7 @@
 				<?php foreach($books as $book){?>
 					<li>
 						<div class="collapsible-header" style="display:block;"><?php if (preg_replace('/\s+/', '',$book->post_title) == ''){echo "(No Book Title)";}else{echo $book->post_title;}?>
-							<label style="padding-left:10px;"><a href="/dashboard/edit-book?edit-book=<?php echo $book->ID; ?>">Edit</a><?php if ($book->post_status == 'publish'){?> / <a href="<?php echo get_permalink($book->ID); ?>">View</a><?php } ?> / <a onclick="delete_this_book(<?php echo $book->ID; ?>)" style="color:#cf0a0a !important;cursor:pointer;">Delete</a></label>
+							<label style="padding-left:10px;"><a href="/dashboard/edit-book/<?php echo $book->ID; ?>">Edit</a><?php if ($book->post_status == 'publish'){?> / <a href="<?php echo get_permalink($book->ID); ?>">View</a><?php } ?> / <a onclick="delete_this_book(<?php echo $book->ID; ?>)" style="color:#cf0a0a !important;cursor:pointer;">Delete</a></label>
 							<label class="right"><?php if ($book->post_status == 'publish'){echo 'Published';}else if ($book->post_status == 'draft'){echo 'Draft';} ?></label>
 						</div>
 						<div class="collapsible-body">
@@ -43,7 +43,7 @@
 					</li>
 				<?php } ?>
 				<li>
-					<div onclick="window.location = '/dashboard/edit-book?edit-book=new'" href="/dashboard/edit-book?edit-book=new" class="collapsible-header"><i class="large material-icons">add</i><a>New Book</a></div>
+					<div onclick="window.location = '/dashboard/edit-book/new'" href="/dashboard/edit-book/new" class="collapsible-header"><i class="large material-icons">add</i><a>New Book</a></div>
 				</li>
 			</ul>
 		</main><!-- .site-main -->
