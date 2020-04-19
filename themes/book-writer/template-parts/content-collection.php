@@ -11,7 +11,7 @@ $collection_author = get_userdata(get_term_meta($collection->term_id,'author',tr
 $collection_time = get_term_meta($collection->term_id,'time_created',true);
 ?>
 	
-<article id="<?php echo $collection->ID; ?>">
+<article id="collection-<?php echo $collection->ID; ?>">
 	<header>
 
 		<h2 class="entry-title" style="display: inline-block;margin-bottom:0em;"><a href="<?php echo get_term_link($collection->term_id); ?>"><?php echo $collection->name; ?></a></h2>

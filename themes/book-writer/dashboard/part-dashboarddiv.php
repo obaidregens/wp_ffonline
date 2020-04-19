@@ -70,7 +70,7 @@
 				'author'    =>12,
 				'orderby'	=> 'modified',
 				'posts_per_page' => -1,
-				'date_query'     => $date_query,
+				//'date_query'     => $date_query,
 			));
 			$posts = $query->posts;
 			foreach($posts as $post){

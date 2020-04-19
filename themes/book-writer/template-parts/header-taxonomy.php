@@ -8,9 +8,20 @@ else{
 	<?php
 	echo '<h4> Updated ' . get_the_time() . '</h4>';
 }
-echo '<span class="each-tag icon-tag"><i class="fas fa-book-open"></i>' . get_post_meta($post->ID,'word-count')[0] . '</span> ';
+$meta_query = array(
+	array(
+		'key'     => 'public_collection',
+		'value'   => 'Public',
+	),
+);
+$collections = get_terms(array(
+    'meta_query' => $meta_query,
+    'taxonomy' => 'collection',
+    'object_ids' => array($post->ID),
+));
+echo '<span class="each-tag icon-tag"><i class="fas fa-book-open"></i>' . get_post_meta($post->ID,'word-count',true) . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-heart"></i>' . count(get_stats_of('book_fav',$post->ID)) . '</span> ';
-echo '<span class="each-tag icon-tag"><i class="fas fa-list-ul"></i>' . count(wp_get_post_terms($post->ID,'collection')) . '</span> ';
+echo '<span class="each-tag icon-tag"><i class="fas fa-list-ul"></i>' . count($collections) . '</span> ';
 if (is_home() == false && is_search() == false && is_archive() == false){
 	echo '<br>';
 }

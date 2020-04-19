@@ -73,6 +73,6 @@ $no_login_modal = array('page-dashboard.php','page-login.php');
 
         
 <?php wp_footer(); ?>
-
+<div class="progress" style="display:none;margin:0;position: fixed;bottom: 0px;right: 0px;left: 0px;"><div class="indeterminate"></div></div>
 </body>
 </html>

@@ -364,7 +364,7 @@ function edit_book($book){
 							M.toast({html: 'An unknown error occured.'});
 						}
 					    if ((response == 1 || response == 2) && id == 'new'){
-					        window.location.href = 'https://fanfiction.online/dashboard/edit-book?edit-book=' + return_data.id;
+					        window.location.href = document.location.origin + '/dashboard/edit-book?edit-book=' + return_data.id;
 					    }
 					}
 				});

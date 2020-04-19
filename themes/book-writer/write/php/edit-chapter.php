@@ -3,10 +3,10 @@ define('WP_USE_THEMES', false);
 require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
 
 if( isset($_POST['ajax']) && isset($_POST['id']) && isset($_POST['title'])) {
-	if (! isset($_SESSION)){
+	if (! headers_sent() && ! isset($_SESSION) ){
 		session_start();
 	}
-    if($_POST['ajax'] != $_SESSION['nonce_key']){
+    if(!isset($_SESSION['nonce_key']) || $_POST['ajax'] != $_SESSION['nonce_key']){
         echo '9';
         exit();
     }

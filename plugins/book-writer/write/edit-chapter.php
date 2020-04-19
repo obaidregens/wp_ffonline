@@ -1,6 +1,6 @@
 <?php
 function edit_chapter($chapter){
-	if (! isset($_SESSION)){
+	if (! headers_sent() && ! isset($_SESSION) ){
 		session_start();
 	}
     $_SESSION['nonce_key'] = bin2hex(random_bytes(31));

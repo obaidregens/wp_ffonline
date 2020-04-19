@@ -17,115 +17,165 @@
  */
 
 global $wp;
-get_header(); ?>
+get_header();
+wp_enqueue_script('updates__js', get_stylesheet_directory_uri() .'/js/updates.js', array('jquery'), null, true);
+wp_enqueue_script('book_options_js', get_stylesheet_directory_uri() .'/js/book-options.js', array('jquery'), null, true);
+$author_base = get_author_posts_url($author) . '/';
+?>
 
-<section id="primary" class="content-area margin">
+<section id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
-		
-			<?php echo '<h1 class="page-title section">'.  get_the_author_meta('display_name',$author) . '<a href="/dashboard/?to=chat&id=' . $author . '" style="margin-left: 10px;" class="btn-floating btn-hover"><i class="fas fa-envelope"></i></a>' . '</h1>' ; ?>
-			<div class="row">
-				<div>
-					<ul class="tabs">
-						<li class="tab col s4" ><a href="#about">About <?php echo get_the_author_meta('display_name',$author) ?></a></li>
-						<li class="tab col s4" ><a href="#books">Books</a></li>
-						<li class="tab col s4" ><a href="#favorites">Favorites</a></li>
-					</ul>
+		<?php get_template_part('author/header'); ?>
+		<div class="author-content row">
+			<div class="col s12 m6 l4">
+				<?php if (get_the_author_meta('user_description',$author) != ''){ ?>
+				<div class="card author-bio">
+					<pre><?php echo get_the_author_meta('user_description',$author); ?></pre>
 				</div>
-				<div id="about" class="col s12">
-					<div class="section "></div>
-					<?php echo '<div class="margin taxonomy-description"><strong>About '. get_the_author_meta('display_name',$author) .'</strong><br>' . get_the_author_meta('description',$author) . '</div>'; ?>
-				</div>
-				<div id="favorites" class="col s12">
-					<?php  if (!empty(get_stats_of('user_fav',$author))) {
-					  $default_query = new WP_Query( array(
-						  'post_type' => 'book',
-						  'post__in' => get_stats_of('user_fav',$author),
-					  ));
-					  $original_query = $wp_query;
-					  $wp_query = null;
-					  $wp_query = $default_query;
-
-					  // Start the Loop.
-					  while ( have_posts() ) {
-						  the_post();
-
-					?><div class="section"></div><?php
-					  get_template_part( 'template-parts/content', 'search' );
-
-					  }
-
-					  the_posts_pagination(
-						  array(
-							  'prev_text'          => __( 'Previous page', 'twentysixteen' ),
-							  'next_text'          => __( 'Next page', 'twentysixteen' ),
-							  'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentysixteen' ) . ' </span>',
-						  ));
-					  // If no content, include the "No posts found" template.
-					  			  //Reset Data
-				  //This is because we dont want our meddling of the $wp-query to affect the whole site
-
-				  $wp_query = null;
-				  $wp_query = $original_query;
-				  wp_reset_postdata();
-				  }
-				  else {
-					?>
-					<div class="section"></div>
-					<article class="margin">
-						<h1 style="padding-bottom: 12px;" class="page-title"><?php _e( 'No Favourites!', 'twentysixteen' ); ?></h1>
-					</article>
-					<?php
-																													  }
-																									
-					?>
-				</div>
-				<div id="books" class="col s12">
+				<?php } ?>
 				<?php
-					$default_query = new WP_Query( array(
-						'post_type' => 'book',
-						'author' => $author,
-					));
-					$original_query = $wp_query;
-					$wp_query = null;
-					$wp_query = $default_query;
-
-					if ( have_posts() ) :
-					// Start the Loop.
-					while ( have_posts() ) :
+				$posts = new WP_Query(array(
+					'post_type'      => array( 'post' ),
+					'orderby'        => 'modified',
+					'posts_per_page' => 2,
+					'order'          => 'DESC',
+					'author__in' 	 => array( $author )
+				));
+				$original_query = $wp_query;
+				$wp_query = null;
+				$wp_query = $posts;
+				if ( have_posts()  || get_current_user_id() == $author) :
+					?><div class="card author-updates"><?php
+					while (have_posts()) :
 						the_post();
-
-						?><div class="section"></div><?php
-						get_template_part( 'template-parts/content', 'search' );
-
+						get_template_part( 'template-parts/content', 'update' );
 					endwhile;
-
-					the_posts_pagination(
-						array(
-							'prev_text'          => __( 'Previous page', 'twentysixteen' ),
-							'next_text'          => __( 'Next page', 'twentysixteen' ),
-							'before_page_number' => '<span class="meta-nav screen-reader-text">' . __( 'Page', 'twentysixteen' ) . ' </span>',
-						));
-					// If no content, include the "No posts found" template.
-				else :
-				?>
-				    <div class="section"></div>
-            	<article class="margin">
-            			<h1 style="padding-bottom: 12px;" class="page-title"><?php _e( 'No Books', 'twentysixteen' ); ?></h1>
-            	</article>
-				<?php endif;
+					if ($wp_query->found_posts > 2){
+						?><div class="divider"></div><?php
+						?><a href="<?php echo $author_base . 'updates'; ?>" class="btn-hover more valign-wrapper"><i class="material-icons">expand_more</i>Older Updates</a><?php
+					}
+					if (get_current_user_id() == $author){
+						?><a class="new-update btn-hover more valign-wrapper"><i class="material-icons">add</i><span>Add Update</span></a><?php
+					}
+					?></div><?php
+				endif;
 				//Reset Data
 				//This is because we dont want our meddling of the $wp-query to affect the whole site
-
 				$wp_query = null;
 				$wp_query = $original_query;
 				wp_reset_postdata();
-			?>
+				?>
 			</div>
+			<div class="col s12 m6 l8">
+				<?php
+				$posts = array(
+					'post_type'      => array( 'book' ),
+					'orderby'        => 'modified',
+					'posts_per_page' => 3,
+					'order'          => 'DESC',
+				);
+				//if (get_current_user_id() == $author  && $_GET['preview'] == 'true'){
+				//	$posts['post_status'] = array('publish','draft');
+				//}
+				$posts = new WP_Query($posts);
+				$original_query = $wp_query;
+				$wp_query = null;
+				$wp_query = $posts;
+				if ( have_posts()   || get_current_user_id() == $author) :
+					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
+					while (have_posts() ) :
+						the_post();
+						?><div style="position: relative;"><div <?php if ($post->post_status == 'draft'){ ?>class="preview"<?php } ?> ><?php
+						get_template_part( 'template-parts/content', 'search' );
+						?></div></div><?php
+					endwhile;
+					if ($wp_query->found_posts > 3){
+						?><div class="divider"></div><?php
+						?><a href="<?php echo $author_base . 'books'; ?>" class="btn-hover more valign-wrapper"><i class="material-icons">expand_more</i>More Books</a><?php
+					}
+					if (get_current_user_id() == $author){
+						?><a href="/dashboard/write" class="btn-hover more valign-wrapper"><i class="material-icons">add</i><span>Add book</span></a><?php
+					}
+					?></div><?php
+				endif;
+				//Reset Data
+				//This is because we dont want our meddling of the $wp-query to affect the whole site
+				$wp_query = null;
+				$wp_query = $original_query;
+				wp_reset_postdata();
+				?>
+				<?php
+				$meta_query = array(
+					array(
+						'key'     => 'public_collection',
+						'value'   => 'Public',
+					),
+				);
+				$collections = get_terms(array(
+				    'meta_key' => 'author',
+				    'meta_value' => $author,
+				    'meta_query' => $meta_query,
+				    'taxonomy' => 'collection',
+				    'hide_empty' => true,
+				));
+				if (get_current_user_id() == $author){
+					//$posts['post_status'] = array('publish','draft');
+				}
+				if (! empty($collections)   || get_current_user_id() == $author) {
+					?><div class="card author-collections"><h2 class="type-title">Collections</h2><?php
+					?>
+					<article id="collection-favorites">
+						<header>
+							<h2 class="entry-title" style="display: inline-block;margin-bottom:0em;"><a href="<?php echo $author_base . 'favorites'; ?>">Favorites</a></h2>
+							
+							<?php echo '<h5 style="margin-bottom:1.05em;">by <a href="' .  $author_base . '">' . get_the_author_meta('display_name',$author) .  '</a></h5>'; ?>
+						</header><!-- .entry-header -->
+							
+						<div class="search-summary">
+							<div><strong>Books: </strong><?php echo count(get_stats_of('user_fav',$author)); ?></div>
+						</div>
+					</article>
+					<?php
+					foreach ($collections as $key => $collection) {
+						global $collection;
+						get_template_part( 'template-parts/content', 'collection' );
+						if ($key == 2){
+							break;
+						}
+					}
+					if (count($collections) > 3){
+						?><div class="divider"></div><?php
+						?><a href="<?php echo $author_base . 'collections'; ?>" class="btn-hover more valign-wrapper"><i class="material-icons">expand_more</i>More collections</a><?php
+					}
+					if (get_current_user_id() == $author){
+						?><a href="/dashboard/collection" class="btn-hover more valign-wrapper"><i class="material-icons">add</i><span>Add collection</span></a><?php
+					}
+					?></div><?php
+				}
+				?>
 			</div>
-		</main><!-- .site-main -->
-	</section><!-- .content-area -->
+		</div>
 
+	</main><!-- .site-main -->
+</section><!-- .content-area -->
+<!-- Modal Structure -->
+<div id="edit-update" class="modal">
+	<form id="update_form">
+		<div class="modal-content">
+			<h4 class="row" id="update_header">Add Update</h4>
+			<input type="hidden" id="update_id" value="new">
+			<div class="row">
+				<div class="input-field col s12">
+					<textarea required name="update" id="update" class="materialize-textarea"></textarea>
+					<label for="update">Update</label>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button type="submit" class="waves-effect btn">Save</button>
+		</div>
+	</form>
+</div>
 <?php get_footer(); ?>
 <?php
-
 ?>

@@ -1,7 +1,14 @@
 <?php
 
 global $user_ID, $user_identity; if (!$user_ID) { ?>
-<?php $register = $_GET['register']; $reset = $_GET['reset']; ?>
+<?php
+if (isset($_GET['register'])){
+	$register = $_GET['register'];
+}
+if (isset($_GET['reset'])){
+	$reset = $_GET['reset'];
+}
+?>
 <div style="margin-bottom:0;" class="row">
 	<div class="col s12">
 		<ul class="tabs">

@@ -6,23 +6,15 @@ function my_theme_enqueue_styles() {
 	$to_remove = str_replace('\\','/',$to_remove);
 	$template = str_replace('\\','/',$template);
 	$template_pages = str_replace($to_remove,"",$template);
-	//Specific Includes
-	if ($template_pages == 'page-write.php' || $template_pages == 'page-profile.php' || $template_pages == 'page-login.php' || $template_pages == 'page-reset-password.php' || $template_pages == 'page-contact.php' || $template_pages == 'page-edit-chapter.php' || $template_pages == 'page-search.php' || $template_pages == 'page-create-cat.php' || $template_pages == 'page-dashboard.php' || $template_pages == 'single-chapter.php' || $template_pages == 'single-book.php' || $template_pages == 'taxonomy-collection.php' || $template_pages == 'page-collection.php' || $template_pages == 'author.php'){
-	    wp_enqueue_style( 'materialize_css', get_stylesheet_directory_uri() . '/materialize/css/materialize-input.min.css');		
-	}
 	//General Includes
-	else {
-	    wp_enqueue_style( 'materialize_css', get_stylesheet_directory_uri() . '/materialize/css/materialize.min.css');
-	}
-	if ($template_pages == 'page-write.php'){
-		wp_enqueue_script('write', get_stylesheet_directory_uri() .'/js/write.js', array('jquery'), null, true);
-	}
+	wp_enqueue_style( 'materialize_css', get_stylesheet_directory_uri() . '/materialize/css/materialize-input.min.css');	
+
     wp_enqueue_style( 'nouislider_css', get_stylesheet_directory_uri() . '/materialize/extras/nouislider.css');
 	wp_enqueue_script('nouislider_js', get_stylesheet_directory_uri() .'/materialize/extras/nouislider.js');
 	wp_enqueue_script('materialize_js', get_stylesheet_directory_uri() .'/materialize/js/materialize.min.js', array('jquery'), null, true);
 	wp_enqueue_script('global', get_stylesheet_directory_uri() .'/js/global.js', array('jquery'), null, true);
 	//wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css' );
-	wp_enqueue_style( 'child-style',get_stylesheet_directory_uri() . '/style.css',array( $parent_style ),wp_get_theme()->get('Version'));
+	wp_enqueue_style( 'child-style',get_stylesheet_directory_uri() . '/style.css');
 	//Specific Includes
     if($template_pages == 'page-dashboard.php'){
 	    wp_enqueue_script('dashboard_js', get_stylesheet_directory_uri() .'/js/dashboard.js', array('jquery'), null, true);

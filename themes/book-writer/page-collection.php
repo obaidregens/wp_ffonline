@@ -13,7 +13,7 @@ $args = array(
     'meta_value' => 'Public',
     
 );
-if ($_GET['sortby']){
+if (isset($_GET['sortby']) && $_GET['sortby']){
 	if ($_GET['sortby'] == 'most-books'){
 		$args['orderby'] = 'count';
 		$args['order'] = 'DESC';

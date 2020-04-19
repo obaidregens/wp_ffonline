@@ -212,7 +212,7 @@ function get_click_rate($id,$from = null,$to = null){
 }
 //////////////////////////////////////////// VIEWS/CLICKS //////////////////////////////////////////////
 function record_landing(){
-	if (session_status() == PHP_SESSION_NONE){
+	if (! headers_sent() && ! isset($_SESSION) ){
 		session_start();
 	}
  	global $template;
@@ -265,7 +265,7 @@ function record_landing(){
 }
 /////////////////////////////////////////// IMPRESSIONS ////////////////////////////////////////////////
 function record_impressions(){
-	if (session_status() == PHP_SESSION_NONE){
+	if (! headers_sent() && ! isset($_SESSION) ){
 		session_start();
 	}
 	global $post;
@@ -600,17 +600,16 @@ function notification_emails($type,$id,$extra,$notification_of){
 		case "favorited":
 			$book = get_post($id);
 			$user_name = get_the_author_meta('display_name',$extra);
-			$chapter_on = get_post($comment->comment_post_ID);
 		    $subject = 'Your book \'' . $book->post_title . '\' has a new favorite.';
         	$message = 'Your book \'' . $book->post_title . '\' has been favorited by \'' . $user_name . '\'.' . "\r\n\r\n";
         	$message .= 'See book stats in depth:' . "\r\n";
-        	$message .= 'https://fanfiction.online/dashboard?to=stats' . "\r\n\r\n";
+        	$message .= 'https://fanfiction.online/dashboard/stats' . "\r\n\r\n";
 			break;
 		default:
 			return;
 	}
 	$message .= "You got this email because you have email notifications enabled, you can disable them here." . "\r\n";
-	$message .= "https://fanfiction.online/dashboard?to=settings" . "\r\n";
+	$message .= "https://fanfiction.online/dashboard/settings" . "\r\n";
 	$user_email = get_the_author_meta('user_email',$notification_of);
 	wp_mail($user_email,$subject,$message);
 }

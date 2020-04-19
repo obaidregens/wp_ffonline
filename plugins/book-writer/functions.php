@@ -29,7 +29,6 @@ function run_at_activation(){
 		array('Dashboard','dashboard','page-dashboard.php'),
 		array('Login','login','page-login.php'),
 		array('Pick a New Password','reset-password','page-reset-password.php'),
-		array('Profile','profile','page-profile.php'),
 		array('Read','read','page-search.php')
 	);
 	foreach($pages as $page){
@@ -48,14 +47,44 @@ function run_at_activation(){
 			update_option('page_on_front',$page_id);
 			update_option( 'show_on_front', 'page' );
 		}
-		//Remove Widgets
-		update_option('sidebars_widgets',array());
-		update_option('acme_cleared_widget',array());
-		update_option('default_role','author');
-		//Activate Theme
-		switch_theme('book-writer');
-		flush_rewrite_rules();
 	}
+	//Remove Widgets
+	update_option('sidebars_widgets',array());
+	update_option('acme_cleared_widget',array());
+	update_option('default_role','author');
+	//Activate Theme
+	switch_theme('book-writer');
+	flush_rewrite_rules();
+
+
+	//Add Searches Table
+	global $wpdb;
+	$searches_table_name = 'searches';
+	$searchparams_table_name = 'searchparams';
+	$charset_collate = $wpdb->get_charset_collate();
+
+	$searches_table = "CREATE TABLE $searches_table_name (
+		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		  `user_id` BIGINT UNSIGNED NOT NULL DEFAULT '0' ,
+		  `type` VARCHAR(20) NOT NULL DEFAULT 'main' ,
+		  `type_id` BIGINT UNSIGNED NOT NULL DEFAULT '0' ,
+		  `timestamp` BIGINT UNSIGNED NOT NULL ,
+		  `IP` VARCHAR(100) NOT NULL ,
+		  `args` LONGTEXT NOT NULL ,
+		  PRIMARY KEY (`ID`)
+		) $charset_collate;";
+
+	$searchparams_table = "CREATE TABLE $searchparams_table_name (
+		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		  `search_id` BIGINT UNSIGNED NOT NULL ,
+		  `parameter` VARCHAR(500) NOT NULL ,
+		  `value` VARCHAR(500) NOT NULL ,
+		  PRIMARY KEY (`ID`)
+		) $charset_collate;";
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta( $searches_table );
+	dbDelta( $searchparams_table );
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
@@ -89,6 +118,6 @@ include('write/order-book.php');
 
 include('custom-login.php');
 
-include('saved-searches.php');
+include('searches.php');
 
 include('endpoints.php');

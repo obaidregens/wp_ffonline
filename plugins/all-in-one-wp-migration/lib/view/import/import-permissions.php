@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2014-2018 ServMask Inc.
+ * Copyright (C) 2014-2020 ServMask Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,10 +23,21 @@
  * ╚══════╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
  */
 
-class Ai1wm_Recursive_Newline_Filter extends RecursiveFilterIterator {
-
-	public function accept() {
-		return strpos( $this->getInnerIterator()->getSubPathname(), "\n" ) === false &&
-			strpos( $this->getInnerIterator()->getSubPathname(), "\r" ) === false;
-	}
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'Kangaroos cannot jump here' );
 }
+?>
+
+<div class="ai1wm-message ai1wm-red-message ai1wm-clear" style="margin-top: 4em;">
+	<?php
+	printf(
+		__(
+			'<h3>Site could not be imported</h3>' .
+			'<p>Please make sure that storage directory <strong>%s</strong> has read and write permissions.</p>' .
+			'<p><a href="https://help.servmask.com/knowledgebase/invalid-file-permissions/" target="_blank">Technical details</a></p>',
+			AI1WM_PLUGIN_NAME
+		),
+		AI1WM_STORAGE_PATH
+	);
+	?>
+</div>

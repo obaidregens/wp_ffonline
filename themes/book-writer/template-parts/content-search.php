@@ -37,7 +37,7 @@ record_impressions();
         else{
             echo $post->post_title;
         }
-		echo '</a></h2>' . $eye;
+		echo '</a></h2>';
 		?>
 		<?php 
 		if ($post->post_author == 37 && metadata_exists('post',$post->ID,'source_author')){
@@ -50,8 +50,8 @@ record_impressions();
 	</header><!-- .entry-header -->
 		
 	<div class="search-summary">
+		<p>
 		<?php if (preg_replace('/\s+/', '',$post->post_excerpt) != ''){
-		    ?><p><?php
             if( $wp_query->query_vars['s'] != ''){
                 $excerpt = $post->post_excerpt;
                 foreach($wp_query->query_vars['search_terms'] as $term){
@@ -62,8 +62,8 @@ record_impressions();
             else{
                 echo $post->post_excerpt;
             }
-            ?></p><?php
 		} ?>
+		</p>
 	</div>
 	<?php echo '<h4 class="update-time"> Updated ' . get_the_time() . '</h4>'; ?>
 	</div>

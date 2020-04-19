@@ -40,7 +40,7 @@ function label_excerpt_summary( $translation, $original ) {
     return $translation;
 }
 add_filter( 'gettext', 'label_excerpt_summary', 10, 2 );
-
+/**
 function post_update_messages($messages)
 {
     $messages['book'] = array
@@ -50,7 +50,7 @@ function post_update_messages($messages)
 	 2 => __( 'Custom field updated.' ),
 	 3 => __( 'Custom field deleted.' ),
 	 4 => __( 'Book updated.' ),
-	/* translators: %s: date and time of the revision */
+	// translators: %s: date and time of the revision
 	 5 => isset( $_GET['revision']) ? sprintf( __( 'Book restored to revision from %s.' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 	 6 => __( 'Book published.' ) . $view_post_link_html,
 	 7 => __( 'Book saved.' ),
@@ -66,7 +66,7 @@ function post_update_messages($messages)
 	 2 => __( 'Custom field updated.' ),
 	 3 => __( 'Custom field deleted.' ),
 	 4 => __( 'Chapter updated.' ),
-	/* translators: %s: date and time of the revision */
+	// translators: %s: date and time of the revision
 	 5 => isset( $_GET['revision']) ? sprintf( __( 'Chapter restored to revision from %s.' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 	 6 => __( 'Chapter published.' ) . $view_post_link_html,
 	 7 => __( 'Chapter saved.' ),
@@ -77,7 +77,7 @@ function post_update_messages($messages)
     return $messages;
 }
 add_filter('post_updated_messages','post_update_messages',1,1);
-
+**/
 
 add_filter( 'radio_buttons_for_taxonomies_no_term_rating', '__return_FALSE' );
 add_filter( 'radio_buttons_for_taxonomies_no_term_language', '__return_FALSE' );

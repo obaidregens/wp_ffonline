@@ -246,6 +246,7 @@ Use it to make something cool, have fun, and share what you've learned with othe
  *    17.3 - Meks Easy Social Share
  *    17.4 - Materialize
  * 18.0 - Chapter Page
+ * 19.0 - Author Pages
  */
 
 
@@ -255,7 +256,9 @@ Use it to make something cool, have fun, and share what you've learned with othe
  * Normalizing styles have been helped along thanks to the fine work of
  * Nicolas Gallagher and Jonathan Neal http://necolas.github.com/normalize.css/
  */
-
+a.btn,button{
+	outline:none !important;
+}
 html {
 	font-family: sans-serif;
 	-webkit-text-size-adjust: 100%;
@@ -4483,3 +4486,102 @@ p > video {
  .modal,.modal input:focus{
      color:black !important;
  }
+
+ /**
+ * 19.0 - Author Page
+ */
+div.divider{
+	margin:10px 0;
+}
+.type-title{
+	margin-bottom: 20px;
+}
+.preview {
+    border: 4px solid var(--secondary-color);
+    padding: 10px;
+    margin-top: 50px;
+}
+.preview:before {
+	content: 'Preview';
+	color: white;
+	background-color: var(--secondary-color);
+	padding: 5px;
+	position: absolute;
+	top: -32px;
+	right: 0px;
+}
+.author-bio pre,.author-updates pre{
+	font-family: Merriweather,Georgia,serif;
+	color: var(--text-color);
+	border:none !important;
+	margin:0 !important;
+	padding:0!important;
+}
+.author-updates p,.author-updates header, .author-updates .margin{
+	margin:0 !important;
+}
+.author-updates .more,.author-books .more,.author-collections .more{
+	color:var(--text-color) !important;
+	padding:8px 0;
+	width: 100%;
+}
+.author-updates .more > i,.author-books .more > i,.author-collections .more > i{
+	margin-right:5px;
+}
+.card{
+	padding:20px !important;
+}
+/* Author Header */
+.author-header{
+	margin-bottom:20px;
+}
+.author-name-block{
+	text-align:center;
+	height:10vh;
+}
+.author-title{
+	color:var(--text-color) !important;
+	font-family: monospace;
+	word-spacing: -6px;	
+}
+.author-tabs{
+	float: left;
+	width: fit-content;
+	overflow: hidden;
+	padding:5px;
+}
+.author-menu{
+	padding:5px;
+}
+.author-tabs a{
+	color:var(--text-color) !important;
+	padding:7px;
+}
+.author-tabs a.active{
+	border-bottom:2px solid var(--theme-color);
+	font-weight: bold;
+}
+.author-actions{
+	padding:5px;
+	text-align: right;
+	width:auto;
+	overflow: hidden;
+}
+.author-actions a{
+	text-align: right;
+	width:auto;
+	border:1px solid #cac3c2;
+	padding:4px 10px;
+	border-radius: 6px;
+	margin: 0 3px;
+}
+.author-actions a:hover{
+	color:var(--theme-color) !important;
+	background-color: #f7f7f7;
+}
+@media only screen and (max-width: 380px) {
+	.author-tabs,.author-actions{
+		width:100%;
+		text-align: center;
+	}
+}

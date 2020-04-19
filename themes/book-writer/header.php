@@ -8,6 +8,9 @@
  * @subpackage Twenty_Sixteen
  * @since Twenty Sixteen 1.0
  */
+if (! headers_sent() && ! isset($_SESSION) ){
+	session_start();
+}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">

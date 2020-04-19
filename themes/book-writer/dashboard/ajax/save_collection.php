@@ -29,8 +29,10 @@ if( isset($_POST['ajax']) && isset($_POST['collection']) ) {
             'slug'  => $slug
         ));
         update_term_meta($_POST['collection'],'public_collection',$_POST['public_switch']);
-        foreach($_POST['deleted_books'] as $book_id){
-            wp_set_post_terms($book_id,array(),'collection');
+        if (isset($_POST['deleted_books']) && is_array($_POST['deleted_books'])){
+            foreach($_POST['deleted_books'] as $book_id){
+                wp_set_post_terms($book_id,array(),'collection');
+            }
         }
         if (is_wp_error($return)){
             echo 0;

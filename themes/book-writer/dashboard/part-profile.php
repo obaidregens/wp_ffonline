@@ -28,7 +28,7 @@
 					  <label for="email">Email</label>
 					  <span id="email_help" class="helper-text">
 						  <?php
-							$new_email = get_user_meta( $current_user->ID, '_new_email', true );
+							$new_email = get_user_meta( get_current_user_id(), '_new_email', true );
 							if ( $new_email && $new_email['newemail'] != $current_user->user_email){
 								echo 'Please check your inbox at <strong>' . $new_email['newemail'] . '</strong> to confirm your new email.';
 							}
@@ -36,7 +36,7 @@
 					  </span>
 						<span id="perm_email_help" style="display:none">
 						  <?php
-							$new_email = get_user_meta( $current_user->ID, '_new_email', true );
+							$new_email = get_user_meta( get_current_user_id(), '_new_email', true );
 							if ( $new_email && $new_email['newemail'] != $current_user->user_email){
 								echo 'Please check your inbox at <strong>' . $new_email['newemail'] . '</strong> to confirm your new email.';
 							}
@@ -195,7 +195,6 @@ jQuery("form[name='change-username']").submit(function(event) {
 		type: 'post',
 		data: {ajax: 1,new_username:username,password:password},
 		success: function(response){
-			console.log(response);
 			document.getElementById("change-user-button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Change</button>';
 			M.Toast.dismissAll();
 			jQuery('#username').val('');

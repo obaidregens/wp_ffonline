@@ -29,106 +29,6 @@ function verify_reCAPTCHA($response){
     $result = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context),true);
 	return $result;
 }
-function create_args_from_url(){
-	if (empty($_GET) == false){
-		$taxonomies = ['tag','category','rating','language','status','genre','character','pairing'];
-		if (isset($_GET['words'])){
-    		$_GET['words'] = explode(',',$_GET['words']);
-    		$meta_query = array(
-    			'relation' => 'AND',
-    			array(
-    				'key'     => 'word-count',
-    				'value'   => $_GET['words'][0],
-    				'compare' => '>=',
-    				'type'    => 'NUMERIC',
-    			),
-    			array(
-    				'key'     => 'word-count',
-    				'value'   => $_GET['words'][1],
-    				'compare' => '<=',
-    				'type'    => 'NUMERIC',
-    			),
-    		);
-		}
-		$tax_query = array(
-			'relation' => 'AND',
-		);
-		foreach ($taxonomies as $taxonomy){
-			if ($taxonomy == 'category'){
-				$_GET['category_included'] = $_GET['fandom_included'];
-				$_GET['category_excluded'] = $_GET['fandom_excluded'];
-			}
-			$included = array();
-			if (isset($_GET[$taxonomy . '_included'])){
-				$included = explode(',',$_GET[$taxonomy . '_included']);
-			}
-			$excluded = array();
-			if (isset($_GET[$taxonomy . '_excluded'])){
-				$excluded = explode(',',$_GET[$taxonomy . '_excluded']);
-			}
-			if (empty($included) == false){
-				$tax_query[] = array(
-					'taxonomy'         => $taxonomy,
-					'terms'            => $included,
-					'field'            => 'term_id',
-					'operator'         => 'AND',
-				);
-			}
-			if (empty($excluded) == false){
-				$tax_query[] = array(
-					'taxonomy'         => $taxonomy,
-					'terms'            => $excluded,
-					'field'            => 'term_id',
-					'operator'         => 'NOT IN',
-				);
-			}
-		}
-		if (isset($_GET['only'])){
-			if ($_GET['only'] == 'only'){
-				$cats = get_terms( array(
-					'taxonomy' => 'category',
-					'childless' => true,
-				) );
-				$excluded_cats = array_diff(array_column($cats, 'term_id'),$_GET['category']);
-
-				$tax_query[] = array(
-					'taxonomy'         => 'category',
-					'terms'            => $excluded_cats,
-					'field'            => 'term_id',
-					'operator'         => 'NOT IN',		
-				);			
-			}
-		}
-		$args = array(
-			'post_type'              => array( 'book' ),
-			'post_status'            => array( 'publish' ),
-			's'                      => str_replace(" ","+",$_GET['search']),
-			'posts_per_page'		 => 10,
-			'post__not_in'	 => get_stats_of('user_hidden',get_current_user_id()),
-		);
-		if (isset($_GET['words'])){
-			$args['meta_query'] = $meta_query;
-		}
-		if (isset($_GET['page'])){
-			$args['paged'] = intval($_GET['page']);
-		}
-		$args['tax_query'] = $tax_query;
-
-		$sort_options = ['modified/DESC','date/DESC','favorites/DESC','words/DESC'];
-		$sort = explode('/',$_GET['sort']);
-	}
-	else{
-		$args = array(
-			'post_type'      		 => array( 'book' ),
-			'post_status'            => array( 'publish' ),
-			'posts_per_page' 		 => 10,
-			'order'                  => 'DESC',
-			'orderby'                => 'modified',
-			'post__not_in'	 		 => get_stats_of('user_hidden',get_current_user_id()),
-		);	
-	}
-	return $args;
-}
 function add_to_block_list($user_id){
 	if (! is_in_block_list($user_id) && $user_id != get_current_user_id()){
 		if (! metadata_exists('user',get_current_user_id(),'block_list')){
@@ -307,7 +207,7 @@ function record_visit(){
 }
 add_action('wp_loaded','record_visit');
 function login_only(){
-	if ($_GET['logged_out'] == true){
+	if (isset($_GET['logged_out'])){
     	wp_logout();
     	?><script>location.reload();</script><?php
 	}
@@ -480,6 +380,7 @@ function myplugin_register_query_vars( $vars ) {
     return $vars;
 }
 add_filter( 'query_vars', 'myplugin_register_query_vars' );
+
 function default_comments_off( $data ) {
     if( $data['post_type'] == 'page' && $data['post_status'] == 'auto-draft' ) {
         $data['comment_status'] = 0;

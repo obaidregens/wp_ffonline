@@ -5205,48 +5205,48 @@ msgid "Navigation Menus"
 msgstr "نیویگیشن منیوز"
 
 #. translators: used to join items in a list with only 2 items
-#: wp-includes/formatting.php:4915
+#: wp-includes/formatting.php:4957
 msgid "%1$s and %2$s"
 msgstr "%1$s اور %2$s"
 
 #. translators: used to join last two items in a list with more than 2 times
-#: wp-includes/formatting.php:4913
+#: wp-includes/formatting.php:4955
 msgid "%1$s, and %2$s"
 msgstr "%1$s، اور %2$s"
 
 #. translators: used to join items in a list with more than 2 items
-#: wp-includes/formatting.php:4911
+#: wp-includes/formatting.php:4953
 msgid "%1$s, %2$s"
 msgstr "%1$s، %2$s"
 
-#: wp-includes/formatting.php:4671
+#: wp-includes/formatting.php:4688
 msgid "https://codex.wordpress.org/Using_Permalinks#Choosing_your_permalink_structure"
 msgstr "https://codex.wordpress.org/Using_Permalinks#Choosing_your_permalink_structure"
 
 #. translators: %s: Codex URL
-#: wp-includes/formatting.php:4670
+#: wp-includes/formatting.php:4687
 msgid "A structure tag is required when using custom permalinks. <a href=\"%s\">Learn more</a>"
 msgstr "اپنی مرضی کے پرمالنکس کے لیے اسٹرکچر ٹیگ درکار ہے۔ <a href=\"%s\">مزید جانیے</a>"
 
-#: wp-includes/formatting.php:4652
+#: wp-includes/formatting.php:4669
 msgid "The timezone you have entered is not valid. Please select a valid timezone."
 msgstr "آپ کا درج کردہ ٹائم زون درست نہیں ہے۔ براہ مہربانی درست ٹائم زون منتخب کریں۔"
 
-#: wp-includes/formatting.php:4593
+#: wp-includes/formatting.php:4610
 msgid "The Site address you entered did not appear to be a valid URL. Please enter a valid URL."
 msgstr "سائٹ کا ایڈریس جو آپ نے درج کیا ہے وہ درست یوآرایل ظاہر نہیں یو رہا۔ براہ مہربانی درست یوآرایل درج کریں۔"
 
-#: wp-includes/formatting.php:4580
+#: wp-includes/formatting.php:4597
 msgid "The WordPress address you entered did not appear to be a valid URL. Please enter a valid URL."
 msgstr "WordPress ایڈریس جو آپ نے درج کیا ہے وہ درست یوآرایل ظاہر نہیں ہو رہا۔ براہ مہربانی درست یوآرایل درج کریں۔"
 
-#: wp-includes/formatting.php:4470
+#: wp-includes/formatting.php:4487
 msgid "The email address entered did not appear to be a valid email address. Please enter a valid email address."
 msgstr "جو ای میل درج کیا ہے وہ درست ای میل ایڈریس ظاہر نہیں ہو رہا۔ براہ مہربانی درست ای میل ایڈریس درج کریں۔"
 
 #. translators: Time difference between two dates, in years. %s: Number of
 #. years
-#: wp-includes/formatting.php:3658
+#: wp-includes/formatting.php:3675
 msgid "%s year"
 msgid_plural "%s years"
 msgstr[0] "%s سال"
@@ -5254,7 +5254,7 @@ msgstr[1] "%s سال"
 
 #. translators: Time difference between two dates, in months. %s: Number of
 #. months
-#: wp-includes/formatting.php:3651
+#: wp-includes/formatting.php:3668
 msgid "%s month"
 msgid_plural "%s months"
 msgstr[0] "%s مہینہ"
@@ -5262,14 +5262,14 @@ msgstr[1] "%s مہینے"
 
 #. translators: Time difference between two dates, in weeks. %s: Number of
 #. weeks
-#: wp-includes/formatting.php:3644
+#: wp-includes/formatting.php:3661
 msgid "%s week"
 msgid_plural "%s weeks"
 msgstr[0] "%s ہفتہ"
 msgstr[1] "%s ہفتے"
 
 #. translators: Time difference between two dates, in days. %s: Number of days
-#: wp-includes/formatting.php:3637
+#: wp-includes/formatting.php:3654
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] "%s دن"
@@ -5277,7 +5277,7 @@ msgstr[1] "%s دن"
 
 #. translators: Time difference between two dates, in minutes (min=minute). %s:
 #. Number of minutes
-#: wp-includes/formatting.php:3623
+#: wp-includes/formatting.php:3640
 msgid "%s min"
 msgid_plural "%s mins"
 msgstr[0] "%s منٹ "
@@ -5342,7 +5342,7 @@ msgid "&#8221;"
 msgstr "&#8221;"
 
 #. translators: opening curly double quote
-#: wp-includes/formatting.php:98 wp-includes/formatting.php:5234
+#: wp-includes/formatting.php:98 wp-includes/formatting.php:5276
 msgctxt "opening curly double quote"
 msgid "&#8220;"
 msgstr "&quot;"
@@ -6020,7 +6020,7 @@ msgstr[1] "%s منٹس"
 #. translators: Time duration in hour or hours.
 #. translators: Time difference between two dates, in hours. %s: Number of
 #. hours
-#: wp-includes/functions.php:377 wp-includes/formatting.php:3630
+#: wp-includes/functions.php:377 wp-includes/formatting.php:3647
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] "%s گھنٹہ"
@@ -6221,7 +6221,7 @@ msgctxt "admin color scheme"
 msgid "Default"
 msgstr "طے شدہ"
 
-#: wp-includes/general-template.php:3953 wp-includes/formatting.php:3746
+#: wp-includes/general-template.php:3953 wp-includes/formatting.php:3763
 msgid "&hellip;"
 msgstr "&hellip;"
 
@@ -10001,7 +10001,7 @@ msgstr "اپ لوڈ کرنے کے لیے فائلز کو ڈراپ کریں"
 msgid "Close media panel"
 msgstr "میڈیا پنیل بند کریں"
 
-#: wp-includes/rss.php:917 wp-includes/widgets.php:1471
+#: wp-includes/widgets.php:1471
 msgid "An error has occurred, which probably means the feed is down. Try again later."
 msgstr "ایک خرابی واقع ہوئی ہے، شاید اس کا مطلب یہ ہے کہ فیڈ ڈاؤن ہے۔ کچھ دیر بعد دوبارہ کوشش کریں۔"
 
@@ -10374,13 +10374,7 @@ msgstr "اسٹائل‌ شیٹ موجود نہیں ہے۔"
 msgid "The theme directory \"%s\" does not exist."
 msgstr "تھیم ڈائریکٹری %s موجود نہیں ہے۔"
 
-#. translators: 1: error message, 2: line number
-#: wp-includes/atomlib.php:175
-msgid "XML Error: %1$s at line %2$s"
-msgstr "ایکس ایم ایل کی خرابی: %1$s لائن پر %2$s"
-
-#: wp-includes/atomlib.php:151 wp-includes/feed.php:554
-#: wp-includes/IXR/class-IXR-message.php:48
+#: wp-includes/feed.php:554
 msgid "PHP's XML extension is not available. Please contact your hosting provider to enable PHP's XML extension."
 msgstr "پی ایچ پی کے ایکس ایم ایل کی توسیع موجود نہیں ہے۔ براہ مہربانی اس کو موثر بنانے کے لیے اپنے ہوسٹنگ کی فراہمی کے ادارے سے رابطہ کریں۔"
 
@@ -13901,7 +13895,7 @@ msgstr "آج"
 #. Asian characters), enter 'characters_excluding_spaces' or
 #. 'characters_including_spaces'. Otherwise, enter 'words'. Do not translate
 #. into your own language.
-#: wp-includes/script-loader.php:2091 wp-includes/formatting.php:3757
+#: wp-includes/script-loader.php:2091 wp-includes/formatting.php:3774
 #: wp-includes/js/dist/editor.js:29052
 msgctxt "Word count type. Do not translate!"
 msgid "words"
