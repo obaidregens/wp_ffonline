@@ -2,9 +2,10 @@
 define('WP_USE_THEMES', false);
 require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
 if( isset($_POST['ajax'])){
+    $_POST['id'] = intval($_POST['id']);
     if (isset($_POST['to_delete'])){
-        delete_search($_POST['link']);
-        if (saved_search_exists('',$_POST['link']) == false){
+        delete_search($_POST['id']);
+        if (saved_search_exists('',$_POST['id']) == false){
             echo 2;
             exit();
         }
@@ -13,7 +14,7 @@ if( isset($_POST['ajax'])){
         echo 3;
         exit();
     }
-    $exists = saved_search_exists($_POST['name'],$_POST['link']);
+    $exists = saved_search_exists($_POST['name'],$_POST['id']);
     if ($_POST['name'] == ''){
         echo 'Name cannot be empty.';
         exit();
@@ -22,7 +23,15 @@ if( isset($_POST['ajax'])){
         echo $exists;
         exit();
     }
-    save_search($_POST['name'],$_POST['link']);
-    echo 1;
+    $save_search_r = save_search($_POST['name'],$_POST['id']);
+    if ($save_search_r != false){
+        echo 1;
+        exit();
+    }
+    else{
+        //output false
+        echo 'An error occured.';
+        exit();
+    }
  exit;
 }

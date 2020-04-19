@@ -1,4 +1,15 @@
 <?php
+function packed_to_url($packed){
+	if (isset($packed['page'])){
+		unset($packed['page']);
+	}
+	$construct = '?';
+	foreach ($packed as $key => $value) {
+		$construct .= $key . '=' . $value . '&';
+	}
+	$construct .= 'page=1';
+	return $construct;
+}
 //get searches by search_id from databse
 function get_search($id,$fields = 'all'){
 	if (! is_array($field) && $fields != 'all'){
@@ -404,24 +415,32 @@ function unpack_search($packed){
 
 
 /////Saved Searches
-function save_search($name,$link){
+function save_search($name,$search_id){
+	if (! is_numeric($search_id)){
+		return false;
+	}
+	$search_id = intval($search_id);
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
-		update_user_meta(get_current_user_id(),'saved_searches',array(array($name,$link)));
+		update_user_meta(get_current_user_id(),'saved_searches',array(array($name,$search_id)));
 		return;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
-	if (saved_search_exists($name,$link) != false){
-		return;
+	if (saved_search_exists($name,$search_id) != false){
+		return false;
 	}
-	$searches[] = array($name,$link);
+	$searches[] = array($name,$search_id);
 	update_user_meta(get_current_user_id(),'saved_searches',$searches);
+	return true;
 }
-function saved_search_exists($name,$link){
+function saved_search_exists($name,$search_id){
+	if (! is_int($search_id)){
+		return 'Not Integer';
+	}
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
 		return false;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
-	if (in_array($link,array_column($searches,1))){
+	if (in_array($search_id,array_column($searches,1))){
 		return 'Search exists.';
 	}
 	else if (in_array($name,array_column($searches,0))){
@@ -437,13 +456,13 @@ function get_saved_searches(){
 	}
 	return get_user_meta(get_current_user_id(),'saved_searches',true);
 }
-function delete_search($name_or_link){
+function delete_search($name_or_search_id){
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
 		return;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
 	foreach($searches as $key => $search){
-		if ($search[0] == $name_or_link || $search[1] == $name_or_link){
+		if ($search[0] == $name_or_search_id || $search[1] == $name_or_search_id){
 			unset($searches[$key]);
 			$searches = array_values($searches);
 			update_user_meta(get_current_user_id(),'saved_searches',$searches);

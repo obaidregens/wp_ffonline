@@ -22,7 +22,7 @@ get_header();
                         <?php
                             $searches = get_saved_searches();
                             foreach ($searches as $search){
-                                ?><a href="<?php echo $search[1]; ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
+                                ?><a href="<?php echo packed_to_url(pack_search($search[1])); ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
                             }
                         ?>
                     </ul>
@@ -55,50 +55,46 @@ get_header();
 <script>
 	function save_current_search(){
         var name = document.getElementById('new_search_name').value;
-        var link = window.location.href.replace('https://fanfiction.online','');
+        var id = document.getElementById('search_id').innerHTML;
         jQuery('.progress').css('display','block');
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/save_search.php',
-			type: 'post',
-			data: {ajax:1,name:name,link:link},
-			success: function(response){
-				jQuery('.progress').css('display','none');
-				if (response == 3){
-				    M.toast({html: 'Please login.'});
-				}
-				else if (response == 1){
-				    M.toast({html: 'Search added.'});
-				    jQuery('#searches-collection').append('<a href="' + link + '" style="width:90%;display:inline-block;border:none;" class="collection-item">' + name + '</a><i onclick="delete_search(\'' + link + '\')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i>');
-				}
-				else{
-				    M.toast({html: response});
-				}
-			}
-		});
+    		jQuery.ajax({
+    			url: '/wp-content/themes/book-writer/php/save_search.php',
+    			type: 'post',
+    			data: {ajax:1,name:name,id:id},
+    			success: function(response){
+    				jQuery('.progress').css('display','none');
+    				if (response == 3){
+    				    M.toast({html: 'Please login.'});
+    				}
+    				else if (response == 1){
+    				    M.toast({html: 'Search added.'});
+                window.location.reload();
+    				}
+    				else{
+    				    M.toast({html: response});
+    				}
+    			}
+    		});
     }
-    function delete_search(link){
+    function delete_search(id){
         jQuery('.progress').css('display','block');
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/save_search.php',
-			type: 'post',
-			data: {ajax:1,to_delete:'to_delete',link:link},
-			success: function(response){
-				jQuery('.progress').css('display','none');
-				if (response == 3){
-				    M.toast({html: 'Please login.'});
-				}
-				else if (response == 2){
-				    M.toast({html: 'Search deleted.'});
-				    var each = jQuery('#searches-collection').children('a');
-                    for (var i = 0; i < each.length; i++) {
-                        if (each[i].href.replace('https://fanfiction.online','') == link.replace('https://fanfiction.online','')){
-                            jQuery(each[i]).next().remove();
-                            jQuery(each[i]).remove();
-                        }
-                    }
-				}
-				
-			}
-		});
+    		jQuery.ajax({
+    			url: '/wp-content/themes/book-writer/php/save_search.php',
+    			type: 'post',
+    			data: {ajax:1,to_delete:'to_delete',id:id},
+    			success: function(response){
+    				jQuery('.progress').css('display','none');
+    				if (response == 3){
+    				    M.toast({html: 'Please login.'});
+    				}
+    				else if (response == 2){
+    				    M.toast({html: 'Search deleted.'});
+                window.location.reload();
+    				}	
+            else{
+              
+            }
+    			}
+    		});
     }
 </script>

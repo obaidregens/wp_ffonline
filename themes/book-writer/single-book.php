@@ -1,5 +1,5 @@
 <?php
-if (current_user_can('administrator') && $_GET['template'] == 'test'){
+if (current_user_can('administrator') && isset($_GET['template']) && $_GET['template'] == 'test'){
     include('single-book-test.php');
     exit();
 }
@@ -21,12 +21,12 @@ if (current_user_can('administrator') && $_GET['template'] == 'test'){
 <?php
 //page_header
 get_header();
-if (isset($_GET['chapter']) && is_numeric($_GET['chapter'])){
+if (isset($wp_query->query_vars['chapter']) && is_numeric($wp_query->query_vars['chapter'])){
 	$chapter = new WP_Query( array(
 		'post_type'      => array( 'chapter' ),
 		'post_parent'    => $post->ID,
 		'meta_key'       => 'chapter_order',
-		'meta_value' => intval($_GET['chapter']),
+		'meta_value' => intval($wp_query->query_vars['chapter']),
 		'posts_per_page' => 1,
 	));
 	if ($chapter->found_posts != 0){

@@ -30,7 +30,7 @@ function my_permalinks($permalink, $post, $leavename) {
 	if($post->post_type != 'chapter'){
 	 	return $permalink;
 	}
-	$permalink = get_permalink($post->post_parent) . '?chapter=' . get_post_meta($post->ID,'chapter_order',true);
+	$permalink = get_permalink($post->post_parent) . 'chapter/' . get_post_meta($post->ID,'chapter_order',true);
 	
 	return $permalink;
 }
@@ -356,6 +356,7 @@ function bw_register_cpt() {
 		'menu_icon'             => 'dashicons-book-alt',
 		'supports'              => array('title','editor','excerpt'),
 		'exclude_from_search'   => false,
+		'rewrite'				=> array('ep_mask' => EP_BOOKS),
 	);
 	register_post_type( 'book', $args );
 	$labels = array(

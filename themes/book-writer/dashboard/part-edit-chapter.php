@@ -1,7 +1,10 @@
 <main><a onclick="load_page('write')" class="btn-hover btn-floating btn-small waves-effect waves-light"><i class="fas fa-arrow-left"></i></a><?php
-    $chapter = get_post($_GET['edit_chap']);
-    if(strpos($_GET['edit_chap'],'new-') !== false){
-        $book_id = explode('-',$_GET['edit_chap'])[1];
+    $chapter = get_post($_POST['id']);
+    if (! isset($_POST['id'])){
+        ?><script>load_page('dashboard');</script><?php
+    }
+    else if(strpos($_POST['id'],'new-') !== false){
+        $book_id = explode('-',$_POST['id'])[1];
         $book = get_post($book_id);
         if (get_current_user_id() != $book->post_author || $book->post_type != 'book'){
             ?><script>load_page('dashboard');</script><?php
@@ -10,7 +13,7 @@
             ?><div class="mobile-margin">
                 <h4 class="section"><?php echo 'Book: '; if (preg_replace('/\s+/', '',$book->post_title) == ''){echo "(No Book Title)";}else{echo $book->post_title;}?></h4>
                 <?php
-            	edit_chapter($_GET['edit_chap']);
+            	edit_chapter($_POST['id']);
         	?></div><?php            
         }
     }

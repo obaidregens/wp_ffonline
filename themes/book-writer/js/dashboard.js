@@ -3,17 +3,13 @@ jQuery(document).ready(function(){
     jQuery("html").css("cssText",'margin-top:0px !important;');
     var urlParams = new URLSearchParams(location.search);
     var pages = ['write','profile','stats','edit-chapter','messages','chat','settings','edit-book','bookmarks','collections'];
-    var page_to = window.location.href.replace(window.location.origin + '/dashboard','').replace(/\//g,'').split('?')[0];
+    var page_full = window.location.href.replace(window.location.origin + '/dashboard','').replace('/','').split('/');
+    var page_to = page_full[0].replace(/\//g,'');
+    var page_id = page_full[1].replace(/\//g,'');
     if (page_to != ''){
         if(pages.includes(page_to)){
-            if (page_to == 'edit-chapter'){
-                load_page(page_to,urlParams.get('chap'));
-            }
-            else if (page_to == 'edit-book'){
-                load_page(page_to,urlParams.get('edit-book'));
-            }
-            else if(page_to == 'chat'){
-                load_page(page_to,urlParams.get('id'));
+            if ((page_to == 'edit-chapter' || page_to == 'edit-book' || page_to == 'chat') && page_id != ''){
+                load_page(page_to,page_id);
             }
             else{
                load_page(page_to);
@@ -36,18 +32,8 @@ function load_page(page,extra = null){
     var construct = '/dashboard/' + page;
 	var data = {ajax: 1,page:page};
 	if (extra !== null){
-	    if (page == 'edit-chapter'){
-            data['chap'] = extra;
-            construct += '?chap=' + extra;
-	    }
-	    else if (page == 'chat'){
-	        data['id'] = extra;
-            construct += '?id=' + extra;
-	    }
-	    else if (page == 'edit-book'){
-	        data['edit-book'] = extra;
-            construct += '?edit-book=' + extra;
-	    }
+        data['id'] = extra;
+        construct += '/' + extra;
 	}
     window.history.pushState("object or string", document.getElementsByTagName("title")[0].innerHTML,construct);
 	jQuery.ajax({

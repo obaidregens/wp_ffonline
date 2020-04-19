@@ -1,4 +1,12 @@
 <?php
+/**
+ * Endpoint Mask for Book Post Type.
+ *
+ * @since book-writer 2.0.2
+ */
+define( 'EP_BOOKS', 8192 );
+
+
 //source https://wordpress.stackexchange.com/questions/123210/how-to-set-up-author-archives-with-sub-category-url
 function wpa_author_endpoints(){
     global $wp_query;
@@ -11,6 +19,9 @@ function wpa_author_endpoints(){
     foreach ($parms as $key => $value) {
         add_rewrite_endpoint( $value, EP_PAGES,false);
     }
+
+    //Books
+    add_rewrite_endpoint( 'chapter', EP_BOOKS,'chapter');
 }
 add_action( 'init', 'wpa_author_endpoints' );
 function wpa_author_template( $template = '' ){

@@ -1,6 +1,5 @@
 <?php
-
-if(preg_replace('/[0-9]+/', '', $_POST['id']) == ''){
+if(isset($_POST['id']) && preg_replace('/[0-9]+/', '', $_POST['id']) == ''){
     $user = get_user_by('id',explode('-',$_POST['id'])[0])->data;
     if(! $user){
         

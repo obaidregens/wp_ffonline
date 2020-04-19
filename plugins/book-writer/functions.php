@@ -71,7 +71,11 @@ function run_at_activation(){
 		  `timestamp` BIGINT UNSIGNED NOT NULL ,
 		  `IP` VARCHAR(100) NOT NULL ,
 		  `args` LONGTEXT NOT NULL ,
-		  PRIMARY KEY (`ID`)
+		  PRIMARY KEY (`ID`),
+		  KEY user_id (user_id),
+		  KEY type (type),
+		  KEY type_id (type_id),
+		  KEY IP (IP),
 		) $charset_collate;";
 
 	$searchparams_table = "CREATE TABLE $searchparams_table_name (
@@ -79,7 +83,10 @@ function run_at_activation(){
 		  `search_id` BIGINT UNSIGNED NOT NULL ,
 		  `parameter` VARCHAR(500) NOT NULL ,
 		  `value` VARCHAR(500) NOT NULL ,
-		  PRIMARY KEY (`ID`)
+		  PRIMARY KEY (`ID`),
+		  KEY search_id (search_id),
+		  KEY parameter (parameter),
+		  KEY value (value),
 		) $charset_collate;";
 
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -87,6 +94,8 @@ function run_at_activation(){
 	dbDelta( $searchparams_table );
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
+
+include('endpoints.php');
 
 include('book-validation.php');
 
@@ -119,5 +128,3 @@ include('write/order-book.php');
 include('custom-login.php');
 
 include('searches.php');
-
-include('endpoints.php');

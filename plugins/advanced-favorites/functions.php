@@ -579,14 +579,14 @@ function notification_emails($type,$id,$extra,$notification_of){
         	$book = get_post($chapter->post_parent);
         	$author_name = get_the_author_meta('display_name',$book->post_author);
         	if ($extra != 'hidden' && $extra != 'favorites'){
-        	    $collection = get_term($extra)->name;
+        	    $collection_name = get_term($extra)->name;
         	}
         	else{
         	    $collection_name = ucfirst($extra);
         	}
         	$subject = $book->post_title . ' by ' . $author_name . ' just got a new chapter!';
         	$message = $book->post_title . ' by ' . $author_name . 'from your collection \'' . $collection_name .  '\' just got a new chapter!' . "\r\n\r\n";
-            $message .=  'Chapter ' . get_post_meta($chapterid,'chapter_order',true) . ': ' . $chapter-> post_title  . "\r\n";
+            $message .=  'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true) . ': ' . $chapter-> post_title  . "\r\n";
         	$message .= get_permalink($chapter->ID) . "\r\n\r\n";
 			break;
 		case "comment":
