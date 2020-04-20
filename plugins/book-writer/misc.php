@@ -1,4 +1,51 @@
 <?php
+function disable_json_api () {
+
+  // Filters for WP-API version 1.x
+  add_filter( 'json_enabled', '__return_false' );
+  add_filter( 'json_jsonp_enabled', '__return_false' );
+
+  // Filters for WP-API version 2.x
+  add_filter( 'rest_enabled', '__return_false' );
+  add_filter( 'rest_jsonp_enabled', '__return_false' );
+
+}
+add_action( 'after_setup_theme', 'disable_json_api' );
+// Disable REST API link tag
+remove_action('wp_head', 'rest_output_link_wp_head', 10);
+
+// Disable oEmbed Discovery Links
+remove_action('wp_head', 'wp_oembed_add_discovery_links', 10);
+
+// Disable REST API link in HTTP headers
+remove_action('template_redirect', 'rest_output_link_header', 11, 0);
+
+//Remove Feeds
+remove_action( 'wp_head', 'feed_links_extra', 3 ); // Display the links to the extra feeds such as category feeds
+remove_action( 'wp_head', 'feed_links', 2 ); // Display the links to the general feeds: Post and Comment Feed
+remove_action( 'wp_head', 'rsd_link' ); // Display the link to the Really Simple Discovery service endpoint, EditURI link
+remove_action( 'wp_head', 'wlwmanifest_link' ); // Display the link to the Windows Live Writer manifest file.
+remove_action( 'wp_head', 'index_rel_link' ); // index link
+remove_action( 'wp_head', 'parent_post_rel_link', 10, 0 ); // prev link
+remove_action( 'wp_head', 'start_post_rel_link', 10, 0 ); // start link
+remove_action( 'wp_head', 'adjacent_posts_rel_link', 10, 0 ); // Display relational links for the posts adjacent to the current post.
+remove_action( 'wp_head', 'wp_generator' ); // Display the XHTML generator that is generated on the wp_head hook, WP version
+function fb_disable_feed() {
+	global $wp_query;
+    $wp_query->set_404();
+    status_header(404);
+	exit();
+}
+
+add_action('do_feed', 'fb_disable_feed', 1);
+add_action('do_feed_rdf', 'fb_disable_feed', 1);
+add_action('do_feed_rss', 'fb_disable_feed', 1);
+add_action('do_feed_rss2', 'fb_disable_feed', 1);
+add_action('do_feed_atom', 'fb_disable_feed', 1);
+add_action('do_feed_rss2_comments', 'fb_disable_feed', 1);
+add_action('do_feed_atom_comments', 'fb_disable_feed', 1);
+
+
 add_filter( 'script_loader_tag', 'add_asyn_to_script', 10, 3 );
 
 function add_asyn_to_script( $tag, $handle, $src ) {

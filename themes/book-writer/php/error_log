@@ -18043,3 +18043,10 @@ Stack trace:
 [19-Apr-2020 21:06:32 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
 [19-Apr-2020 21:07:22 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
 [19-Apr-2020 21:08:18 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:03:27 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:04:11 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:06:16 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:26:13 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:26:49 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:39:12 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9
+[19-Apr-2020 23:44:30 UTC] PHP Warning:  in_array() expects parameter 2 to be array, null given in /home/readadmt/fanfiction.online/wp-content/themes/book-writer/php/search.php on line 9

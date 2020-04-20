@@ -19,13 +19,10 @@ if (! headers_sent() && ! isset($_SESSION) ){
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<?php meta_desc(); ?>
-	<link rel="profile" href="http://gmpg.org/xfn/11">
 	<?php if ( is_singular() && pings_open( get_queried_object() ) ) : ?>
-	<link rel="pingback" href="<?php echo esc_url( get_bloginfo( 'pingback_url' ) ); ?>">
 	<?php endif; ?>
+    <link rel="dns-prefetch" href="//use.fontawesome.com">
 	<?php wp_head(); ?>
-	  <!--Import Google Icon Font-->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       <!--Import materialize.css in functions.php-->
 	  <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 
