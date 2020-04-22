@@ -7,7 +7,11 @@
  */
 $front_cache = get_front_cache();
 if (! is_null($front_cache) && !is_user_logged_in() && empty($_GET)){
-    print_r($front_cache);
+	//Find Args from Url
+	$args = unpack_search($_GET);
+	$search_id = log_search($args);
+	$replaced = preg_replace('~(<span id="search_id" style="display:none;">)(([0-9]+)|())(</span>)~','<span id="search_id" style="display:none;">' . $search_id . '</span>',$front_cache);
+	print_r($replaced);
     exit();
 }
 get_header();

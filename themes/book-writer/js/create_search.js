@@ -178,6 +178,7 @@ function trigger_search(page = false){
         data: data,
         dataType: 'JSON',
         success: function(response){
+			console.log(response);
             if (response['output'] == 6){
                   M.toast({html: 'An error occured.'});
                   window.location.reload();
