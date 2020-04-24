@@ -1,5 +1,5 @@
 jQuery(document).ready(function(){
-	jQuery('.book-share').click(function(){
+	jQuery('body').on("click",'.book-share',function(){
 		var book_elem = jQuery(this).parents('article.mainsearch-item')[0];
 		var title = jQuery(book_elem).find('.entry-title a')[0].innerHTML;
 		var desc = jQuery(book_elem).find('.search-summary p')[0].innerHTML;
@@ -54,7 +54,7 @@ jQuery(document).ready(function(){
 	        console.warn("Could not select text in node: Unsupported browser.");
 	    }
 	}
-	jQuery('.book-hide').click(function(){
+	jQuery('body').on("click",'.book-hide',function(){
 		jQuery('.progress').css('display','block');
 		var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
 		jQuery.ajax({
@@ -82,7 +82,8 @@ jQuery(document).ready(function(){
 			}
 		});
 	});
-	jQuery('.book-collections').click(function(){
+
+	jQuery('body').on("click",'.book-collections',function(){
 		if (this.hasAttribute("disabled")){
 			jQuery('#login-modal').modal('open');
 		}
@@ -91,7 +92,7 @@ jQuery(document).ready(function(){
 			M.Modal.getInstance(document.getElementById('collections-' + id)).open();
 		}
 	});
-	jQuery('.book-favorite').click(function(){
+	jQuery('body').on("click",'.book-favorite',function(){
 		jQuery('.progress').css('display','block');
 		var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
 		jQuery.ajax({
@@ -119,7 +120,8 @@ jQuery(document).ready(function(){
 			}
 		});
 	});
-	jQuery('.save-collection').click(function(){
+
+	jQuery('body').on("click",'.save-collection',function(){
         jQuery('.progress').css('display','block');
         var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
         var switches = jQuery('#collections-' + id).find('.save-collection');

@@ -11,7 +11,7 @@
 <section class="no-results not-found">
 	<article class="margin">
 			<h1 style="padding-bottom: 12px;" class="page-title"><?php _e( 'No Books found!', 'twentysixteen' ); ?></h1>
-			<h3 style="color:black !important;"><?php _e( 'What if you refined your search a bit?', 'twentysixteen' ); ?></h3>
+			<h3 style="color:var(--text-color) !important;"><?php _e( 'What if you refined your search a bit?', 'twentysixteen' ); ?></h3>
 	</article>
 
 </section><!-- .no-results -->

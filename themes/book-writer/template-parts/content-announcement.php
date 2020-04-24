@@ -13,7 +13,7 @@
 		<?php
 		$pinned = '';
 		if (is_sticky()){
-			$pinned = '<span style="color:black;font-size: 15px;"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Pinned</span>';
+			$pinned = '<span style="color:var(--text-color);font-size: 15px;"><i class="fa fa-thumb-tack" aria-hidden="true"></i> Pinned</span>';
 		}
 		
 		the_title( '<h1 class="entry-title">', '  ' . $pinned . '</h1>'); ?>

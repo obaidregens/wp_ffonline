@@ -57,7 +57,52 @@ function new_message_notification() {
 var notifyMessageID = setInterval(new_message_notification, 10000);
 
 
+////////Theme START ///////////////
+//Parse Cookies
+//Cookies Parsed: theme, line-height, font-size
+var cookies_arr = document.cookie.split('; ');
+var cookies = {};
+for (let i = 0; i < cookies_arr.length; i++) {
+    let split = cookies_arr[i].split('=');
+    cookies[split[0]] = split[1];
+}
+//Set Cookies Function
+function setCookie(name, value, options) {
+  var d = new Date();
+  d.setTime(d.getTime() + (options.expires*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=" + options.path;
+}
 
+var current_theme = 'light';
+function dark_mode(){
+    current_theme = 'dark';
+    jQuery(":root").get(0).style.setProperty("--theme-color", "#265f86");
+    jQuery(":root").get(0).style.setProperty("--text-color", "#b7bfc4");
+    jQuery(":root").get(0).style.setProperty("--background-color", "black");
+    setCookie("theme","dark_mode", { expires:30, path: '/' });
+}
+function light_mode() {
+    current_theme = 'light';
+    jQuery(":root").get(0).style.setProperty("--theme-color", "#007ACC");
+    jQuery(":root").get(0).style.setProperty("--text-color", "#262828");
+    jQuery(":root").get(0).style.setProperty("--background-color", "#fdfdfd");
+    setCookie("theme","light_mode", { expires:30, path: '/' });
+}
+jQuery("#dark_mode").click(dark_mode);
+jQuery("#light_mode").click(light_mode);
+jQuery("#triggerTheme").click(function(){
+    if (current_theme == 'dark'){
+        light_mode();
+    }
+    else if (current_theme == 'light'){
+        dark_mode();
+    }
+});
+//Theme Settings
+if (cookies["theme"] == "dark_mode"){dark_mode()}
+else{light_mode()}
+/////////////////Themes END /////////////////
 
 
 

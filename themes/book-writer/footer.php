@@ -70,8 +70,9 @@ $no_login_modal = array('page-dashboard.php','page-login.php');
 	</div><!-- .site-inner -->
 
 </div><!-- .site -->
+<!-- Theme -->
+<a class="btn-floating" id="triggerTheme" style="z-index:999999;position:absolute;top:-6px;left:-6px;background-color: var(--background-color);"><i style="color:var(--text-color) !important;" class="fas fa-adjust"></i></a>
 
-        
 <?php wp_footer(); ?>
 <!-- Fonts -->
 <!-- Font Awesome -->

@@ -27,5 +27,8 @@ function get_front_cache(){
 	$result = $wpdb->get_results ( "
 	    SELECT * FROM $table_name ORDER BY ID DESC LIMIT 1
 	" );
+	if (is_null($result) || empty($result)){
+		return null;
+	}
 	return $result[0]->value;
 }

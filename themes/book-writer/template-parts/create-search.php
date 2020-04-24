@@ -12,7 +12,7 @@
     }
     .btn-include,.btn-exclude{
         background-color:transparent;
-        color: #343434;
+        color: var(--text-color);
     }
     .btn-include.active,.btn-include:hover,.btn-include:focus{
         background-color:var(--theme-color);
@@ -23,12 +23,12 @@
         color:white;
     }
     .btn-clear:hover{
-        color:white;
-        background-color:black;
+        color:var(--background-color);
+        background-color:var(--text-color);
     }
     .btn-clear:focus{
         background-color:transparent;
-        color:#343434;
+        color:var(--text-color);
     }
     .included_chips .chip{
         background-color:#f0f8ff;
@@ -49,7 +49,7 @@
 	.noUi-tooltip span {
 		width: fit-content;
 		text-align: center;
-		color: black;
+		color: var(--text-color);
 		font-size: 12px;
 		opacity: 0;
 		position: absolute;

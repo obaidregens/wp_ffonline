@@ -38,7 +38,7 @@ foreach($fandoms as $fandom){
 				$current_book['title'] = $title->plaintext;
 				$link = $title->href;
 			}
-			foreach($divClass->find("a.stitle ~ a") as $author ) {
+			foreach($divClass->find("a[href^='/u']") as $author ) {
 				$author_name = $author->plaintext;
 				$author_link = $author->href;
 				$current_book['author'] = '<a href="https://www.fanfiction.net' . $author_link . '">' . $author_name .'</a>';
@@ -99,7 +99,7 @@ foreach($fandoms as $fandom){
 					'posts_per_page' => 1, // we only want to check if any exists, so don't need to get all of them
 					'meta_key' => 'link',
 					'meta_value' => $current_book['link'],
-					'post_status' => array('publish','draft'),
+					'post_status' => array('publish','draft','trash'),
 					'fields' => 'ids', // we don't need it's content, etc.
 				) );
 				if ( empty( $exists_book ) ) {

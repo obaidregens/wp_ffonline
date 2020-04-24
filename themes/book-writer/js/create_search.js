@@ -178,7 +178,6 @@ function trigger_search(page = false){
         data: data,
         dataType: 'JSON',
         success: function(response){
-			console.log(response);
             if (response['output'] == 6){
                   M.toast({html: 'An error occured.'});
                   window.location.reload();
@@ -206,6 +205,8 @@ function trigger_search(page = false){
                 construct += '&page=1';
             }
             window.history.pushState("object or string", document.getElementsByTagName("title")[0].innerHTML,construct);
+            jQuery('.dropdown-trigger').dropdown();
+            jQuery('.modal:not(#searchbook)').modal();
         }
     });
 

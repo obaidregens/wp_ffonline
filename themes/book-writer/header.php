@@ -222,8 +222,8 @@ if (! headers_sent() && ! isset($_SESSION) ){
 		<header id="masthead" class="site-header" role="banner">
 			<div class="site-header-main">
 				<nav class="nav-wrapper" style="width:100%">
-					<div class="nav-logo">
-						<a href="/"><img width="240" height="67" src="https://fanfiction.online/wp-content/uploads/2019/11/cropped-logo-transparent-2.png" class="custom-logo" alt="Fanfiction Online"></a>
+					<div class="nav-logo">						
+						<a href="/" ><?php include(explode('wp-content',__FILE__)[0] . 'wp-content/uploads/logo.svg'); ?></a>
 					</div>
 					<div class="nav-content">
 						<li><a <?php if ($pagename == 'search' || $pagename == ''){echo 'class="pagenow active"';} ?> target="_self" href="/">Read</a></li>

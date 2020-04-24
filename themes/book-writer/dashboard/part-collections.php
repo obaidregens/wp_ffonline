@@ -8,7 +8,7 @@ $collections = get_terms(array(
 ));
 ?>
 <ul class="collection">
-	<li onclick="M.Modal.getInstance(document.getElementById('modal-favorites')).open();" style="color:black !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
+	<li onclick="M.Modal.getInstance(document.getElementById('modal-favorites')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
 		<span class="title"><?php echo 'Favorites <label>(Private)</label>'; ?></span><span class="right" style="padding-left:6px;"></span>
 	</li>
 
@@ -35,7 +35,7 @@ $collections = get_terms(array(
 			<a onclick="save_it('favorites');" class="waves-effect btn-flat">Save</a>
 		</div>
 	</div>
-	<li onclick="M.Modal.getInstance(document.getElementById('modal-hidden')).open();" style="color:black !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
+	<li onclick="M.Modal.getInstance(document.getElementById('modal-hidden')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
 		<span class="title"><?php echo 'Hidden <label>(Private)</label>'; ?></span><span class="right" style="padding-left:6px;"></span>
 	</li>
 
@@ -66,7 +66,7 @@ $collections = get_terms(array(
 
 	foreach($collections as $collection){
     ?>
-    <li onclick="M.Modal.getInstance(document.getElementById('modal-<?php echo $collection->term_id; ?>')).open();" style="color:black !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
+    <li onclick="M.Modal.getInstance(document.getElementById('modal-<?php echo $collection->term_id; ?>')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
         <span class="title"><?php echo $collection->name . ' <label>(' . get_term_meta($collection->term_id,'public_collection',true) . ')</label>'; ?></span><span class="right" style="padding-left:6px;"><a href="<?php echo get_term_link($collection->term_id); ?>">View</a></span>
         <p><?php echo $collection->description; ?></p>
     </li>
@@ -135,7 +135,7 @@ $collections = get_terms(array(
     <?php
 }
 ?>
-    <li onclick="M.Modal.getInstance(document.getElementById('modal-new')).open();" style="color:black !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
+    <li onclick="M.Modal.getInstance(document.getElementById('modal-new')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
         <span class="title">New Collection</span>
     </li>
 
@@ -184,7 +184,7 @@ $collections = get_terms(array(
       if (deleted_books.indexOf(collection_book) == -1){
           titles.push(jQuery('#' + collection_book + ' a')[0]);
           deleted_books.push(collection_book);
-          document.getElementById(collection_book).innerHTML = '<div><a style="color:black;">Removed</a><a onclick="delete_book(\'' + collection_book + '\')" class="secondary-content">UNDO</a></div>';
+          document.getElementById(collection_book).innerHTML = '<div><a style="color:var(--text-color);">Removed</a><a onclick="delete_book(\'' + collection_book + '\')" class="secondary-content">UNDO</a></div>';
       }
       else{
           var index = deleted_books.indexOf(collection_book);

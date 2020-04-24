@@ -1,51 +1,6 @@
 ////HTML is located in Chapter Page Template
 ////Script included in 'footer.php'
 
-//Parse Cookies
-//Cookies Parsed: theme, line-height, font-size
-var cookies_arr = document.cookie.split('; ');
-var cookies = {};
-for (let i = 0; i < cookies_arr.length; i++) {
-    let split = cookies_arr[i].split('=');
-    cookies[split[0]] = split[1];
-}
-//Set Cookies Function
-function setCookie(name, value, options) {
-  var d = new Date();
-  d.setTime(d.getTime() + (options.expires*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=" + options.path;
-}
-
-function theme_whiteonblack(){
-	jQuery(":root").get(0).style.setProperty("--theme-color", "#265f86");
-	jQuery(":root").get(0).style.setProperty("--text-color", "white");
-	jQuery(":root").get(0).style.setProperty("--background-color", "black");
-	jQuery("#theme-whiteonblack").get(0).style.setProperty("display", "none");
-	jQuery("#theme-pale").get(0).style.setProperty("display", "inline-block");
-	jQuery("#theme-normal").get(0).style.setProperty("display", "inline-block");
-	setCookie("theme","theme_whiteonblack", { expires:30, path: '/' });
-}
-function theme_normal() {
-	jQuery(":root").get(0).style.setProperty("--theme-color", "#007ACC");
-	jQuery(":root").get(0).style.setProperty("--text-color", "#1a1a1a");
-	jQuery(":root").get(0).style.setProperty("--background-color", "white");
-	jQuery("#theme-normal").get(0).style.setProperty("display", "none");
-	jQuery("#theme-pale").get(0).style.setProperty("display", "inline-block");
-	jQuery("#theme-whiteonblack").get(0).style.setProperty("display", "inline-block");
-	
-	setCookie("theme","theme_normal", { expires:30, path: '/' });
-}	
-function theme_pale() {
-	jQuery(":root").get(0).style.setProperty("--theme-color", "#007ACC");
-	jQuery(":root").get(0).style.setProperty("--text-color", "#1a1a1a");
-	jQuery(":root").get(0).style.setProperty("--background-color", "#ECE1CB");
-	jQuery("#theme-pale").get(0).style.setProperty("display", "none");
-	jQuery("#theme-whiteonblack").get(0).style.setProperty("display", "inline-block");
-	jQuery("#theme-normal").get(0).style.setProperty("display", "inline-block");
-	
-	setCookie("theme","theme_pale", { expires:30, path: '/' });
-}
 //fontSize default
 var originalfontSize = parseInt(jQuery(".chapter-content").css("font-size"));
 		
@@ -55,10 +10,6 @@ jQuery(".entry-content").get(0).style.setProperty("line-height",cookies["line-he
 //Font Size setting
 jQuery(".chapter-content").get(0).style.setProperty("font-size",cookies["font-size"] + "px");
 
-//Theme Settings
-if (cookies["theme"] == "theme_pale"){theme_pale()};
-if (cookies["theme"] == "theme_whiteonblack"){theme_whiteonblack()};
-if (cookies["theme"] == "theme_normal"){theme_normal()};
 
 //Container Settings
 if (cookies["line-height"]/cookies["font-size"] <= 1.2){jQuery("#decreaselineheight").get(0).style.setProperty("display", "none");}
@@ -147,9 +98,7 @@ jQuery("#decreaselineheight").click
 		setCookie("font-size", parseInt(jQuery(".chapter-content").css("font-size")), { expires:30, path: '/' });
 		setCookie("line-height", parseInt(jQuery(".entry-content").css("line-height")), { expires:30, path: '/' });				}
 )
-jQuery("#theme-whiteonblack").click(theme_whiteonblack);
-jQuery("#theme-normal").click(theme_normal);
-jQuery("#theme-pale").click(theme_pale);
+
 jQuery("#increasemargin").click
 (
 	function()

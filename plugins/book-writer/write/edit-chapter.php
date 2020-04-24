@@ -42,7 +42,8 @@ function edit_chapter($chapter){
             border:1px solid #ccc;
         }
         .editorWrap:fullscreen {
-            background-color:white;
+            background-color:var(--background-color);
+            color: var(--text-color);
         }
         .editorWrap:fullscreen .editor{
             max-height:calc(100vh - 75px) !important;

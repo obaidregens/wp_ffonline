@@ -8,14 +8,16 @@ Template: twentysixteen
 Version: 1.0.0
 Text Domain: book-writer
 */ 
+@import url('https://fonts.googleapis.com/css2?family=Varela+Round');
 :root
 {
 	--theme-color: #007acc;
 	--secondary-color: #96908F;
 	--light-theme-color:  rgba(0,122,204,0.09);
 	--mid-theme-color: rgba(0,122,204,0.639);
-	--text-color: black;
-	--background-color: white;
+	--text-color: #262828;
+	--background-color: #fdfdfd;
+	--font: 'Varela Round';
 }
 
 
@@ -387,7 +389,7 @@ select:not(.browser-default)
     -webkit-rtl-ordering: logical;
     cursor: default;
     margin: 0em;
-    font: 400 14px Merriweather, Georgia, serif;
+    font: 400 14px var(--font);
     border-radius: 5px;
     border-width: 1px;
     border-style: solid;
@@ -516,7 +518,7 @@ optgroup {
 	vertical-align: top;
 }
 .bypostauthor > article .fn:after{
-    font-family: Merriweather, Georgia, serif;
+    font-family: var(--font);
     font-size: 13px;
     -moz-osx-font-smoothing: grayscale;
 	-webkit-font-smoothing: antialiased;
@@ -541,7 +543,7 @@ button,
 input,
 textarea {
 	color: var(--text-color);
-	font-family: Merriweather, Georgia, serif;
+	font-family: var(--font);
 	font-size: 16px;
 	font-size: 1rem;
 	line-height: 1.75;
@@ -1914,7 +1916,6 @@ blockquote:after,
 
 .entry-header,
 .entry-summary,
-.entry-content,
 .entry-footer,
 .page-content {
 	margin-right: 7.6923%;
@@ -1962,7 +1963,6 @@ a.post-thumbnail:focus {
 	border-color: #d1d1d1;
 }
 
-.entry-content h1,
 .entry-summary h1,
 .comment-content h1,
 .textwidget h1 {
@@ -1973,7 +1973,6 @@ a.post-thumbnail:focus {
 	margin-bottom: 1em;
 }
 
-.entry-content h2,
 .entry-summary h2,
 .comment-content h2,
 .textwidget h2 {
@@ -1984,7 +1983,6 @@ a.post-thumbnail:focus {
 	margin-bottom: 1.2173913043em;
 }
 
-.entry-content h3,
 .entry-summary h3,
 .comment-content h3,
 .textwidget h3 {
@@ -1994,10 +1992,6 @@ a.post-thumbnail:focus {
 	margin-top: 2.9473684211em;
 	margin-bottom: 1.4736842105em;
 }
-
-.entry-content h4,
-.entry-content h5,
-.entry-content h6,
 .entry-summary h4,
 .entry-summary h5,
 .entry-summary h6,
@@ -2014,7 +2008,6 @@ a.post-thumbnail:focus {
 	margin-bottom: 1.75em;
 }
 
-.entry-content h4,
 .entry-summary h4,
 .comment-content h4,
 .textwidget h4 {
@@ -2593,7 +2586,7 @@ body.search-no-results .page-header {
 
 .required {
 	color: var(--theme-color);
-	font-family: Merriweather, Georgia, serif;
+	font-family: var(--font);
 }
 
 .comment-reply-title small {
@@ -2626,7 +2619,7 @@ body.search-no-results .page-header {
 
 .comment-form .comment-form-cookies-consent label {
 	display: inline;
-	font-family: Merriweather, Georgia, serif;
+	font-family: var(--font);
 	letter-spacing: 0;
 	text-transform: none;
 }
@@ -3103,7 +3096,6 @@ p > video {
 
 	.entry-header,
 	.post-thumbnail,
-	.entry-content,
 	.entry-summary,
 	.entry-footer,
 	.comments-area,
@@ -3377,7 +3369,6 @@ p > video {
 
 	.entry-header,
 	.post-thumbnail,
-	.entry-content,
 	.entry-summary,
 	.entry-footer,
 	.comments-area,
@@ -3633,7 +3624,6 @@ p > video {
 	}
 
 	.no-sidebar .entry-header,
-	.no-sidebar .entry-content,
 	.no-sidebar .entry-summary,
 	.no-sidebar .entry-footer,
 	.no-sidebar .comments-area,
@@ -4364,7 +4354,7 @@ p > video {
     -webkit-rtl-ordering: logical;
     cursor: default;
     margin: 0em;
-    font: 400 14px Merriweather, Georgia, serif;
+    font: 400 14px var(--font);
 	height: 30px !important;
 	padding: 2px 0px 2px 9px;
 	
@@ -4475,16 +4465,20 @@ p > video {
      top:-11px;
      left: 12px;
      background-color: transparent !important;
-     background: linear-gradient(to bottom,#fafafa 10px,transparent 20px);
+     background: linear-gradient(to bottom,var(--background-color) 10px,transparent 20px);
      padding: 0 4px;
      color: #9e9e9e!important;
  }
+.search-item:hover span{
+	background-color:transparent !important;
+	background:linear-gradient(to bottom, var(--background-color) 10px, transparent 20px);
+}
  .search-item p{
      color:black;
      margin:12px;
  }
- .modal,.modal input:focus{
-     color:black !important;
+ .modal#searchbook,.modal#searchbook input:focus{
+     color:var(--text-color	) !important;
  }
 
  /**
@@ -4511,7 +4505,7 @@ div.divider{
 	right: 0px;
 }
 .author-bio pre,.author-updates pre{
-	font-family: Merriweather,Georgia,serif;
+	font-family: var(--font);
 	color: var(--text-color);
 	border:none !important;
 	margin:0 !important;

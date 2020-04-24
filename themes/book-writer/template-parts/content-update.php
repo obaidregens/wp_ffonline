@@ -9,7 +9,7 @@
 $pinned = '';
 $pin_text = 'Pin';
 if (is_sticky()){
-	$pinned = '<span style="color:black;font-size: 15px;"><i style="margin-right:7px;" class="fa fa-thumb-tack" aria-hidden="true"></i>Pinned</span>';
+	$pinned = '<span style="color:var(--text-color);font-size: 15px;"><i style="margin-right:7px;" class="fas fa-thumbtack" aria-hidden="true"></i>Pinned</span>';
 	$pin_text = 'Unpin';
 }
 ?>
@@ -30,7 +30,7 @@ if (is_sticky()){
 	</header><!-- .entry-header -->
 	<div>
 	<?php
-		echo '<div><span style="display:block;height:15px;"><a style="color:black !important;font-weight:bold;" href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )) . '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></span>';
+		echo '<div><span style="display:block;height:15px;"><a style="color:var(--text-color) !important;font-weight:bold;" href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )) . '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></span>';
 		echo '<span style="display:block;" class="grey-text">' . get_the_time() . '</span></div>';
 		echo '<pre style="line-height:1.4;">' . get_the_content() . '</pre>';
 	?>

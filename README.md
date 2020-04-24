@@ -12,3 +12,6 @@ WP Super Cache @https://wordpress.org/plugins/wp-super-cache/
 
 Version 2.0.4
 Updated jQuery to latest 3.5.0
+
+Version 2.1.0
+uploads/logo.svg added (New Logo)

@@ -19,10 +19,4 @@
         </div>
     </div>
 </div>
-<style>
-	.search-item:hover span{
-		background-color:transparent !important;
-		background:linear-gradient(to bottom, #fafafa 10px, transparent 20px);
-	}
-</style>
 <?php

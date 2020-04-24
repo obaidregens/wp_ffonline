@@ -21,20 +21,6 @@
 			<a id="increaselineheight" class="btn-floating blue"><i class="fas fa-plus"></i></a>
 			<a id="decreaselineheight" class="btn-floating blue"><i class="fas fa-minus"></i></a>
 	    </div>
-		<!--
-	    <div class="portion">
-    		<i class="fas fa-arrows-alt-h fa-lg"></i>
-			<a id="increasemargin" class="btn-floating blue"><i class="fas fa-plus"></i></a>
-			<a id="decreasemargin" class="btn-floating blue"><i class="fas fa-minus"></i></a>
-        </div>
-		-->
-        <div class="portion">
-    		<i class="fas fa-palette fa-lg"></i>
-			<a id="theme-normal" class="btn-floating" style="background-color:white;display:none;"></a>
-    		<a id="theme-whiteonblack" class="btn-floating" style="background-color:black;"></a>
-    		<a id="theme-pale" class="btn-floating" style="background-color:#ECE1CB;"></a>
-        </div>
-
     </div>
     <div class="modal-footer">
         <a href="#" class="modal-close waves-effect btn-flat">Close</a>

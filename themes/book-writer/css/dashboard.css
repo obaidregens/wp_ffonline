@@ -33,7 +33,7 @@ footer.site-footer{
 		margin-left: 40px;
 	}
 	#dashboard-sidenav{
-        background-color: #fff;
+        background-color: var(--background-color);
     }
     .sidenav-trigger{
         display:block;
@@ -144,7 +144,7 @@ i.fas.offline{
 /*Chat Window Scroller */
 .chat-window::-webkit-scrollbar {
 	width: 7px;
-	background-color: white;
+	background-color: var(--background-color);
 }
 
 .chat-window::-webkit-scrollbar-thumb {

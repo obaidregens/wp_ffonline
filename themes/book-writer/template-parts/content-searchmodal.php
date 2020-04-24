@@ -1,5 +1,5 @@
-<div id="search-settings" style="display:none;position:absolute;top:0;left:0;width:100%;background-color:#fafafa;z-index:1000">
-    <div id="custom_overlay" onclick="close_custom_modal();" style="display:none;z-index: 1001;opacity: 0.5;position: fixed;width: 100%;height: 100%;left: 0;top: 0;background-color: black;"></div>
+<div id="search-settings" style="display:none;position:absolute;top:0;left:0;width:100%;background-color:var(--background-color);z-index:1000">
+    <div id="custom_overlay" onclick="close_custom_modal();" style="display:none;z-index: 1001;opacity: 0.5;position: fixed;width: 100%;height: 100%;left: 0;top: 0;background-color: var(--text-color);"></div>
     <a style="position:fixed;top:0;right:0;" onclick="search_settings('close');" class="btn-hover btn-floating btn-small waves-effect waves-light"><i class="fas fa-times"></i></a>
 	<form name="search" class="col s12">
 		<div style="padding:24px;">
@@ -57,27 +57,27 @@
     						<div class="all_label"><div class="grey-text">All</div></div>
     					</div>
     				</div>
-                  <div class="custom-modal" id="<?php echo $taxonomy; ?>-select" style="background-color:#fafafa;z-index:1002;height:80%;width:85%;overflow:auto;position:fixed;top:10%;left:7.5%;display:none">
-                    <div class="modal-header" style="padding:15px 20px 0px 20px;position: sticky;top: 0;left:0;background-color: #fafafa;z-index: 10;">
+                  <div class="custom-modal" id="<?php echo $taxonomy; ?>-select" style="background-color:var(--background-color);z-index:1002;height:80%;width:85%;overflow:auto;position:fixed;top:10%;left:7.5%;display:none">
+                    <div class="modal-header" style="padding:15px 20px 0px 20px;position: sticky;top: 0;left:0;background-color: var(--background-color);z-index: 10;">
                         <div>
                             <span style="width:100%;">
                                 <button style="width:48%;" type="button" class="btn-include active" onclick="trigger_include('<?php echo $taxonomy; ?>')">Include</button>
                                 <button style="width:48%;" type="button" class="right btn-exclude" onclick="trigger_exclude('<?php echo $taxonomy; ?>')">Exclude</button>
                             </span>
                         </div>
-                        <div><input placeholder="Search" class="search-tags"></input></div>
+                        <div><input placeholder="Search" class="search-tags"/></div>
                     </div>
                     <div style="padding:0 24px;">
                         <div class="row" style="margin-bottom:0;">
                             <?php foreach ($terms as $term) { ?>
-                              <label class="col s12 btn-hover" style="color:black !important;padding:10px;">
-                                <input type="checkbox" value="<?php echo $term->term_id; ?>" <?php if(isset($get_in) && is_array($get_in) && in_array($term->term_id,$get_in)){echo 'checked';}else if(in_array($term->term_id,$get_ex)){echo 'checked class="cross"';} ?> />
+                              <label class="col s12 btn-hover" style="color:var(--text-color) !important;padding:10px;">
+                                <input type="checkbox" value="<?php echo $term->term_id; ?>" <?php if(isset($get_in) && is_array($get_in) && in_array($term->term_id,$get_in)){echo 'checked';}else if(isset($get_ex) && in_array($term->term_id,$get_ex)){echo 'checked class="cross"';} ?> />
                                 <span><?php echo $term->name; ?></span>
                               </label>
                             <?php } ?>
                         </div>
                     </div>
-                    <div style="text-align:right;padding:15px 20px;position: sticky;bottom: 0;background-color: #fafafa;z-index: 10;">
+                    <div style="text-align:right;padding:15px 20px;position: sticky;bottom: 0;background-color: var(--background-color);z-index: 10;">
                         <button type="button" onclick="clear_checkboxes('<?php echo $taxonomy; ?>');blur(this);" class="left btn-flat btn-clear">Clear</button>
                         <button type="button" onclick="close_custom_modal();" class="btn">OK</button>
                     </div>

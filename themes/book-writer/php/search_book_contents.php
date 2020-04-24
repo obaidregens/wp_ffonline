@@ -44,8 +44,15 @@ if( isset($_POST['ajax']) && isset($_POST['s']) ){
 							$p_after[] = $p_tag;
 						}
 					}
-					$start = max($p_before);
-					$end = min($p_after);
+					$start = 0;
+					if (! empty($p_before)){
+						$start = max($p_before);
+					}
+					$end = strlen($input);
+					if (! empty($p_after)){
+						$end = min($p_after);
+					}
+					
 					//Plus 1 because of zero indexing, Plus 1 because </p> is for the previous
 					$link_this = $link . '#p-' . (array_search($start,$p_tags)+2);
 					$current = str_replace(array('<p>','</p>'),'',substr($input,$start,$end-$start));
