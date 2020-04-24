@@ -1,6 +1,5 @@
 jQuery(document).ready(function(){
     jQuery('#dashboard-sidenav').sidenav();
-    jQuery("html").css("cssText",'margin-top:0px !important;');
     var urlParams = new URLSearchParams(location.search);
     var pages = ['write','profile','stats','edit-chapter','messages','chat','settings','edit-book','bookmarks','collections'];
     var page_full = window.location.href.replace(window.location.origin + '/dashboard','').replace('/','').split('/');

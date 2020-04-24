@@ -28,7 +28,6 @@ function my_theme_enqueue_styles() {
 	//Specific Includes
     if($template_pages == 'page-dashboard.php'){
 	    wp_enqueue_script('dashboard_js', get_stylesheet_directory_uri() .'/js/dashboard.js', array('jquery'), null, true);
-	    wp_enqueue_style( 'dashboard_css', get_stylesheet_directory_uri() .'/css/dashboard.css');
 	}
 	if ($template_pages == 'page-search.php' || $template_pages == 'taxonomy-collection.php'){
 		wp_enqueue_script('page_read_js', get_stylesheet_directory_uri() .'/js/read.js', array('jquery'), null, true);

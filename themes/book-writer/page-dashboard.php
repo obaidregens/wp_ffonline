@@ -3,8 +3,8 @@
 ?>
 <?php
 //page_header
-
 login_only();
+wp_enqueue_style( 'dashboard_css', get_stylesheet_directory_uri() .'/css/dashboard.css');
 get_header();
 ?>
 <?php $books = get_pages(array(

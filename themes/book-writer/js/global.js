@@ -77,16 +77,18 @@ function setCookie(name, value, options) {
 var current_theme = 'light';
 function dark_mode(){
     current_theme = 'dark';
-    jQuery(":root").get(0).style.setProperty("--theme-color", "#265f86");
-    jQuery(":root").get(0).style.setProperty("--text-color", "#b7bfc4");
-    jQuery(":root").get(0).style.setProperty("--background-color", "black");
+    var root = document.documentElement;
+    root.style.setProperty("--theme-color", "#265f86");
+    root.style.setProperty("--text-color", "#b7bfc4");
+    root.style.setProperty("--background-color", "black");
     setCookie("theme","dark_mode", { expires:30, path: '/' });
 }
 function light_mode() {
     current_theme = 'light';
-    jQuery(":root").get(0).style.setProperty("--theme-color", "#007ACC");
-    jQuery(":root").get(0).style.setProperty("--text-color", "#262828");
-    jQuery(":root").get(0).style.setProperty("--background-color", "#fdfdfd");
+    var root = document.documentElement;
+    root.style.setProperty("--theme-color", "#007ACC");
+    root.style.setProperty("--text-color", "#262828");
+    root.style.setProperty("--background-color", "#fdfdfd");
     setCookie("theme","light_mode", { expires:30, path: '/' });
 }
 jQuery("#dark_mode").click(dark_mode);
