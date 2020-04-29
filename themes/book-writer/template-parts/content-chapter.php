@@ -36,7 +36,6 @@ record_landing();
 		// Include the single post content template.
 		get_template_part( 'template-parts/chapter', 'single' );
 		chapter_navigator();
-		?><!--<a href="whatsapp://send?text=dws">dsds</a><div class="right"><i style="padding-right:15px;" class="fa-2x btn-favorite far fa-share-square"></i><i style="padding-right:15px;"data-position="bottom" data-tooltip="Like" class="tooltipped fa-2x btn-favorite far fa-thumbs-up"></i></div>--><?php
 		global $withcomments;
 		$withcomments = 1;
 		if (comments_open()){

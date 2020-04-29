@@ -80,7 +80,7 @@ function dark_mode(){
     var root = document.documentElement;
     root.style.setProperty("--theme-color", "#265f86");
     root.style.setProperty("--text-color", "#b7bfc4");
-    root.style.setProperty("--background-color", "black");
+    root.style.setProperty("--background-color", "#121212");
     setCookie("theme","dark_mode", { expires:30, path: '/' });
 }
 function light_mode() {

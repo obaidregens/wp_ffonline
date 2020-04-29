@@ -1,5 +1,5 @@
 <?php
-wp_enqueue_script('book', get_stylesheet_directory_uri() .'/js/book.js', array('jquery'), null, true);
+wp_enqueue_script('book', get_stylesheet_directory_uri() .'/js/book.js', array('jquery','materialize_js'), null, true);
 if (current_user_can('administrator') && isset($_GET['template']) && $_GET['template'] == 'test'){
     include('single-book-test.php');
     exit();
@@ -11,18 +11,10 @@ if (current_user_can('administrator') && isset($_GET['template']) && $_GET['temp
 **/
 
 ?>
-<style>
-.btn-hover.active{
-    background-color: rgba(0,0,0,.05)!important;
-}
-.btn-hover:focus{
-    background-color: transparent !important;
-}
-</style>
 <?php
 //page_header
 get_header();
-if (isset($wp_query->query_vars['chapter']) && is_numeric($wp_query->query_vars['chapter'])){
+/**if (isset($wp_query->query_vars['chapter']) && is_numeric($wp_query->query_vars['chapter'])){
 	$chapter = new WP_Query( array(
 		'post_type'      => array( 'chapter' ),
 		'post_parent'    => $post->ID,
@@ -41,7 +33,7 @@ if (isset($wp_query->query_vars['chapter']) && is_numeric($wp_query->query_vars[
 	}
 	get_footer();
 	exit();
-}
+}**/
 record_landing();
 ?>
 <div id="primary" class="content-area">
@@ -80,8 +72,6 @@ record_landing();
                 <?php
             	echo '<h2 style="margin:0" class="page-title book-title"> <a href="' .get_permalink($post->ID). '">' . get_the_title($post->ID) . '</a></h2>';
             	echo '<h4>by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->ID)). '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->ID )).'</a></h4>';
-            	echo '<h4> Updated ' . get_the_time() . '</h4>';
-            	echo "<h4>" . get_post_meta($post->ID,'word-count')[0]. " Words</h4>";
                 ?>
               </div>
               <div class="divider" style="margin:10px 0;"></div>

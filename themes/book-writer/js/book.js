@@ -2,7 +2,7 @@ function save_collections(){
     jQuery('.progress').css('display','block');
     var switches = jQuery('input[id^=switch-]');
     var collections = [];
-    for (i = 0; i < switches.length; i++) {
+    for (let i = 0; i < switches.length; i++) {
         var collection_id = switches[i].id.replace('switch-','');
         if (switches[i].checked == true){
             collections.push(collection_id);
@@ -73,6 +73,4 @@ function favorite_this(id){
 		}
 	});
 }
-jQuery(document).ready(function(){
 jQuery('.scrollspy').scrollSpy();
-});

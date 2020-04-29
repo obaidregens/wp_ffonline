@@ -262,9 +262,10 @@ a.btn,button{
 	outline:none !important;
 }
 html {
-	font-family: sans-serif;
+	font-family: var(--font);
 	-webkit-text-size-adjust: 100%;
 	-ms-text-size-adjust: 100%;
+	color: var(--text-color);
 }
 
 body {
@@ -2536,17 +2537,6 @@ body.search-no-results .page-header {
 	padding-top: 1.75em;
 }
 
-.comment-form label {
-	color: var(--secondary-color);
-	display: block;
-	font-family: Montserrat, "Helvetica Neue", sans-serif;
-	font-size: 13px;
-	font-size: 0.8125rem;
-	letter-spacing: 0.076923077em;
-	line-height: 1.6153846154;
-	margin-bottom: 0.5384615385em;
-	text-transform: uppercase;
-}
 
 .comment-list .comment-form {
 	padding-bottom: 1.75em;
@@ -4226,16 +4216,16 @@ p > video {
  /*Hover Button */
 .btn-hover{
     background-color: rgba(255,255,255,0);
-    color: transparent !important;
-    box-shadow: none;    
+    color: transparent;
+    box-shadow: none;
 }
-.btn-hover:focus{
+.btn-hover:focus,.btn-hover.active{
     outline:none;
-    background-color: rgba(0,0,0,0.05);
-    box-shadow: none;    
+    background-color: rgba(206, 206, 206, 0.22) !important;
+    box-shadow: none;
 }
 .btn-hover:hover{
-    background-color: rgba(0,0,0,0.05);
+    background-color: rgba(206, 206, 206, 0.22) !important;
     box-shadow: none; 
 }
 .btn-hover:disabled{
@@ -4474,7 +4464,7 @@ p > video {
 	background:linear-gradient(to bottom, var(--background-color) 10px, transparent 20px);
 }
  .search-item p{
-     color:black;
+     color: var(--text-color);
      margin:12px;
  }
  .modal#searchbook,.modal#searchbook input:focus{

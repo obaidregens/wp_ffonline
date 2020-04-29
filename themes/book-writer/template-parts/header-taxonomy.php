@@ -6,7 +6,6 @@ else{
 	?>
 	<div class="book-tags"><div>
 	<?php
-	echo '<h4> Updated ' . get_the_time() . '</h4>';
 }
 $meta_query = array(
 	array(
@@ -19,6 +18,7 @@ $collections = get_terms(array(
     'taxonomy' => 'collection',
     'object_ids' => array($post->ID),
 ));
+echo '<span class="each-tag icon-tag"><i class="fas fa-clock"></i>' . get_the_time() . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-book-open"></i>' . get_post_meta($post->ID,'word-count',true) . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-heart"></i>' . count(get_stats_of('book_fav',$post->ID)) . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-list-ul"></i>' . count($collections) . '</span> ';

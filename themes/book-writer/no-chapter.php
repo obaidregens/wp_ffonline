@@ -16,9 +16,7 @@ get_header(); ?>
             	</div><!-- .page-header -->
             </section><!-- .error-404 -->
         </main><!-- .site-main -->
-		<?php get_sidebar( 'content-bottom' ); ?>
 
 	</div><!-- .content-area -->
 
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

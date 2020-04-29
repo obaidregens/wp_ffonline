@@ -1,4 +1,7 @@
 <?php
+remove_action('wp_head','wp_shortlink_wp_head');
+remove_action('wp_head','rel_canonical');
+
 function disable_json_api () {
 
   // Filters for WP-API version 1.x
@@ -399,23 +402,6 @@ function meta_desc(){
 		<meta name="Description" content="<?php echo $post->post_excerpt; ?>">
 <?php }
 }
-//Chapter Title
-add_filter( 'pre_get_document_title', function( $title )
-	{
-		if( is_singular("chapter"))
-		{
-			global $post;
-			return 'Chapter ' . get_post_meta($post->ID,'chapter_order',true) . ' - ' . get_post($post->post_parent)->post_title; 
-		}
-		if( is_singular("book"))
-		{
-			global $post;
-			return $post->post_title . ' - by ' . get_the_author_meta('display_name',$post->post_author); 
-		}
-		// Return my custom title
-		return $title;
-	}
-	, 11, 1 );
 
 ////User IP column
 function add_users_ip_column($column) {
@@ -577,7 +563,7 @@ function get_chapters_query()
 
 function time_format_change($time)
 {
-	return human_time_diff(get_post_modified_time('U')) . " ago";
+	return human_time_diff(get_post_modified_time('U'));
 }
 add_filter( 'get_date', "time_format_change", 100);
 add_filter( 'get_the_date', "time_format_change", 100);

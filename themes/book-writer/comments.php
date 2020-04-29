@@ -34,7 +34,7 @@ $book = get_post($post->post_parent);
 						<?php if (get_current_user_id() == $comment->user_id) { $more = 1; ?><li><a onclick="delete_comment(<?php echo $comment->comment_ID; ?>)"><i class="fas fa-trash"></i>Delete</a></li><?php } ?>
 					</ul>
 					<footer style="padding-bottom: 8px;">
-						<b class="comment-author"><?php echo $comment_author->display_name; if($comment_author->ID == $post->post_author){echo '<label> (Book Author)</label>';} ?></b>
+						<span class="comment-author"><?php echo $comment_author->display_name; if($comment_author->ID == $post->post_author){echo '<label> (Book Author)</label>';} ?></span>
 						<?php if ($more == 1){ ?>
 						<a class="right btn-hover btn-floating dropdown-trigger" data-target="more-<?php echo $comment->comment_ID; ?>"><i style="font-size:1rem;" class="fas fa-ellipsis-v"></i></a>
 						<?php } ?>

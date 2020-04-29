@@ -2632,7 +2632,7 @@ a {
 }
 
 /* 2dp elevation modified*/
-.z-depth-1,  .card-panel, .card, .toast, .btn, .btn-large, .btn-small, .btn-floating, .dropdown-content, .collapsible, .sidenav {
+.z-depth-1,  .card-panel, .card, .toast, .dropdown-content, .collapsible {
   -webkit-box-shadow: var(--text-color) 0px 0px 3px;
           box-shadow: var(--text-color) 0px 0px 3px;
 }
@@ -2661,7 +2661,7 @@ a {
 }
 
 /* 24dp elevation */
-.z-depth-5, .modal {
+.z-depth-5{
   -webkit-box-shadow: var(--text-color) 0px 0px 10px;
           box-shadow: var(--text-color) 0px 0px 10px;
 }
@@ -3000,7 +3000,7 @@ table.highlight > tbody > tr {
 }
 
 table.highlight > tbody > tr:hover {
-  background-color: rgba(242, 242, 242, 0.5);
+  background-color: rgba(206,206,206,.22);
 }
 
 table.centered thead tr th, table.centered tbody tr td {
@@ -3156,7 +3156,7 @@ td, th {
 }
 
 .collection a.collection-item:not(.active):hover {
-  background-color: #ddd;
+  background-color: rgba(206, 206, 206, 0.22);
 }
 
 .collection.with-header .collection-header {
@@ -5696,8 +5696,8 @@ body.keyboard-focused .dropdown-content li:focus {
   max-height: 70%;
   width: 55%;
   margin: auto;
+  border-radius:5px;
   overflow-y: auto;
-  border-radius: 2px;
   will-change: top, opacity;
 }
 .modal-large{
@@ -5827,7 +5827,7 @@ body.keyboard-focused .dropdown-content li:focus {
 }
 
 .keyboard-focused .collapsible-header:focus {
-  background-color: #eee;
+  background-color: transparent;
 }
 
 .collapsible-body {

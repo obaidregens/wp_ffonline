@@ -19,9 +19,6 @@
 #dashboard-sidenav{
     width: var(--sidebar-size);
 }
-li.selected{
-    background-color:rgba(0,0,0,.05)
-}
 #wpadminbar{
 	display:none !important;
 }
@@ -142,11 +139,13 @@ i.fas.offline{
     color:grey;
 }
 /*Chat Window Scroller */
+.chat-window{
+    overscroll-behavior:contain;
+}
 .chat-window::-webkit-scrollbar {
 	width: 7px;
 	background-color: var(--background-color);
 }
-
 .chat-window::-webkit-scrollbar-thumb {
   border-radius: 100px;
   background: var(--light-theme-color);

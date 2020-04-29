@@ -1,5 +1,5 @@
-<div id="search-settings" style="display:none;position:absolute;top:0;left:0;width:100%;background-color:var(--background-color);z-index:1000">
-    <div id="custom_overlay" onclick="close_custom_modal();" style="display:none;z-index: 1001;opacity: 0.5;position: fixed;width: 100%;height: 100%;left: 0;top: 0;background-color: var(--text-color);"></div>
+<div id="search-settings" style="border-radius:5px;display:none;position:absolute;top:0;left:0;width:100%;background-color:var(--background-color);z-index:1000">
+    <div id="custom_overlay" onclick="close_custom_modal();" style="display:none;z-index: 1001;opacity: 0.5;position: fixed;width: 100%;height: 100%;left: 0;top: 0;background-color: black;"></div>
     <a style="position:fixed;top:0;right:0;" onclick="search_settings('close');" class="btn-hover btn-floating btn-small waves-effect waves-light"><i class="fas fa-times"></i></a>
 	<form name="search" class="col s12">
 		<div style="padding:24px;">

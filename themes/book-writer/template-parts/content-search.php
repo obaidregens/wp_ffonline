@@ -65,7 +65,6 @@ record_impressions();
 		} ?>
 		</p>
 	</div>
-	<?php echo '<h4 class="update-time"> Updated ' . get_the_time() . '</h4>'; ?>
 	</div>
 	<?php get_template_part( 'template-parts/header', 'taxonomy' ); ?>
 	<?php if ( 'book' === get_post_type() ) : ?>

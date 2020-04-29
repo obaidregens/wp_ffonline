@@ -5,49 +5,56 @@ if( isset($_POST['ajax'])){
     if (verify_reCAPTCHA($_POST['reCAPTCHA'])['success'] != true){
         echo '8';exit();
     }
-    global $withcomments;
-    $withcomments = 1;
-    if (! comments_open()){
+    $post = get_post($_POST['chapter_id']);
+    if (! $post){
         echo '2';
         exit();
     }
-    if (! is_user_logged_in() && get_post_meta($book->ID,'anon_review',true) != 'true'){
-        echo 3;
+    global $withcomments;
+    $withcomments = 1;
+    if (! comments_open($post->ID)){
+        echo '2';
+        exit();
+    }
+    if (! is_user_logged_in() && get_post_meta($post->post_parent,'anon_review',true) != 'true'){
+        echo '3';
         exit();
     }
     if ($_POST['action'] == 'insert'){
         $comment_id = wp_insert_comment(array(
             'user_id'           => get_current_user_id(),
-            'comment_post_ID'   => $_POST['id'],
+            'comment_post_ID'   => $post->ID,
             'comment_content'   => htmlspecialchars($_POST['comment']),
             'comment_author_IP' => $_SERVER['REMOTE_ADDR']
         ));  
-		$post = get_post($_POST['id']);
 		add_notification('comment',$comment_id);
     }
     else if ($_POST['action'] == 'delete'){
-        if (! get_current_user_id() == get_comment($_POST['id'])->user_id){
-            echo 2;
+        $comment = get_comment($_POST['id']);
+        if (! $comment){
+            echo '2';
             exit();
         }
-		$post = get_post(get_comment($_POST['id'])->comment_post_ID);
-        wp_delete_comment($_POST['id']);
+        if (get_current_user_id() != $comment->user_id){
+            echo '2';
+            exit();
+        }
+        wp_delete_comment($comment->comment_ID);
     }
     else if ($_POST['action'] == 'reply'){
-		$comment = get_comment($_POST['id']);
-		if ($comment == null){
-			echo 2;
-			exit();
-		}
-		$post = get_post($comment->comment_post_ID);
+        $comment = get_comment($_POST['id']);
+        if (! $comment){
+            echo '2';
+            exit();
+        }
         if ($post->post_author != get_current_user_id()){
-			echo 4;
+			echo '4';
 			exit();
 		}
 		$comment_id = wp_insert_comment(array(
             'user_id'           => get_current_user_id(),
             'comment_post_ID'   => $post->ID,
-			'comment_parent'	=> $_POST['id'],
+			'comment_parent'	=> $comment->comment_ID,
             'comment_content'   => htmlspecialchars($_POST['comment']),
             'comment_author_IP' => $_SERVER['REMOTE_ADDR']
         ));

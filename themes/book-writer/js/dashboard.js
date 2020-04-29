@@ -47,11 +47,8 @@ function load_page(page,extra = null){
 		data: data,
 		success: function(response){
             jQuery("#page-main").html(response);
-            var children = jQuery('#dashboard-sidenav').children();
-            for (var i = 0; i < children.length; i++) {
-                jQuery(children[i]).removeClass("selected");
-            }
-			jQuery("." + page + "_li").addClass("selected");
+            jQuery('#dashboard-sidenav').children().removeClass("active");
+			jQuery("." + page + "_li").addClass("active");
 			jQuery('.collapsible').collapsible();
             jQuery('.modal').modal();
 			M.updateTextFields();
