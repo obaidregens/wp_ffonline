@@ -1,4 +1,6 @@
 <?php
+
+
 remove_action('wp_head','wp_shortlink_wp_head');
 remove_action('wp_head','rel_canonical');
 
@@ -394,7 +396,7 @@ function working_page($coming_soon = false,$part = false,$link = null,$time = nu
 }
 //Meta Descriptions, Function called in header
 function meta_desc(){
-	if (is_home() || is_page('search')) { ?>
+	if (is_home() || is_page('search') || is_page('read')) { ?>
 		<meta name="Description" content="The best collection of fanfics where readers & writers gather to share their love of fanfiction.">
 <?php } else if ( is_singular("chapter")){ global $post; ?>
 		<meta name="Description" content="<?php echo get_post($post->post_parent)->post_excerpt; ?>">
@@ -402,7 +404,7 @@ function meta_desc(){
 		<meta name="Description" content="<?php echo $post->post_excerpt; ?>">
 <?php }
 }
-
+add_action('wp_head','meta_desc',1);
 ////User IP column
 function add_users_ip_column($column) {
 	$column['user_ip'] = 'IP Address';

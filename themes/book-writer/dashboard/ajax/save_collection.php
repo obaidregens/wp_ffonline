@@ -5,7 +5,7 @@ require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
 if( isset($_POST['ajax']) && isset($_POST['collection']) ) {
     if ($_POST['public_switch'] != 'Public'){
         $_POST['public_switch'] == 'Private';
-        $slug = bin2hex(random_bytes(5));
+        $slug = bin2hex(random_bytes(7));
     }
     else{
         $slug = $_POST['name'];

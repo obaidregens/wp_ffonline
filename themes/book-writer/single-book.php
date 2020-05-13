@@ -53,7 +53,7 @@ record_landing();
     			$eye = '';
     		}
             ?>
-          <div class="row" style="z-index:10;background-color:#ddd;position:sticky;top:0;margin:0 0 15px 0;width:100%;">
+          <div class="row" style="white-space:nowrap;overflow:auto;z-index:10;background-color:var(--background-accent);position:sticky;top:0;margin:0 0 15px 0;width:100%;">
             <div class="col s12" style="padding:0;">
               <ul style="margin:0">
                 <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#about">About</a>

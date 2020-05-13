@@ -28,10 +28,10 @@ if (!empty(preg_replace('/\s+/', '', get_post_meta($post->ID,'pre-chapter_notes'
 		    $para_num = 0;
 		    foreach($content as $para){
 		        $para_num += 1;
-		        ?><div id="p-<?php echo $para_num; ?>" style="margin-bottom:0;" class="row"><?php
+		        ?><div id="p-<?php echo $para_num; ?>" style="margin-bottom:0;position:relative;" class="row"><?php
 		        $para_extra = str_replace('<p','',explode('>',$para)[0]);
 		        $para = $para . '</p>';
-				$para = preg_replace('~<p[^>]*>~', '<p style="margin-bottom:0;"' . $para_extra . ' class="col s11">', $para);
+				$para = preg_replace('~<p[^>]*>~', '<p style="margin-bottom:0;"' . $para_extra . ' class="col s12">', $para);
 		        echo $para;
 		        if (chapter_bookmark_exists($post->ID,$para_num)){
 		            $active = ' active ';
@@ -39,7 +39,7 @@ if (!empty(preg_replace('/\s+/', '', get_post_meta($post->ID,'pre-chapter_notes'
 		        else{
 		            $active = '';
 		        }
-		        echo '<div class="col s1"><div class="bookmark-wrapper"><i onclick="bookmark_this(' . $para_num . ',\'' . $post->ID . '\')" class="' . $active . 'btn-bookmark btn-favorite far fa-bookmark"></i></div></div>';
+		        echo '<div style="position:absolute;top:0;right:0;"><div class="bookmark-wrapper"><i onclick="bookmark_this(' . $para_num . ',\'' . $post->ID . '\')" class="' . $active . 'btn-bookmark btn-favorite far fa-bookmark"></i></div></div>';
 		        ?></div><?php
 		    }
 		?>

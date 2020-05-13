@@ -62,7 +62,6 @@
 
 //Find Args from Url
 $args = unpack_search($_GET);
-
 //Max Count
 $max_count = max_search_words($args);
 ?> <span id="max_count" style="display:none;"><?php echo $max_count; ?></span> <?php

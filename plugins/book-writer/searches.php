@@ -262,6 +262,7 @@ function pack_search($unpacked){
 	}
 
 	//Search Terms
+	//'s' parameter not in use, kept for precaution
 	if (isset($unpacked['s'])){
 		$pack['search'] = $unpacked['s'];
 	}
@@ -374,7 +375,27 @@ function unpack_search($packed){
 			'post__not_in'	 		 => get_stats_of('user_hidden',get_current_user_id()),
 		);
 		if (isset($packed['search'])){
-			$args['s'] = str_replace(" ","+",$packed['search']);
+			$search = $packed['search'];
+			$search_sql = '%' . $search . '%';
+			global $wpdb;
+			$tablename = $wpdb->prefix . "posts";
+			$sql = $wpdb->prepare( "SELECT ID FROM wp_posts WHERE post_title LIKE %s OR post_excerpt LIKE %s",array($search_sql,$search_sql) );
+			$results = $wpdb->get_results( $sql ,ARRAY_A );
+			$ids = [];
+			foreach($results as $result){
+				$ids[] = $result['ID'];
+			}
+			if (isset($args['post__in'])){
+				$args['post__in'] = array_merge($args['post__in'],$ids);
+			}
+			else{
+				$args['post__in'] = $ids;
+			}
+			if (empty($ids)){
+				$args['post__in'] = array(0);
+			}
+			$args['search_ids'] = $ids;
+			$args['search_key'] = $search;
 		}
 		if (isset($packed['page'])){
 			$args['paged'] = intval($packed['page']);

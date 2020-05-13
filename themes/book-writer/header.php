@@ -28,7 +28,6 @@ if (! headers_sent() && ! isset($_SESSION) ){
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php meta_desc(); ?>
 	<?php if ( is_singular() && pings_open( get_queried_object() ) ) : ?>
 	<?php endif; ?>
     <link rel="dns-prefetch" href="//use.fontawesome.com">
@@ -124,7 +123,7 @@ if (! headers_sent() && ! isset($_SESSION) ){
 				display:inline;
 			}
 			.nav-content {
-				background-color: #212020;
+				background-color: var(--background-accent);
 				height:40px;
 				text-align:center;
 				position:fixed;
@@ -132,6 +131,9 @@ if (! headers_sent() && ! isset($_SESSION) ){
 				left:0;
 				z-index:11;
 				width:100%;
+			}
+			.nav-content a{
+				color: var(--text-color);
 			}
 			html{
 				margin-bottom: 40px;

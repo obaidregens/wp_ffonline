@@ -110,38 +110,24 @@ function run_at_activation(){
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
-include('endpoints.php');
-
-include('book-validation.php');
-
-include('book-fields.php');
-
-include('misc.php');
-
-include('admin-columns.php');
-
-include ('upload-book-menu.php');
-
-include ('chapter-navigator.php');
-
-include ('cpt.php');
-
-include ('wp_dropdown_posts.php');
-
-include('chapter-validation.php');
-
-include('chapter-fields.php');
-
-include('write/edit-book.php');
-
-include('write/new-chapter.php');
-
-include('write/edit-chapter.php');
-
-include('write/order-book.php');
-
-include('custom-login.php');
-
-include('searches.php');
-
-include('custom_cache.php');
+$includes = array(
+	'endpoints',
+	'book-validation',
+	'book-fields',
+	'misc',
+	'admin-columns',
+	'upload-book-menu',
+	'chapter-navigator',
+	'cpt',
+	'wp_dropdown_posts',
+	'chapter-validation',
+	'chapter-fields',
+	'custom-login',
+	'searches',
+	'custom_cache',
+	'data',
+	'validation'
+);
+foreach($includes as $include){
+	include ($include . '.php');
+}

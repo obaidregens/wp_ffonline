@@ -1,9 +1,11 @@
 <?php
 /* Template Name: Dashboard */ 
-?>
-<?php
+
 //page_header
 login_only();
+wp_enqueue_script( 'inputs_js', get_stylesheet_directory_uri() .'/components/inputs.js',array('jquery'));
+wp_enqueue_script('helpers', get_stylesheet_directory_uri() .'/js/helpers.js',array('jquery'));
+wp_enqueue_script('draggable','https://cdn.jsdelivr.net/npm/@shopify/draggable@1.0.0-beta.9/lib/draggable.bundle.js');
 wp_enqueue_style( 'dashboard_css', get_stylesheet_directory_uri() .'/css/dashboard.css');
 get_header();
 ?>

@@ -27,11 +27,9 @@ record_impressions();
 	<header>
 		<?php
 		echo '<h2 class="entry-title" style="font-weight:500;display: inline-block;margin-bottom:0em;"><a href="' . get_permalink() . '" rel="bookmark">';
-        if( $wp_query->query_vars['s'] != ''){
+        if( isset($wp_query->query_vars['search_key']) && $wp_query->query_vars['search_key'] != ''){
             $title = $post->post_title;
-            foreach($wp_query->query_vars['search_terms'] as $term){
-				$title = preg_replace('/(' . $term . ')+/i','<mark>$1</mark>',$title);
-            }
+			$title = preg_replace('/(' . $wp_query->query_vars['search_key'] . ')+/i','<mark>$1</mark>',$title);
             echo $title;
         }
         else{
@@ -52,11 +50,9 @@ record_impressions();
 	<div class="search-summary">
 		<p>
 		<?php if (preg_replace('/\s+/', '',$post->post_excerpt) != ''){
-            if( $wp_query->query_vars['s'] != ''){
+            if( isset($wp_query->query_vars['search_key']) && $wp_query->query_vars['search_key'] != ''){
                 $excerpt = $post->post_excerpt;
-                foreach($wp_query->query_vars['search_terms'] as $term){
-					$excerpt = preg_replace('/(' . $term . ')+/i','<mark>$1</mark>',$excerpt);
-                }
+				$excerpt = preg_replace('/(' . $wp_query->query_vars['search_key'] . ')+/i','<mark>$1</mark>',$excerpt);
                 echo $excerpt;
             }
             else{
@@ -69,7 +65,7 @@ record_impressions();
 	<?php get_template_part( 'template-parts/header', 'taxonomy' ); ?>
 	<?php if ( 'book' === get_post_type() ) : ?>
 
-		<footer>
+		<!--<footer>
 			<?php
 				//edit_post_link(
 					//sprintf(
@@ -81,7 +77,7 @@ record_impressions();
 					//'</span>'
 				//);
 			?>
-		</footer><!-- .entry-footer -->
+		</footer>--><!-- .entry-footer -->
 
 
 	<?php endif; ?>

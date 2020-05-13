@@ -15,7 +15,7 @@ function wpa_author_endpoints(){
     add_rewrite_endpoint( 'updates', EP_AUTHORS);
     add_rewrite_endpoint( 'favorites', EP_AUTHORS);
     add_rewrite_endpoint( 'collection', EP_AUTHORS);
-    $parms = array('write','profile','stats','edit-chapter','messages','chat','settings','edit-book','bookmarks','collections');
+    $parms = array('write','profile','stats','messages','chat','settings','bookmarks','collections');
     foreach ($parms as $key => $value) {
         add_rewrite_endpoint( $value, EP_PAGES,false);
     }
