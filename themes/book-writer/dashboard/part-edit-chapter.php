@@ -169,7 +169,8 @@
 	</form>
 	<script type = "text/javascript">
 		jQuery('input[type="checkbox"][on_label][off_label]').trigger('change');
-		jQuery("#chapter_content").focus(function(){
+		jQuery(document).ready(function(){
+			jQuery("#chapter_content").focus();
 			jQuery(this).siblings('.toolbar').children('button[text_action=justifyLeft]').click();
 			document.execCommand('formatblock',false,'p');
 		});
@@ -233,7 +234,6 @@
         });
         jQuery(".editorWrap button").click(function() {
             var editor_elem = jQuery(this).parents('.editorWrap')[0];
-            jQuery(editor_elem).children('.editor').focus();
             var action = jQuery(this).attr('text_action');
             if (action == 'fullscreen'){
                 if (document.fullscreenElement){
