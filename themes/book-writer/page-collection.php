@@ -7,11 +7,17 @@
  */
 get_header();
 $args = array(
-    'taxonomy' => 'collection',
-    'hide_empty' => true,
-    'meta_key' => 'public_collection',
-    'meta_value' => 'Public',
-    
+    'taxonomy' 		=> 'collection',
+    'hide_empty' 	=> true,
+	'meta_query' 	=> array(
+		'relation' 		=> 'AND',
+		array(
+			'key'     	=> 'public_collection',
+			'value'   	=> 'Public',
+			'compare' 	=> '=',
+			'type'    	=> 'CHAR',
+		),
+	),
 );
 if (isset($_GET['sortby']) && $_GET['sortby']){
 	if ($_GET['sortby'] == 'most-books'){
@@ -23,9 +29,9 @@ if (isset($_GET['sortby']) && $_GET['sortby']){
 		$args['order'] = 'ASC';		
 	}
 	else if ($_GET['sortby'] == 'newest'){
-		$args['meta_key'] = 'time_created';
+		$args['meta_key'] = 'time_modified';
 		$args['orderby'] = 'meta_value_num';
-		$args['order'] = 'DESC';		
+		$args['order'] = 'DESC';
 	}
 }
 $collections = get_terms($args);

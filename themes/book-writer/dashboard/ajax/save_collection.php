@@ -34,6 +34,7 @@ if( isset($_POST['ajax']) && isset($_POST['collection']) ) {
                 wp_set_post_terms($book_id,array(),'collection');
             }
         }
+        update_term_meta($_POST['collection'],'time_modified',current_time('timestamp'));
         if (is_wp_error($return)){
             echo 0;
             exit();
@@ -49,6 +50,7 @@ if( isset($_POST['ajax']) && isset($_POST['collection']) ) {
         $term_id = $term_id['term_id'];
         update_term_meta($term_id,'author',get_current_user_id());
         update_term_meta($term_id,'time_created',current_time('timestamp'));
+        update_term_meta($term_id,'time_modified',current_time('timestamp'));
         update_term_meta($term_id,'public_collection',$_POST['public_switch']);
         echo 2;
     }
