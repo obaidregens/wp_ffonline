@@ -123,6 +123,7 @@ function run_at_activation(){
 	dbDelta( $searches_table );
 	dbDelta( $searchparams_table );
 	dbDelta( $custom_cache_table );
+	dbDelta( $custom_stats_table );
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 

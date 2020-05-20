@@ -2,6 +2,11 @@
 define('WP_USE_THEMES', false);
 require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
 
+global $vfs;
+if (!isset($vfs)){
+	$vfs = vfs();
+}
+
 if( isset($_POST['ajax'])) {
 	if(! headers_sent() && ! isset($_SESSION) ){ 
 		session_start(); 
