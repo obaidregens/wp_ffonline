@@ -6,7 +6,9 @@
  * @subpackage Twenty_Sixteen
  * @since Twenty Sixteen 1.0
  */
-record_impressions();
+global $vfs;
+log_stats('impression','book',$post->ID,$vfs);
+
 ?>
 <style>
 	.entry-title{

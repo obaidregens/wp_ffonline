@@ -6,6 +6,9 @@
  *
  */
 $collection_id = get_queried_object()->term_id;
+global $vfs;
+$vfs = vfs();
+log_stats('view','collection',$collection_id,$vfs);
 $collection_author = get_userdata(get_term_meta($collection_id,'author',true));
 if (get_term_meta($collection_id,'public_collection',true) == 'Private' && get_current_user_id() != $collection_author->ID){
     global $wp_query;

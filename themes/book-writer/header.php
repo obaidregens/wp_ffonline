@@ -11,6 +11,10 @@
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
+global $vfs;
+if (!isset($vfs)){
+	$vfs = vfs();
+}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">

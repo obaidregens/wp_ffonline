@@ -1,6 +1,7 @@
 <?php
+global $vfs;
+log_stats('view','chapter',$post->ID,$vfs);
 wp_enqueue_script('chapter', get_stylesheet_directory_uri() .'/js/chapter.js', array('jquery'), null, true);
-record_landing(); 
 ?>
 <div id="define" style="box-shadow:0 24px 38px 3px var(--text-color), 0 35px 46px 8px rgba(0,0,0,.32), 0 11px 15px -7px rgba(0,0,0,.2);display:none;margin:0;width: 100%;height: fit-content;position: fixed;bottom: 0;padding: 10px;left: 0;border-radius: 5px 5px 0px 0px;color: var(--text-color);background-color: var(--background-color);z-index: 1000;" class="row">
 	<a data-target="define-full" class="modal-trigger btn-hover btn-floating right"><i class="fas fa-angle-up"></i></a>

@@ -1,4 +1,9 @@
 <?php
+
+global $vfs;
+$vfs = vfs();
+log_stats('view','book',$post->ID,$vfs);
+
 wp_enqueue_script('book', get_stylesheet_directory_uri() .'/js/book.js', array('jquery','materialize_js'), null, true);
 if (current_user_can('administrator') && isset($_GET['template']) && $_GET['template'] == 'test'){
     include('single-book-test.php');
@@ -14,27 +19,6 @@ if (current_user_can('administrator') && isset($_GET['template']) && $_GET['temp
 <?php
 //page_header
 get_header();
-/**if (isset($wp_query->query_vars['chapter']) && is_numeric($wp_query->query_vars['chapter'])){
-	$chapter = new WP_Query( array(
-		'post_type'      => array( 'chapter' ),
-		'post_parent'    => $post->ID,
-		'meta_key'       => 'chapter_order',
-		'meta_value' => intval($wp_query->query_vars['chapter']),
-		'posts_per_page' => 1,
-	));
-	if ($chapter->found_posts != 0){
-    	$post = $chapter->posts[0];
-    	$wp_query = $chapter;
-    	get_template_part( 'template-parts/content', 'chapter' );
-    	wp_reset_postdata();
-	}
-	else{
-	    get_template_part('no-chapter');
-	}
-	get_footer();
-	exit();
-}**/
-record_landing();
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">

@@ -101,6 +101,22 @@ function run_at_activation(){
 	  PRIMARY KEY (`ID`),
 	  KEY field (field),
 	) $charset_collate;";
+
+	//Add Stats Table
+	$custom_stats_table_name = 'custom_stats';
+	$custom_stats_table = "CREATE TABLE $custom_stats_table_name (
+	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+	`cookie_id` VARCHAR(100) NOT NULL ,
+	`timestamp` BIGINT NOT NULL ,
+	`stat` VARCHAR(50) NOT NULL ,
+	`type` VARCHAR(50) NOT NULL ,
+	`type_id` BIGINT NOT NULL ,
+	`user_id` BIGINT NOT NULL ,
+	`IP` VARCHAR(100) NOT NULL ,
+	`referrer_host` VARCHAR(150) NULL ,
+	`referrer_path` VARCHAR(300) NULL ,
+	PRIMARY KEY (`ID`)
+	) $charset_collate;";
 	
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -126,7 +142,8 @@ $includes = array(
 	'searches',
 	'custom_cache',
 	'data',
-	'validation'
+	'validation',
+	'stats'
 );
 foreach($includes as $include){
 	include ($include . '.php');

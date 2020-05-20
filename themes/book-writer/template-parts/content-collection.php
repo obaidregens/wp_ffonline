@@ -7,6 +7,8 @@
  * @since Twenty Sixteen 1.0
  */
 global $collection;
+global $vfs;
+log_stats('impression','collection',$collection->term_id,$vfs);
 $collection_author = get_userdata(get_term_meta($collection->term_id,'author',true));
 $collection_time = get_term_meta($collection->term_id,'time_created',true);
 ?>

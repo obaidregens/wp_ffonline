@@ -17,6 +17,11 @@
  */
 
 global $wp;
+
+global $vfs;
+$vfs = vfs();
+log_stats('view','author',$author,$vfs);
+
 get_header();
 wp_enqueue_script('updates__js', get_stylesheet_directory_uri() .'/js/updates.js', array('jquery'), null, true);
 wp_enqueue_script('book_options_js', get_stylesheet_directory_uri() .'/js/book-options.js', array('jquery'), null, true);
