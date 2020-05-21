@@ -5,8 +5,11 @@
  * Search page
  *
  */
+global $js_bundle;
+$js_bundle = global_bundle('author_updates');
+$js_bundle->add('updates');
+$js_bundle->enqueue();
 get_header();
-wp_enqueue_script('updates__js', get_stylesheet_directory_uri() .'/js/updates.js', array('jquery'), null, true);
 $author_obj = get_user_by('ID',$author);
 ?>
 <div id="primary" class="content-area">

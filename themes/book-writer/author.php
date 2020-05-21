@@ -21,10 +21,12 @@ global $wp;
 global $vfs;
 $vfs = vfs();
 log_stats('view','author',$author,$vfs);
-
+global $js_bundle;
+$js_bundle = global_bundle('author');
+$js_bundle->add('updates');
+$js_bundle->add('book-options');
+$js_bundle->enqueue();
 get_header();
-wp_enqueue_script('updates__js', get_stylesheet_directory_uri() .'/js/updates.js', array('jquery'), null, true);
-wp_enqueue_script('book_options_js', get_stylesheet_directory_uri() .'/js/book-options.js', array('jquery'), null, true);
 $author_base = get_author_posts_url($author) . '/';
 ?>
 

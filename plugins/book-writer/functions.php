@@ -144,7 +144,8 @@ $includes = array(
 	'custom_cache',
 	'data',
 	'validation',
-	'stats'
+	'stats',
+	'bundles'
 );
 foreach($includes as $include){
 	include ($include . '.php');

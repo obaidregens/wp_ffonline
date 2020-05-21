@@ -1,8 +1,37 @@
 <?php
 
+add_action( 'wp_print_styles', 'wps_deregister_styles', 100 );
+function wps_deregister_styles() {
+	wp_dequeue_style( 'wp-block-library' );
+	wp_dequeue_style( 'wp-block-library-theme' );
+}
+function remove_dns_prefetch( $hints, $relation_type ) {
+    if ( 'dns-prefetch' === $relation_type ) {
+        return array();
+    }
 
-remove_action('wp_head','wp_shortlink_wp_head');
-remove_action('wp_head','rel_canonical');
+    return $hints;
+}
+
+add_filter( 'wp_resource_hints', 'remove_dns_prefetch', 10, 2 );
+
+// Remove default wp packages
+remove_action( 'wp_default_scripts', 'wp_default_scripts' );
+remove_action( 'wp_default_scripts', 'wp_default_packages' );
+
+// REMOVE WP EMOJI
+
+remove_action('wp_head', 'print_emoji_detection_script', 7);
+remove_action('wp_print_styles', 'print_emoji_styles');
+
+remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+remove_action( 'admin_print_styles', 'print_emoji_styles' );
+
+remove_action( 'embed_head', 'print_emoji_detection_script' );
+
+remove_action( 'wp_before_admin_bar_render', 'wp_customize_support_script' );
+remove_action( 'wp_head', 'wp_shortlink_wp_head' );
+remove_action( 'wp_head', 'rel_canonical' );
 
 function disable_json_api () {
 
@@ -525,15 +554,8 @@ function hide_menu_author()
 		<?php
 	}
 }
-function hide_admin_bar_from_front_end(){
-	if (current_user_can('administrator') == false) {
-		return false;
-	}
-	else{
-		return true;
-	}
-}
-add_filter( 'show_admin_bar', 'hide_admin_bar_from_front_end' );
+show_admin_bar( false );
+
 
 function get_chapters_query()
 {
@@ -679,53 +701,3 @@ function posts_for_current_author($query) {
 }
 add_filter('pre_get_posts', 'posts_for_current_author');
 
-
-// add links/menus to the admin bar
-function mytheme_admin_bar_render() {
-	global $wp_admin_bar;
-	$wp_admin_bar->add_menu( array(
-		'parent' => 'new-content', // use 'false' for a root menu, or pass the ID of the parent menu
-		'id' => 'new_media', // link ID, defaults to a sanitized title value
-		'title' => __('Media'), // link title
-		'href' => admin_url( 'media-new.php'), // name of file
-		'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
-	));
-	$my_account = $wp_admin_bar->get_node('my-account');
-	$newtext = str_replace( 'Howdy,', 'Hi,', $my_account->title );
-	$wp_admin_bar->add_node( array(
-	'id' => 'my-account',
-	'title' => $newtext,
-	) );
-	if (current_user_can('author')){
-		$wp_admin_bar->add_node(array(
-		'id' => 'new-content',
-		'title' => '<span class="ab-icon"></span><span class="ab-label">'.__( 'Write').'</span>',
-		'href' => '',
-		'meta' => array(
-		'target' => '_self',
-		)));
-		$wp_admin_bar->add_menu( array(
-		'parent' => 'new-content', // use 'false' for a root menu, or pass the ID of the parent menu
-		'id' => 'new-book', // link ID, defaults to a sanitized title value
-		'title' => __('Book'), // link title
-		'href' => admin_url( 'edit.php?post_type=book'), // name of file
-			'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
-		));
-		$wp_admin_bar->add_menu( array(
-		'parent' => 'new-content', // use 'false' for a root menu, or pass the ID of the parent menu
-		'id' => 'new-chapter', // link ID, defaults to a sanitized title value
-		'title' => __('Chapter'), // link title
-		'href' => admin_url( 'edit.php?post_type=chapter'), // name of file
-			'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
-		));
-		$wp_admin_bar->add_menu( array(
-		'parent' => 'new-content', // use 'false' for a root menu, or pass the ID of the parent menu
-		'id' => 'upload-books', // link ID, defaults to a sanitized title value
-		'title' => __('Upload Books'), // link title
-		'href' => admin_url( 'admin.php?page=upload-books.php'), // name of file
-			'meta' => false // array of any of the following options: array( 'html' => '', 'class' => '', 'onclick' => '', target => '', title => '' );
-		));
-		
-	}
-}
-//add_action( 'wp_before_admin_bar_render', 'mytheme_admin_bar_render' );

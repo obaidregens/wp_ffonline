@@ -8,9 +8,12 @@
  * @subpackage Twenty_Sixteen
  * @since Twenty Sixteen 1.0
  */
+
+
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
+
 global $vfs;
 if (!isset($vfs)){
 	$vfs = vfs();
@@ -19,213 +22,12 @@ if (!isset($vfs)){
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">
 <head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-153515447-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
-
-		gtag('config', 'UA-153515447-1');
-	</script>
-
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<?php if ( is_singular() && pings_open( get_queried_object() ) ) : ?>
-	<?php endif; ?>
-    <link rel="dns-prefetch" href="//use.fontawesome.com">
 	<?php wp_head(); ?>
-      <!--Import materialize.css in functions.php-->
-	  <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-
-	  <script>
-		  function recaptchaOnload(){
-			  if (document.getElementById('reCAPTCHA_div')){
-				  grecaptcha.render("reCAPTCHA_div", {
-					  sitekey: '6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth',
-				  });				  
-			  }
-		  }
-	  </script>
 </head>
-	<style>
-		#share_modal .share_title{
-			margin-bottom:20px;
-		}
-		#share_modal .book_description{
-			margin:0;
-		}
-		#share_modal .book_box{
-			margin-bottom:15px;
-		}
-		.nav-content{
-			display:block;
-			text-align:right;
-			width:auto;
-			overflow:hidden;
-		}
-		.nav-content > li{
-			display:inline-block;
-			margin: 5px;
-		}
-		.nav-content > li > a{
-			padding:10px;
-		}
-		.nav-logo{
-			display:block;
-			float:left;
-			width:fit-content;
-		}
-		.home-desc{
-			float:left;
-			width:65%;
-			max-width:750px;
-			margin-right:5%;
-		}
-		.home-tags{
-			width:auto;
-			overflow:hidden;
-		}
-		.each-tag.icon-tag{
-			margin-right:10px;
-			color:var(--theme-color);
-		}
-		.each-tag.icon-tag i{
-			margin-right:5px;
-		}
-		.mainsearch-item .book-options{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		.mainsearch-item .book-options + ul{
-			height: fit-content !important;
-			width: fit-content !important;
-		}
-		.entry-title{
-			font-size:24px !important;
-		}
-		.home-tags,.search-summary,.update-time{
-			font-size:14px !important;
-		}
-		.entry-author{
-			font-size: 13px !important;
-		}
-		.home-tags .each-tag:not(.icon-tag){
-			display:block;
-		}
-		@media only screen and (max-width: 992px) {
-			.home-desc{
-				width:100%;
-				margin-right:0%;
-			}
-			.home-tags{
-				width:100%;
-			}
-			.home-tags .each-tag:not(.icon-tag){
-				display:inline;
-			}
-			.nav-content {
-				background-color: var(--background-accent);
-				height:40px;
-				text-align:center;
-				position:fixed;
-				bottom:0;
-				left:0;
-				z-index:11;
-				width:100%;
-			}
-			.nav-content a{
-				color: var(--text-color);
-			}
-			html{
-				margin-bottom: 40px;
-			}
-			.nav-logo{
-				width:100%;
-				text-align:center;
-			}
-			.entry-title{
-				font-size:20px !important;
-			}
-			.home-tags,.search-summary,.update-time{
-				font-size:13px !important;
-			}
-			.entry-author{
-				font-size: 12px !important;
-			}
-		}
-		@media only screen and (max-width: 520px) {
-			.entry-title{
-				font-size:17px !important;
-			}
-			.home-tags,.search-summary,.update-time{
-				font-size:12px !important;
-			}
-			.entry-author{
-				font-size: 11px !important;
-			}
-		}
-		@media only screen and (max-width: 380px) {
-			.entry-title{
-				font-size:14px !important;
-			}
-			.home-tags,.search-summary,.update-time{
-				font-size:11.5px !important;
-			}
-			.entry-author{
-				font-size: 10.5px !important;
-			}
-		}
-		@media only screen and (max-width: 320px) {
-			.entry-title{
-				font-size:13px !important;
-			}
-			.home-tags,.search-summary,.update-time{
-				font-size:10.0px !important;
-			}
-			.entry-author{
-				font-size: 9.5px !important;
-			}
-		}
-		.btn-floating{
-			padding:0 !important;
-		}
-
-		/* Make the badge float in the top right corner of the button */
-		.notification-badge {
-			background-color: #fa3e3e;
-			border-radius: 50%;
-			color: white;
-			line-height: 1;
-			z-index:9;
-			padding: 3px 5px; /* Add some padding so it looks nice */
-			font-size: 10px;
-
-			position: absolute; /* Position the badge within the relatively positioned button */
-			top: 2px;
-			right: 2px;
-			user-select: none;
-			-moz-user-select: none;
-			-khtml-user-select: none;
-			-webkit-user-select: none;
-			-o-user-select: none;
-		}
-		.tabs,.site-header,.paginationm{
-			user-select: none;
-			-moz-user-select: none;
-			-khtml-user-select: none;
-			-webkit-user-select: none;
-			-o-user-select: none;		
-		}
-		.notification-badge:empty{
-			display:none;
-		}
-
-	</style>
-<body <?php body_class(); ?>>
-	<?php wp_body_open(); ?>
+<body>
 	<?php if (is_user_logged_in()){ ?>
 	<ul style="user-select: none;-moz-user-select: none;-khtml-user-select: none;-webkit-user-select: none;-o-user-select: none;width:55%;" id="notification-sidenav" class="sidenav">
 		<?php get_template_part('template-parts/header','notifications'); ?>
@@ -233,7 +35,6 @@ if (!isset($vfs)){
 	<?php } ?>
 <div id="page" class="site">
 	<div class="site-inner">
-		<a class="skip-link screen-reader-text" href="#content"><?php _e( 'Skip to content', 'twentysixteen' ); ?></a>
 		<header id="masthead" class="site-header" role="banner">
 			<div class="site-header-main">
 				<nav class="nav-wrapper" style="width:100%">

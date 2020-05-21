@@ -139,6 +139,9 @@ $wp_query = $original_query;
 wp_reset_postdata();
 
 get_template_part( 'template-parts/content', 'searchmodal' );
-wp_enqueue_script('create_search_js', get_stylesheet_directory_uri() .'/js/create_search.js', array('jquery'), null, true);
-wp_enqueue_script('book_options_js', get_stylesheet_directory_uri() .'/js/book-options.js', array('jquery'), null, true);
-?>
+
+global $js_bundle;
+$js_bundle = global_bundle('create_search');
+$js_bundle->add('create_search');
+$js_bundle->add('book-options');
+$js_bundle->enqueue();

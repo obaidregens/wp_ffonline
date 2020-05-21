@@ -13,7 +13,8 @@ function f_dt($time){
     return str_replace(' ','T',$time) . '+00:00';
 }
 function dss($string){
-    return str_replace('//','/',$string);
+    $string_arr = explode('://',$string);
+    return $string_arr[0] . '://' . str_replace('//','/',$string_arr[1]);
 }
 function url_field($loc,$lastmod,$changefreq){
     $construct = '<url>';
@@ -66,6 +67,7 @@ $terms = (new WP_Term_Query(array(
     'meta_key'      => 'time_modified',
     'orderby'       => 'meta_value_num',
     'order'         => 'DESC'
+    
 )))->terms;
 $xml .= url_field(
     'https://fanfiction.online/collection/',

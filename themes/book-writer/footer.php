@@ -1,4 +1,9 @@
 <?php
+global $js_bundle;
+if (! isset($js_bundle)){
+	$js_bundle = global_bundle('global');
+	$js_bundle->enqueue();
+}
 /**
  * The template for displaying the footer
  *
@@ -70,15 +75,44 @@ $no_login_modal = array('page-dashboard.php','page-login.php');
 	</div><!-- .site-inner -->
 
 </div><!-- .site -->
-<!-- Theme -->
-<a class="btn-floating" id="triggerTheme" style="z-index:999999;position:absolute;top:-6px;left:-6px;background-color: var(--background-color);"><i style="color:var(--text-color) !important;" class="fas fa-adjust"></i></a>
+
 
 <?php wp_footer(); ?>
+
+<!--CSS-->
+<link rel="stylesheet" id="nouislider-css" href="/wp-content/themes/book-writer/materialize/extras/nouislider.css" type="text/css" media="all">
+
 <!-- Fonts -->
 <!-- Font Awesome -->
 <link rel="stylesheet" id="font-awesome-official-css" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" type="text/css" media="all" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
-  <!--Import Google Icon Font-->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	
+<!-- Google Tools -->
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-153515447-1"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag(){dataLayer.push(arguments);}
+	gtag('js', new Date());
+
+	gtag('config', 'UA-153515447-1');
+</script>
+<!-- reCAPTCHA -->
+<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+<script>
+	function recaptchaOnload(){
+		if (document.getElementById('reCAPTCHA_div')){
+			grecaptcha.render("reCAPTCHA_div", {
+				sitekey: '6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth',
+			});				  
+		}
+	}
+</script>
+<!--Fixed Elements -->
+<!-- Theme Change -->
+<a class="btn-floating" id="triggerTheme" style="z-index:999999;position:absolute;top:-6px;left:-6px;background-color: var(--background-color);"><i style="color:var(--text-color) !important;" class="fas fa-adjust"></i></a>
+<!--Progress Bar -->
 <div class="progress" style="display:none;margin:0;position: fixed;bottom: 0px;right: 0px;left: 0px;"><div class="indeterminate"></div></div>
 </body>
 </html>

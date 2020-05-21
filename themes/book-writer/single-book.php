@@ -4,7 +4,12 @@ global $vfs;
 $vfs = vfs();
 log_stats('view','book',$post->ID,$vfs);
 
-wp_enqueue_script('book', get_stylesheet_directory_uri() .'/js/book.js', array('jquery','materialize_js'), null, true);
+global $js_bundle;
+$js_bundle = global_bundle('book');
+$js_bundle->add('book');
+$js_bundle->add('chapter');
+$js_bundle->enqueue();
+
 if (current_user_can('administrator') && isset($_GET['template']) && $_GET['template'] == 'test'){
     include('single-book-test.php');
     exit();

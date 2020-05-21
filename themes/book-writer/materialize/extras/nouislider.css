@@ -404,3 +404,15 @@
 .noUi-vertical .noUi-active .noUi-tooltip span {
   opacity: 1;
 }
+
+.noUi-tooltip span {
+	width: fit-content;
+	text-align: center;
+	color: var(--text-color);
+	font-size: 12px;
+	opacity: 0;
+	position: absolute;
+	top: 40px;
+	left: -50px;
+	transition: opacity .25s cubic-bezier(.215,.61,.355,1);
+}
