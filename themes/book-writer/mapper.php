@@ -12,6 +12,9 @@ function f_stamp($time){
 function f_dt($time){
     return str_replace(' ','T',$time) . '+00:00';
 }
+function dss($string){
+    return str_replace('//','/',$string);
+}
 function url_field($loc,$lastmod,$changefreq){
     $construct = '<url>';
     $construct .= '<loc>' . $loc . '</loc>';
@@ -39,7 +42,7 @@ $xml .= url_field(
 $num_pages = $book_query->max_num_pages;
 for ($i=2; $i <= $num_pages; $i++) { 
     $xml .= url_field(
-        'https://fanfiction.online/?page=' . $i,
+        'https://fanfiction.online/?page=' . $i . '/',
         f_dt($book_query->posts[0]->post_modified),
         'hourly'
     );
@@ -95,7 +98,7 @@ for ($i=1; $i <= $num_pages; $i++) {
         )))->posts;
         foreach($books as $book){
             $xml .= url_field(
-                get_permalink($book->ID),
+                dss(get_permalink($book->ID) . '/'),
                 f_dt($book->post_modified),
                 'monthly'
             );
@@ -103,7 +106,7 @@ for ($i=1; $i <= $num_pages; $i++) {
             $chapters = published_chapters($book->ID);
             foreach($chapters as $chapter){
                 $xml .= url_field(
-                    get_permalink($chapter->ID),
+                    dss (get_permalink($chapter->ID) . '/'),
                     f_dt($chapter->post_modified),
                     'weekly'
                 );
@@ -155,7 +158,7 @@ for ($i=1; $i <= $num_pages; $i++) {
 
         foreach($terms as $term){
             $xml .= url_field(
-                get_term_link($term->term_id),
+                dss (get_term_link($term->term_id) . '/') ,
                 f_stamp(get_term_meta($term->term_id,'time_modified',true)),
                 'weekly'
             );
@@ -191,28 +194,26 @@ for ($i=1; $i <= $num_pages; $i++) {
                 'posts_per_page'		 => 1,
             ) ))->posts;
             if (empty($author_books)){
-                $author_time = f_dt($user->user_registered);
+                continue;
             }
-            else{
-                $author_time = f_dt($author_books[0]->post_modified);
-            }
+            $author_time = f_dt($author_books[0]->post_modified);
             $xml .= url_field(
-                get_author_posts_url($user->ID),
+                dss (get_author_posts_url($user->ID) . '/'),
                 $author_time,
                 'monthly'
             );
             $xml .= url_field(
-                str_replace('//','/',get_author_posts_url($user->ID) . '/books'),
+                dss(get_author_posts_url($user->ID) . '/books/'),
                 $author_time,
                 'monthly'
             );
             $xml .= url_field(
-                str_replace('//','/',get_author_posts_url($user->ID) . '/updates'),
+                dss(get_author_posts_url($user->ID) . '/updates/'),
                 $author_time,
                 'monthly'
             );
             $xml .= url_field(
-                str_replace('//','/',get_author_posts_url($user->ID) . '/collection'),
+                dss(get_author_posts_url($user->ID) . '/collection/'),
                 $author_time,
                 'monthly'
             );
@@ -226,7 +227,7 @@ for ($i=1; $i <= $num_pages; $i++) {
 $index_xml = '<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 $all_files = scandir($dir);
 foreach ($all_files as $file_) {
-    if (strpos($file_,'sitemap') !== false){
+    if (strpos($file_,'sitemap') !== false && $file_ != 'sitemap-index.xml'){
         $index_xml .= '<sitemap><loc>https://fanfiction.online/sitemap/' . $file_ . '</loc></sitemap>';
     }
 }
