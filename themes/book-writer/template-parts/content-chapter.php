@@ -15,18 +15,17 @@ log_stats('view','chapter',$post->ID,$vfs);
 </div>
 <div id="primary" class="content-area">
 <main id="main" class="site-main" role="main">
-			<input type="hidden" id="chapter_id" value="<?php echo $post->ID; ?>">
-			<header class="mobile-margin">
-				<div>
-					
-		            <?php
-					echo '<h5> <a href="' .get_permalink($post->post_parent). '">' . get_the_title($post->post_parent) . '</a></h5>';
-					echo '<h6>by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )). '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></h6>';
+		<input type="hidden" id="chapter_id" value="<?php echo $post->ID; ?>">
+		<header class="mobile-margin">
+			<div>
+				<?php
+				echo '<h5> <a href="' .get_permalink($post->post_parent). '">' . get_the_title($post->post_parent) . '</a></h5>';
+				echo '<h6>by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )). '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></h6>';
 				?>
-				</div>
-				<div style="float:right;">
-						<button data-target="chapters-index" class="modal-trigger waves-effect waves-light btn">Index</button>
-				</div>
+			</div>
+			<div style="float:right;">
+				<button data-target="chapters-index" class="modal-trigger waves-effect waves-light btn">Index</button>
+			</div>
 		</header><!-- .page-header -->
 	<?php
 	// Start the loop.

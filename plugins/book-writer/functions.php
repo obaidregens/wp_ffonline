@@ -130,7 +130,6 @@ register_activation_hook(__FILE__, 'run_at_activation' );
 $includes = array(
 	'endpoints',
 	'book-validation',
-	'book-fields',
 	'misc',
 	'admin-columns',
 	'upload-book-menu',

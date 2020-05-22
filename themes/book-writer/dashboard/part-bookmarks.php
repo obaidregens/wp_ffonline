@@ -16,6 +16,9 @@ foreach($bookmarks as $bookmark){
     </li>
     <?php
 }
+if (empty($bookmarks)){
+	echo '<li class="collection-item">No bookmarks yet.</li>';
+}
 ?>
 </ul>
 <script>

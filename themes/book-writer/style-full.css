@@ -3769,10 +3769,6 @@ p > video {
 		margin-top: -1.105263158em;
 	}
 
-	body:not(.search-results) article:not(.type-page) .entry-content {
-		float: right;
-		width: 71.42857144%;
-	}
 
 	body:not(.search-results) article:not(.type-page) .entry-content > blockquote.alignleft.below-entry-meta {
 		margin-left: -40%;

@@ -114,6 +114,7 @@ $wp_query = $default_query;
 <div class="row" id="search-display"><div id="box" class="col s12">
 	<?php
 	if (have_posts()){
+        get_template_part('template-parts/modal','collection');
 		// Start the loop.
 		while (have_posts() ) :
 			the_post();

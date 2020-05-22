@@ -7,7 +7,7 @@
  * @since Twenty Sixteen 1.0
  */
 $pinned = '';
-$pin_text = 'Pin';
+$pin_text = '</i>Pin';
 if (is_sticky()){
 	$pinned = '<span style="color:var(--text-color);font-size: 15px;"><i style="margin-right:7px;" class="fas fa-thumbtack" aria-hidden="true"></i>Pinned</span>';
 	$pin_text = 'Unpin';
@@ -15,8 +15,7 @@ if (is_sticky()){
 ?>
 <!-- Dropdown Structure -->
 <ul id='update-options-<?php the_ID(); ?>' class='dropdown-content'>
-	<!--<li><a class="edit-update" update_id="<?php the_ID(); ?>"><i class="fas fa-edit" aria-hidden="true"></i>Edit</a></li>-->
-	<li><a class="stick-update" update_id="<?php the_ID(); ?>"><i class="fa fa-thumb-tack" aria-hidden="true"></i><?php echo $pin_text; ?></a></li>
+	<li><a class="stick-update" update_id="<?php the_ID(); ?>"><i class="fa fa-thumbtack" aria-hidden="true"></i><?php echo $pin_text; ?></a></li>
 	<li><a class="delete-update" update_id="<?php the_ID(); ?>"><i class="fas fa-trash-alt" aria-hidden="true"></i>Delete</a></li>
 </ul>
 <article id="update-<?php the_ID(); ?>" >

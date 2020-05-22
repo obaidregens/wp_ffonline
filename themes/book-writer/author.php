@@ -1,21 +1,4 @@
 <?php
-/**
- * The template for displaying archive pages
- *
- * Used to display archive-type pages if nothing more specific matches a query.
- * For example, puts together date-based pages if no date.php file exists.
- *
- * If you'd like to further customize these archive views, you may create a
- * new template file for each one. For example, tag.php (Tag archives),
- * category.php (Category archives), author.php (Author archives), etc.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package WordPress
- * @subpackage Twenty_Sixteen
- * @since Twenty Sixteen 1.0
- */
-
 global $wp;
 
 global $vfs;
@@ -36,6 +19,7 @@ $author_base = get_author_posts_url($author) . '/';
 		<div class="author-content row">
 			<div class="col s12 m6 l4">
 				<?php if (get_the_author_meta('user_description',$author) != ''){ ?>
+				<?php $bio_card = true; ?>
 				<div class="card author-bio">
 					<pre><?php echo get_the_author_meta('user_description',$author); ?></pre>
 				</div>
@@ -52,6 +36,7 @@ $author_base = get_author_posts_url($author) . '/';
 				$wp_query = null;
 				$wp_query = $posts;
 				if ( have_posts()  || get_current_user_id() == $author) :
+					$posts_card = true;
 					?><div class="card author-updates"><?php
 					while (have_posts()) :
 						the_post();
@@ -73,7 +58,13 @@ $author_base = get_author_posts_url($author) . '/';
 				wp_reset_postdata();
 				?>
 			</div>
-			<div class="col s12 m6 l8">
+			<?php
+			$class = ' m6 l8 ';
+			if (! isset($posts_card) && ! isset($bio_card)){
+				$class = "";
+			}
+			?>
+			<div class="col s12 <?= $class; ?>">
 				<?php
 				$posts = array(
 					'post_type'      => array( 'book' ),
@@ -82,14 +73,16 @@ $author_base = get_author_posts_url($author) . '/';
 					'posts_per_page' => 3,
 					'order'          => 'DESC',
 				);
-				//if (get_current_user_id() == $author  && $_GET['preview'] == 'true'){
-				//	$posts['post_status'] = array('publish','draft');
-				//}
+				// if (get_current_user_id() == $author  && $_GET['preview'] == 'true'){
+				// 	$posts['post_status'] = array('publish','draft');
+				// }
 				$posts = new WP_Query($posts);
 				$original_query = $wp_query;
 				$wp_query = null;
 				$wp_query = $posts;
 				if ( have_posts()   || get_current_user_id() == $author) :
+					$books_card = true;
+					get_template_part('template-parts/modal','collection');
 					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
 					while (have_posts() ) :
 						the_post();

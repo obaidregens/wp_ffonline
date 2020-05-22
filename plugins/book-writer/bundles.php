@@ -87,9 +87,10 @@ class js_bundle {
             CURLOPT_POST => true,
             CURLOPT_HTTPHEADER => ["Content-Type: application/x-www-form-urlencoded"],
             CURLOPT_POSTFIELDS => http_build_query([ "input" => $total_js ]),
-            CURLOPT_SSL_VERIFYPEER => is_ssl()
+            CURLOPT_SSL_VERIFYPEER => false
         ]);
         $minified = curl_exec($ch);
+        $error = curl_error($ch);
         curl_close($ch);
         file_put_contents ($this->bundles_dir . '/' . $this->name . '.js',$minified);
         

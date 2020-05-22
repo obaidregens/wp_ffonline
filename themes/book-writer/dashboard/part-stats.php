@@ -1,5 +1,11 @@
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
+		Coming Soon!
+	</main>
+</div>
+<?php exit(); ?>
+<div id="primary" class="content-area">
+	<main id="main" class="site-main" role="main">
         <?php $books = get_pages(array(
     		'authors'		=> get_current_user_id(),
     		'post_type'		=> 'book',

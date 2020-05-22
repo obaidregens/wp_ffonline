@@ -1,3 +1,9 @@
+const book_collections_elem = document.getElementById('book_collections');
+let book_collections = {};
+if (book_collections_elem){
+	book_collections = JSON.parse(book_collections_elem.innerHTML);
+}
+
 jQuery(document).ready(function(){
 	jQuery('body').on("click",'.book-share',function(){
 		var book_elem = jQuery(this).parents('article.mainsearch-item')[0];
@@ -34,6 +40,7 @@ jQuery(document).ready(function(){
 			selectText('copy_bubble');
 			document.execCommand("copy");
 			jQuery('#copy_bubble').remove();
+			M.toast({html: 'Copied!'})
 		});
 	  }
 	});
@@ -56,15 +63,22 @@ jQuery(document).ready(function(){
 	}
 	jQuery('body').on("click",'.book-hide',function(){
 		jQuery('.progress').css('display','block');
-		var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
+		var collection_modal = jQuery(this).parents('.collections-modal');
+		if (collection_modal){
+			var id = collection_modal.attr('book_id');
+		}
+		else{
+			var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
+		}
 		jQuery.ajax({
 			url: '/wp-content/themes/book-writer/php/hide_book.php',
 			type: 'post',
 			data: {ajax:1,id:id},
 			success: function(response){
+				console.log(response);
 				jQuery('.progress').css('display','none');
 				var li_elem = jQuery('#book-options-' + id).find('.book-hide')[0];
-				var switch_elem = jQuery('#collections-' + id).find('.book-hide')[0];
+				var switch_elem = jQuery('[book_id="' + id + '"].collections-modal').find('.book-hide')[0];
 				if (response == 3){
 				    jQuery('#login-modal').modal('open');	
 				}
@@ -89,12 +103,29 @@ jQuery(document).ready(function(){
 		}
 		else{
 			var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
-			M.Modal.getInstance(document.getElementById('collections-' + id)).open();
+			var collection_modal = document.querySelector('.collections-modal');
+			collection_modal.setAttribute('book_id',id);
+			if (! book_collections[id]){
+				book_collections[id] = [];
+			}
+
+			for (let i = 0; i < book_collections[id].length; i++) {
+				let collection_id = book_collections[id][i];
+				jQuery(collection_modal).find('[collection_id="' + collection_id +'"]').prop('checked',true);
+			}
+			M.Modal.getInstance(collection_modal).open();
 		}
 	});
 	jQuery('body').on("click",'.book-favorite',function(){
+		
 		jQuery('.progress').css('display','block');
-		var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
+		var collection_modal = jQuery(this).parents('.collections-modal');
+		if (collection_modal){
+			var id = collection_modal.attr('book_id');
+		}
+		else{
+			var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
+		}
 		jQuery.ajax({
 			url: '/wp-content/themes/book-writer/php/favorite_this.php',
 			type: 'post',
@@ -102,7 +133,7 @@ jQuery(document).ready(function(){
 			success: function(response){
 				jQuery('.progress').css('display','none');
 				var li_elem = jQuery('#book-options-' + id).find('.book-favorite')[0];
-				var switch_elem = jQuery('#collections-' + id).find('.book-favorite')[0];
+				var switch_elem = jQuery('[book_id="' + id + '"].collections-modal').find('.book-favorite')[0];
 				if (response == 3){
 				    jQuery('#login-modal').modal('open');
 				}
@@ -122,9 +153,11 @@ jQuery(document).ready(function(){
 	});
 
 	jQuery('body').on("click",'.save-collection',function(){
-        jQuery('.progress').css('display','block');
-        var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
-        var switches = jQuery('#collections-' + id).find('.save-collection');
+
+		jQuery('.progress').css('display','block');
+		var collection_modal = jQuery(this).parents('.collections-modal')[0];
+        var id = collection_modal.getAttribute('book_id');
+        var switches = jQuery(collection_modal).find('.save-collection');
         var collections = [];
         for (i = 0; i < switches.length; i++) {
             var collection_id = switches[i].getAttribute("collection_id");

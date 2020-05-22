@@ -25,13 +25,11 @@ if (!empty(preg_replace('/\s+/', '', get_post_meta($post->ID,'pre-chapter_notes'
 		<?php
 		    $content = explode('</p>',$post->post_content);
 			unset($content[count($content)-1]);
-		    $para_num = 0;
+			$para_num = 0;
 		    foreach($content as $para){
 		        $para_num += 1;
-		        ?><div id="p-<?php echo $para_num; ?>" style="margin-bottom:0;position:relative;" class="row"><?php
-		        $para_extra = str_replace('<p','',explode('>',$para)[0]);
-		        $para = $para . '</p>';
-				$para = preg_replace('~<p[^>]*>~', '<p style="margin-bottom:0;"' . $para_extra . ' class="col s12">', $para);
+		        ?><div id="p-<?php echo $para_num; ?>" style="position:relative;"><?php
+				$para = $para . '</p>';
 		        echo $para;
 		        if (chapter_bookmark_exists($post->ID,$para_num)){
 		            $active = ' active ';
