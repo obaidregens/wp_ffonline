@@ -90,17 +90,6 @@ function run_at_activation(){
 		  KEY value (value),
 		) $charset_collate;";
     
-    
-    //Add Cache Table
-    $custom_cache_table_name = 'custom_cache';
-	$custom_cache_table = "CREATE TABLE $custom_cache_table_name (
-	  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-	  `field` VARCHAR(100) NOT NULL ,
-	  `value` LONGTEXT NOT NULL ,
-	  `timestamp` BIGINT NOT NULL ,
-	  PRIMARY KEY (`ID`),
-	  KEY field (field),
-	) $charset_collate;";
 
 	//Add Stats Table
 	$custom_stats_table_name = 'custom_stats';
@@ -118,12 +107,25 @@ function run_at_activation(){
 	PRIMARY KEY (`ID`)
 	) $charset_collate;";
 	
+	//Autosaves table
+	$custom_autosaves_table_name = 'custom_autosaves';
+	$custom_autosaves_table = "CREATE TABLE $custom_autosaves_table_name (
+	`ID` BIGINT NOT NULL AUTO_INCREMENT,
+	`book_id` BIGINT NOT NULL,
+	`chapter_id` BIGINT NOT NULL,
+	`author` BIGINT NOT NULL,
+	`timestamp` BIGINT NOT NULL,
+	`content` LONGTEXT NOT NULL,
+	PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $searches_table );
 	dbDelta( $searchparams_table );
-	dbDelta( $custom_cache_table );
 	dbDelta( $custom_stats_table );
+	dbDelta( $custom_autosaves_table );
+
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 

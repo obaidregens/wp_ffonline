@@ -9,7 +9,6 @@
  * @since Twenty Sixteen 1.0
  */
 
-
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }

@@ -1,9 +1,8 @@
 <?php
-wp_enqueue_script('login', get_stylesheet_directory_uri() .'/js/login.js', array('jquery'), null, true);
 
 global $user_ID, $user_identity; if (!$user_ID) { ?>
 <?php
-if (isset($_GET['register'])){
+	if (isset($_GET['register'])){
 	$register = $_GET['register'];
 }
 if (isset($_GET['reset'])){

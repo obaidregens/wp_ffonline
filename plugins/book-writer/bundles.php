@@ -1,6 +1,7 @@
 <?php
 function global_bundle($name){
     $_js_bundle = new js_bundle($name);
+    $_js_bundle->add('jquery');
     $_js_bundle->add('materialize/extras/nouislider',true);
     $_js_bundle->add('materialize/js/materialize.min',true);
     $_js_bundle->add('global');

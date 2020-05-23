@@ -1,6 +1,5 @@
 <?php
 /* Template Name: Dashboard */ 
-
 //page_header
 login_only();
 global $js_bundle;

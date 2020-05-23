@@ -49,13 +49,7 @@ if (! isset($_POST['selected_chapters']) || $_POST['publish'] == 'false'){
 }
 $all_chapters = all_chapters($_POST['book_id'],-1,'ids');
 $non_selected = array_diff($all_chapters,$_POST['selected_chapters']);
-foreach($non_selected as $chapter_id){
-	wp_update_post(array(
-		'ID'			=> $chapter_id,
-		'post_status'	=> 'draft'
-	));
-	delete_post_meta($chapter_id,'chapter_order');
-}
+draft_these_chapters($_POST['book_id'],$non_selected);
 // Add the content of the form to $post as an array
 $book = array(
 	'post_title'    	=> htmlspecialchars($_POST['title']),

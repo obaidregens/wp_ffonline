@@ -135,7 +135,6 @@
 </div>
 	<script type = "text/javascript">
 		var data = JSON.parse(jQuery('#jsondata')[0].innerHTML);
-		console.log(data);
 
 		jQuery("form[name='editbook']").submit(function(event) {
 			event.preventDefault();

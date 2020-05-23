@@ -49,7 +49,6 @@ if ($_POST['publish'] == 'true'){
 if ($_POST['comments'] == 'true'){
 	$new_post['comment_status'] = 'open';
 }
-
 if ($_POST['chapter_id'] == 'new'){
 	$chapter_id = wp_insert_post($new_post);
 }
@@ -57,10 +56,22 @@ else{
 	$chapter_id = $_POST['chapter_id'];
 	$new_post['ID'] = $chapter_id;
 	wp_update_post($new_post);
+	global $wpdb;
 }
+if ($_POST['publish'] == 'true'){
+	update_post_meta($chapter_id,'chapter_order',count(published_chapters($_POST['book_id']))+1);
+}
+else{
+	draft_these_chapters($_POST['book_id'],array($chapter_id));
+}
+$wpdb->delete( 'custom_autosaves', array( 'chapter_id' => $_POST['chapter_id'],'book_id' => $_POST['book_id']) );
 $updated = get_post($chapter_id);
 if ($updated->post_status == 'publish'){
-	return_code(1);
+	echo json_encode(array(
+		'code'			=> 1,
+		'chapter_id'	=> $chapter_id,
+	));
+	exit();
 }
 else if($updated->post_status == 'draft'){
 	if (empty(published_chapters($_POST['book_id']))){
@@ -69,7 +80,12 @@ else if($updated->post_status == 'draft'){
 			'post_status'	=> 'draft'
 		));
 	}
-	return_code(2);
+	echo json_encode(array(
+		'code'			=> 2,
+		'chapter_id'	=> $chapter_id,
+	));
+	
+	exit();
 }
 return_code(7);
 exit();

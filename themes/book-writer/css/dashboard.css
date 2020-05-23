@@ -16,6 +16,89 @@
 #select-chapters .chapters-list .row .material-icons{
     margin-right:10px;
 }
+/* Edit Chapter */
+@media only screen and (min-width: 600px){
+    .editorWrap .toolbar {
+        overflow: visible !important;
+    }
+}
+.editorWrap + label{
+    transform:none !important;
+    left:15px !important;
+    top:-4px !important;
+}
+
+.top-bar{
+    text-align: right;
+    margin-bottom: 2px;
+}
+.editorWrap{
+    border:1px solid #ccc;
+}
+.editorWrap:fullscreen {
+    background-color:var(--background-color);
+    color: var(--text-color);
+}
+.editorWrap:fullscreen .editor{
+    max-height:calc(100vh - 75px) !important;
+    height:calc(100vh - 75px);
+}
+.editorWrap .toolbar{
+    font-size:0 !important;
+    border-bottom:1px solid #ccc;
+    white-space: nowrap;
+    overflow: auto;
+}
+.editorWrap .editor p{
+    margin:0 !important;
+    min-height:21px;
+}
+.editorWrap button{
+    position:relative;
+    outline:none !important;
+    background-color:transparent;
+    color:var(--text-color);
+    border-radius:0px;
+}
+.editorWrap button.active,.editorWrap button:hover{
+    background-color:var(--theme-color);
+    color:var(--background-color);
+}
+.editorWrap .word-count{
+    height: 34px;
+    border-top:1px solid #ccc;
+    padding: 5px;
+    color: grey;
+}
+.editorWrap .editor{
+    min-height:100px;
+    outline:none !important;
+    padding:10px;
+    max-height: 500px;
+    overflow: auto;
+}
+/* Autosaves */
+.autosaves-header{
+    margin-bottom: 10px;
+}
+.autosaves-list:empty:after {
+    content: 'No autosaves found.';
+    font-size: 13px;
+}
+.autosave-time{
+    font-size: 13px;
+    margin-bottom: 6px;
+    text-align: right;
+    width: auto;
+}
+.autosave{
+    margin-bottom:16px;
+}
+.autosave-edit{
+    font-size: 12px;
+    width: max-content;
+    float: left;
+}
 
 .collection a:focus{
     outline:none !important;

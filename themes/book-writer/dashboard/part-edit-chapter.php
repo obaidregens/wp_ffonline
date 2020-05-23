@@ -1,60 +1,3 @@
-<style>
-        @media only screen and (min-width: 600px){
-			.editorWrap .toolbar {
-				overflow: visible !important;
-			}
-        }
-        .editorWrap + label{
-            transform:none;
-            left:15px;
-            top:-27px;
-        }
-        .editorWrap{
-            border:1px solid #ccc;
-        }
-        .editorWrap:fullscreen {
-            background-color:var(--background-color);
-            color: var(--text-color);
-        }
-        .editorWrap:fullscreen .editor{
-            max-height:calc(100vh - 75px) !important;
-            height:calc(100vh - 75px);
-        }
-        .editorWrap .toolbar{
-            font-size:0 !important;
-            border-bottom:1px solid #ccc;
-            white-space: nowrap;
-            overflow: auto;
-        }
-        .editorWrap .editor p{
-            margin:0 !important;
-            min-height:21px;
-        }
-        .editorWrap button{
-            position:relative;
-            outline:none !important;
-            background-color:transparent;
-            color:var(--text-color);
-            border-radius:0px;
-        }
-        .editorWrap button.active,.editorWrap button:hover{
-            background-color:var(--theme-color);
-            color:var(--background-color);
-        }
-        .editorWrap .word-count{
-            height: 34px;
-            border-top:1px solid #ccc;
-            padding: 5px;
-            color: grey;
-        }
-        .editorWrap .editor{
-            min-height:100px;
-            outline:none !important;
-            padding:10px;
-            max-height: 500px;
-            overflow: auto;
-        }
-    </style>
 <main>
 
 	<?php
@@ -71,6 +14,7 @@
 	$book = get_post($book_id);
 	$chapter = get_post($chapter_id);
 	
+
 	if ($chapter_id == 'new'){
 		$title = '';
 		$content = '';
@@ -113,7 +57,6 @@
 	<input type="hidden" id="v_key" value="<?= $_SESSION['nonce_key'] ?>">
 	<input type="hidden" name="book_id" value="<?= $book_id ?>">
 	<input type="hidden" name="chapter_id" value="<?= $chapter_id ?>">
-	
 	<a onclick="load_page('write')" class="row btn-hover btn-floating btn-small waves-effect waves-light"><i class="fas fa-arrow-left"></i></a>
 	<form name="editchapter" class="mobile-margin col s12">
 		<!-- Chapter Title -->
@@ -126,18 +69,19 @@
 		<!-- Chapter Editor -->
 		<div class="row">
 			<div class="input-field col s12">
+				<div class="top-bar"><a class="autosave-trigger">Autosaves</a></div>
 				<div class="editorWrap">
 					<div class="toolbar">
-						<button tooltip="Ctrl B" text_action="bold" type="button"><i class="fas fa-bold"></i></button>
-						<button tooltip="Ctrl I" text_action="italic" type="button"><i class="fas fa-italic"></i></button>
-						<button tooltip="Ctrl U" text_action="underline" type="button"><i class="fas fa-underline"></i></button>
-						<button tooltip="Ctrl L" text_action="justifyLeft" type="button"><i class="fas fa-align-left"></i></button>
-						<button tooltip="Ctrl E" text_action="justifyCenter" type="button"><i class="fas fa-align-center"></i></button>
-						<button tooltip="Ctrl R" text_action="justifyRight" type="button"><i class="fas fa-align-right"></i></button>
-						<button tooltip="Ctrl D" text_action="strikethrough" type="button"><i class="fas fa-strikethrough"></i></button>
-						<button tooltip="Ctrl Z"text_action="undo" type="button"><i class="fas fa-undo-alt"></i></button>
-						<button tooltip="Ctrl Y" text_action="redo" type="button"><i class="fas fa-redo-alt"></i></button>
-						<button tooltip="F11" text_action="fullscreen" type="button"><i class="fas fa-expand"></i></button>
+						<button tabindex="-1" tooltip="Ctrl B" text_action="bold" type="button"><i class="fas fa-bold"></i></button>
+						<button tabindex="-1" tooltip="Ctrl I" text_action="italic" type="button"><i class="fas fa-italic"></i></button>
+						<button tabindex="-1" tooltip="Ctrl U" text_action="underline" type="button"><i class="fas fa-underline"></i></button>
+						<button tabindex="-1" tooltip="Ctrl L" text_action="justifyLeft" type="button"><i class="fas fa-align-left"></i></button>
+						<button tabindex="-1" tooltip="Ctrl E" text_action="justifyCenter" type="button"><i class="fas fa-align-center"></i></button>
+						<button tabindex="-1" tooltip="Ctrl R" text_action="justifyRight" type="button"><i class="fas fa-align-right"></i></button>
+						<button tabindex="-1" tooltip="Ctrl D" text_action="strikethrough" type="button"><i class="fas fa-strikethrough"></i></button>
+						<button tabindex="-1" tooltip="Ctrl Z"text_action="undo" type="button"><i class="fas fa-undo-alt"></i></button>
+						<button tabindex="-1" tooltip="Ctrl Y" text_action="redo" type="button"><i class="fas fa-redo-alt"></i></button>
+						<button tabindex="-1" tooltip="F11" text_action="fullscreen" type="button"><i class="fas fa-expand"></i></button>
 					</div>
 					<div class="editor" spellcheck="true" name="chapter_content" id="chapter_content" contenteditable="true">
 						<?= $content ?>
@@ -164,10 +108,16 @@
 				<span class='lever'></span>
 			</label>
 		</div>
-
-		<div id="button-wrapper" style="padding-right: 15px;" class="right"><button class="waves-effect waves-light btn-small" type="submit">Save</button></div>
+		<div id="button-wrapper" style="padding-right: 15px;" class="right-align"><button class="waves-effect waves-light btn-small" type="submit">Save</button></div>
 	</form>
+	<div id="autosave-modal" class="modal modal-large">
+		<div class="modal-content">
+			<h3 class="autosaves-header">Autosaves</h3>
+			<div class="autosaves-list"></div>
+		</div>
+	</div>
 	<script type = "text/javascript">
+		let autosaves = {};
 		jQuery('input[type="checkbox"][on_label][off_label]').trigger('change');
 		jQuery(document).ready(function(){
 			jQuery("#chapter_content").focus();
@@ -256,78 +206,7 @@
             	}
             }
 
-        });
-		jQuery(document).ready(function(){
-			if (document.getElementById('get_utc') != null){
-				var date_utc = document.getElementById('get_utc').innerHTML;
-				var current = new Date();
-				var offset = current.getTimezoneOffset();
-				var countDownDate = new Date(date_utc + ' UTC');
-
-				// Update the count down every 1 second
-				var x = setInterval(function() {
-
-					// Get today's date and time
-					var now = new Date().getTime();
-
-					// Find the distance between now and the count down date
-					var distance = countDownDate - now;
-
-					// Time calculations for days, hours, minutes and seconds
-					var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-					var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-					var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-					var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-					// Output the result in an element with id="demo"
-					document.getElementById("scheduled_timer").innerHTML = '';
-					if (days  == 1){
-						document.getElementById("scheduled_timer").innerHTML += days + " day ";
-					}
-					else if (days != 0 && hours == 0){
-						document.getElementById("scheduled_timer").innerHTML += days + " days";
-					}
-					else if (days != 0){
-						document.getElementById("scheduled_timer").innerHTML += days + " days ";
-					}
-					if (hours == 1){
-						document.getElementById("scheduled_timer").innerHTML += hours + " hour";
-					}
-					else if (hours != 0){
-						document.getElementById("scheduled_timer").innerHTML += hours + " hours";
-					}
-					if (minutes != 0 && hours == 0 && days == 0){
-						document.getElementById("scheduled_timer").innerHTML += minutes + " minutes ";
-					}
-
-					// If the count down is over, write some text 
-					if (distance < 0) {
-						clearInterval(x);
-						document.getElementById("scheduled_timer").innerHTML = "Chapter Published!";
-					}
-				}, 1000);
-			}
 		});
-		function schedule_switch(){
-			if (document.querySelector("#schedule-switch").checked == true){
-				jQuery('#scheduled-input-wrapper').append('<div class="input-field col s6"><input type="text" id="dateinput" class="datepicker"><label for="dateinput" class="">Date</label></div><div class="input-field col s6"><input type="text" id="timeinput" class="timepicker"><label for="dateinput" class="">Time</label></div>');
-				var tomorrow = new Date();
-				tomorrow.setDate(new Date().getDate()+1);
-				var max = new Date();
-				max.setDate(new Date().getDate()+6);
-				jQuery('#dateinput').datepicker({
-					format: 'yyyy-mm-dd',
-					minDate: tomorrow,
-					maxDate: max,
-
-				});
-				jQuery('#timeinput').timepicker();
-
-			}
-			else{
-				jQuery('#scheduled-input-wrapper').children().remove();
-			}
-		}
 		jQuery("form[name='editchapter']").submit(function(event) {
 			event.preventDefault();
 			M.Toast.dismissAll();
@@ -359,7 +238,6 @@
 					dataType: 'JSON',
 					data: data_submit,
 					success: function(response){
-						console.log(response);
 						M.Toast.dismissAll();
 						document.getElementById("button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Save</button>';
 						if (response.code == 1){
@@ -374,13 +252,59 @@
 						else{
 							M.toast({html: 'An unknown error occured.'});
 						}
+						console.log(response);
 						if ((response.code <= 5) && data_submit.chapter_id == 'new'){
-							window.location.href = document.location.origin + '/dashboard/write/' + response.chapter_id;
+							window.location.href = document.location.origin + '/dashboard/write/' + data_submit.book_id + '/' + response.chapter_id;
 						}
 					}
 				});
 			}
 			
 		});
+		//Autosaves
+		autosave_content();
+		jQuery('.autosave-trigger').click(function(){
+			jQuery('#autosave-modal').modal('open');
+		});
+		jQuery(document).on('click','.autosave-edit a',function(){
+			autosave_content();
+			let timestamp = this.parentElement.parentElement.getAttribute('timestamp');
+			jQuery('#chapter_content')[0].innerHTML = autosaves[timestamp];
+		});
+		function add_autosaves(autosaves_new){
+			clear_autosaves();
+			autosaves = autosaves_new;
+			let autosave_keys = Object.keys(autosaves);
+			for (let i = 0; i < autosave_keys.length; i++) {
+				let timestamp = autosave_keys[i];
+				let time = new Date(timestamp * 1000);
+				let content = autosaves[timestamp];
+				jQuery('.autosaves-list').append('<div class="autosave" timestamp="' + timestamp + '"><div class="autosave-edit"><a>Edit</a></div><div class="autosave-time">' + time + '</div><div class="autosave-short-content">' + content + '</div></div>');				
+			}
+		}
+		function clear_autosaves(){
+			autosaves = {};
+			jQuery('.autosaves-list').children().remove();
+		}
+		function autosave_content() {
+			if (document.querySelector("#chapter_content").innerHTML.replace(/\s+/g, '') == ""){
+				return;
+			}
+			jQuery.ajax({
+				url: '/wp-content/themes/book-writer/dashboard/ajax/autosave_content.php',
+				type: 'post',
+				dataType: 'JSON',
+				data: {
+					ajax: document.getElementById('v_key').value,
+					content: jQuery('#chapter_content')[0].innerHTML,
+					book_id: jQuery("input[name='book_id']").val(),
+					chapter_id: jQuery("input[name='chapter_id']").val()
+				},
+				success: function(response){
+					add_autosaves(response);
+				}
+			});            
+    	}
+		var intervalID = setInterval(autosave_content, 100000);
     </script>
 </main>

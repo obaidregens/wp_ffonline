@@ -158,3 +158,21 @@ function all_chapters($book_id,$limit = -1,$fields = 'all'){
     )))->posts;
     return $chapters;
 }
+function draft_these_chapters($book_id,$chapter_ids = false){
+    if (! $chapter_ids){
+        $chapter_ids = draft_chapters($book_id,-1,'ids');
+    }
+    $chapter_ids = (array) $chapter_ids;
+    foreach($chapter_ids as $chapter_id){
+        wp_update_post(array(
+            'ID'			=> $chapter_id,
+            'post_status'	=> 'draft'
+        ));
+        delete_post_meta($chapter_id,'chapter_order');
+    }
+    //Now refill
+    $published = published_chapters($book_id,-1,'ids');
+    for ($i=0; $i < count($published); $i++) { 
+        update_post_meta($published[$i],'chapter_order',$i+1);
+    }
+}

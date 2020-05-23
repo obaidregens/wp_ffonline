@@ -199,3 +199,17 @@ function collection_data($book_ids){
 		'collections'	   => $collections,
 	);
 }
+function get_autosaves($book_id,$chapter_id){
+	global $wpdb;
+	$table_name = "custom_autosaves";
+	$result = $wpdb->get_results ( "
+		SELECT * FROM $table_name
+			WHERE chapter_id = $chapter_id
+			AND book_id = $book_id
+	" );
+	$return = array();
+	foreach ($result as $value) {
+		$return[$value->timestamp] = $value->content;
+	}
+	return $return;
+}

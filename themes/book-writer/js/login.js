@@ -7,17 +7,15 @@ jQuery("form[name='login']").submit(function(event) {
 		type: 'post',
 		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),login:login,password:password,},
 		success: function(response){
+			M.Toast.dismissAll();
 			grecaptcha.reset();
 			if (response == '1'){
-				M.Toast.dismissAll();
 				M.toast({html: 'Your username and/or password is incorrect.'});
 			}
 			else if (response == '8'){
-				M.Toast.dismissAll();
 				M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
 			}
 			else{
-			    M.Toast.dismissAll();
 				jQuery("#login-btn" ).text("Welcome " + response + "!");
 				jQuery("#login-btn").addClass("disabled");
 				location.reload();
@@ -29,6 +27,14 @@ jQuery("form[name='signup']").submit(function(event) {
 	event.preventDefault();
 	var login = jQuery('#signup_username').val();
 	var email = jQuery('#signup_email').val();
+	if (login.length < 5 || login.length > 20){
+		M.toast({html: 'Username has to be between 5-20 characters.'});
+		return false;
+	}
+	if (login.replace(/(\d)|(\.)|(_)|([A-Z])+/gi,'').length > 0){
+		M.toast({html: 'Usernames may only contain dots(.), underscores(_), numbers, and letters.'});
+		return false;
+	}
 	jQuery.ajax({
 		url: '/wp-content/themes/book-writer/php/validate_signup.php',
 		type: 'post',
@@ -52,7 +58,8 @@ jQuery("form[name='signup']").submit(function(event) {
 				M.Toast.dismissAll();
 				M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
 			}
-			else{
+			else if (response == '0'){
+				M.toast({html: 'Check your email for confirmation.'});
 				jQuery("#signup-btn" ).text("Check your email for confirmation.");
 				jQuery("#signup-btn").addClass("disabled");
 			}

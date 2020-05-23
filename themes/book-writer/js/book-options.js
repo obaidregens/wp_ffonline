@@ -75,7 +75,6 @@ jQuery(document).ready(function(){
 			type: 'post',
 			data: {ajax:1,id:id},
 			success: function(response){
-				console.log(response);
 				jQuery('.progress').css('display','none');
 				var li_elem = jQuery('#book-options-' + id).find('.book-hide')[0];
 				var switch_elem = jQuery('[book_id="' + id + '"].collections-modal').find('.book-hide')[0];
@@ -159,7 +158,7 @@ jQuery(document).ready(function(){
         var id = collection_modal.getAttribute('book_id');
         var switches = jQuery(collection_modal).find('.save-collection');
         var collections = [];
-        for (i = 0; i < switches.length; i++) {
+        for (let i = 0; i < switches.length; i++) {
             var collection_id = switches[i].getAttribute("collection_id");
             if (switches[i].checked == true){
                 collections.push(collection_id);

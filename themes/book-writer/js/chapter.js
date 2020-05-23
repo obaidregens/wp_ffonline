@@ -297,7 +297,6 @@ function delete_comment(id){
 		type: 'post',
 		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),chapter_id:chapter_id,id:id,action:'delete'},
 		success: function(response){
-			console.log(response);
 			M.Toast.dismissAll();
 			if (response == '3'){
 				jQuery('#login-modal').modal('open');

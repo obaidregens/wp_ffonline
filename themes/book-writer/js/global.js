@@ -5,9 +5,10 @@ jQuery(document).ready(function(){
 	    if (jQuery('.pulse.notification-badge')[0].innerHTML != ''){
     	    messages_count += parseInt(jQuery('.pulse.notification-badge')[0].innerHTML);
     	    jQuery('.pulse.notification-badge')[0].innerHTML = '';	        
-	    }
+        }
 	}});
-	jQuery('.modal:not(#searchbook)').modal();
+    jQuery('.modal:not(#searchbook)').modal();
+    
 	jQuery('.tabs').tabs();
 	var links_tabs = jQuery('#nav-tabs a');
 	var active_exists = 0;
