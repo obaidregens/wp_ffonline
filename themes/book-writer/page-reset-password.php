@@ -11,6 +11,12 @@
  * @since Twenty Sixteen 1.0
  */
 
+global $js_bundle;
+$js_bundle = global_bundle('reset-password');
+$js_bundle->add('reset-password');
+$js_bundle->enqueue();
+
+
 get_header(); ?>
 
 <div id="primary" class="content-area">
@@ -20,7 +26,7 @@ get_header(); ?>
 		<h3><?php _e( 'Pick a New Password', 'personalize-login' ); ?></h3>
 	<?php endif; ?>
 
-	<form name="resetpassform" id="resetpassform" action="<?php echo site_url( 'wp-login.php?action=resetpass' ); ?>" method="post" autocomplete="off">
+	<form name="resetpassform" id="resetpassform" method="post" autocomplete="off">
 		<input type="hidden" id="user_login" name="rp_login" value="<?php echo esc_attr( $attributes['login'] ); ?>" autocomplete="off" />
 		<input type="hidden" name="rp_key" value="<?php echo esc_attr( $attributes['key'] ); ?>" />
 
@@ -49,46 +55,8 @@ get_header(); ?>
 	</form>
 	<div id="reCAPTCHA_div" style="margin:0 20px 20px;" class="g-recaptcha" data-sitekey="6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth"></div>
 </div>
-<script>
-	jQuery("form[name='resetpassform']").submit(function(event) {
-	    event.preventDefault();
-		var pass1 = jQuery('#pass1').val();
-		var pass2 = jQuery('#pass2').val();
-		if (pass1 != pass2){
-			jQuery('#pass2').addClass('invalid');
-			return;
-		}
-		else{
-		    var urlParams = new URLSearchParams(location.search);
-		    var key = urlParams.get('key');
-		    var login = urlParams.get('login');
-			jQuery.ajax({
-				url: '/wp-content/themes/book-writer/php/set_password.php',
-				type: 'post',
-				data: {ajax: 1,key:key,reCAPTCHA:grecaptcha.getResponse(),login:login,password:pass2},
-				success: function(response){
-				    grecaptcha.reset();
-					if (response == '0' || response == '2'){
-						M.toast({html: 'An unknown error occured'});
-					}
-					else if (response == '1'){
-					    M.toast({html: 'Your password has been reset.'});
-						jQuery('#resetpass-button').prop('disabled','true');
-						window.location.href = "https://fanfiction.online/dashboard";
-					}
-					else if (response == '8'){
-						M.Toast.dismissAll();
-						M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
-					}
-				},
-			});			
-		}
-	});
-</script>
 	</main><!-- .site-main -->
 
 
 </div><!-- .content-area -->
-
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

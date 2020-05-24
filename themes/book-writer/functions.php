@@ -7,8 +7,10 @@ function my_theme_enqueue_styles() {
 	$template = str_replace('\\','/',$template);
 	$template_pages = str_replace($to_remove,"",$template);
 	//jQuery
-	wp_deregister_script( 'jquery' );
-	wp_register_script('jquery', false);
+	if (! is_admin()){
+    	wp_deregister_script( 'jquery' );
+    	wp_register_script('jquery', false);
+	}
 
 	//General Includes
 	wp_enqueue_style( 'materialize_css', get_stylesheet_directory_uri() . '/materialize/css/materialize-input.min.css');	

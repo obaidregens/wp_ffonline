@@ -5,6 +5,10 @@
  * Contact form
  *
  */
+global $js_bundle;
+$js_bundle = global_bundle('contact');
+$js_bundle->add('contact');
+$js_bundle->enqueue();
 ?>
 <?php get_header(); ?>
 <div id="primary" class="content-area">
@@ -60,39 +64,4 @@
 		</form>
 	</main><!-- .site-main -->
 </div><!-- .content-area -->
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>
-<script>
-	function validateoption(){
-		if(jQuery('input[name=contact_options]:checked').attr('value') == undefined || jQuery('input[name=contact_options]:checked').attr('value') == false){
-			var element = jQuery("input[name='contact_options']")[0];
-			element.setCustomValidity('Please select an option.');
-		}
-		else{
-			var element = jQuery("input[name='contact_options']")[0];
-			element.setCustomValidity('');			
-		}
-	}
-	jQuery("form[name='message']").submit(function(event) {
-		event.preventDefault();
-		var element = jQuery("input[name='contact_options']")[0];
-		element.setCustomValidity('');
-		var email = jQuery('#email').val();
-		var message = jQuery('#message').val();
-		var label = jQuery('input[name=contact_options]:checked').attr('value');
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/send_message.php',
-			type: 'post',
-			data: {ajax: 1,email:email,message:message,label:label},
-			success: function(response){
-				if (response != '1'){
-					M.toast({html: 'Your message was not sent.'});
-				}
-				else{
-					jQuery("#message_btn" ).text("Sent!");
-					jQuery("#message_btn").addClass("disabled");
-				}
-			}
-		});
-	});
-</script>
