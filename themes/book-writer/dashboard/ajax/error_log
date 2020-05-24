@@ -1,0 +1,22 @@
+[24-May-2020 00:55:54 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:04 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:14 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:24 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:34 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:44 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:56:54 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:04 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:14 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:24 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:34 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:44 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:57:54 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:58:04 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:58:14 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 00:58:24 America/New_York] PHP Warning:  Use of undefined constant SMTP_USER - assumed 'SMTP_USER' (this will throw an Error in a future version of PHP) in /home/readadmt/fanfiction.online/wp-config.php on line 30
+[24-May-2020 05:32:52 UTC] WordPress database error Table 'readadmt_ffonline.custom_autosaves' doesn't exist for query 
+		SELECT * FROM custom_autosaves
+			WHERE chapter_id = 202846
+			AND book_id = 186457
+	 made by get_autosaves
+[24-May-2020 05:32:52 UTC] WordPress database error Table 'readadmt_ffonline.custom_autosaves' doesn't exist for query SHOW FULL COLUMNS FROM `custom_autosaves`

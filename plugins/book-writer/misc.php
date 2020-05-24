@@ -1,4 +1,21 @@
 <?php
+//SMTP SETUp
+
+add_action( 'phpmailer_init', 'wpse8170_phpmailer_init' );
+function wpse8170_phpmailer_init( PHPMailer $phpmailer ) {
+    $phpmailer->Mailer     = 'smtp';
+    $phpmailer->Host       = SMTP_HOST;
+    $phpmailer->SMTPAuth   = SMTP_AUTH;
+    $phpmailer->Port       = SMTP_PORT;
+    $phpmailer->Username   = SMTP_USER;
+    $phpmailer->Password   = SMTP_PASS;
+    $phpmailer->SMTPSecure = SMTP_SECURE;
+    $phpmailer->From       = SMTP_FROM;
+    $phpmailer->FromName   = SMTP_NAME;
+    
+    $phpmailer->IsSMTP();
+}
+
 
 add_action( 'wp_print_styles', 'wps_deregister_styles', 100 );
 function wps_deregister_styles() {
@@ -526,20 +543,6 @@ function add_last_nav_item($items) {
 	}
 }
 add_filter('wp_nav_menu_header_items','add_last_nav_item');
-
-// Function to change email address
-function wpb_sender_email( $original_email_address ) {
-    return 'support@fanfiction.online';
-}
- 
-// Function to change sender name
-function wpb_sender_name( $original_email_from ) {
-    return 'Fanfiction Online';
-}
- 
-// Hooking up our functions to WordPress filters 
-add_filter( 'wp_mail_from', 'wpb_sender_email' );
-add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
 
 
 add_action('admin_head', 'hide_menu_author');
