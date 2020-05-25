@@ -277,7 +277,7 @@
 			let autosave_keys = Object.keys(autosaves);
 			for (let i = 0; i < autosave_keys.length; i++) {
 				let timestamp = autosave_keys[i];
-				let time = new Date(timestamp * 1000);
+				let time = timestamp_to_local(timestamp);
 				let content = autosaves[timestamp];
 				jQuery('.autosaves-list').append('<div class="autosave" timestamp="' + timestamp + '"><div class="autosave-edit"><a>Edit</a></div><div class="autosave-time">' + time + '</div><div class="autosave-short-content">' + content + '</div></div>');				
 			}

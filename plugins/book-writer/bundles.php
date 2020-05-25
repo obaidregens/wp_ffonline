@@ -5,6 +5,7 @@ function global_bundle($name){
     $_js_bundle->add('materialize/extras/nouislider',true);
     $_js_bundle->add('materialize/js/materialize.min',true);
     $_js_bundle->add('global');
+    $_js_bundle->add('helpers');
     $_js_bundle->add('login');
     return $_js_bundle;
 }

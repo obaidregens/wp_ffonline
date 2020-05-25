@@ -3,6 +3,9 @@
 function word_counts($postid, $post_obj){
 	//Add Word Count
 	update_post_meta($postid,'word-count', str_word_count(strip_tags($post_obj->post_content)));
+	
+	$chapters = published_chapters($post_obj->post_parent);
+
 	//Add Book Word Count
 	if (empty($chapters)){
 		update_post_meta($post_obj->post_parent,'word-count',0);
@@ -23,7 +26,7 @@ function word_counts($postid, $post_obj){
 	);
 	wp_update_post($book_args);
 }
-add_action('publish_chapter', 'word_counts', 11,2);
+add_action('save_post_chapter', 'word_counts', 11,2);
 
 function ring_notify($new_status,$old_status,$post){
 	if ($new_status == 'publish' && $post->post_type == 'chapter'){

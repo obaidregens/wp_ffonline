@@ -109,3 +109,13 @@ function spin(selector,align = false){
         jQuery(selector).css('text-align',align);
     }
 }
+function timestamp_to_local(timestamp){
+    const time = new Date(timestamp * 1000);
+    let time_formatted = time.toString();
+    time_formatted = time_formatted.split(' GMT')[0];
+    time_formatted = time_formatted.substring(0,time_formatted.length-3);
+    return time_formatted;
+}
+function ucfirst(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }

@@ -157,7 +157,7 @@ footer.site-footer{
 		display:none;
 	}
 	#dashboard-sidenav{
-		background-color:rgba(0,0,0,0.05);
+		background-color: var(--background-accent);
 	}
 }
 /*Chats*/
