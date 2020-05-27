@@ -1,3 +1,4 @@
+
 <style>
     [type=checkbox].cross:checked+span:not(.lever):before{
         top: -3px;
@@ -145,4 +146,5 @@ global $js_bundle;
 $js_bundle = global_bundle('create_search');
 $js_bundle->add('create_search');
 $js_bundle->add('book-options');
+// $js_bundle->write();
 $js_bundle->enqueue();

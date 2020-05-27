@@ -91,7 +91,8 @@ function forceArray(variable){
     }
 }
 function spin(selector,align = false){
-    var spinner = '<div class="preloader-wrapper big active">' + 
+    var spinner =
+    '<div class="preloader-wrapper big active">' + 
         '<div class="spinner-layer">' +
             '<div class="circle-clipper left">' +
                 '<div class="circle"></div>' +
@@ -116,6 +117,14 @@ function timestamp_to_local(timestamp){
     time_formatted = time_formatted.substring(0,time_formatted.length-3);
     return time_formatted;
 }
+function timestamp_duration(timestamp){
+    var hours = Math.floor(timestamp / 60 / 60);
+    var minutes = Math.floor(timestamp / 60) - (hours * 60);  
+    var seconds = timestamp % 60;
+  
+    var formatted = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
+    return formatted;
+  }
 function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }

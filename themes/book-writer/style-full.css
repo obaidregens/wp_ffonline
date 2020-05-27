@@ -4631,3 +4631,29 @@ div.divider{
 .notification-badge:empty{
 	display:none;
 }
+/* Custom Flex Grid */
+.flex-container{
+	width: 100%;
+}
+.flex-container > div{
+	display: flex;
+	padding: 15px 0;
+	flex-wrap: nowrap;
+	border-bottom: 1px solid #D3D3D3;
+}
+.flex-container > div.flex-header{
+	border-bottom: 0;
+}
+.flex-container > div > div{
+	text-align: center;
+	width: 100%;
+}
+/* Scrollbar */
+*::-webkit-scrollbar-thumb {
+    background: var(--theme-color);
+}
+*::-webkit-scrollbar {
+    background: transparent;
+    width: 5px;
+
+}

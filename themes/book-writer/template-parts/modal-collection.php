@@ -11,17 +11,7 @@ echo '<span id="book_collections" style="display:none;">' . json_encode($collect
                 <td><?= $collection['name'] ?> <label>(<?= $collection['type'] ?>)</label></td>
                 <td class="right-align">
                     <div class="switch"><label>
-                        <input 
-                        <?php if ($collection_id == 'favorites') { ?>
-                        class="book-favorite"
-                        <?php } 
-                            else if ($collection_id == 'hidden') { ?>
-                        class="book-hide"
-                        <?php }
-                            else { ?>
-                        class="save-collection"
-                        <?php } ?>
-                         collection_id="<?php echo $collection_id; ?>" type="checkbox">
+                        <input class="save-collection" collection_id="<?php echo $collection_id; ?>" type="checkbox">
                         <span class="lever"></span>
                     </label></div>
                 </td>

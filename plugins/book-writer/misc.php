@@ -20,6 +20,9 @@ function _link($id,$type){
 	else if (in_array($type,array('author','user'))){
 		return get_author_posts_url($id);
 	}
+	else if (in_array($type,array('survey'))){
+		return '/manage/survey/' . $id;
+	}
 	else{
 		return false;
 	}
@@ -35,7 +38,11 @@ function _title($id,$type){
 		)))->posts[0];
 		return get_the_title($home_id);
 	}
-	else if (in_array($type,array('book','chapter','post','page'))){
+	else if (in_array($type,array('chapter'))){
+		$obj = get_post($id);
+		return $obj->post_title . ' - ' . get_the_title($obj->post_parent);
+	}
+	else if (in_array($type,array('book','post','page'))){
 		return get_the_title($id);
 	}
 	else if (in_array($type,array('collection','term'))){
@@ -43,6 +50,9 @@ function _title($id,$type){
 	}
 	else if (in_array($type,array('author','user'))){
 		return get_the_author_meta('display_name',$id);
+	}
+	else if (in_array($type,array('survey'))){
+		return 'Survey ' . $id;
 	}
 	else{
 		return false;
@@ -53,14 +63,14 @@ function _title($id,$type){
 add_action( 'phpmailer_init', 'wpse8170_phpmailer_init' );
 function wpse8170_phpmailer_init( PHPMailer $phpmailer ) {
     $phpmailer->Mailer     = 'smtp';
-    $phpmailer->Host       = SMTP_HOST;
-    $phpmailer->SMTPAuth   = SMTP_AUTH;
-    $phpmailer->Port       = SMTP_PORT;
-    $phpmailer->Username   = SMTP_USER;
-    $phpmailer->Password   = SMTP_PASS;
-    $phpmailer->SMTPSecure = SMTP_SECURE;
-    $phpmailer->From       = SMTP_FROM;
-    $phpmailer->FromName   = SMTP_NAME;
+    $phpmailer->Host       = defined('SMTP_HOST') ? SMTP_HOST : '';
+    $phpmailer->SMTPAuth   = defined('SMTP_AUTH') ? SMTP_AUTH : true;
+    $phpmailer->Port       = defined('SMTP_PORT') ? SMTP_PORT : 587;
+    $phpmailer->Username   = defined('SMTP_USER') ? SMTP_USER : '';
+    $phpmailer->Password   = defined('SMTP_PASS') ? SMTP_PASS : '';
+    $phpmailer->SMTPSecure = defined('SMTP_SECURE') ? SMTP_SECURE : 'tls';
+    $phpmailer->From       = defined('SMTP_FROM') ? SMTP_FROM : '';
+    $phpmailer->FromName   = defined('SMTP_NAME') ? SMTP_NAME : '';
     
     $phpmailer->IsSMTP();
 }

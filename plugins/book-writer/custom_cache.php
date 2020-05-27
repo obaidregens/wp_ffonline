@@ -1,7 +1,7 @@
 <?php
 function initialize_custom_cache_dir(){
 	if (! defined("custom_cache_dir")){
-		define("custom_cache_dir",explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/custom-cache');
+		define("custom_cache_dir",explode('wp-content',__FILE__)[0] . 'custom-cache');
 	}
 	if (! file_exists(custom_cache_dir)){
 		mkdir(custom_cache_dir);

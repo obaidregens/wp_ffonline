@@ -4,6 +4,7 @@
  *
  * @since book-writer 2.0.2
  */
+
 define( 'EP_BOOKS', 8192 );
 
 

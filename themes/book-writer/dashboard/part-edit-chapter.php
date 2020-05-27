@@ -252,7 +252,6 @@
 						else{
 							M.toast({html: 'An unknown error occured.'});
 						}
-						console.log(response);
 						if ((response.code <= 5) && data_submit.chapter_id == 'new'){
 							window.location.href = document.location.origin + '/dashboard/write/' + data_submit.book_id + '/' + response.chapter_id;
 						}

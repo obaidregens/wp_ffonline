@@ -1,6 +1,7 @@
 <?php
 /* Template Name: Dashboard */ 
 admin_only();
+// js_bundle::reWrite('manage');
 global $js_bundle;
 $js_bundle = global_bundle('manage');
 $js_bundle->add('manage');
@@ -141,7 +142,7 @@ $table_name = 'custom_stats';
 $result = $wpdb->get_results ( "
     SELECT * FROM $table_name
     GROUP BY cookie_id
-    ORDER BY ID ASC
+    ORDER BY ID DESC
 " );
 $result = json_encode($result);
 ?>

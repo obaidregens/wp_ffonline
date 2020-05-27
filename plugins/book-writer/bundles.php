@@ -7,6 +7,7 @@ function global_bundle($name){
     $_js_bundle->add('global');
     $_js_bundle->add('helpers');
     $_js_bundle->add('login');
+    $_js_bundle->add('survey');
     return $_js_bundle;
 }
 class js_bundle {
@@ -17,7 +18,7 @@ class js_bundle {
     public static function reWriteAll() {
         $bundles_dir = explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/js/bundles';
         $files = scandir($bundles_dir);
-        foreach($files as $files){
+        foreach($files as $file){
             if ($file == 'index.idn'){
                 continue;
             }
@@ -45,11 +46,19 @@ class js_bundle {
         }
         $this->bundle_exists();
     }
-    function enqueue(){
+    function enqueue($mode = 'production'){
         if (! isset($this->file) || ! $this->file || $this->index[$this->name] !== $this->bundle){
             $this->write();
         }
-        wp_enqueue_script( 'bundle_' . $this->name,$this->file,array('jquery'),null,true);
+        if ($mode == 'dev'){
+            $enqueued = [];
+            foreach ($this->bundle as $key => $filename) {
+                wp_enqueue_script( 'bundle_' . $this->name . '_' . $key,$this->theme_url . '/' . $filename . '.js',$enqueued,null,true);
+                $enqueued[] = 'bundle_' . $this->name . '_' . $key;
+            }
+            return;
+        }
+        wp_enqueue_script( 'bundle_' . $this->name,$this->file,array(),null,true);
     }
     function bundle_exists(){
         $this->index = json_decode(file_get_contents($this->bundles_dir . '/index.idn'),true);

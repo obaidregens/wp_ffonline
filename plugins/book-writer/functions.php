@@ -6,6 +6,7 @@
  * Author: Fanfiction Online
  * Author URI: https://www.fanfiction.online
  */
+
 function run_at_activation(){
 	//Create Pages
 	//Privacy Policy
@@ -90,7 +91,7 @@ function run_at_activation(){
 		  KEY user_id (user_id),
 		  KEY type (type),
 		  KEY type_id (type_id),
-		  KEY IP (IP),
+		  KEY IP (IP)
 		) $charset_collate;";
 
 	$searchparams_table = "CREATE TABLE $searchparams_table_name (
@@ -101,7 +102,7 @@ function run_at_activation(){
 		  PRIMARY KEY (`ID`),
 		  KEY search_id (search_id),
 		  KEY parameter (parameter),
-		  KEY value (value),
+		  KEY value (value)
 		) $charset_collate;";
     
 
@@ -133,17 +134,34 @@ function run_at_activation(){
 	PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+
+	//surveys
+	$surveys_table_name = 'surveys';
+	$surveys_table = "CREATE TABLE $surveys_table_name (
+		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
+		`vfs` VARCHAR(100) NOT NULL ,
+		`user_id` BIGINT NOT NULL ,
+		`timestamp` BIGINT NOT NULL ,
+		`type` VARCHAR(50) NOT NULL ,
+		`rating` TINYINT NULL ,
+		`suggestion` TEXT NULL ,
+		`email` VARCHAR(300) NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $searches_table );
 	dbDelta( $searchparams_table );
 	dbDelta( $custom_stats_table );
 	dbDelta( $custom_autosaves_table );
-
+	dbDelta( $surveys_table );
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
 $includes = array(
+	'survey_query',
+	'stats',
 	'endpoints',
 	'misc',
 	'chapter-navigator',
@@ -154,10 +172,10 @@ $includes = array(
 	'custom_cache',
 	'data',
 	'validation',
-	'stats',
 	'bundles',
-	'privileges'
+	'privileges',
+	'collections',
 );
 foreach($includes as $include){
-	include ($include . '.php');
+	require ($include . '.php');
 }

@@ -161,6 +161,12 @@ function get_data($book_id = 'new'){
     return $data;
 }
 function collection_data($book_ids){
+	if (! is_user_logged_in()){
+		return array(
+			'book_collections' => null,
+			'collections'	   => null,
+		);
+	}
 	//All Collections, Favorites & Hidden
 	$collections = get_terms(array(
 		'meta_key' => 'author',

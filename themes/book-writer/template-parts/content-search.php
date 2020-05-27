@@ -10,8 +10,8 @@ log_stats('impression','book',$post->ID,$vfs);
 			<li><a target="_blank" href="/dashboard/write/<?php the_ID(); ?>" class="book-edit"><i class="fas fa-pencil-alt"></i>Edit</a></li>
 		<?php } ?>
 		<li><a class="book-share"><i class="fas fa-share-alt"></i>Share</a></li>
-		<li><a class="book-favorite"><i class="fas fa-heart"></i><?php if (in_array(get_current_user_id(),get_stats_of('book_fav',$post->ID))){echo 'Remove';}else {echo 'Favorite';} ?></a></li>
-		<li><a  class="book-hide"><i class="fas fa-eye-slash"></i>Hide</a></li>
+		<li><a class="book-favorite"></a></li>
+		<li><a class="book-hide"></a></li>
 		<li><a <?php if (! is_user_logged_in()){echo ' disabled ';} ?> class="book-collections"><i class="fas fa-list-ul"></i>Collections</a></li>
 
 	  </ul>

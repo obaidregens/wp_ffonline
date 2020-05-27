@@ -4,10 +4,11 @@
 login_only();
 global $js_bundle;
 $js_bundle = global_bundle('dashboard');
+$js_bundle->add('draggable.bundle');
 $js_bundle->add('dashboard');
 $js_bundle->add('components/inputs');
 $js_bundle->add('helpers');
-$js_bundle->add('draggable.bundle');
+$js_bundle->write();
 $js_bundle->enqueue();
 wp_enqueue_style( 'dashboard_css', get_stylesheet_directory_uri() .'/css/dashboard.css');
 get_header();

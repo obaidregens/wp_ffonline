@@ -176,3 +176,68 @@ function draft_these_chapters($book_id,$chapter_ids = false){
         update_post_meta($published[$i],'chapter_order',$i+1);
     }
 }
+
+function is_($this_,$id){
+    if (! is_numeric($id) && ! in_array($this_,array('collection'))){
+        return false;
+    }
+    $id = intval($id);
+    if (in_array($this_,array('book'))){
+        $obj = get_post($id);
+        if ($obj == null || $obj->post_type != 'book'){
+            return false;
+        }
+    }
+    else if (in_array($this_,array('chapter'))){
+        $obj = get_post($id);
+        if ($obj == null || $obj->post_type != 'chapter'){
+            return false;
+        }
+    }
+    else if (in_array($this_,array('user','author'))){
+        $obj = get_userdata($id);
+        if (! $obj){
+            return false;
+        }
+    }
+    else if (in_array($this_,array('collection'))){
+        if (in_array($id,array('favorites','hidden'))){
+            return true;
+        }
+        $obj = get_term($id,'collection');
+        if (is_wp_error( $obj ) || $obj == null){
+            return false;
+        }
+    }
+    return true;
+}
+
+function is_author_($author,$id,$obj_type){
+    if (! is_numeric($id) && ! in_array($obj_type,array('collection'))){
+        return false;
+    }
+    $id = intval($id);
+
+    if (in_array($obj_type,array('book','chapter','post','page'))){
+        $obj = get_post($id);
+        if ($obj == null){
+            return false;
+        }
+        if ($obj->post_author != $author){
+            return false;
+        }
+    }
+    else if (in_array($obj_type,array('collection'))){
+        if (in_array($id,array('favorites','hidden'))){
+            return true;
+        }
+        $obj = get_term($id,'collection');
+        if (is_wp_error( $obj ) || $obj == null){
+            return false;
+        }
+        if (intval(get_term_meta($id,'author',true)) != $author){
+            return false;
+        }
+    }
+    return true;
+}

@@ -378,7 +378,6 @@ function unpack_search($packed){
 			$search = $packed['search'];
 			$search_sql = '%' . $search . '%';
 			global $wpdb;
-			$tablename = $wpdb->prefix . "posts";
 			$sql = $wpdb->prepare( "SELECT ID FROM wp_posts WHERE post_title LIKE %s OR post_excerpt LIKE %s",array($search_sql,$search_sql) );
 			$results = $wpdb->get_results( $sql ,ARRAY_A );
 			$ids = [];
