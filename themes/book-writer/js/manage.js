@@ -2,7 +2,7 @@ const data = JSON.parse(document.querySelector('json_data').innerHTML);
 for (let i = 0; i < data.length; i++) {
     let element = data[i];
     let time = timestamp_to_local(element.timestamp);
-    jQuery('tbody').append('<tr vfs="' + element.cookie_id + '"><td>' + element.user_id + '</td><td>' + time + '</td><td>' + (element.referrer_host || 'direct') + '</td></tr>');
+    jQuery('tbody').append('<tr vfs="' + element.cookie_id + '"><td>' + element.user_id + '</td><td>' + time + '</td><td>' + (element.IP) + '</td></tr>');
 }
 jQuery('tr').click(function(){
     jQuery('#track_user').modal('open');

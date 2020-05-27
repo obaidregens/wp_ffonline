@@ -79,11 +79,13 @@ function renderBookCollections(id){
 
 	//Dropdown Render
 	const article = jQuery('article.mainsearch-item#book-' + id)[0];
-	jQuery(article).find('.book-favorite')[0].innerHTML =
-		book_collections[id].includes('favorites') ? '<i class="fas fa-heart"></i>Remove' : '<i class="fas fa-heart"></i>Favorite';
-	jQuery(article).find('.book-hide')[0].innerHTML = 
-		book_collections[id].includes('hidden') ? '<i class="fas fa-eye-slash"></i>Show' : '<i class="fas fa-eye-slash"></i>Hide';
+	if (article){
+		jQuery(article).find('.book-favorite')[0].innerHTML =
+			book_collections[id].includes('favorites') ? '<i class="fas fa-heart"></i>Remove' : '<i class="fas fa-heart"></i>Favorite';
+		jQuery(article).find('.book-hide')[0].innerHTML = 
+			book_collections[id].includes('hidden') ? '<i class="fas fa-eye-slash"></i>Show' : '<i class="fas fa-eye-slash"></i>Hide';
 
+	}
 	//Collection Render
 	const collection_modal = jQuery('.collections-modal[book_id="' + id + '"]')[0];
 	if (! collection_modal){
@@ -108,8 +110,11 @@ jQuery('body').on("click",'.book-collections',function(){
 		jQuery('#login-modal').modal('open');
 	}
 	else{
-		var id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
-		var collection_modal = jQuery('.collections-modal')[0];
+		let id = this.getAttribute('book_id');
+		if (! id){
+			id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
+		}
+		let collection_modal = jQuery('.collections-modal')[0];
 		collection_modal.setAttribute('book_id',id);
 
 		renderBookCollections(id);

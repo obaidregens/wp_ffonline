@@ -94,11 +94,16 @@ jQuery(document).ready(function(){
         jQuery('#survey_modal').modal('open');
 
     });
-    jQuery('.close_survey_bar').click(function(){
+    function close_survey_bar(){
         jQuery('#survey_top_bar').css('position','absolute');
         jQuery('#survey_top_bar').css('height','31.4px');
         jQuery('#survey_top_bar').children('a').css('display','none');
-
-    });
+        jQuery('#survey_top_bar').children('span').css('margin-left','0');
+        setCookie('improve_bar','close');
+    }
+    jQuery('.close_survey_bar').click(close_survey_bar);
+    if (cookies['improve_bar'] && cookies['improve_bar'] == 'close'){
+        close_survey_bar();
+    }
 });
 

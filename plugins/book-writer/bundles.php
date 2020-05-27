@@ -53,7 +53,7 @@ class js_bundle {
         if ($mode == 'dev'){
             $enqueued = [];
             foreach ($this->bundle as $key => $filename) {
-                wp_enqueue_script( 'bundle_' . $this->name . '_' . $key,$this->theme_url . '/' . $filename . '.js',$enqueued,null,true);
+                wp_enqueue_script( 'bundle_' . $this->name . '_' . $key, $this->theme_url . '/' . $filename . '.js',$enqueued,null,true);
                 $enqueued[] = 'bundle_' . $this->name . '_' . $key;
             }
             return;
@@ -81,6 +81,19 @@ class js_bundle {
         }
         return;
     }
+    function remove($file,$full = false){
+        if (! isset($this->bundle)){
+            $this->bundle = array();
+        }
+        if ($full == false){
+            $file = 'js/' . $file;
+        }
+        if (in_array($file,$this->bundle)){
+            unset($this->bundle[array_search($file,$this->bundle)]);
+            sort($this->bundle);
+        }
+        return;
+    }
     function write(){
         
         if (! isset($this->bundle) || empty($this->bundle)){
@@ -89,7 +102,9 @@ class js_bundle {
         $total_js = '';
         foreach ($this->bundle as $file) {
             $total_js .= file_get_contents($this->theme_dir . '/' .  $file . '.js');
+            $total_js .= "\n\r";
         }
+        file_put_contents($this->theme_dir . '/total_js.error',$total_js);
         $url = 'https://javascript-minifier.com/raw';
         $ch = curl_init();
         curl_setopt_array($ch, [

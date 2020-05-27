@@ -5,7 +5,7 @@ admin_only();
 global $js_bundle;
 $js_bundle = global_bundle('manage');
 $js_bundle->add('manage');
-$js_bundle->enqueue();
+$js_bundle->enqueue('dev');
 get_header();
 ?>
 <style>
@@ -140,7 +140,12 @@ get_header();
 global $wpdb;
 $table_name = 'custom_stats';
 $result = $wpdb->get_results ( "
-    SELECT * FROM $table_name
+    SELECT *
+    FROM (
+        SELECT * FROM custom_stats
+        ORDER BY ID DESC
+        LIMIT 18446744073709551615
+    ) AS sub
     GROUP BY cookie_id
     ORDER BY ID DESC
 " );
@@ -158,8 +163,8 @@ $result = json_encode($result);
     <thead>
         <tr>
             <th>User ID</th>
-            <th>First Visit</th>
-            <th>First Referral</th>
+            <th>Most Recent Visit</th>
+            <th>Most Recent IP</th>
         </tr>
     </thead>
     <tbody>

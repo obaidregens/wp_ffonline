@@ -62,13 +62,13 @@ var notifyMessageID = setInterval(new_message_notification, 10000);
 //Parse Cookies
 //Cookies Parsed: theme, line-height, font-size
 var cookies_arr = document.cookie.split('; ');
-var cookies = {};
+const cookies = {};
 for (let i = 0; i < cookies_arr.length; i++) {
     let split = cookies_arr[i].split('=');
     cookies[split[0]] = split[1];
 }
 //Set Cookies Function
-function setCookie(name, value, options) {
+function setCookie(name, value, options = { expires: 30, path: '/' }) {
   var d = new Date();
   d.setTime(d.getTime() + (options.expires*24*60*60*1000));
   var expires = "expires="+ d.toUTCString();

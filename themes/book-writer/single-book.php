@@ -7,13 +7,9 @@ log_stats('view','book',$post->ID,$vfs);
 global $js_bundle;
 $js_bundle = global_bundle('book');
 $js_bundle->add('book');
-$js_bundle->add('chapter');
+$js_bundle->add('book-options');
 $js_bundle->enqueue();
 
-if (current_user_can('administrator') && isset($_GET['template']) && $_GET['template'] == 'test'){
-    include('single-book-test.php');
-    exit();
-}
 /**
 * The template for displaying book pages
 * Template Name: Book
@@ -25,6 +21,24 @@ if (current_user_can('administrator') && isset($_GET['template']) && $_GET['temp
 //page_header
 get_header();
 ?>
+<style>
+.book-bar{
+  margin:0;
+  text-transform: uppercase;
+  font-weight:bold;
+}
+.book-bar > a {
+  display:inline-block;
+  padding:10px 10px;
+  cursor: pointer;
+}
+.book-bar > a > i {
+  margin-right: 10px;
+}
+.book-bar > a:hover > i {
+  color: var(--secondary-color);
+}
+</style>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
 		<?php if ( have_posts() ) { ?>
@@ -44,14 +58,16 @@ get_header();
             ?>
           <div class="row" style="white-space:nowrap;overflow:auto;z-index:10;background-color:var(--background-accent);position:sticky;top:0;margin:0 0 15px 0;width:100%;">
             <div class="col s12" style="padding:0;">
-              <ul style="margin:0">
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#about">About</a>
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#summary">Summary</a>
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#tags">Tags</a>
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#follow">Follow</a>
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#index">Index</a>
-                <a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="#author">Author</a>
-				<a class="btn-hover" style="display:inline-block;padding:10px 10px;" href="<?php echo get_post_meta($post->ID,'link',true); ?>" rel="nofollow" target="_blank">Source</a>
+              <ul class="book-bar">
+                <a class="btn-hover" href="#about">About</a>
+                <a class="btn-hover" href="#summary">Summary</a>
+                <a class="btn-hover" href="#tags">Tags</a>
+                <a class="btn-hover" href="#index">Index</a>
+                <a class="btn-hover" href="#author">Author</a>
+                <?php if (metadata_exists('post',$post->ID,'link')){ ?>
+                <a class="btn-hover" href="<?php echo get_post_meta($post->ID,'link',true); ?>" rel="nofollow" target="_blank">Source</a>
+                <?php } ?>
+                <a class="btn-hover right book-collections" book_id="<?= $post->ID ?>"><i class="fas fa-plus"></i>Add to collection</a>
               </ul>
             </div>
           </div>
@@ -72,12 +88,6 @@ get_header();
                 <?php get_template_part( 'template-parts/header', 'taxonomy' ); ?>
               </div>
               <div class="divider" style="margin:10px 0;"></div>
-              <div id="follow" class="valign-wrapper scrollspy">
-                <div style="display:inline-block;font-size:21px;" class="favorite-wrapper"><i onclick="favorite_this(<?php echo $post->ID; ?>)" class="<?php if (in_array(get_current_user_id(),get_stats_of('book_fav',$post->ID))){echo 'active ';} ?>btn-favorite far fa-heart"></i></div>
-                <?php echo $eye; ?>
-                <div style="display:inline-block;font-size:21px;margin-left:10px;" onclick="M.Modal.getInstance(document.getElementById('add_to_collection')).open();" class="btn-hover btn-floating"><i class="fas fa-list-ul"></i></div>
-              </div>
-              <div class="divider" style="margin:10px 0;"></div>
               <div id="index" class="scrollspy">
                 <?php get_template_part( 'template-parts/content', 'index' ); ?>
               </div>
@@ -87,63 +97,10 @@ get_header();
               <div class="divider" style="margin:10px 0;"></div>
             </div>
           </div>
-		    <span id="book-id" style="display:none;"><?php echo $post->ID; ?></span>
-            <div class="progress" style="display:none;margin:0;position: fixed;bottom: 0px;right: 0px;left: 0px;"><div class="indeterminate"></div></div>
-            <!-- Modal Structure -->
-            <div id="add_to_collection" class="modal bottom-sheet">
-            	<div class="modal-content">
-            	 <?php
-            	 $collections_of_book = wp_get_post_terms($post->ID,'collection',array('fields'=>'ids'));
-            	 $collections = get_terms(array(
-                    'meta_key' => 'author',
-                    'meta_value' => get_current_user_id(),
-                    'taxonomy' => 'collection',
-                    'hide_empty' => false,
-                ));
-                ?>
-                <table><tbody>
-        			<tr>
-        				<td>Favorites <label>(Private)</label></td>
-        				<td class="right-align">
-        					<div class="switch"><label>
-        						<input onclick="favorite_this(<?php echo $post->ID ; ?>)" <?php if (in_array(get_current_user_id(),get_stats_of('book_fav',$post->ID))){echo 'checked';} ?> id="d-switch-favorite" type="checkbox">
-        						<span class="lever"></span>
-        						</label></div>
-        				</td>
-        			</tr>
-        			<tr>
-        				<td>Hidden <label>(Private)</label></td>
-        				<td class="right-align">
-        					<div class="switch"><label>
-        						<input onclick="hide_book(<?php echo $post->ID ; ?>)" <?php if (in_array($post->ID,get_stats_of('user_hidden',get_current_user_id()))){echo 'checked';} ?> id="d-switch-hidden" type="checkbox">
-        						<span class="lever"></span>
-        						</label></div>
-        				</td>
-        			</tr>
-        			<?php foreach($collections as $collection) { ?>
-                        <tr>
-                            <td><?php echo $collection->name . ' <label>(' . get_term_meta($collection->term_id,'public_collection',true) . ')</label>'; ?></td>
-                            <td class="right-align">
-                                <div class="switch"><label>
-                                    <input onclick="save_collections();" <?php if (in_array($collection->term_id,$collections_of_book)){echo 'checked';} ?> id="switch-<?php echo $collection->term_id; ?>" type="checkbox">
-                                    <span class="lever"></span>
-                                </label></div>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                    <?php if (empty($collections)) { ?>
-                        <tr>
-                            <td><a href="/dashboard/collections">Create Collection</a></td>
-                            <td></td>
-                        </tr>            
-                    <?php } ?>
-                </tbody></table>
-            	</div>
-            </div>
+          <?php get_template_part('template-parts/modal','collection'); ?>
 		<?php } else {
 			get_template_part( 'template-parts/content', 'bookempty' );
 		} ?>
 	</main><!-- .site-main -->
 </div><!-- .content-area -->
-<?php get_sidebar(); ?>
 <?php get_footer(); ?>

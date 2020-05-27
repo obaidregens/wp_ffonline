@@ -161,12 +161,6 @@ function get_data($book_id = 'new'){
     return $data;
 }
 function collection_data($book_ids){
-	if (! is_user_logged_in()){
-		return array(
-			'book_collections' => null,
-			'collections'	   => null,
-		);
-	}
 	//All Collections, Favorites & Hidden
 	$collections = get_terms(array(
 		'meta_key' => 'author',
@@ -192,7 +186,10 @@ function collection_data($book_ids){
 	$favorites = get_stats_of('user_fav',get_current_user_id());
 	$hidden = get_stats_of('user_hidden',get_current_user_id());
 	foreach ($book_ids as $book_id) {
-		$book_collections[$book_id] = wp_get_post_terms($book_id,'collection',array('fields'=>'ids'));
+		$book_collections[$book_id] = array_intersect(
+			wp_get_post_terms($book_id,'collection',array('fields'=>'ids')),
+			array_keys($collections)
+		);
 		if (in_array($book_id,$favorites)){
 			$book_collections[$book_id][] = 'favorites';
 		}
