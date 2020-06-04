@@ -46,9 +46,10 @@ function get_type_template(){
 	$template_page = get_template_page();
 	global $author;
 	$return = array();
-	if ($template_page == 'taxonomy-collection.php'){
+	if ($template_page == 'collections/single.php'){
 		$return['type'] = 'collection';
-		$return['type_id'] = get_queried_object()->term_id;
+		global $collection;
+		$return['type_id'] = $collection['ID'];
 	}
 	else if ($template_page == 'page-search.php'){
 		$return['type'] = 'main';
@@ -87,11 +88,12 @@ function get_template_page(){
 //Add Search to Database
 function log_search($unpacked){
 	global $wpdb;
-	if (get_type_template() == false){
+	$this_type_template =  get_type_template();
+	if ($this_type_template == false){
 		return false;
 	}
-	$type = get_type_template()['type'];
-	$type_id = get_type_template()['type_id'];
+	$type = $this_type_template['type'];
+	$type_id = $this_type_template['type_id'];
 	$wpdb->insert(
 		'searches', 
 		array(
@@ -372,7 +374,7 @@ function unpack_search($packed){
 			'post_type'              => array( 'book' ),
 			'post_status'            => array( 'publish' ),
 			'posts_per_page'		 => 10,
-			'post__not_in'	 		 => get_stats_of('user_hidden',get_current_user_id()),
+			'post__not_in'	 		 => collection::get_hidden(),
 		);
 		if (isset($packed['search'])){
 			$search = $packed['search'];
@@ -427,7 +429,7 @@ function unpack_search($packed){
 			'posts_per_page' 		 => 10,
 			'order'                  => 'DESC',
 			'orderby'                => 'modified',
-			'post__not_in'	 		 => get_stats_of('user_hidden',get_current_user_id()),
+			'post__not_in'	 		 => collection::get_hidden(),
 		);	
 	}
 	return $args;

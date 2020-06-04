@@ -1,4 +1,16 @@
 <?php
+function username_regex_valid($string){
+	if (strlen(preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$string)) > 0){
+		return false;
+	}
+	return true;
+}
+function title_regex_valid($string){
+	if (strlen(preg_replace ('/(\d)|(\.)|( )|(\-)|(\?)|(\_)|([A-Z])+/i','',$string)) > 0){
+		return false;
+	}
+	return true;
+}
 //All Objs
 function _link($id,$type){
 	if (in_array($type,array('home'))){
@@ -179,7 +191,7 @@ function username_possible($username){
 	if (strlen($username) < 5 || strlen($username) > 20){
 		return false;
 	}
-	if (strlen(preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$username)) > 0){
+	if (! username_regex_valid($username)){
 		return false;
 	}
 	if (username_exists($username)){
@@ -324,7 +336,7 @@ function get_unread_messages_with($user_id){
     }
 	return $unread;
 }
-function find_current_user_chats(){
+function find_current_user_chats($received_only = false){
 	$tax_query = array(
 		'relation' => 'AND',
 		array(
@@ -337,14 +349,16 @@ function find_current_user_chats(){
 	);
 	// WP_Query arguments
 	$args = array(
-		'post_type'              => array( 'message' ),
-		'post_status'            => array( 'publish' ),
-		'tax_query'              => $tax_query,
-		'order'                  => 'DESC',
-		'orderby'                => 'date',
-		'posts_per_page'		 => -1,
+		'post_type'             => array( 'message' ),
+		'post_status'           => array( 'publish' ),
+		'tax_query'             => $tax_query,
+		'order'                 => 'DESC',
+		'orderby'               => 'date',
+		'posts_per_page'		=> -1,
 	);
-
+	if ($received_only === true){
+		$args['author__not_in'] = array(get_current_user_id());
+	}
 	// The Query
 	$query = new WP_Query( $args );
 	$messages = $query->posts;

@@ -89,15 +89,6 @@ $no_login_modal = array('page-dashboard.php','page-login.php');
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	
 <!-- Google Tools -->
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async defer src="https://www.googletagmanager.com/gtag/js?id=UA-153515447-1"></script>
-<script>
-	window.dataLayer = window.dataLayer || [];
-	function gtag(){dataLayer.push(arguments);}
-	gtag('js', new Date());
-
-	gtag('config', 'UA-153515447-1');
-</script>
 <!-- reCAPTCHA -->
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 <script>

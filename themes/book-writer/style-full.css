@@ -147,12 +147,6 @@ option:hover {
 
 
 
-@media screen and (min-width: 44.375em)
-{
-.site
-{
-	margin: 0;
-}
 
 .site-main article {
     margin-bottom: 2em;
@@ -3006,6 +3000,11 @@ p > video {
 	.site {
 		margin: 21px;
 	}
+	#search-settings{
+		top: -21px !important;
+	    left: -21px !important;
+    	width: calc(100% + 42px) !important;
+	}
 
 	.site-main {
 		margin-bottom: 5.25em;
@@ -4656,4 +4655,14 @@ div.divider{
     background: transparent;
     width: 5px;
 
+}
+/* Collection Content */
+.collection-content{
+	margin-bottom: 40px;
+}
+.collection-content h2{
+	margin-bottom: 0;
+}
+.collection-content h5{
+	margin-bottom:1.05em;
 }

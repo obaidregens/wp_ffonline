@@ -11,7 +11,7 @@ if( isset($_POST['ajax'])){
 			'code'				=>	$code,
 		);
 		if ($code <= 5){
-			$_return['book_collections'] = collection_data($_POST['book_ids'])['book_collections'];
+			$_return['book_collections'] = collection::query_by_book($_POST['book_ids'],'ID');
 		}
 		if ($extra !== 0){
 			$_return['extra'] = $extra;
@@ -24,15 +24,10 @@ if( isset($_POST['ajax'])){
 	}
 	$_POST['book_ids'] = array_keys($_POST['book_collections']);
 	foreach ($_POST['book_ids'] as $key => $book_id) {
-		if (! is_('book',$book_id)){
-			return_code(7);
+		$return = collection::set('book',$book_id,$_POST['book_collections'][$book_id],null,get_current_user_id());
+		if (err::is($return) ){
+			return_code($return);
 		}
-		foreach($_POST['book_collections'][$book_id] as $collection_id){
-			if(! is_author_(get_current_user_id(),$collection_id,'collection')){
-				return_code(8);
-			}
-		}
-		set_collections($book_id,$_POST['book_collections'][$book_id]);
 	}
 	return_code(1);
 }

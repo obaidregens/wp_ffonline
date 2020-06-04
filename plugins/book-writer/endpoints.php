@@ -14,15 +14,18 @@ function wpa_author_endpoints(){
 
     add_rewrite_endpoint( 'books', EP_AUTHORS);
     add_rewrite_endpoint( 'updates', EP_AUTHORS);
-    add_rewrite_endpoint( 'favorites', EP_AUTHORS);
-    add_rewrite_endpoint( 'collection', EP_AUTHORS);
-    $parms = array('write','profile','stats','messages','chat','settings','bookmarks','collections');
+    // Favorites will be a subsection of collections
+    // add_rewrite_endpoint( 'favorites', EP_AUTHORS);
+    $parms = array('write','profile','stats','messages','chat','settings','bookmarks');
     foreach ($parms as $key => $value) {
         add_rewrite_endpoint( $value, EP_PAGES,false);
     }
 
     //Books
     add_rewrite_endpoint( 'chapter', EP_BOOKS,'chapter');
+
+    //Collections
+    add_rewrite_endpoint( 'collections', EP_AUTHORS | EP_PAGES | EP_ROOT, 'collections');
 }
 add_action( 'init', 'wpa_author_endpoints' );
 function wpa_author_template( $template = '' ){
@@ -33,11 +36,29 @@ function wpa_author_template( $template = '' ){
     if( array_key_exists( 'updates', $wp_query->query_vars ) ){
         $template = locate_template( array( 'author/updates.php', $template ), false );
 	}
-    if( array_key_exists( 'favorites', $wp_query->query_vars ) ){
-        $template = locate_template( array( 'author/favorites.php', $template ), false );
-	}
-    if( array_key_exists( 'collection', $wp_query->query_vars ) ){
-        $template = locate_template( array( 'author/collections.php', $template ), false );
+    if( array_key_exists( 'collections', $wp_query->query_vars ) ){
+        $args = array(
+            'slug'                  => $wp_query->query_vars['collections'],
+            'types'                 => array('Favorites'),
+            'text_search_protocol'  => 'strict',
+            'authors'               => array($wp_query->queried_object->ID),
+        );
+        if (get_current_user_id() === $wp_query->queried_object->ID){
+            $args['types'][] = 'Private';
+            $args['types'][] = 'Unlisted';
+        }
+        $collection_query = collection::query($args);
+        if ($wp_query->query_vars['collections'] == ''){
+            $template = locate_template('author/collections.php');
+        }
+        else if (empty($collection_query)){
+            _404('collections/404.php');
+        }
+        else{
+            global $collection;
+            $collection = $collection_query[0];
+            $template = locate_template( 'collections/single.php' );
+        }
     }
     return $template;
 }
@@ -48,17 +69,24 @@ add_filter( 'author_template', 'wpa_author_template' );
 add_filter( 'document_title_parts', function($title){
     global $wp_query;
     if (is_author()){
+        $author_name = $title['title'];
         if( array_key_exists( 'books', $wp_query->query_vars ) ){
-            $title['title'] .= ' - Books';
+            $title['title'] = 'Books - ' .$author_name;
         }
         else if( array_key_exists( 'updates', $wp_query->query_vars ) ){
-            $title['title'] .= ' - Updates';
+            $title['title'] = 'Updates - ' . $author_name;
         }
-        else if( array_key_exists( 'favorites', $wp_query->query_vars ) ){
-            $title['title'] .= ' - Favorites';
-        }
-        else if( array_key_exists( 'collection', $wp_query->query_vars ) ){
-            $title['title'] .= ' - Collections';
+        else if( array_key_exists( 'collections', $wp_query->query_vars ) ){
+            global $collection;
+            if ($wp_query->query_vars['collections'] == ''){
+                $title['title'] = 'Collections - ' . $author_name;
+            }
+            else if (! isset($collection)){
+                $title['title'] = 'Collection not found - ' . $author_name;
+            }
+            else{
+                $title['title'] = $collection['title'] . ' - ' . 'Collections - ' . $author_name;
+            }
         }
     }
     else if( is_singular("chapter")){
@@ -69,8 +97,17 @@ add_filter( 'document_title_parts', function($title){
         global $post;
         $title['title'] = $post->post_title . ' - by ' . get_the_author_meta('display_name',$post->post_author);
     }
-    else if (is_tax('collection')){
-        $title['title'] .= ' - Collections';
+    else if (isset($wp_query->query_vars['collections'])){
+        global $collection;
+        if ($wp_query->query_vars['collections'] === ''){
+            $title['title'] = 'Collections';
+        }
+        else if (! isset($collection)){
+            $title['title'] = 'Collection not found';
+        }
+        else{
+            $title['title'] =  $collection['title'] . ' - Collections';
+        }
     }
     return $title;
 });
@@ -102,12 +139,37 @@ function ct_chapter_template($template = ''){
                     'p'              => 0
                 ));
                 $wp_query = $chapter;
-                $wp_query->set_404();
-                status_header( 404 );
-                $template = locate_template( array( 'no-chapter.php', '404.php' ), false );
+                _404('no-chapter.php');
             }
         }
     }
     return $template;
 }
 add_filter( 'single_template', 'ct_chapter_template');
+
+function collections_hook($template = ''){
+    global $wp_query;
+    global $template;
+
+    if (isset($wp_query->query_vars['collections'])){
+        $collection_query = collection::query(array(
+            'types'                 => array('Public','Unlisted'),
+            'slug'                  => $wp_query->query_vars['collections'],
+            'text_search_protocol'  => 'strict',
+        ));
+        if ($wp_query->query_vars['collections'] == ''){
+            $template = locate_template(array('collections/index.php'),false);
+        }
+        else if (empty($collection_query)){
+            _404('collections/404.php');
+        }
+        else{
+            global $collection;
+            $collection = $collection_query[0];
+            $template = locate_template( array('collections/single.php'),false);
+        }
+    }
+
+    return $template;
+}
+add_filter( 'home_template', 'collections_hook' );

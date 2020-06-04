@@ -1,61 +1,38 @@
 <?php
 
-global $vfs;
-$vfs = vfs();
-log_stats('view','book',$post->ID,$vfs);
-
 global $js_bundle;
 $js_bundle = global_bundle('book');
 $js_bundle->add('book');
 $js_bundle->add('book-options');
 $js_bundle->enqueue();
 
-/**
-* The template for displaying book pages
-* Template Name: Book
-*
-**/
-
-?>
-<?php
-//page_header
 get_header();
 ?>
 <style>
-.book-bar{
-  margin:0;
-  text-transform: uppercase;
-  font-weight:bold;
-}
-.book-bar > a {
-  display:inline-block;
-  padding:10px 10px;
-  cursor: pointer;
-}
-.book-bar > a > i {
-  margin-right: 10px;
-}
-.book-bar > a:hover > i {
-  color: var(--secondary-color);
-}
+  .book-bar{
+    margin:0;
+    text-transform: uppercase;
+    font-weight:bold;
+    display: flex;
+  }
+  .book-bar > a {
+    display:inline-block;
+    padding:10px 10px;
+    cursor: pointer;
+  }
+  .book-bar > a > i {
+    margin-right: 10px;
+  }
+  .book-bar > a:hover > i {
+    color: var(--secondary-color);
+  }
+  .book-bar > .book-collections{
+    margin-left:auto;
+  }
 </style>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
 		<?php if ( have_posts() ) { ?>
-            <?php
-            if (in_array($post->ID,get_stats_of('user_hidden',get_current_user_id()))){
-                $class_of_eye = 'fa-eye-slash';
-            }
-            else{
-                $class_of_eye = 'fa-eye';
-            }
-    		if (is_user_logged_in()){
-    			$eye = '<a onclick="hide_book(' . $post->ID . ')" style="margin-left:10px;" class="btn-hover btn-floating"><i class="icon-hide far ' . $class_of_eye . '"></i></a>';
-    		}
-    		else{
-    			$eye = '';
-    		}
-            ?>
           <div class="row" style="white-space:nowrap;overflow:auto;z-index:10;background-color:var(--background-accent);position:sticky;top:0;margin:0 0 15px 0;width:100%;">
             <div class="col s12" style="padding:0;">
               <ul class="book-bar">

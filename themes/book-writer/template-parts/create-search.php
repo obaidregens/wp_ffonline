@@ -57,10 +57,14 @@
 		top: 40px;
 		left: -50px;
 		transition: opacity .25s cubic-bezier(.215,.61,.355,1);
-	}
+    }
+    .filters-button-wrapper{
+        text-align:right;
+        margin-bottom: 50px;
+        margin-top:20px;
+    }
 </style>
 <?php
-
 //Find Args from Url
 $args = unpack_search($_GET);
 //Max Count
@@ -70,20 +74,18 @@ $max_count = max_search_words($args);
 //Log Search
 $search_id = log_search($args);
 ?> <span id="search_id" style="display:none;"><?php echo $search_id; ?></span> <?php
-if (get_template_page() == 'taxonomy-collection.php'){
-    $collection_id = get_queried_object()->term_id;
-    if (! isset($args['tax_query'])){
-        $args['tax_query'] = array();
+global $collection;
+if (isset($collection)){
+    $collection_books = array_column(collection::book_query(array($collection['ID'])),'ID');
+    if (! isset($args['post__in'])){
+        $args['post__in'] = $collection_books;
     }
-    if (! isset($args['tax_query']['relation'])){
-        $args['tax_query']['relation'] = 'AND';
+    else{
+        $args['post__in'] = array_merge($args['post__in'],$collection_books);
     }
-    $args['tax_query'][] = array(
-        'taxonomy'         => 'collection',
-        'terms'            => $collection_id,
-        'field'            => 'term_id',
-        'operator'         => 'AND',
-    );
+    if (empty($args['post__in'])){
+        $args['post__in'] = array(0);
+    }
 }
 else if (get_template_page() == 'author/books.php'){
     global $author;
@@ -97,10 +99,10 @@ else if (get_template_page() == 'author/books.php'){
 else if (get_template_page() == 'author/favorites.php'){
     global $author;
     if (! isset($args['post__in'])){
-        $args['post__in'] = get_stats_of('user_fav',$author);
+        $args['post__in'] = collection::get_favorites($author);
     }
     else{
-        $args['post__in'] = array_merge(get_stats_of('user_fav',$author),$args['post__in']);
+        $args['post__in'] = array_merge(collection::get_favorites($author),$args['post__in']);
     }
     if (empty($args['post__in'])){
         $args['post__in'] = array(0);
@@ -111,7 +113,7 @@ $original_query = $wp_query;
 $wp_query = null;
 $wp_query = $default_query;
 ?>
-<button style="margin-bottom:50px;" class="mobile-margin waves-effect waves-light btn-small right" onclick="search_settings('open')">Filters</button>
+<div class="filters-button-wrapper mobile-margin"><button class="waves-effect waves-light btn-small" onclick="search_settings('open')">Filters</button></div>
 <div class="row" id="search-display"><div id="box" class="col s12">
 	<?php
 	if (have_posts()){
@@ -146,4 +148,4 @@ global $js_bundle;
 $js_bundle = global_bundle('create_search');
 $js_bundle->add('create_search');
 $js_bundle->add('book-options');
-$js_bundle->enqueue('dev');
+$js_bundle->enqueue();

@@ -1,10 +1,12 @@
 <?php
-function _404(){
+function _404($template_ = '404.php'){
+    global $template;
+    $template = locate_template(  $template_ , false);
     global $wp_query;
     $wp_query->set_404();
     status_header( 404 );
     get_header();
-    get_template_part('404');
+    load_template( $template );
     get_footer();
     exit();
 }

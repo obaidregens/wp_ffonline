@@ -3,7 +3,7 @@
         <div class="card-panel">
             <div class="section" style="color:var(--mid-theme-color);"><h3>Comments from last week.</h3></div>
             <?php
-			$comments = get_stats_of('user_comments',get_current_user_id(),'last week');
+			$comments = array();
             if (count($comments) == 0){
                 $books = get_posts(array('post_type'=>'book','author'=>get_current_user_id(),'post_status'=>'publish'));
                 $books_with_comments = get_posts(array('post_type'=>'book','author'=>get_current_user_id(),'post_status'=>'publish','comment_status'=>'open'));

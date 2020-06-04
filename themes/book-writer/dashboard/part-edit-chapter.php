@@ -69,7 +69,7 @@
 		<!-- Chapter Editor -->
 		<div class="row">
 			<div class="input-field col s12">
-				<div class="top-bar"><a class="autosave-trigger">Autosaves</a></div>
+				<div class="top-bar"><a href="#" class="autosave-trigger">Autosaves</a></div>
 				<div class="editorWrap">
 					<div class="toolbar">
 						<button tabindex="-1" tooltip="Ctrl B" text_action="bold" type="button"><i class="fas fa-bold"></i></button>
@@ -117,6 +117,8 @@
 		</div>
 	</div>
 	<script type = "text/javascript">
+	var intervalID;
+	function load_chapter_part(){
 		let autosaves = {};
 		jQuery('input[type="checkbox"][on_label][off_label]').trigger('change');
 		jQuery(document).ready(function(){
@@ -274,10 +276,15 @@
 			clear_autosaves();
 			autosaves = autosaves_new;
 			let autosave_keys = Object.keys(autosaves);
+			autosave_keys.sort();
+			autosave_keys.reverse();
 			for (let i = 0; i < autosave_keys.length; i++) {
 				let timestamp = autosave_keys[i];
 				let time = timestamp_to_local(timestamp);
 				let content = autosaves[timestamp];
+				if (content.length > 400){
+					content = content.substring(0,400) + ' <a href="#">...</a>';
+				}
 				jQuery('.autosaves-list').append('<div class="autosave" timestamp="' + timestamp + '"><div class="autosave-edit"><a>Edit</a></div><div class="autosave-time">' + time + '</div><div class="autosave-short-content">' + content + '</div></div>');				
 			}
 		}
@@ -302,8 +309,10 @@
 				success: function(response){
 					add_autosaves(response);
 				}
-			});            
+			});   
     	}
-		var intervalID = setInterval(autosave_content, 100000);
+		intervalID = setInterval(autosave_content, 10000);
+	}
+	load_chapter_part();
     </script>
 </main>

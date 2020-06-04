@@ -4,7 +4,7 @@
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
 .materialize-red {
-  background-color: #e51c23 !important;t
+  background-color: #e51c23 !important;
 }
 
 .materialize-red-text {
@@ -7163,7 +7163,7 @@ select {
   bottom: 0;
   margin: auto 0;
   z-index: 0;
-  fill: rgba(0, 0, 0, 0.87);
+  fill: var(--text-color);
 }
 
 .select-wrapper + label {
@@ -7176,16 +7176,18 @@ select:disabled {
   color: rgba(0, 0, 0, 0.42);
 }
 
-.select-wrapper.disabled + label {
-  color: rgba(0, 0, 0, 0.42);
+.select-wrapper.disabled+label {
+  color: var(--text-color);
+  opacity: 0.6;
 }
 
 .select-wrapper.disabled .caret {
-  fill: rgba(0, 0, 0, 0.42);
+  fill: var(--text-color);
+  opacity: 0.4;
 }
 
 .select-wrapper input.select-dropdown:disabled {
-  color: rgba(0, 0, 0, 0.42);
+  color: var(--text-color);
   cursor: default;
   -webkit-user-select: none;
      -moz-user-select: none;

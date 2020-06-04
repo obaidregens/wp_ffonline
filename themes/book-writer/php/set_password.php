@@ -17,6 +17,7 @@ if( isset($_POST['ajax']) && isset($_POST['key']) && isset($_POST['login']) && i
     else{
         echo '1';
         $return = reset_password($user,$_POST['password']);
+        collection::create_default($user->ID);
     }
  exit;
 }

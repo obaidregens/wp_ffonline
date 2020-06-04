@@ -219,6 +219,9 @@
 					if ((response.code <= 5) && data_submit.book_id == 'new'){
 						window.location.href = document.location.origin + '/dashboard/write/' + response.book_id;
 					}
+				},
+				error: function (first,second,third){
+					console.log(arguments);
 				}
 			});
 			

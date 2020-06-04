@@ -4,7 +4,8 @@
 
 <?php
 $template_page = get_template_page();
-$author_base = get_author_posts_url($author) . '/';
+$author_base = rtrim(get_author_posts_url($author),'/') . '/';
+global $wp_query;
 ?>
 <div class="author-header">
 	<div class="author-name-block">
@@ -15,7 +16,7 @@ $author_base = get_author_posts_url($author) . '/';
 			<a href="<?php echo $author_base; ?>" <?php if ($template_page == 'author.php'){?> class="active" <?php } ?> >About</a>
 			<a href="<?php echo $author_base . 'books'; ?>" <?php if ($template_page == 'author/books.php'){?> class="active" <?php } ?> >Books</a>
 			<a href="<?php echo $author_base . 'updates'; ?>" <?php if ($template_page == 'author/updates.php'){?> class="active" <?php } ?> >Updates</a>
-			<a href="<?php echo $author_base . 'collection'; ?>" <?php if ($template_page == 'author/collections.php'){?> class="active" <?php } ?> >Collections</a>
+			<a href="<?php echo $author_base . 'collections'; ?>" <?php if (isset($wp_query->query_vars['collections'])){?> class="active" <?php } ?> >Collections</a>
 		</div>
 		<div class="author-actions">
 			<!--<a><i class="fas fa-user-plus"></i></a>-->

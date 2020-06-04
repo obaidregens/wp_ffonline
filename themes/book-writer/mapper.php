@@ -50,28 +50,17 @@ for ($i=2; $i <= $num_pages; $i++) {
 }
 
 //Collection Page
-$terms = (new WP_Term_Query(array(
-    'count'         => 1,
-    'fields'        => 'ids',
-    'taxonomy' 		=> 'collection',
-    'hide_empty' 	=> true,
-    'meta_query' 	=> array(
-        'relation' 		=> 'AND',
-        array(
-            'key'     	=> 'public_collection',
-            'value'   	=> 'Public',
-            'compare' 	=> '=',
-            'type'    	=> 'CHAR',
-        ),
-    ),
-    'meta_key'      => 'time_modified',
-    'orderby'       => 'meta_value_num',
-    'order'         => 'DESC'
-    
-)))->terms;
+$collections = collection::query(array(
+    'orderby'   => 'modified',
+    'order'     => 'DESC',
+    'types'     => array('Public','Favorites'),
+    'count'     => array(
+        'from'      => 1,
+    )
+));
 $xml .= url_field(
     'https://fanfiction.online/collection/',
-    f_stamp(get_term_meta($terms[0],'time_modified',true)),
+    f_stamp($collections[0]['modified']),
     'daily'
 );
 $xml .= '</urlset>';
@@ -118,50 +107,37 @@ for ($i=1; $i <= $num_pages; $i++) {
         file_put_contents ($file,$xml);
     }
 }
-$num_pages = intval(wp_count_terms('collection',array(
-    'hide_empty' 	=> true,
-	'meta_query' 	=> array(
-		'relation' 		=> 'AND',
-		array(
-			'key'     	=> 'public_collection',
-			'value'   	=> 'Public',
-			'compare' 	=> '=',
-			'type'    	=> 'CHAR',
-		),
-    ),
-    'meta_key'      => 'time_modified',
-    'orderby'       => 'meta_value_num',
-    'order'         => 'DESC',
-))/100)+1;
+
+$num_pages = (intval(collection::query(array(
+    'select'    => 'count',
+    'orderby'   => 'modified',
+    'order'     => 'DESC',
+    'types'     => array('Public','Favorites'),
+    'limit'     => 9999999999999999999999999999,
+    'count'     => array(
+        'from'      => 1,
+    )
+)))/100)+1;
 for ($i=1; $i <= $num_pages; $i++) {
     $file = $dir . '/sitemap-collection-' . $i . '.xml';
     if (! file_exists($file) || filemtime($file) < time() - 172800){
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-        $terms = (new WP_Term_Query(array(
-            'count'         => 100,
-            'offset'        => ($i * 100) - 100,
-            'taxonomy' 		=> 'collection',
-            'hide_empty' 	=> true,
-            'meta_query' 	=> array(
-                'relation' 		=> 'AND',
-                array(
-                    'key'     	=> 'public_collection',
-                    'value'   	=> 'Public',
-                    'compare' 	=> '=',
-                    'type'    	=> 'CHAR',
-                ),
-            ),
-            'meta_key'      => 'time_modified',
-            'orderby'       => 'meta_value_num',
-            'order'         => 'DESC'
-        )))->terms;
-
-        foreach($terms as $term){
+        $collections = collection::query(array(
+            'orderby'   => 'modified',
+            'order'     => 'DESC',
+            'types'     => array('Public','Favorites'),
+            'limit'     => 100,
+            'page'      => $i
+            'count'     => array(
+                'from'      => 1,
+            )
+        ));
+        foreach($collections as $collection){
             $xml .= url_field(
-                dss (get_term_link($term->term_id) . '/') ,
-                f_stamp(get_term_meta($term->term_id,'time_modified',true)),
+                rtrim(collection::link($collection), '/') . '/' ,
+                f_stamp($collection['modified']),
                 'weekly'
             );
         }

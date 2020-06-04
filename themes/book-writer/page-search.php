@@ -5,9 +5,7 @@
  * Search page
  *
  */
-global $vfs;
-$vfs = vfs();
-log_stats('view','home',$post->ID,$vfs);
+
 $front_cache = get_front_cache();
 if ($front_cache && ! is_user_logged_in() && empty($_GET) ){
 	//Find Args from Url
@@ -18,6 +16,7 @@ if ($front_cache && ! is_user_logged_in() && empty($_GET) ){
   exit();
 }
 get_header();
+
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">

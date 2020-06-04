@@ -1,298 +1,209 @@
+<style>
+.collections_list > li {
+    color:var(--text-color) !important;
+    padding-left:20px !important;
+    border-radius:0%  !important;
+}
+.collection_modal.modal.open.focus-temp {
+    box-shadow: 0 0 0pt 2pt var(--text-color);
+    transform: scale(0.96) !important;
+}
+</style>
 <main id="main" class="site-main" role="main">
 <?php
-$collections = get_terms(array(
-    'meta_key' => 'author',
-    'meta_value' => get_current_user_id(),
-    'taxonomy' => 'collection',
-    'hide_empty' => false,
-));
+$collections_ = collection::_present_dashboard();
 ?>
-<ul class="collection">
-	<li onclick="M.Modal.getInstance(document.getElementById('modal-favorites')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
-		<span class="title"><?php echo 'Favorites <label>(Private)</label>'; ?></span><span class="right" style="padding-left:6px;"></span>
-	</li>
-
-	<!-- Modal Structure -->
-	<div id="modal-favorites" class="modal">
-		<div class="modal-content">
-			<h4 class="row valign-wrapper"><span class="col s10">Favorites</span><span class="col s2"><a onclick="notifications_toggle('favorites')" class="right btn-hover btn-floating"><i style="font-size:1.3rem;" class="notification-icon fas <?php if (get_user_meta(get_current_user_id(),'fav_notify',true) == 'notify' || get_user_meta(get_current_user_id(),'fav_notify',true) === ''){echo 'fa-bell';}else{echo 'fa-bell-slash';} ?>"></i></a></span></h4>
-			<?php
-			$favs = get_stats_of('user_fav',get_current_user_id());
-			?>
-			<ul class="collection with-header">
-				<?php
-				foreach($favs as $fav){
-				$book = get_post($fav);
-				?><li id="<?php echo 'favorites_' . $book->ID; ?>" class="collection-item"><div><a href="<?php echo get_permalink($book->ID); ?>"><?php echo $book->post_title; ?></a><a class="secondary-content"><i onclick="delete_book('<?php echo 'favorites_' . $book->ID; ?>')" class="btn-favorite far fa-trash-alt"></i></a></div></li><?php
-				}
-				if (empty($favs)){
-					?><li class="collection-item"><div><a>No Books</a></div></li><?php
-				}
-				?>
-			</ul>
-		</div>
-		<div class="modal-footer">
-			<a onclick="save_it('favorites');" class="waves-effect btn-flat">Save</a>
-		</div>
-	</div>
-	<li onclick="M.Modal.getInstance(document.getElementById('modal-hidden')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
-		<span class="title"><?php echo 'Hidden <label>(Private)</label>'; ?></span><span class="right" style="padding-left:6px;"></span>
-	</li>
-
-	<!-- Modal Structure -->
-	<div id="modal-hidden" class="modal">
-		<div class="modal-content">
-		    <h4 class="row valign-wrapper"><span class="col s10">Hidden</span><span class="col s2"><a onclick="notifications_toggle('hidden')" class="right btn-hover btn-floating"><i style="font-size:1.3rem;" class="notification-icon fas <?php if (get_user_meta(get_current_user_id(),'hidden_notify',true) == 'notify' || get_user_meta(get_current_user_id(),'hidden_notify',true) === ''){echo 'fa-bell';}else{echo 'fa-bell-slash';} ?>"></i></a></span></h4>
-			<?php
-			$hidden = get_stats_of('user_hidden',get_current_user_id());
-			?>
-			<ul class="collection with-header">
-				<?php
-				foreach($hidden as $id){
-				$book = get_post($id);
-				?><li id="<?php echo 'hidden_' . $book->ID; ?>" class="collection-item"><div><a href="<?php echo get_permalink($book->ID); ?>"><?php echo $book->post_title; ?></a><a class="secondary-content"><i onclick="delete_book('<?php echo 'hidden_' . $book->ID; ?>')" class="btn-favorite far fa-trash-alt"></i></a></div></li><?php
-				}
-				if (empty($hidden)){
-					?><li class="collection-item"><div><a>No Books</a></div></li><?php
-				}
-				?>
-			</ul>
-		</div>
-		<div class="modal-footer">
-			<a onclick="save_it('hidden');" class="waves-effect btn-flat">Save</a>
-		</div>
-	</div>
-	<?php
-
-	foreach($collections as $collection){
-    ?>
-    <li onclick="M.Modal.getInstance(document.getElementById('modal-<?php echo $collection->term_id; ?>')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
-        <span class="title"><?php echo $collection->name . ' <label>(' . get_term_meta($collection->term_id,'public_collection',true) . ')</label>'; ?></span><span class="right" style="padding-left:6px;"><a href="<?php echo get_term_link($collection->term_id); ?>">View</a></span>
-        <p><?php echo $collection->description; ?></p>
-    </li>
-
-  <!-- Modal Structure -->
-  <div id="modal-<?php echo $collection->term_id; ?>" class="modal">
+<span id="collections_data" style="display:none;"><?= json_encode($collections_) ?></span>
+<ul class="collections_list collection">
+</ul>
+<div collection_id="" class="collection_modal modal">
     <div class="modal-content">
-      <div class="row">
-        <div class="input-field col s10">
-          <input name="name" type="text" class="validate" value="<?php echo $collection->name; ?>" required>
-          <label for="name">Name</label>
-          <span class="helper-text" data-error="Enter a name for your collection."></span>
-        </div>
-        <div class="input-field col s2">
-            <a onclick="notifications_toggle(<?php echo $collection->term_id; ?>)" class="right btn-hover btn-floating"><i style="font-size:1.3rem;" class="notification-icon fas <?php if (in_array(get_current_user_id(),get_stats_of('collection_follow',$collection->term_id))){echo 'fa-bell';}else{echo 'fa-bell-slash';} ?>"></i></a>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <textarea name="description" class="materialize-textarea"><?php echo $collection->description; ?></textarea>
-          <label for="description">Description</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-            <div class="switch">
-            <label>
-            Private
-            <input <?php if(get_term_meta($collection->term_id,'public_collection',true) == 'Public'){echo 'checked';} ?> name="public_switch" type="checkbox">
-            <span class="lever"></span>
-            Public
-            </label>
+        <div class="row"></div>
+        <div class="row">
+            <div class="input-field col s12">
+                <input name="title" data-length="50" type="text" class="validate" value="" required>
+                <label for="title">Title</label>
+                <span class="helper-text"></span>
             </div>
         </div>
-      </div>
-    <?php
-        $args = array(
-        'post_type' => 'book',
-        'posts_per_page' => -1,
-        'tax_query' => array(
-            array(
-            'taxonomy' => 'collection',
-            'field' => 'term_id',
-            'terms' => $collection->term_id
-             )
-          )
-        );
-        $query = new WP_Query( $args );
-        ?>
-        <ul class="collection with-header">
-            <?php
-            foreach($query->posts as $book){
-                ?><li id="<?php echo $collection->term_id . '_' . $book->ID; ?>" class="collection-item"><div><a href="<?php echo get_permalink($book->ID); ?>"><?php echo $book->post_title; ?></a><a class="secondary-content"><i onclick="delete_book('<?php echo $collection->term_id . '_' . $book->ID; ?>')" class="btn-favorite far fa-trash-alt"></i></a></div></li><?php
-            }
-            if (empty($query->posts)){
-                ?><li class="collection-item"><div><a>No Books</a></div></li><?php
-            }
-            ?>
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea name="description" data-length="400" class="materialize-textarea"></textarea>
+                <label for="description">Description</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select name="type" style="display:none;">
+                    <option value="Public">Public</option>
+                    <option value="Unlisted">Unlisted</option>
+                    <option value="Private">Private</option>
+                </select>
+                <label>Privacy</label>
+            </div>
+        </div>
+        <ul class="collection_books_list collection with-header">
+
         </ul>
     </div>
     <div class="modal-footer">
-      <a onclick="delete_collection('<?php echo $collection->term_id; ?>');" class="waves-effect btn-flat">Delete</a>
-      <a onclick="save_it('<?php echo $collection->term_id; ?>');" class="waves-effect btn-flat">Save</a>
+        <a class="waves-effect btn-flat save-collection action-delete">Delete</a>
+        <a class="waves-effect btn-flat save-collection action-save">Save</a>
     </div>
-  </div>
-    <?php
-}
-?>
-    <li onclick="M.Modal.getInstance(document.getElementById('modal-new')).open();" style="color:var(--text-color) !important;padding-left:20px;border-radius:0%;" class="btn-hover collection-item avatar">
-        <span class="title">New Collection</span>
-    </li>
-
-  <!-- Modal Structure -->
-  <div id="modal-new" class="modal">
-    <div class="modal-content">
-      <div class="row">
-        <div class="input-field col s12">
-          <input name="name" type="text" class="validate" required>
-          <label for="name">Name</label>
-          <span class="helper-text" data-error="Enter a name for your collection."></span>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <textarea name="description" class="materialize-textarea"></textarea>
-          <label for="description">Description</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-            <div class="switch">
-            <label>
-            Private
-            <input checked name="public_switch" type="checkbox">
-            <span class="lever"></span>
-            Public
-            </label>
-            </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <a onclick="save_it('new');" class="waves-effect btn-flat">Save</a>
-    </div>
-  </div>
-
-</ul>
+</div>
 <script>
-  var deleted_books = [];
-  var titles = [];
-  jQuery(document).ready(function(){
-    jQuery('.modal').modal();
-  });
-  function delete_book(collection_book){
-      if (deleted_books.indexOf(collection_book) == -1){
-          titles.push(jQuery('#' + collection_book + ' a')[0]);
-          deleted_books.push(collection_book);
-          document.getElementById(collection_book).innerHTML = '<div><a style="color:var(--text-color);">Removed</a><a onclick="delete_book(\'' + collection_book + '\')" class="secondary-content">UNDO</a></div>';
-      }
-      else{
-          var index = deleted_books.indexOf(collection_book);
-          document.getElementById(collection_book).innerHTML = '<div><a href="' + titles[index].getAttribute('href') + '">' + titles[index].innerHTML + '</a><a class="secondary-content"><i onclick="delete_book(\'' + collection_book + '\')" class="btn-favorite far fa-trash-alt"></i></a></div>';
-          deleted_books.splice(index, 1);
-          titles.splice(index, 1);
-      }
-  }
-    function delete_collection(collection){
-        var confirm = window.confirm("Are you sure you want to delete this collection? You won't be able to recover it later.");
-        if (confirm == false){
+function collections_load(){
+    jQuery('input[data-length], textarea[data-length]').characterCounter();
+
+    let collections_data = JSON.parse(document.getElementById('collections_data').innerHTML);
+    const collections_list = jQuery('.collections_list')[0];
+    const collection_modal = jQuery('.collection_modal')[0];
+    function render_list(){
+        let construct = '';
+        const keys_ = Object.keys(collections_data);
+        for (let i = 0; i <= keys_.length; i++) {
+            const id = keys_.length == i ? 'new' : keys_[i];
+            const collection = i == keys_.length ? {title: 'New Collection'} : collections_data[keys_[i]];
+            construct += `<li collection_id="${id}" class="btn-hover collection-item avatar collection_li"><span class="title">${collection.title}`;
+            if (i !== keys_.length){
+                construct += ` <label>(${collection.type})</label></span><span class="right" style="padding-left:6px;"><a href="${collection.link}">View</a></span><p>${collection.description}</p>`;
+            }
+            construct += '</li>';
+        }
+        jQuery(collections_list).children().remove();
+        jQuery(collections_list).append(construct);
+    }
+    function modal_dismiss(bl = false){
+        let m = M.Modal.getInstance(collection_modal);
+        m.options.dismissible = bl;
+        let temp_save_warning_again;
+        if (! bl){
+            function closeCollectionModal(){
+                jQuery(collection_modal).addClass('focus-temp');
+                M.Toast.dismissAll()
+                M.toast({html: 'Remember to save your changes if you want to keep them!'});
+                const temp_collection_focus_interval = setInterval(function(){
+                    jQuery(collection_modal).removeClass('focus-temp');
+                    clearInterval(temp_collection_focus_interval);
+                }, 50);
+                modal_dismiss(true);
+                temp_save_warning_again = setInterval(function(){
+                    modal_dismiss(false);
+                    clearInterval(temp_save_warning_again);
+                },30000);
+            }
+            jQuery('.modal-overlay').on('click.nodismissone',closeCollectionModal);
             return;
         }
-        jQuery("#page-main").html('<main><div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></main>');
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/dashboard/ajax/save_collection.php',
-    		type: 'post',
-    		data: {ajax: 1,collection:collection,to_delete:'delete'},
-    		success: function(response){
-                M.Toast.dismissAll();
-    		    if (response == 1){
-    		        M.toast({html: 'Collection Deleted.'});
-    		    }
-    		    else{
-    		        M.toast({html: 'An error occured.'});
-    		    }
-    			load_page('collections');
-    		}
-    	});
+        jQuery('.modal-overlay').off('click.nodismissone');
+        clearInterval(temp_save_warning_again);
     }
-    function save_it(collection){
-        var collection_deleted_books = [];
-        for (i = 0; i < deleted_books.length; i++) {
-            if (deleted_books[i].split('_')[0] == collection){
-                collection_deleted_books.push(deleted_books[i].split('_')[1]);
-            }
+    jQuery(collection_modal).on('change','input, textarea, select',function(){
+        modal_dismiss(false);
+    });
+    render_list();
+    jQuery('.collections_list').on('click','.collection_li',function(){
+        jQuery(collection_modal).modal('open');
+        M.Toast.dismissAll();
+        const collection_id = this.getAttribute('collection_id');
+        const _collection = collections_data[collection_id];
+        jQuery(collection_modal).find('[name="title"]').val(collection_id !== 'new' ? _collection.title : '');
+
+        jQuery(collection_modal).find('[name="description"]').val(collection_id !== 'new' ? _collection.description : '');
+        jQuery(collection_modal).find('[name="type"]').val(collection_id !== 'new' ? _collection.type : 'Public');
+        M.updateTextFields();
+        if (['Favorites','Hidden'].includes(collection_id !== 'new' ? _collection.title : 'New Collection')){
+            jQuery(collection_modal).find('[name="title"]').prop('disabled',true);
+            jQuery(collection_modal).find('[name="description"]').prop('disabled',true);
+            jQuery(collection_modal).find('[name="type"]').prop('disabled',true);
         }
-		if (collection != 'favorites' && collection != 'hidden'){
-			var name = jQuery('#modal-' + collection + ' [name=name]')[0].value;
-			if (name == ''){
-				jQuery('#modal-' + collection).animate({
-					scrollTop: jQuery('#modal-' + collection + ' [name=name]').offset().top
-				}, 500);
-			}
-			var description = jQuery('#modal-' + collection + ' [name=description]')[0].value;
-			if (jQuery('#modal-' + collection + ' [name=public_switch]')[0].checked == true){
-				var public_switch = 'Public';
-			}
-			else{
-				var public_switch = 'Private';
-			}
-			var data = {ajax: 1,collection:collection,deleted_books:collection_deleted_books,name:name,description:description,public_switch:public_switch};
-		}
-		else{
-			var data = {ajax: 1,collection:collection,deleted_books:collection_deleted_books};
-		}
-        jQuery("#page-main").html('<main><div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></main>');
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/dashboard/ajax/save_collection.php',
-    		type: 'post',
-    		data: data,
-    		success: function(response){
+        else{
+            jQuery(collection_modal).find('[name="title"]').prop('disabled',false);
+            jQuery(collection_modal).find('[name="description"]').prop('disabled',false);
+            jQuery(collection_modal).find('[name="type"]').prop('disabled',false);
+        }
+        jQuery(collection_modal).find('[name="type"]').formSelect();
+        //Set Books
+        let construct = '';
+        const book_keys = collection_id !== 'new' ? Object.keys(_collection.books) : [];
+        for (let i = 0; i < book_keys.length; i++) {
+            let book_id = book_keys[i];
+            let book = _collection.books[book_id];
+            construct += `<li book_id="${book_id}" class="collection-item"><div><a class="book_title" href="${book.link}">${book.title}</a><a class="secondary-content"><i class="btn-favorite far fa-trash-alt delete-book"></i></a></div></li>`;
+        }
+        if (book_keys.length == 0){
+            construct += '<li class="collection-item"><div><a>No Books</a></div></li>';
+        }
+        jQuery('.collection_books_list').children().remove();
+        jQuery('.collection_books_list').append(construct);
+        collection_modal.setAttribute('collection_id',collection_id);
+        modal_dismiss(true);
+    });
+    const deleted_books = [];
+    jQuery(collection_modal).on('click','.delete-book',function(){
+        modal_dismiss(false);
+        const li_elem = jQuery(this).parents('li[book_id]')[0];
+        const title_elem = jQuery(li_elem).find('a.book_title')[0];
+        const book_id = li_elem.getAttribute('book_id');
+        const collection_id = collection_modal.getAttribute('collection_id');
+        const book = collections_data[collection_id].books[book_id];
+
+        const index = deleted_books.indexOf(book_id);
+        if (index === -1){
+            deleted_books.push(book_id);
+            title_elem.removeAttribute('href');
+            title_elem.innerText = 'Removed';
+            this.innerText = 'UNDO';
+            this.className = 'delete-book';
+        }
+        else{
+            deleted_books.splice(index, 1);
+            title_elem.setAttribute('href',book.link);
+            title_elem.innerText = book.title;
+            this.innerText = '';
+            this.className = 'far fa-trash-alt btn-favorite delete-book';
+        }
+    });
+    jQuery('.save-collection').click(function (){
+        const action = jQuery(this).hasClass('action-save') ? 'save' : 'delete';
+        const collection_id = collection_modal.getAttribute('collection_id');
+        const books = collection_id !== 'new' ? array_diff(Object.keys(collections_data[collection_id].books),deleted_books) : [];
+        var data_submit = {
+            collection_id,
+            action,
+            title: jQuery(collection_modal).find('[name="title"]').val(),
+            description: jQuery(collection_modal).find('[name="description"]').val(),
+            type: jQuery(collection_modal).find('[name="type"]').val(),
+            books
+        };
+        jQuery(".progress").css('display','block');
+        jQuery.ajax({
+            url: '/wp-content/themes/book-writer/dashboard/ajax/save_collection.php',
+            type: 'post',
+            data: data_submit,
+            dataType: 'JSON',
+            success: function(response){
                 M.Toast.dismissAll();
-    		    if (response == 1){
-    		        M.toast({html: 'Collection Updated.'});
-    		    }
-    		    else if (response == 2){
-    		        M.toast({html: 'Collection Created.'});
-    		    }
-    		    else if (response == 0){
-    		        M.toast({html: 'Collection name is unavailable.'});
-    		    }
-    		    else{
-    		        M.toast({html: 'An error occured.'});
-    		    }
-    			load_page('collections');
-    		}
-    	});
-    }
-    function notifications_toggle(collection){
-		var data = {ajax: 1,collection:collection};
-        //jQuery("#page-main").html('<main><div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></main>');
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/php/collections_notifications.php',
-    		type: 'post',
-    		data: data,
-    		success: function(response){
-                M.Toast.dismissAll();
-    		    if (response == 1){
-    		        M.toast({html: "You'll receive notifications for this collection."});
-    		        jQuery('#modal-' + collection + ' .notification-icon').removeClass('fa-bell');
-    		        jQuery('#modal-' + collection + ' .notification-icon').removeClass('fa-bell-slash');
-    		        jQuery('#modal-' + collection + ' .notification-icon').addClass('fa-bell');
-    		    }
-    		    else if (response == 0){
-    		        M.toast({html: "You won't receive notifications for this collection from now."});
-    		        jQuery('#modal-' + collection + ' .notification-icon').removeClass('fa-bell');
-    		        jQuery('#modal-' + collection + ' .notification-icon').removeClass('fa-bell-slash');
-    		        jQuery('#modal-' + collection + ' .notification-icon').addClass('fa-bell-slash');
-    		    }
-    		    else if (response == 3){
-    		        M.toast({html: 'Please login.'});
-    		    }
-    		    else{
-    		        M.toast({html: 'An error occured.'});
-    		    }
-    		}
-    	});
-    }
+                jQuery(".progress").css('display','none');
+                if (response.code <= 5){
+                    jQuery(collection_modal).modal('close');
+                    collections_data = response.collection_data;
+                    render_list();
+                }
+                let toast = '';
+                response.code > 5 && (toast = 'An error occured.');
+                response.code === 1 && (toast = 'Collection Updated.');
+                response.code === 2 && (toast = 'Collection Created.');
+                response.code === 3 && (toast = 'Collection Deleted.');
+                response.code === 11 && (toast = 'Collection description is longer than 400 characters.');
+                response.code === 12 && (toast = 'Collection title is required.');
+                response.code === 13 && (toast = 'Collection title is longer than 50 characters.');
+                (response.code === 1001 || response.code === 1002) && (toast = 'Title unavailable.');
+                M.toast({html: toast});
+            }
+        });
+    });
+}
+collections_load();
 </script>
 </main><!-- .site-main -->

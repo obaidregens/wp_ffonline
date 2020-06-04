@@ -13,7 +13,7 @@ $js_bundle->enqueue();
 <?php get_header(); ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
-	    <div class="mobile-margin"><p style="font-size:12px;color:grey;">If you have any issues, need help in some way, or maybe you can help us? Whatever it is, just shoot us a message through the form below. We're waiting for it.</p></div>
+	    <div class="mobile-margin"><p style="font-size:12px;color:grey;">If you have any issues or need help, just shoot us a message through the form below. We'll reach out as soon as possible.</p></div>
 		<form name="message" class="col s12 mobile-margin">
 			<div class="row">
 				<p>

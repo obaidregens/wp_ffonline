@@ -14552,205 +14552,6 @@ $jscomp.polyfill = function (e, r, p, m) {
   Range.init($('input[type=range]'));
 })(cash, M.anime);
 
-var messages_count;
-jQuery(document).ready(function(){
-	jQuery('.dropdown-trigger').dropdown();
-	jQuery('#notification-sidenav').sidenav({edge:'right',onCloseEnd:function(){
-	    if (jQuery('.pulse.notification-badge')[0].innerHTML != ''){
-    	    messages_count += parseInt(jQuery('.pulse.notification-badge')[0].innerHTML);
-    	    jQuery('.pulse.notification-badge')[0].innerHTML = '';	        
-        }
-	}});
-    jQuery('.modal:not(#searchbook)').modal();
-    
-	jQuery('.tabs').tabs();
-	var links_tabs = jQuery('#nav-tabs a');
-	var active_exists = 0;
-	for (var i = 0; i < links_tabs.length; i++) {
-		if(jQuery(links_tabs[i]).hasClass('pagenow') == true){
-			active_exists = 1;
-		}
-	}
-	if(active_exists == 0){
-		jQuery('#nav-tabs .indicator').remove();
-	}
-	jQuery('.tooltipped').tooltip();
-	jQuery('.collapsible').collapsible();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/message_notifications.php',
-		type: 'post',
-		data: {ajax: 1,data: 'count'},
-		success: function(response){
-		    messages_count = parseInt(response);
-		}
-	});
-});
-function new_message_notification() {
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/message_notifications.php',
-		type: 'post',
-		data: {ajax: 1,data:'count',read:messages_count},
-		success: function(response){
-			if (response > messages_count){
-			    var diff = response - messages_count;
-				if (diff != parseInt(jQuery('.pulse.notification-badge')[0].innerHTML)){
-                    jQuery('.pulse.notification-badge')[0].innerHTML = diff;
-                	jQuery.ajax({
-                		url: '/wp-content/themes/book-writer/php/message_notifications.php',
-                		type: 'post',
-                		data: {ajax: 1,data: 'full'},
-                		success: function(response){
-                		    jQuery('#notification-sidenav')[0].innerHTML = response;
-                		}
-                	});				    
-				}
-			}
-		}
-	});     
-}
-
-var notifyMessageID = setInterval(new_message_notification, 10000);
-
-
-////////Theme START ///////////////
-//Parse Cookies
-//Cookies Parsed: theme, line-height, font-size
-var cookies_arr = document.cookie.split('; ');
-var cookies = {};
-for (let i = 0; i < cookies_arr.length; i++) {
-    let split = cookies_arr[i].split('=');
-    cookies[split[0]] = split[1];
-}
-//Set Cookies Function
-function setCookie(name, value, options) {
-  var d = new Date();
-  d.setTime(d.getTime() + (options.expires*24*60*60*1000));
-  var expires = "expires="+ d.toUTCString();
-  document.cookie = name + "=" + value + ";" + expires + ";path=" + options.path;
-}
-
-var current_theme = 'light';
-function dark_mode(){
-    current_theme = 'dark';
-    var root = document.documentElement;
-    root.style.setProperty("--theme-color", "#265f86");
-    root.style.setProperty("--text-color", "#b7bfc4");
-    root.style.setProperty("--background-color", "#121212");
-    root.style.setProperty("--background-accent", "#212020");
-    setCookie("theme","dark_mode", { expires:30, path: '/' });
-}
-function light_mode() {
-    current_theme = 'light';
-    var root = document.documentElement;
-    root.style.setProperty("--theme-color", "#007ACC");
-    root.style.setProperty("--text-color", "#262828");
-    root.style.setProperty("--background-color", "#fdfdfd");
-    root.style.setProperty("--background-accent", "#ececec");
-    setCookie("theme","light_mode", { expires:30, path: '/' });
-}
-jQuery("#dark_mode").click(dark_mode);
-jQuery("#light_mode").click(light_mode);
-jQuery("#triggerTheme").click(function(){
-    if (current_theme == 'dark'){
-        light_mode();
-    }
-    else if (current_theme == 'light'){
-        dark_mode();
-    }
-});
-//Theme Settings
-if (cookies["theme"] == "dark_mode"){dark_mode()}
-else{light_mode()}
-/////////////////Themes END /////////////////
-
-
-
-/////////preg_split function used in PHP
-function preg_split (pattern, subject, limit, flags) {
-    // http://kevin.vanzonneveld.net
-    // + original by: Marco Marchi??
-    // * example 1: preg_split(/[\s,]+/, 'hypertext language, programming');
-    // * returns 1: ['hypertext', 'language', 'programming']
-    // * example 2: preg_split('//', 'string', -1, 'PREG_SPLIT_NO_EMPTY');
-    // * returns 2: ['s', 't', 'r', 'i', 'n', 'g']
-    // * example 3: var str = 'hypertext language programming';
-    // * example 3: preg_split('/ /', str, -1, 'PREG_SPLIT_OFFSET_CAPTURE');
-    // * returns 3: [['hypertext', 0], ['language', 10], ['programming', 19]]
-    // * example 4: preg_split('/( )/', '1 2 3 4 5 6 7 8', 4, 'PREG_SPLIT_DELIM_CAPTURE');
-    // * returns 4: ['1', ' ', '2', ' ', '3', ' ', '4 5 6 7 8']
-    // * example 5: preg_split('/( )/', '1 2 3 4 5 6 7 8', 4, (2 | 4));
-    // * returns 5: [['1', 0], [' ', 1], ['2', 2], [' ', 3], ['3', 4], [' ', 5], ['4 5 6 7 8', 6]]
-
-    limit = limit || 0; flags = flags || ''; // Limit and flags are optional
-
-    var result, ret=[], index=0, i = 0,
-        noEmpty = false, delim = false, offset = false,
-        OPTS = {}, optTemp = 0,
-        regexpBody = /^\/(.*)\/\w*$/.exec(pattern.toString())[1],
-        regexpFlags = /^\/.*\/(\w*)$/.exec(pattern.toString())[1];
-        // Non-global regexp causes an infinite loop when executing the while,
-        // so if it's not global, copy the regexp and add the "g" modifier.
-        pattern = pattern.global && typeof pattern !== 'string' ? pattern :
-            new RegExp(regexpBody, regexpFlags+(regexpFlags.indexOf('g') !==-1 ? '' :'g'));
-
-    OPTS = {
-        'PREG_SPLIT_NO_EMPTY': 1,
-        'PREG_SPLIT_DELIM_CAPTURE': 2,
-        'PREG_SPLIT_OFFSET_CAPTURE': 4
-    };
-    if (typeof flags !== 'number') { // Allow for a single string or an array of string flags
-        flags = [].concat(flags);
-        for (i=0; i < flags.length; i++) {
-            // Resolve string input to bitwise e.g. 'PREG_SPLIT_OFFSET_CAPTURE' becomes 4
-            if (OPTS[flags[i]]) {
-                optTemp = optTemp | OPTS[flags[i]];
-            }
-        }
-        flags = optTemp;
-    }
-    noEmpty = flags & OPTS.PREG_SPLIT_NO_EMPTY;
-    delim = flags & OPTS.PREG_SPLIT_DELIM_CAPTURE;
-    offset = flags & OPTS.PREG_SPLIT_OFFSET_CAPTURE;
-
-    var _filter = function(str, strindex) {
-        // If the match is empty and the PREG_SPLIT_NO_EMPTY flag is set don't add it
-        if (noEmpty && !str.length) {return;}
-        // If the PREG_SPLIT_OFFSET_CAPTURE flag is set
-        //      transform the match into an array and add the index at position 1
-        if (offset) {str = [str, strindex];}
-        ret.push(str);
-    };
-    // Special case for empty regexp
-    if (!regexpBody){
-        result=subject.split('');
-        for (i=0; i < result.length; i++) {
-            _filter(result[i], i);
-        }
-        return ret;
-    }
-    // Exec the pattern and get the result
-    while (result = pattern.exec(subject)) {
-        // Stop if the limit is 1
-        if (limit === 1) {break;}
-        // Take the correct portion of the string and filter the match
-        _filter(subject.slice(index, result.index), index);
-        index = result.index+result[0].length;
-        // If the PREG_SPLIT_DELIM_CAPTURE flag is set, every capture match must be included in the results array
-        if (delim) {
-            // Convert the regexp result into a normal array
-            var resarr = Array.prototype.slice.call(result);
-            for (i = 1; i < resarr.length; i++) {
-                if (result[i] !== undefined) {
-                    _filter(result[i], result.index+result[0].indexOf(result[i]));
-                }
-            }
-        }
-        limit--;
-    }
-    // Filter last match
-    _filter(subject.slice(index, subject.length), index);
-    return ret;
-}
 function checkboxLabel(){
     if (this.checked == true){
         var label = this.getAttribute('on_label');
@@ -14774,6 +14575,16 @@ function object_dive(object, columnName) {
     return Object.keys(object).map(function(value) {
         return object[value][columnName];
     });
+}
+function array_unique(array){
+    let to_return = [];
+    for (let bb = 0; bb < array.length; bb++) {
+        const element = array[bb];
+        if (! to_return.includes(element)){
+            to_return.push(element);
+        }
+    }
+    return to_return;
 }
 function array_intersect(array,array1){
     var intersection = [];
@@ -14863,6 +14674,16 @@ function spin(selector,align = false){
         jQuery(selector).css('text-align',align);
     }
 }
+function progress(state = true){
+    if (state === true){
+        jQuery('.progress').css('display','block');
+        return;
+    }
+    jQuery('.progress').css('display','none');
+}
+function prompt_login(){
+    jQuery('#login-modal').modal('open');
+}
 function timestamp_to_local(timestamp){
     const time = new Date(timestamp * 1000);
     let time_formatted = time.toString();
@@ -14880,7 +14701,242 @@ function timestamp_duration(timestamp){
   }
 function ucfirst(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  }
+}
+
+/////////preg_split function used in PHP
+function preg_split (pattern, subject, limit, flags) {
+    // http://kevin.vanzonneveld.net
+    // + original by: Marco Marchi??
+    // * example 1: preg_split(/[\s,]+/, 'hypertext language, programming');
+    // * returns 1: ['hypertext', 'language', 'programming']
+    // * example 2: preg_split('//', 'string', -1, 'PREG_SPLIT_NO_EMPTY');
+    // * returns 2: ['s', 't', 'r', 'i', 'n', 'g']
+    // * example 3: var str = 'hypertext language programming';
+    // * example 3: preg_split('/ /', str, -1, 'PREG_SPLIT_OFFSET_CAPTURE');
+    // * returns 3: [['hypertext', 0], ['language', 10], ['programming', 19]]
+    // * example 4: preg_split('/( )/', '1 2 3 4 5 6 7 8', 4, 'PREG_SPLIT_DELIM_CAPTURE');
+    // * returns 4: ['1', ' ', '2', ' ', '3', ' ', '4 5 6 7 8']
+    // * example 5: preg_split('/( )/', '1 2 3 4 5 6 7 8', 4, (2 | 4));
+    // * returns 5: [['1', 0], [' ', 1], ['2', 2], [' ', 3], ['3', 4], [' ', 5], ['4 5 6 7 8', 6]]
+
+    limit = limit || 0; flags = flags || ''; // Limit and flags are optional
+
+    var result, ret=[], index=0, i = 0,
+        noEmpty = false, delim = false, offset = false,
+        OPTS = {}, optTemp = 0,
+        regexpBody = /^\/(.*)\/\w*$/.exec(pattern.toString())[1],
+        regexpFlags = /^\/.*\/(\w*)$/.exec(pattern.toString())[1];
+        // Non-global regexp causes an infinite loop when executing the while,
+        // so if it's not global, copy the regexp and add the "g" modifier.
+        pattern = pattern.global && typeof pattern !== 'string' ? pattern :
+            new RegExp(regexpBody, regexpFlags+(regexpFlags.indexOf('g') !==-1 ? '' :'g'));
+
+    OPTS = {
+        'PREG_SPLIT_NO_EMPTY': 1,
+        'PREG_SPLIT_DELIM_CAPTURE': 2,
+        'PREG_SPLIT_OFFSET_CAPTURE': 4
+    };
+    if (typeof flags !== 'number') { // Allow for a single string or an array of string flags
+        flags = [].concat(flags);
+        for (i=0; i < flags.length; i++) {
+            // Resolve string input to bitwise e.g. 'PREG_SPLIT_OFFSET_CAPTURE' becomes 4
+            if (OPTS[flags[i]]) {
+                optTemp = optTemp | OPTS[flags[i]];
+            }
+        }
+        flags = optTemp;
+    }
+    noEmpty = flags & OPTS.PREG_SPLIT_NO_EMPTY;
+    delim = flags & OPTS.PREG_SPLIT_DELIM_CAPTURE;
+    offset = flags & OPTS.PREG_SPLIT_OFFSET_CAPTURE;
+
+    var _filter = function(str, strindex) {
+        // If the match is empty and the PREG_SPLIT_NO_EMPTY flag is set don't add it
+        if (noEmpty && !str.length) {return;}
+        // If the PREG_SPLIT_OFFSET_CAPTURE flag is set
+        //      transform the match into an array and add the index at position 1
+        if (offset) {str = [str, strindex];}
+        ret.push(str);
+    };
+    // Special case for empty regexp
+    if (!regexpBody){
+        result=subject.split('');
+        for (i=0; i < result.length; i++) {
+            _filter(result[i], i);
+        }
+        return ret;
+    }
+    // Exec the pattern and get the result
+    while (result = pattern.exec(subject)) {
+        // Stop if the limit is 1
+        if (limit === 1) {break;}
+        // Take the correct portion of the string and filter the match
+        _filter(subject.slice(index, result.index), index);
+        index = result.index+result[0].length;
+        // If the PREG_SPLIT_DELIM_CAPTURE flag is set, every capture match must be included in the results array
+        if (delim) {
+            // Convert the regexp result into a normal array
+            var resarr = Array.prototype.slice.call(result);
+            for (i = 1; i < resarr.length; i++) {
+                if (result[i] !== undefined) {
+                    _filter(result[i], result.index+result[0].indexOf(result[i]));
+                }
+            }
+        }
+        limit--;
+    }
+    // Filter last match
+    _filter(subject.slice(index, subject.length), index);
+    return ret;
+}
+jQuery(document).ready(function(){
+	jQuery('.dropdown-trigger').dropdown();
+    jQuery('.modal:not(#searchbook)').modal();
+    jQuery('.scrollspy').scrollSpy();
+    
+	jQuery('.tabs').tabs();
+	var links_tabs = jQuery('#nav-tabs a');
+	var active_exists = 0;
+	for (var i = 0; i < links_tabs.length; i++) {
+		if(jQuery(links_tabs[i]).hasClass('pagenow') == true){
+			active_exists = 1;
+		}
+	}
+	if(active_exists == 0){
+		jQuery('#nav-tabs .indicator').remove();
+	}
+	jQuery('.tooltipped').tooltip();
+	jQuery('.collapsible').collapsible();
+});
+
+
+function im(type){
+	const selector = type === 'collections' ? 'article.collection-content' : 'article.mainsearch-item';
+	const attr = type === 'collections' ? 'collection_id' : 'book_id';
+	const height = window.innerHeight;
+	const objs = jQuery(selector);
+	let im__ = [];
+	for (let i = 0; i < objs.length; i++) {
+		const id = objs[i].getAttribute(attr);
+		const co_ordinates = objs[i].getBoundingClientRect();
+		const pos = (co_ordinates.top + co_ordinates.bottom)/2;
+		if (pos >= 0 && pos <= height){
+			im__.push(id);
+		}
+	}
+	return im__;
+}
+let notification_open = false;
+jQuery('#notification-sidenav').sidenav({edge:'right',onOpenEnd:function(){
+	jQuery('.pulse.notification-badge')[0].innerHTML = '';	
+	notification_open = true;
+}});
+
+let im_books = [];
+let im_collections = [];
+let lastSend = Date.now() - 20000;
+jQuery(window).on('touchstart touchmove click wheel mousedown mouseup focus blur keydown change resize scroll',function(event){
+	if (event.originalEvent && event.originalEvent.isTrusted !== true){
+		return;
+	}
+	im_books = array_unique(im_books.concat(im('books')));
+	im_collections = array_unique(im_collections.concat(im('collections')));
+	if (Date.now() - lastSend < 15000){
+        return;
+	}
+	lastSend = Date.now();
+	jQuery.ajax({
+		url: '/wp-content/themes/book-writer/php/poll.php',
+		type: 'post',
+		dataType: 'JSON',
+		data: {
+			data: document.getElementById('placeholder_data').innerHTML,
+			im_books,
+			im_collections,
+			notification_open
+		},
+		success: function(response){
+			notification_open = false;
+			let construct = '<li style="background-color:var(--light-theme-color);"><a class="subheader">Notifications</a></li>';
+			for (let i = 0; i < response.notifications.notifications.length; i++) {
+				const element = response.notifications.notifications[i];
+
+				let icon_class = element.type === 'book_updated' ? 'fas fa-book' : null;
+				icon_class = element.type === 'comment' ? 'fas fa-comment-alt' : icon_class;
+				icon_class = element.type === 'message_received' ? 'fas fa-envelope' : icon_class;
+				
+				let desc = element.type === 'book_updated' ? `"${element.title}" from "${element.collection}" has been updated.`: null;
+				desc = element.type === 'comment' ? `Someone commented on "${element.chapter_title}" from your book "${element.book_title}".` : desc;
+				desc = element.type === 'message_received' ? `You\'ve received a message from ${element.from}.`: desc;
+
+				construct += `<a target="_blank" style="display:block;" href="${element.link}"><li class="row btn-hover" style="cursor:pointer;margin-bottom:0;"><div class="center col s2 m1"><i class="${icon_class}"></i></div><div class="col s10 m11"><p style="padding-top:10px;line-height:22px;color:#9e9e9e !important;">${desc}</p><div style="
+					color: #9e9e9e;
+					line-height: 1;
+					text-align: right;
+					margin-bottom: 10px;
+				">${timestamp_to_local(element.timestamp)}</div></div></li></a>`;
+			}
+			if (response.notifications.notifications.length === 0){
+				construct += '<li><a class="subheader">No notifications.</a></li>';
+			}
+			jQuery('#notification-sidenav').children().remove();
+			jQuery('#notification-sidenav').append(construct);
+			jQuery('.pulse.notification-badge')[0].innerHTML = response.notifications.unread > 0 ? response.notifications.unread : '';	
+		}
+	});
+});
+
+////////Theme START ///////////////
+//Parse Cookies
+//Cookies Parsed: theme, line-height, font-size
+var cookies_arr = document.cookie.split('; ');
+const cookies = {};
+for (let i = 0; i < cookies_arr.length; i++) {
+    let split = cookies_arr[i].split('=');
+    cookies[split[0]] = split[1];
+}
+//Set Cookies Function
+function setCookie(name, value, options = { expires: 30, path: '/' }) {
+  var d = new Date();
+  d.setTime(d.getTime() + (options.expires*24*60*60*1000));
+  var expires = "expires="+ d.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=" + options.path;
+}
+
+var current_theme = 'light';
+function dark_mode(){
+    current_theme = 'dark';
+    var root = document.documentElement;
+    root.style.setProperty("--theme-color", "#265f86");
+    root.style.setProperty("--text-color", "#b7bfc4");
+    root.style.setProperty("--background-color", "#121212");
+    root.style.setProperty("--background-accent", "#212020");
+    setCookie("theme","dark_mode", { expires:30, path: '/' });
+}
+function light_mode() {
+    current_theme = 'light';
+    var root = document.documentElement;
+    root.style.setProperty("--theme-color", "#007ACC");
+    root.style.setProperty("--text-color", "#262828");
+    root.style.setProperty("--background-color", "#fdfdfd");
+    root.style.setProperty("--background-accent", "#ececec");
+    setCookie("theme","light_mode", { expires:30, path: '/' });
+}
+jQuery("#dark_mode").click(dark_mode);
+jQuery("#light_mode").click(light_mode);
+jQuery("#triggerTheme").click(function(){
+    if (current_theme == 'dark'){
+        light_mode();
+    }
+    else if (current_theme == 'light'){
+        dark_mode();
+    }
+});
+//Theme Settings
+if (cookies["theme"] == "dark_mode"){dark_mode()}
+else{light_mode()}
+/////////////////Themes END /////////////////
+
 jQuery("form[name='login']").submit(function(event) {
 	event.preventDefault();
 	var login = jQuery('#login_username').val();
@@ -15078,278 +15134,57 @@ jQuery(document).ready(function(){
         jQuery('#survey_modal').modal('open');
 
     });
-    jQuery('.close_survey_bar').click(function(){
+    function close_survey_bar(){
         jQuery('#survey_top_bar').css('position','absolute');
         jQuery('#survey_top_bar').css('height','31.4px');
         jQuery('#survey_top_bar').children('a').css('display','none');
-
-    });
-});
-
-
-function save_collections(){
-    jQuery('.progress').css('display','block');
-    var switches = jQuery('input[id^=switch-]');
-    var collections = [];
-    for (let i = 0; i < switches.length; i++) {
-        var collection_id = switches[i].id.replace('switch-','');
-        if (switches[i].checked == true){
-            collections.push(collection_id);
-        }
+        jQuery('#survey_top_bar').children('span').css('margin-left','0');
+        setCookie('improve_bar','close');
     }
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/add_to_collection.php',
-		type: 'post',
-		data: {ajax:1,collections:collections,book_id:document.getElementById('book-id').innerHTML},
-		success: function(response){
-			jQuery('.progress').css('display','none');
-		}
-	});
-}
-function hide_book(id){
-    jQuery('.progress').css('display','block');
-	if (jQuery('i.icon-hide').hasClass('fa-eye') == true){
-		jQuery('i.icon-hide').removeClass('fa-eye');
-		jQuery('i.icon-hide').addClass('fa-eye-slash');
-		jQuery('#d-switch-hidden').prop('checked',true);
-	}
-	else{
-		jQuery('i.icon-hide').removeClass('fa-eye-slash');
-		jQuery('i.icon-hide').addClass('fa-eye');
-		jQuery('#d-switch-hidden').prop('checked',false);
-	}
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/hide_book.php',
-		type: 'post',
-		data: {ajax:1,id:id},
-		success: function(response){
-			jQuery('.progress').css('display','none');
-			if (response == 3){
-			    M.toast({html: 'Please login.'});
-			}
-			else if (response == 0){
-			    jQuery('#d-switch-hidden').prop('checked',false);
-				jQuery('i.icon-hide').removeClass('fa-eye-slash');
-				jQuery('i.icon-hide').addClass('fa-eye');
-			}
-			else if (response == 1){
-			    jQuery('#d-switch-hidden').prop('checked',true);
-				jQuery('i.icon-hide').removeClass('fa-eye');
-				jQuery('i.icon-hide').addClass('fa-eye-slash');
-			}
-		}
-	});
-}
-function favorite_this(id){
-	jQuery('.favorite-wrapper')[0].innerHTML = '<div class="loader" style="width:21px;height:21px;"></div>';
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/favorite_this.php',
-		type: 'post',
-		data: {ajax:1,book_id:id},
-		success: function(response){
-			jQuery('.favorite-wrapper')[0].innerHTML = '<i onclick="favorite_this(' + id + ')" class="btn-favorite far fa-heart"></i>';
-			if (response == 0){
-				jQuery('.btn-favorite').removeClass('active');
-				jQuery('#d-switch-favorite').prop('checked',false);
-			}
-			else if (response == 1){
-				jQuery('.btn-favorite').addClass('active');
-				jQuery('#d-switch-favorite').prop('checked',true);
-			}
-			else if (response == 3){
-				jQuery('#login-modal').modal('open');
-			}
-		}
-	});
-}
-jQuery('.scrollspy').scrollSpy();
-jQuery('body').on("click",'.book-share',function(){
-	const book_elem = jQuery(this).parents('article.mainsearch-item')[0];
-	const title = jQuery(book_elem).find('.entry-title a')[0].innerHTML;
-	const desc = jQuery(book_elem).find('.search-summary p')[0].innerHTML;
-	const href = jQuery(book_elem).find('.entry-title a')[0].href;
-	const author = jQuery(book_elem).find('.entry-author a')[0].innerHTML;
-
-	const share_obj = {
-		title: 'I found a great fanfiction by ' + author + ' \'' + title + '\'!',
-		url: href,
-		text: desc
-	}
-	if (navigator.share) {
-	navigator.share(share_obj).then(() => {
-		//
-	})
-	.catch(console.error);
-	} else {
-	jQuery('html').append('<div id="share_modal" class="modal"><div class="modal-content"><h1 class="share_title">Share</h1><div class="book_box"><h4 class="book_title_author"></h4><p class="book_description"></p></div><div class="share_icons"><a target="_blank" class="btn-hover btn-floating whatsapp_share"><i class="fab fa-whatsapp"></i></a><a target="_blank" class="btn-hover btn-floating twitter_share"><i class="fab fa-twitter"></i></a><a target="_blank" class="btn-hover btn-floating reddit_share"><i class="fab fa-reddit-alien"></i></a><a target="_blank" class="btn-hover btn-floating facebook_share"><i class="fab fa-facebook-f"></i></a><a class="btn-hover btn-floating copy_share"><i class="fas fa-link"></i></a></div></div></div>');
-	jQuery('#share_modal').modal({onCloseEnd:function(){
-		jQuery('#share_modal').remove();
-	}});
-	jQuery('#share_modal').modal('open');
-	jQuery('#share_modal .book_title_author').html(share_obj.title);
-	jQuery('#share_modal .book_description').html(share_obj.text);
-
-	const text_s = share_obj.title + '%0A' + share_obj.text;
-	jQuery('.whatsapp_share')[0].href = 'https://api.whatsapp.com/send?text=' + text_s + '%0A%0ARead it now: ' + share_obj.url;
-	jQuery('.twitter_share')[0].href = 'https://twitter.com/intent/tweet?url=' + share_obj.url + '&text=' + text_s;
-	jQuery('.reddit_share')[0].href = 'https://www.reddit.com/submit?url=' + share_obj.url + '&title=' + text_s;
-	jQuery('.facebook_share')[0].href = 'https://www.facebook.com/sharer/sharer.php?u=' + share_obj.url + '&quote=' + text_s;
-	
-	jQuery('.copy_share')[0].setAttribute('href_copy',share_obj.url);
-	jQuery('.copy_share').click(function(){
-		const href = this.getAttribute("href_copy");
-		jQuery('html').append('<span id="copy_bubble">' + href + '</span>');
-		selectText('copy_bubble');
-		document.execCommand("copy");
-		jQuery('#copy_bubble').remove();
-		M.toast({html: 'Copied!'});
-	});
-	}
+    jQuery('.close_survey_bar').click(close_survey_bar);
+    if (cookies['improve_bar'] && cookies['improve_bar'] == 'close'){
+        close_survey_bar();
+    }
 });
-function selectText(node) {
-	node = document.getElementById(node);
-
-	if (document.body.createTextRange) {
-		const range = document.body.createTextRange();
-		range.moveToElementText(node);
-		range.select();
-	} else if (window.getSelection) {
-		const selection = window.getSelection();
-		const range = document.createRange();
-		range.selectNodeContents(node);
-		selection.removeAllRanges();
-		selection.addRange(range);
-	} else {
-		console.warn("Could not select text in node: Unsupported browser.");
-	}
-}
 
 
-const book_collections_elem = document.getElementById('book_collections');
-let book_collections = {};
-if (book_collections_elem){
-	book_collections = JSON.parse(book_collections_elem.innerHTML);
-}
-let all_articles = jQuery('article.mainsearch-item');
-for (let i = 0; i < all_articles.length; i++) {
-	let id = all_articles[i].id.replace('book-','');
-	if (! book_collections[id] ){
-		book_collections[id] = [];
-	}
-	renderBookCollections(id);
-}
-
-//Render
-function renderBookCollections(id){
-
-	//Dropdown Render
-	const article = jQuery('article.mainsearch-item#book-' + id)[0];
-	jQuery(article).find('.book-favorite')[0].innerHTML =
-		book_collections[id].includes('favorites') ? '<i class="fas fa-heart"></i>Remove' : '<i class="fas fa-heart"></i>Favorite';
-	jQuery(article).find('.book-hide')[0].innerHTML = 
-		book_collections[id].includes('hidden') ? '<i class="fas fa-eye-slash"></i>Show' : '<i class="fas fa-eye-slash"></i>Hide';
-
-	//Collection Render
-	const collection_modal = jQuery('.collections-modal[book_id="' + id + '"]')[0];
-	if (! collection_modal){
+jQuery("form[name='resetpassform']").submit(function(event) {
+    event.preventDefault();
+	var pass1 = jQuery('#pass1').val();
+	var pass2 = jQuery('#pass2').val();
+	if (pass1 != pass2){
+		jQuery('#pass2').addClass('invalid');
 		return;
 	}
-
-	//Uncheck all first
-	const all_collection_switches = jQuery(collection_modal).find('input.save-collection');
-	for (let i = 0; i < all_collection_switches.length; i++) {
-		let elem = all_collection_switches[i];
-		jQuery(elem).prop('checked',false);
-	}
-	//Check included
-	for (let i = 0; i < book_collections[id].length; i++) {
-		let collection_id = book_collections[id][i];
-		jQuery(collection_modal).find('[collection_id="' + collection_id +'"]').prop('checked',true);
-	}
-}
-//This will open Collections Modal
-jQuery('body').on("click",'.book-collections',function(){
-	if (this.hasAttribute("disabled")){
-		jQuery('#login-modal').modal('open');
+	if (pass1.length < 8){
+	    jQuery('#pass2').addClass('invalid');
+	    M.toast({html: 'Password should have at least 8 characters.'});
 	}
 	else{
-		let id = this.getAttribute('book_id');
-		if (! id){
-			id = jQuery(this).parents('article.mainsearch-item')[0].id.replace('book-','');
-		}
-		let collection_modal = jQuery('.collections-modal')[0];
-		collection_modal.setAttribute('book_id',id);
-
-		renderBookCollections(id);
-
-		M.Modal.getInstance(collection_modal).open();
+	    var urlParams = new URLSearchParams(location.search);
+	    var key = urlParams.get('key');
+	    var login = urlParams.get('login');
+		jQuery.ajax({
+			url: '/wp-content/themes/book-writer/php/set_password.php',
+			type: 'post',
+			data: {ajax: 1,key:key,reCAPTCHA:grecaptcha.getResponse(),login:login,password:pass2},
+			success: function(response){
+			    grecaptcha.reset();
+				if (response == '0' || response == '2'){
+					M.toast({html: 'An unknown error occured'});
+				}
+				else if (response == '1'){
+				    M.toast({html: 'Your password has been reset.'});
+					jQuery('#resetpass-button').prop('disabled','true');
+					window.location.href = "https://fanfiction.online/dashboard";
+				}
+				else if (response == '8'){
+					M.Toast.dismissAll();
+					M.toast({html: 'Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.'});
+				}
+			},
+		});			
 	}
 });
 
-//This is for the Favorite and Hidden buttons in the dropdown
-jQuery('body').on("click",'.book-favorite, .book-hide',function(){
-	let collection_id = '';
-	if (jQuery(this).hasClass('book-favorite')){
-		collection_id = 'favorites';
-	}
-	else if (jQuery(this).hasClass('book-hide')){
-		collection_id = 'hidden';
-	}
-	else{
-		return;
-	}
-	jQuery('.progress').css('display','block');
-	
-	const article = jQuery(this).parents('article.mainsearch-item')[0];
-	const id = article.id.replace('book-','');
-
-	jQuery(article).find('.book-collections').click();
-	
-	const collection_modal = jQuery('.collections-modal')[0];
-	M.Modal.getInstance(collection_modal).close();
-
-	jQuery(collection_modal).find('[collection_id="' + collection_id +'"]').click();
-
-
-});
-
-//Click on switch in collection modal
-jQuery('body').on("click",'.save-collection',function(){
-	jQuery('.progress').css('display','block');
-
-	const collection_modal = jQuery(this).parents('.collections-modal');
-	const id = collection_modal[0].getAttribute('book_id');
-
-	const switches = jQuery(collection_modal).find('.save-collection');
-	let collections = [];
-	for (let i = 0; i < switches.length; i++) {
-		let collection_id = switches[i].getAttribute("collection_id");
-		if (switches[i].checked == true){
-			collections.push(collection_id);
-		}
-	}
-	book_collections[id] = collections;
-
-	renderBookCollections(id);
-	const data_submit = {
-		ajax: 1,
-		book_collections: {}
-	}
-	data_submit.book_collections[id] = collections;
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/add_to_collection.php',
-		type: 'post',
-		dataType: 'JSON',
-		data: {data_: JSON.stringify(data_submit)},
-		success: function(response){
-			if (response.code == 6){
-				jQuery('#login-modal').modal('open');
-			}
-			else if (response.code > 5){
-				M.toast({html: 'An error occured.'});
-			}
-			jQuery('.progress').css('display','none');
-		}
-	});
-});
 

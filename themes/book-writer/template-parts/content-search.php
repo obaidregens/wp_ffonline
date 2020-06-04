@@ -1,8 +1,5 @@
-<?php
-global $vfs;
-log_stats('impression','book',$post->ID,$vfs);
-?>	
-<article id="book-<?php the_ID(); ?>" class="mainsearch-item" <?php //post_class(); ?>>
+
+<article book_id="<?php the_ID(); ?>" id="book-<?php the_ID(); ?>" class="mainsearch-item" <?php //post_class(); ?>>
 	<a class='dropdown-trigger book-options btn-hover btn-floating' data-target='book-options-<?php the_ID(); ?>'><i class="fas fa-angle-down"></i></a>
 	<!-- Dropdown Structure -->
 	<ul id='book-options-<?php the_ID(); ?>' class='dropdown-content'>

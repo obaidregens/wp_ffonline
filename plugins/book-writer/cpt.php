@@ -10,9 +10,6 @@ function chapter_post_name($slug,$post_ID,$post_status,$post_type,$post_parent,$
 //Rewrite term links from front-end
 add_filter('term_link', 'term_link_filter', 10, 3);
 function term_link_filter( $url, $term, $taxonomy ) {
-	if ($taxonomy == 'collection'){
-		return $url;
-	}
 	$url = get_site_url() . '/?' . $taxonomy . '_included=' . $term -> term_id;
     return $url;  
 }
@@ -262,39 +259,6 @@ function bw_register_ct()
 		'show_tagcloud'              => true,
 	);
 	register_taxonomy( 'tag', array( 'book' ), $args );
-
-	$labels = array(
-		'name'                       => 'Collections',
-		'singular_name'              => 'Collection',
-		'menu_name'                  => 'Collection',
-		'all_items'                  => 'All Collections',
-		'parent_item'                => 'Parent Collection',
-		'parent_item_colon'          => 'Parent collection:',
-		'new_item_name'              => 'New Collection',
-		'add_new_item'               => 'Add New Collection',
-		'edit_item'                  => 'Edit Collection',
-		'update_item'                => 'Update Collection',
-		'view_item'                  => 'View Collection',
-		'separate_items_with_commas' => 'Separate collection with commas',
-		'add_or_remove_items'        => 'Add or remove collection',
-		'choose_from_most_used'      => 'Choose from the most used',
-		'popular_items'              => 'Popular Collection',
-		'search_items'               => 'Search Collection',
-		'not_found'                  => 'Not Found',
-		'no_terms'                   => 'No Collections',
-		'items_list'                 => 'Collection list',
-		'items_list_navigation'      => 'Collection list navigation',
-	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => true,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => true,
-	);
-	register_taxonomy( 'collection', array( 'book' ), $args );
 	$args = array(
 		'hierarchical'               => false,
 		'public'                     => false,

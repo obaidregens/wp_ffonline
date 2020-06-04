@@ -5,7 +5,7 @@ admin_only();
 global $js_bundle;
 $js_bundle = global_bundle('manage');
 $js_bundle->add('manage');
-$js_bundle->enqueue('dev');
+$js_bundle->enqueue();
 get_header();
 ?>
 <style>

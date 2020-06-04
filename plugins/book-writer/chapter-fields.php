@@ -30,7 +30,7 @@ add_action('save_post_chapter', 'word_counts', 11,2);
 
 function ring_notify($new_status,$old_status,$post){
 	if ($new_status == 'publish' && $post->post_type == 'chapter'){
-		add_collection_notifications($post->ID);
+		//add_collection_notifications($post->ID);
 	}
 }
 add_action('transition_post_status','ring_notify',15,3);

@@ -124,35 +124,14 @@ jQuery('body').on("click",'.book-collections',function(){
 });
 
 //This is for the Favorite and Hidden buttons in the dropdown
-jQuery('body').on("click",'.book-favorite, .book-hide',function(){
-	let collection_id = '';
-	if (jQuery(this).hasClass('book-favorite')){
-		collection_id = 'favorites';
-	}
-	else if (jQuery(this).hasClass('book-hide')){
-		collection_id = 'hidden';
-	}
-	else{
-		return;
-	}
-	jQuery('.progress').css('display','block');
-	
+jQuery('body').on("click",'.book-favorite, .book-hide',function(){	
 	const article = jQuery(this).parents('article.mainsearch-item')[0];
-	const id = article.id.replace('book-','');
-
 	jQuery(article).find('.book-collections').click();
-	
-	const collection_modal = jQuery('.collections-modal')[0];
-	M.Modal.getInstance(collection_modal).close();
-
-	jQuery(collection_modal).find('[collection_id="' + collection_id +'"]').click();
-
-
 });
 
 //Click on switch in collection modal
 jQuery('body').on("click",'.save-collection',function(){
-	jQuery('.progress').css('display','block');
+	progress(true);
 
 	const collection_modal = jQuery(this).parents('.collections-modal');
 	const id = collection_modal[0].getAttribute('book_id');
@@ -185,7 +164,7 @@ jQuery('body').on("click",'.save-collection',function(){
 			else if (response.code > 5){
 				M.toast({html: 'An error occured.'});
 			}
-			jQuery('.progress').css('display','none');
+			progress(false);
 		}
 	});
 });

@@ -4,8 +4,8 @@ function global_bundle($name){
     $_js_bundle->add('jquery');
     $_js_bundle->add('materialize/extras/nouislider',true);
     $_js_bundle->add('materialize/js/materialize.min',true);
-    $_js_bundle->add('global');
     $_js_bundle->add('helpers');
+    $_js_bundle->add('global');
     $_js_bundle->add('login');
     $_js_bundle->add('survey');
     return $_js_bundle;
@@ -81,18 +81,8 @@ class js_bundle {
         }
         return;
     }
-    function remove($file,$full = false){
-        if (! isset($this->bundle)){
-            $this->bundle = array();
-        }
-        if ($full == false){
-            $file = 'js/' . $file;
-        }
-        if (in_array($file,$this->bundle)){
-            unset($this->bundle[array_search($file,$this->bundle)]);
-            sort($this->bundle);
-        }
-        return;
+    function clear(){
+        $this->bundles = array();
     }
     function write(){
         

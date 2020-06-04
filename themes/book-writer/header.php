@@ -11,11 +11,9 @@
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
+$landing = new _landing();
+$landing_key = $landing->encrypt();
 
-global $vfs;
-if (!isset($vfs)){
-	$vfs = vfs();
-}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">
@@ -26,11 +24,9 @@ if (!isset($vfs)){
 	<?php wp_head(); ?>
 </head>
 <body>
-	<?php if (is_user_logged_in()){ ?>
+	<span style="display:none;" id="placeholder_data"><?= $landing_key; ?></span>
 	<ul style="user-select: none;-moz-user-select: none;-khtml-user-select: none;-webkit-user-select: none;-o-user-select: none;width:55%;" id="notification-sidenav" class="sidenav">
-		<?php get_template_part('template-parts/header','notifications'); ?>
 	</ul>
-	<?php } ?>
 <div id="page" class="site">
 	<div class="site-inner">
 		<header id="masthead" class="site-header" role="banner">
@@ -40,9 +36,9 @@ if (!isset($vfs)){
 						<a href="/" ><?php include(explode('wp-content',__FILE__)[0] . 'wp-content/uploads/logo.svg'); ?></a>
 					</div>
 					<div class="nav-content">
-						<li><a <?php if ($pagename == 'search' || $pagename == ''){echo 'class="pagenow active"';} ?> target="_self" href="/">Read</a></li>
-						<li><a <?php if ($pagename == 'collection'){echo 'class="pagenow active"';} ?>  target="_self" href="/collection">Collections</a></li>
-						<li><a <?php if ($pagename == 'dashboard'){echo 'class="pagenow active"';} ?> target="_self" href="/dashboard">Dashboard</a></li>
+						<li><a target="_self" href="/">Read</a></li>
+						<li><a target="_self" href="/collections">Collections</a></li>
+						<li><a target="_self" href="/dashboard">Dashboard</a></li>
 					    <?php if (is_user_logged_in()) { ?>
 						<li style="position:relative;">
 							<a data-target="notification-sidenav" class="sidenav-trigger btn-hover btn-floating"><i class="fas fa-bell"></i></a>
@@ -52,5 +48,5 @@ if (!isset($vfs)){
 				</nav>				
 			</div><!-- .site-header-main -->
 		</header><!-- .site-header -->
-
+		
 		<div id="content" class="site-content">

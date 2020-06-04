@@ -1,16 +1,13 @@
 <?php
 global $wp;
 
-global $vfs;
-$vfs = vfs();
-log_stats('view','author',$author,$vfs);
 global $js_bundle;
 $js_bundle = global_bundle('author');
 $js_bundle->add('updates');
 $js_bundle->add('book-options');
 $js_bundle->enqueue();
 get_header();
-$author_base = get_author_posts_url($author) . '/';
+$author_base = rtrim(get_author_posts_url($author),'/') . '/';
 ?>
 
 <section id="primary" class="content-area">
@@ -73,9 +70,6 @@ $author_base = get_author_posts_url($author) . '/';
 					'posts_per_page' => 3,
 					'order'          => 'DESC',
 				);
-				// if (get_current_user_id() == $author  && $_GET['preview'] == 'true'){
-				// 	$posts['post_status'] = array('publish','draft');
-				// }
 				$posts = new WP_Query($posts);
 				$original_query = $wp_query;
 				$wp_query = null;
@@ -106,41 +100,24 @@ $author_base = get_author_posts_url($author) . '/';
 				wp_reset_postdata();
 				?>
 				<?php
-				$meta_query = array(
-					array(
-						'key'     => 'public_collection',
-						'value'   => 'Public',
+				$collections = collection::query(array(
+					'types'		=> array('Public','Favorites'),
+					'authors'	=> array($author),
+					'limit'		=> 4,
+					'count'		=> array(
+						'from'	=> 1
 					),
-				);
-				$collections = get_terms(array(
-				    'meta_key' => 'author',
-				    'meta_value' => $author,
-				    'meta_query' => $meta_query,
-				    'taxonomy' => 'collection',
-				    'hide_empty' => true,
+					'orderby'	=> 'count',
+					'order'		=> 'DESC'
 				));
-				if (get_current_user_id() == $author){
-					//$posts['post_status'] = array('publish','draft');
-				}
-				if (! empty($collections)   || get_current_user_id() == $author) {
+				if (! empty($collections)  || get_current_user_id() == $author) {
 					?><div class="card author-collections"><h2 class="type-title">Collections</h2><?php
 					?>
-					<article id="collection-favorites">
-						<header>
-							<h2 class="entry-title" style="display: inline-block;margin-bottom:0em;"><a href="<?php echo $author_base . 'favorites'; ?>">Favorites</a></h2>
-							
-							<?php echo '<h5 style="margin-bottom:1.05em;">by <a href="' .  $author_base . '">' . get_the_author_meta('display_name',$author) .  '</a></h5>'; ?>
-						</header><!-- .entry-header -->
-							
-						<div class="search-summary">
-							<div><strong>Books: </strong><?php echo count(get_stats_of('user_fav',$author)); ?></div>
-						</div>
-					</article>
 					<?php
 					foreach ($collections as $key => $collection) {
 						global $collection;
-						get_template_part( 'template-parts/content', 'collection' );
-						if ($key == 2){
+						get_template_part( 'collections/content' );
+						if ($key === 2){
 							break;
 						}
 					}
@@ -156,7 +133,6 @@ $author_base = get_author_posts_url($author) . '/';
 				?>
 			</div>
 		</div>
-
 	</main><!-- .site-main -->
 </section><!-- .content-area -->
 <!-- Modal Structure -->

@@ -15,7 +15,7 @@ if (
 
 $max_rating = 5;
 
-$vfs = vfs();
+$vfs = _landing::vfs();
 global $wpdb;
 $wpdb->insert(
     'surveys', 
@@ -30,7 +30,6 @@ $wpdb->insert(
     )
 );
 $survey_id = $wpdb->insert_id;
-log_stats('submit','survey',$survey_id,$vfs);
 echo json_encode(array(
     'code'  => 1,
 ));

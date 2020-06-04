@@ -29,7 +29,6 @@ function run_at_activation(){
 	//Other Pages
 	$pages = array(
 		array('Add a fandom','fandom','page-create-cat.php'),
-		array('Collections','collection','page-collection.php'),
 		array('Contact','contact','page-contact.php'),
 		array('Dashboard','dashboard','page-dashboard.php'),
 		array('Login','login','page-login.php'),
@@ -65,6 +64,7 @@ function run_at_activation(){
 		}
 	}
 	//Remove Widgets
+	update_option('show_avatars',0);
 	update_option('sidebars_widgets',array());
 	update_option('acme_cleared_widget',array());
 	update_option('default_role','author');
@@ -106,7 +106,7 @@ function run_at_activation(){
 		) $charset_collate;";
     
 
-	//Add Stats Table
+	//Add Stats Table (redundant)
 	$custom_stats_table_name = 'custom_stats';
 	$custom_stats_table = "CREATE TABLE $custom_stats_table_name (
 	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -121,7 +121,37 @@ function run_at_activation(){
 	`referrer_path` VARCHAR(300) NULL ,
 	PRIMARY KEY (`ID`)
 	) $charset_collate;";
-	
+
+	//Stats
+	//Landing
+	$stats_landings_table_name = 'stats_landings';
+	$stats_landings_table = "CREATE TABLE $stats_landings_table_name (
+	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+	`vfs` VARCHAR(100) NOT NULL ,
+	`timestamp` BIGINT NOT NULL ,
+	`type` VARCHAR(50) NOT NULL ,
+	`type_id` BIGINT NOT NULL ,
+	`user_id` BIGINT NOT NULL ,
+	`IP` VARCHAR(100) NOT NULL ,
+	`referrer_host` VARCHAR(150) NULL ,
+	`referrer_path` VARCHAR(300) NULL ,
+	`platform` VARCHAR(100) NULL,
+	`browser` VARCHAR(100) NULL,
+	`browser_version` VARCHAR(20) NULL,
+	PRIMARY KEY (`ID`)
+	) $charset_collate;";
+	//Actions
+	$stats_actions_table_name = 'stats_actions';
+	$stats_actions_table = "CREATE TABLE $stats_actions_table_name (
+	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+	`landing_id` BIGINT UNSIGNED NOT NULL ,
+	`timestamp` BIGINT NOT NULL ,
+	`type` VARCHAR(50) NOT NULL ,
+	`type_id` BIGINT NOT NULL ,
+	`stat` VARCHAR(20) NOT NULL,
+	PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
 	//Autosaves table
 	$custom_autosaves_table_name = 'custom_autosaves';
 	$custom_autosaves_table = "CREATE TABLE $custom_autosaves_table_name (
@@ -149,19 +179,65 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+	$collections_table_name = 'collections';
+	$collections_table = "CREATE TABLE $collections_table_name (
+		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
+		`title` VARCHAR(100) NOT NULL ,
+		`description` VARCHAR(500) NOT NULL ,
+		`type` VARCHAR(20) NOT NULL ,
+		`slug` VARCHAR(100) NULL DEFAULT NULL ,
+		`created` BIGINT NOT NULL ,
+		`modified` BIGINT NOT NULL ,
+		`author` BIGINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
+	$collection_books_table_name = 'collection_books';
+	$collection_books_table = "CREATE TABLE $collection_books_table_name (
+		`collection_id` BIGINT NOT NULL ,
+		`book_id` BIGINT NOT NULL ,
+		`time_added` BIGINT NOT NULL ,
+		PRIMARY KEY (`collection_id`,`book_id`)
+	) $charset_collate;";
+
+	$collection_follow_table_name = 'collection_follow';
+	$collection_follow_table = "CREATE TABLE $collection_follow_table_name (
+		`collection_id` BIGINT NOT NULL ,
+		`user_id` BIGINT NOT NULL ,
+		`notifications` VARCHAR(20) NOT NULL ,
+		`time_followed` BIGINT NOT NULL ,
+		PRIMARY KEY (`collection_id`,`user_id`)
+	) $charset_collate;";
+
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	// ob_start();
 	dbDelta( $searches_table );
 	dbDelta( $searchparams_table );
 	dbDelta( $custom_stats_table );
+	dbDelta( $stats_landings_table );
+	dbDelta( $stats_actions_table );
 	dbDelta( $custom_autosaves_table );
 	dbDelta( $surveys_table );
+	dbDelta( $collections_table );
+	dbDelta( $collection_books_table );
+	dbDelta( $collection_follow_table );
+	// file_put_contents( ABSPATH . 'this.err',ob_get_contents() );
+	// ob_end_clean();
+
+	//Create Default Collections for users
+	$users = get_users(array(
+		'fields'	=> array('ID')
+	));
+	foreach ($users as $user ) {
+		collection::create_default($user);
+	}
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
 $includes = array(
 	'survey_query',
-	'stats',
 	'endpoints',
 	'misc',
 	'chapter-navigator',
@@ -174,7 +250,10 @@ $includes = array(
 	'validation',
 	'bundles',
 	'privileges',
-	'collections',
+	'classes/stats',
+	'classes/collections',
+	'classes/notifications',
+	'classes/error'
 );
 foreach($includes as $include){
 	require ($include . '.php');
