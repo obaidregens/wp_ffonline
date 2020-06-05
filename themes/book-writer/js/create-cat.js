@@ -50,11 +50,9 @@ jQuery("#fandom_form").submit(function(event) {
     document.getElementById("button-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
     var fandom = jQuery("#fandom").val();
     var category = jQuery('#category').val();
-    jQuery.ajax({
-        url: '/wp-content/themes/book-writer/php/create_fandom.php',
-        type: 'post',
-        data: {ajax: 1,fandom:fandom,category:category},
-        success: function(response){
+    api('create_fandom',{
+        data: {fandom:fandom,category:category},
+        callback: function(response){
             document.getElementById("button-wrapper").innerHTML = '<button id="submit_btn" class="waves-effect waves-light btn-small" type="submit">Create Fandom</button>';
             if (response != '1'){
                 M.toast({html: 'Fandom was added.'});

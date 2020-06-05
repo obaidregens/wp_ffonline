@@ -36,11 +36,9 @@
 			return false;
 		}
 		else{
-			jQuery.ajax({
-				url: '/wp-content/themes/book-writer/php/validate_forgot.php',
-				type: 'post',
-				data: {ajax: 1,login:login},
-				success: function(response){
+			api('validate_forgot',{
+				data: {login:login},
+				callback: function(response){
 					if (response == '0'){
 						jQuery('#user_login').addClass('invalid');
 						jQuery('#forgot_username_help').text("There aren't any authors with this Email or Username.");

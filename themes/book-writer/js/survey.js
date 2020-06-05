@@ -68,12 +68,10 @@ jQuery(document).ready(function(){
         const suggestion = jQuery(this).find('[name="suggestions"]').val();
         const email = jQuery(this).find('[name="email"]').val();
         jQuery('.progress').css('display','block');
-        jQuery.ajax({
-            url: '/wp-content/themes/book-writer/php/post_survey.php',
-            type: 'post',
+        api('post_survey',{
             dataType: 'JSON',
             data: {rating, suggestion},
-            success: function(response){
+            callback: function(response){
                 M.Toast.dismissAll();
                 if (response.code <= 5){
                     M.toast({html: survey_thanks_message});

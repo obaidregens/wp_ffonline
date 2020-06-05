@@ -21,11 +21,9 @@ function load_page(page_chain){
     }
     window.history.pushState("object or string", document.getElementsByTagName("title")[0].innerHTML,'/dashboard/' + page_chain);
     clearInterval(intervalID);
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/load_page.php',
-		type: 'post',
-		data: {ajax:1,page_chain},
-		success: function(response){
+	api('load_page',{
+		data: {page_chain},
+		callback: function(response){
             jQuery("#page-main").html(response);
             jQuery('#dashboard-sidenav').children().removeClass("active");
 			jQuery("." + page_chain_arr[0] + "_li").addClass("active");

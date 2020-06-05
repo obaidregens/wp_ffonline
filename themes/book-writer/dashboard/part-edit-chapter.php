@@ -6,7 +6,6 @@
 	if (! headers_sent() && ! isset($_SESSION) ){
 		session_start();
 	}
-	$_SESSION['nonce_key'] = bin2hex(random_bytes(31));
 
 	$book_id = page_chain_arr[1];
 	$chapter_id = page_chain_arr[2];
@@ -54,7 +53,6 @@
 
 	?>
 	<!-- HTML STARTS -->
-	<input type="hidden" id="v_key" value="<?= $_SESSION['nonce_key'] ?>">
 	<input type="hidden" name="book_id" value="<?= $book_id ?>">
 	<input type="hidden" name="chapter_id" value="<?= $chapter_id ?>">
 	<a onclick="load_page('write')" class="row btn-hover btn-floating btn-small waves-effect waves-light"><i class="fas fa-arrow-left"></i></a>
@@ -225,7 +223,6 @@
 			if (error == 0){
 				spin("#button-wrapper");
 				var data_submit = {
-					ajax: document.getElementById('v_key').value,
 					book_id: jQuery("input[name='book_id']").val(),
 					chapter_id: jQuery("input[name='chapter_id']").val(),
 					title: jQuery('#chapter_title').val(),
@@ -234,12 +231,10 @@
 					comments: document.getElementById('comments').checked
 				};
 				
-				jQuery.ajax({
-					url: '/wp-content/themes/book-writer/dashboard/ajax/submit-chapter.php',
-					type: 'post',
+				api('submit_chapter',{
 					dataType: 'JSON',
 					data: data_submit,
-					success: function(response){
+					callback: function(response){
 						M.Toast.dismissAll();
 						document.getElementById("button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Save</button>';
 						if (response.code == 1){
@@ -296,17 +291,14 @@
 			if (document.querySelector("#chapter_content").innerHTML.replace(/\s+/g, '') == ""){
 				return;
 			}
-			jQuery.ajax({
-				url: '/wp-content/themes/book-writer/dashboard/ajax/autosave_content.php',
-				type: 'post',
+			api('autosave_content',{
 				dataType: 'JSON',
 				data: {
-					ajax: document.getElementById('v_key').value,
 					content: jQuery('#chapter_content')[0].innerHTML,
 					book_id: jQuery("input[name='book_id']").val(),
 					chapter_id: jQuery("input[name='chapter_id']").val()
 				},
-				success: function(response){
+				callback: function(response){
 					add_autosaves(response);
 				}
 			});   

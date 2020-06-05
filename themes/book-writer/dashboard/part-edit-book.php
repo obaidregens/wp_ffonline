@@ -142,8 +142,8 @@
 			var data_submit = {};
 			var error = false;
 			//reCAPTCHA
-			data_submit.reCAPTCHA = grecaptcha.getResponse();
-			if (data_submit.reCAPTCHA == ''){
+			const reCAPTCHA = grecaptcha.getResponse();
+			if (reCAPTCHA == ''){
 				M.toast({html: 'Please confirm you are not a robot by verifying yourself.'});
 				error = true;
 			}
@@ -194,12 +194,11 @@
 				return;
 			}
 			spin("#button-wrapper");
-			jQuery.ajax({
-				url: '/wp-content/themes/book-writer/dashboard/ajax/submit-book.php',
-				type: 'post',
+			api('submit_book',{
 				dataType: 'JSON',
+				reCAPTCHA: reCAPTCHA,
 				data: data_submit,
-				success: function(response){
+				callback: function(response){
 					grecaptcha.reset();
 					M.Toast.dismissAll();
 					document.getElementById("button-wrapper").innerHTML = '<button id="submit-btn" class="waves-effect waves-light btn-small" type="submit">Save</button>';

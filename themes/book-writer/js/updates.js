@@ -3,11 +3,9 @@ jQuery("form[id='update_form']").submit(function(event) {
 	jQuery("#edit-update .modal-footer")[0].innerHTML = '<button type="submit" class="waves-effect btn">Save</button>';
 	var update_id = document.getElementById('update_id').value;
 	var update = document.getElementById('update').value;
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/edit_update.php',
-		type: 'post',
-		data: {ajax: 1,update_id:update_id,update:update},
-		success: function(response){
+	api('edit_update',{
+		data: {update_id:update_id,update:update},
+		callback: function(response){
 			jQuery("#edit-update .modal-footer")[0].innerHTML = '<button type="submit" class="waves-effect btn">Save</button>';
 			M.Toast.dismissAll();
 			if (response == 2){
@@ -45,11 +43,9 @@ jQuery('.delete-update,.stick-update').click(function(event){
 	var id = this.getAttribute('update_id');
 	var action = this.getAttribute('class').replace('-update','');
 	jQuery('.progress').css('display','block');
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/edit_update.php',
-		type: 'post',
-		data: {ajax: 1,update_id:id,action:action},
-		success: function(response){
+	api('edit_update',{
+		data: {update_id:id,action:action},
+		callback: function(response){
 			jQuery('.progress').css('display','none');
 			M.Toast.dismissAll();
 			if (response == 1){

@@ -96,11 +96,9 @@ jQuery(document).ready(function(){
             jQuery('#username_help').text('Username is required.'); 
         }
         else{
-            jQuery.ajax({
-                url: '/wp-content/themes/book-writer/php/validate_penname.php',
-                type: 'post',
-                data: {ajax: 1,username: username},
-                success: function(response){
+            api('validate_penname',{
+                data: {username: username},
+                callback: function(response){
                     if (response == '0'){
                         jQuery('#username').removeClass('invalid');
 						jQuery('#username_help').text('');
@@ -125,11 +123,9 @@ jQuery(document).ready(function(){
             jQuery('#email_help').text('Email is required.'); 
         }
         else{
-            jQuery.ajax({
-                url: '/wp-content/themes/book-writer/php/validate_email.php',
-                type: 'post',
-                data: {ajax: 1,email: email},
-                success: function(response){
+            api('validate_email',{
+                data: {email: email},
+                callback: function(response){
                     if (response == '1'){
                         jQuery('#email').removeClass('invalid');
 						jQuery('#email').removeClass('valid');
@@ -161,11 +157,9 @@ jQuery("form[name='editprofile']").submit(function(event) {
 	var about = jQuery('#about').val();
 	var email = jQuery('#email').val();
 	var password = jQuery('#password').val();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/update_profile.php',
-		type: 'post',
-		data: {ajax: 1,display_name:display,about:about,email:email,password:password},
-		success: function(response){
+	api('update_profile',{
+		data: {display_name:display,about:about,email:email,password:password},
+		callback: function(response){
 			document.getElementById("button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Save</button>';
 			M.Toast.dismissAll();
 			jQuery('#password').val('');
@@ -190,11 +184,9 @@ jQuery("form[name='change-username']").submit(function(event) {
 	document.getElementById("change-user-button-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
 	var username = jQuery('#username').val();
 	var password = jQuery('#old_password').val();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/change_username.php',
-		type: 'post',
-		data: {ajax: 1,new_username:username,password:password},
-		success: function(response){
+	api('change_username',{
+		data: {new_username:username,password:password},
+		callback: function(response){
 			document.getElementById("change-user-button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Change</button>';
 			M.Toast.dismissAll();
 			jQuery('#username').val('');

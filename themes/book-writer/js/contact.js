@@ -15,11 +15,9 @@ jQuery("form[name='message']").submit(function(event) {
 	var email = jQuery('#email').val();
 	var message = jQuery('#message').val();
 	var label = jQuery('input[name=contact_options]:checked').attr('value');
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/send_message.php',
-		type: 'post',
-		data: {ajax: 1,email:email,message:message,label:label},
-		success: function(response){
+	api('send_message',{
+		data: {email:email,message:message,label:label},
+		callback: function(response){
 			if (response != '1'){
 				M.toast({html: 'Your message was not sent.'});
 			}

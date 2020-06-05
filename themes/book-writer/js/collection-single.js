@@ -63,12 +63,10 @@ function follow_collection(){
         email_ntfy: switch_email_ntfy.checked
     };
     progress(true);
-    jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/follow_collection.php',
-        type: 'post',
+    api('follow_collection',{
         dataType: 'JSON',
         data: data_submit,
-		success: function(response){
+		callback: function(response){
             if (response.code === 6){
                 prompt_login();
                 follow_button_state(false);

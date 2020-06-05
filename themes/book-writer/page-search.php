@@ -16,7 +16,6 @@ if ($front_cache && ! is_user_logged_in() && empty($_GET) ){
   exit();
 }
 get_header();
-
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
@@ -68,11 +67,9 @@ get_header();
         var name = document.getElementById('new_search_name').value;
         var id = document.getElementById('search_id').innerHTML;
         jQuery('.progress').css('display','block');
-    		jQuery.ajax({
-    			url: '/wp-content/themes/book-writer/php/save_search.php',
-    			type: 'post',
-    			data: {ajax:1,name:name,id:id},
-    			success: function(response){
+    		api('save_search',{
+    			data: {name:name,id:id},
+    			callback: function(response){
     				jQuery('.progress').css('display','none');
     				if (response == 3){
     				    M.toast({html: 'Please login.'});
@@ -89,11 +86,9 @@ get_header();
     }
     function delete_search(id){
         jQuery('.progress').css('display','block');
-    		jQuery.ajax({
-    			url: '/wp-content/themes/book-writer/php/save_search.php',
-    			type: 'post',
-    			data: {ajax:1,to_delete:'to_delete',id:id},
-    			success: function(response){
+    		api('save_search',{
+    			data: {to_delete:'to_delete',id:id},
+    			callback: function(response){
     				jQuery('.progress').css('display','none');
     				if (response == 3){
     				    M.toast({html: 'Please login.'});

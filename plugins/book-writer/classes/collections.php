@@ -4,19 +4,21 @@ class collection {
         if ($author === null){
             $author = get_current_user_id();
         }
-        return array_column(collection::query(array(
-            'user_ids'      => array($author),
+        $collection_ids = array_column(collection::query(array(
+            'authors'      => array($author),
             'title'         => 'Hidden'
         )),'ID');
+        return array_column(collection::book_query($collection_ids),'ID');
     }
     public static function get_favorites($author = null){
         if ($author === null){
             $author = get_current_user_id();
         }
-        return array_column(collection::query(array(
-            'user_ids'      => array($author),
-            'type'         => 'Favorites'
+        $collection_ids = array_column(collection::query(array(
+            'authors'      => array($author),
+            'types'         => array('Favorites')
         )),'ID');
+        return array_column(collection::book_query($collection_ids),'ID');
     }
     public static function notifications($user_id = 0 ){
         if ($user_id === 0){
@@ -462,6 +464,9 @@ class collection {
     }
     public static function book_query($collection_ids,$wp_query_args_add = array()){
         $collection_ids = (array) $collection_ids;
+        if (empty($collection_ids)){
+            return array();
+        }
         $fill = implode(', ',array_fill(0,count($collection_ids),'%d'));
         $base_sql = 'SELECT book_id FROM collection_books WHERE collection_id IN (' . $fill . ')';
         global $wpdb;

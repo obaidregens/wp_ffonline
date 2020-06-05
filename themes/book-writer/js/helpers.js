@@ -235,3 +235,28 @@ function preg_split (pattern, subject, limit, flags) {
     _filter(subject.slice(index, subject.length), index);
     return ret;
 }
+
+function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
+    const options = {
+		url: '/wp-content/themes/book-writer/php/api.php',
+		type: 'post',
+        data: {action},
+        async
+    };
+    if (reCAPTCHA === null){
+        options.data.nonce = document.getElementById('nonce').innerHTML;
+    }
+    else{
+        options.data.reCAPTCHA = reCAPTCHA;
+    }
+    if (dataType === 'JSON'){
+        options.dataType = dataType;
+    }
+    if (typeof data === 'object'){
+        options.data.data = data;
+    }
+    if (callback instanceof Function){
+        options.success = callback;
+    }
+    jQuery.ajax(options);
+}

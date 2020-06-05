@@ -81,11 +81,9 @@
             return;
         }
         jQuery("#page-main").html('<main><div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div></main>');
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/dashboard/ajax/delete-book.php',
-    		type: 'post',
-    		data: {ajax: 1,id:book_id},
-    		success: function(response){
+    	api('delete_book',{
+    		data: {id:book_id},
+    		callback: function(response){
     		    M.Toast.dismissAll();
     			if (response == '1'){
     			    load_page('write');

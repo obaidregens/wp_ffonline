@@ -5,11 +5,9 @@
 </div><!-- .content-area -->
 <script>
     function refresh_dashboard() {
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/dashboard/ajax/resend_dashboard.php',
-    		type: 'post',
-    		data: {ajax: 1},
-    		success: function(response){
+    	api('resend_dashboard',{
+    		data: {},
+    		callback: function(response){
     		    jQuery(jQuery('main')[0]).html(response);
     		}
     	});            

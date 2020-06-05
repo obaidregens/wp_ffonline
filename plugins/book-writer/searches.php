@@ -12,7 +12,7 @@ function packed_to_url($packed){
 }
 //get searches by search_id from databse
 function get_search($id,$fields = 'all'){
-	if (! is_array($field) && $fields != 'all'){
+	if (! is_array($fields) && $fields != 'all'){
 		return false;
 	}
 	global $wpdb;

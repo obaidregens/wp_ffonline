@@ -248,7 +248,7 @@ $includes = array(
 	'custom_cache',
 	'data',
 	'validation',
-	'bundles',
+	'classes/bundles',
 	'privileges',
 	'classes/stats',
 	'classes/collections',

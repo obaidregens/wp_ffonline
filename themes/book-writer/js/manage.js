@@ -7,13 +7,11 @@ for (let i = 0; i < data.length; i++) {
 jQuery('tr').click(function(){
     jQuery('#track_user').modal('open');
     spin('.user-info');
-    jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/12345.php',
-		type: 'post',
+    api('manage',{
         data: {
             vfs:this.getAttribute('vfs'),
         },
-		success: function(response){
+		callback: function(response){
             const user_data = JSON.parse(response);
             const type_icon = {book: 'menu_book',chapter: 'edit',page: 'description', home: 'home', collection: 'collections_bookmark', author: 'person',survey: 'poll'};
             const type_color = {book: 'purple',chapter: 'yellow',page: 'green', home: 'blue', collection: 'brown darken-1', author: 'pink lighten-1', survey: 'orange darken-4'};

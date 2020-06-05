@@ -100,11 +100,9 @@
                     jQuery('#pen_name_help').text('Pen Name is required.'); 
                 }
                 else{
-                    jQuery.ajax({
-                        url: '/wp-content/themes/book-writer/php/validate_penname.php',
-                        type: 'post',
-                        data: {ajax: 1,pen_name: pen_name},
-                        success: function(response){
+					api('validate_penname',{
+						data: {pen_name: pen_name},
+						callback: function(response){
                             if (response == '1'){
                                 jQuery('#pen_name').removeClass('invalid');
     							jQuery('#pen_name_help').text('');
@@ -118,7 +116,7 @@
                                 element.setCustomValidity('Please enter a different Pen Name.');
                             }
                         }
-                    });
+					});
                 }
             });
             jQuery('#email').keyup(function(){
@@ -129,11 +127,9 @@
                     jQuery('#email_help').text('Email is required.'); 
                 }
                 else{
-                    jQuery.ajax({
-                        url: '/wp-content/themes/book-writer/php/validate_email.php',
-                        type: 'post',
-                        data: {ajax: 1,email: email},
-                        success: function(response){
+                    api('validate_email',{
+                        data: {email: email},
+                        callback: function(response){
                             if (response == '1'){
                                 jQuery('#email').removeClass('invalid');
 								jQuery('#email').removeClass('valid');
@@ -178,11 +174,9 @@
 			else{
 				var notification = 'disable';
 			}			
-			jQuery.ajax({
-				url: '/wp-content/themes/book-writer/php/update_profile.php',
-				type: 'post',
-				data: {ajax: 1,user_id:id,username:username,pen_name:penname,first_name:first,last_name:last,about:about,email:email,password:password,notification:notification},
-				success: function(response){
+			api('update_profile',{
+				data: {user_id:id,username:username,pen_name:penname,first_name:first,last_name:last,about:about,email:email,password:password,notification:notification},
+				callback: function(response){
 					document.getElementById("button-wrapper").innerHTML = '<button class="waves-effect waves-light btn-small" type="submit">Save</button>';
 					M.Toast.dismissAll();
 					M.toast({html: 'Your profile has been updated.'});

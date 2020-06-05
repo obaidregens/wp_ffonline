@@ -4620,6 +4620,9 @@ div.divider{
 	-webkit-user-select: none;
 	-o-user-select: none;
 }
+#notification-sidenav > a{
+	padding: 0 !important;
+}
 .tabs,.site-header,.paginationm{
 	user-select: none;
 	-moz-user-select: none;

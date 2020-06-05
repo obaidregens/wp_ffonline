@@ -2,11 +2,10 @@ jQuery("form[name='login']").submit(function(event) {
 	event.preventDefault();
 	var login = jQuery('#login_username').val();
 	var password = jQuery('#login_password').val();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/validate_login.php',
-		type: 'post',
-		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),login:login,password:password,},
-		success: function(response){
+	api('validate_login',{
+		reCAPTCHA:grecaptcha.getResponse(),
+		data: {login:login,password:password,},
+		callback: function(response){
 			M.Toast.dismissAll();
 			grecaptcha.reset();
 			if (response == '1'){
@@ -35,11 +34,10 @@ jQuery("form[name='signup']").submit(function(event) {
 		M.toast({html: 'Usernames may only contain dots(.), underscores(_), numbers, and letters.'});
 		return false;
 	}
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/validate_signup.php',
-		type: 'post',
-		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),login:login,email:email,},
-		success: function(response){
+	api('validate_signup',{
+		reCAPTCHA:grecaptcha.getResponse(),
+		data: {login:login,email:email,},
+		callback: function(response){
 			grecaptcha.reset();
 			if (response == '1'){
 				M.Toast.dismissAll();
@@ -76,11 +74,9 @@ jQuery("#lostpasswordform").submit(function(event) {
 		return;
 	}
 	else{
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/validate_forgot.php',
-			type: 'post',
-			data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),user_login:login},
-			success: function(response){
+		api('validate_forgot',{
+			data: {reCAPTCHA:grecaptcha.getResponse(),user_login:login},
+			callback: function(response){
 				grecaptcha.reset();
 				if (response == '0'){
 					jQuery('#user_login').addClass('invalid');

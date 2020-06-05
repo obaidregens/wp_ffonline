@@ -3,11 +3,9 @@
 </main>
 <script>
     function refresh_messages() {
-    	jQuery.ajax({
-    		url: '/wp-content/themes/book-writer/dashboard/ajax/resend_messages.php',
-    		type: 'post',
-    		data: {ajax: 1},
-    		success: function(response){
+    	api('resend_messages',{
+    		data: {},
+    		callback: function(response){
     		    jQuery(jQuery('main')[0]).html(response);
     		}
     	});            

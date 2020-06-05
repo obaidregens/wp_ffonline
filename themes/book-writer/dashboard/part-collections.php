@@ -177,12 +177,10 @@ function collections_load(){
             books
         };
         jQuery(".progress").css('display','block');
-        jQuery.ajax({
-            url: '/wp-content/themes/book-writer/dashboard/ajax/save_collection.php',
-            type: 'post',
+        api('save_collection',{
             data: data_submit,
             dataType: 'JSON',
-            success: function(response){
+            callback: function(response){
                 M.Toast.dismissAll();
                 jQuery(".progress").css('display','none');
                 if (response.code <= 5){

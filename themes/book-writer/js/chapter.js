@@ -170,11 +170,9 @@ jQuery("#search_book").keyup(function(event){
         return;
     }
 	jQuery('#load_search_results')[0].innerHTML = '<div class="center-align"><div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div></div>';
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/search_book_contents.php',
-		type: 'post',
-		data: {ajax: 1,chapter_id:jQuery('#chapter_id').val(),s:jQuery('#search_book').val()},
-		success: function(response){
+	api('search_book_contents',{
+		data: {chapter_id:jQuery('#chapter_id').val(),s:jQuery('#search_book').val()},
+		callback: function(response){
 			jQuery('#load_search_results')[0].innerHTML = response;
 		}
 	});    
@@ -224,11 +222,9 @@ document.addEventListener("selectionchange", define_text);
 //Bookmarks
 function bookmark_this(para,chapter){
 	jQuery('#p-' + para + ' .bookmark-wrapper')[0].innerHTML = '<div class="loader" style="width:21px;height:21px;"></div>';
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/bookmark_this.php',
-		type: 'post',
-		data: {ajax:1,para:para,chapter:chapter},
-		success: function(response){
+	api('bookmark_this',{
+		data: {para:para,chapter:chapter},
+		callback: function(response){
 			jQuery('#p-' + para + ' .bookmark-wrapper')[0].innerHTML = '<i onclick="bookmark_this(' + para + ',\'' + chapter + '\')" class="btn-bookmark btn-favorite far fa-bookmark"></i>';
 			if (response == 0){
 				jQuery('#p-' + para + ' .btn-bookmark').removeClass('active');
@@ -259,16 +255,15 @@ function submit_comment() {
 	document.getElementById("submit-comment-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
 	var comment = jQuery('#comment').val();
 	var chapter_id = jQuery('#chapter_id').val();
-	var data = {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),chapter_id:chapter_id,comment:comment,action:'insert'};
+	var data = {chapter_id:chapter_id,comment:comment,action:'insert'};
 	var reply = jQuery('#reply_id').val();
 	if (reply != 0){
-		var data = {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),chapter_id:chapter_id,id:reply,comment:comment,action:'reply'};
+		var data = {chapter_id:chapter_id,id:reply,comment:comment,action:'reply'};
 	}
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/post_comment.php',
-		type: 'post',
+	api('post_comment',{
 		data: data,
-		success: function(response){
+		reCAPTCHA:grecaptcha.getResponse(),
+		callback: function(response){
 			M.Toast.dismissAll();
 			if (response == '3'){
 				jQuery('#login-modal').modal('open');
@@ -292,11 +287,10 @@ function submit_comment() {
 function delete_comment(id){
 	document.getElementById("submit-comment-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
 	var chapter_id = jQuery('#chapter_id').val();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/post_comment.php',
-		type: 'post',
-		data: {ajax: 1,reCAPTCHA:grecaptcha.getResponse(),chapter_id:chapter_id,id:id,action:'delete'},
-		success: function(response){
+	api('post_comment',{
+		reCAPTCHA: grecaptcha.getResponse(),
+		data: {chapter_id:chapter_id,id:id,action:'delete'},
+		callback: function(response){
 			M.Toast.dismissAll();
 			if (response == '3'){
 				jQuery('#login-modal').modal('open');

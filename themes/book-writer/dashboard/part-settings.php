@@ -70,11 +70,9 @@ function save_settings(){
 		var emails_notifications = false;
 	}
 	document.getElementById("button-wrapper").innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer spinner-blue-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/dashboard/ajax/save_settings.php',
-		type: 'post',
-		data: {ajax: 1,messages_status:messages_status,messages_online:messages_online,messages_read:messages_read,emails_notifications:emails_notifications},
-		success: function(response){
+	api('save_settings',{
+		data: {messages_status:messages_status,messages_online:messages_online,messages_read:messages_read,emails_notifications:emails_notifications},
+		callback: function(response){
 			document.getElementById("button-wrapper").innerHTML = '<button onclick="save_settings()" class="waves-effect waves-light btn-small" type="submit">Save</button>';
 			M.Toast.dismissAll();
 			M.toast({html: 'Your settings have been saved.'});

@@ -14,6 +14,14 @@ if (! headers_sent() && ! isset($_SESSION) ){
 $landing = new _landing();
 $landing_key = $landing->encrypt();
 
+//Nonce
+$nonce = bin2hex(random_bytes(14));
+if (! isset($_SESSION['nonce']) || ! is_array($_SESSION['nonce'])){
+	$_SESSION['nonce'] = array($nonce);
+}
+else{
+	$_SESSION['nonce'][] = $nonce;
+}
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">
@@ -24,6 +32,7 @@ $landing_key = $landing->encrypt();
 	<?php wp_head(); ?>
 </head>
 <body>
+	<span style="display:none;" id="nonce"><?= $nonce; ?></span>
 	<span style="display:none;" id="placeholder_data"><?= $landing_key; ?></span>
 	<ul style="user-select: none;-moz-user-select: none;-khtml-user-select: none;-webkit-user-select: none;-o-user-select: none;width:55%;" id="notification-sidenav" class="sidenav">
 	</ul>

@@ -54,9 +54,7 @@ jQuery(window).on('touchstart touchmove click wheel mousedown mouseup focus blur
         return;
 	}
 	lastSend = Date.now();
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/poll.php',
-		type: 'post',
+	api('poll',{
 		dataType: 'JSON',
 		data: {
 			data: document.getElementById('placeholder_data').innerHTML,
@@ -64,7 +62,7 @@ jQuery(window).on('touchstart touchmove click wheel mousedown mouseup focus blur
 			im_collections,
 			notification_open
 		},
-		success: function(response){
+		callback: function(response){
 			notification_open = false;
 			let construct = '<li style="background-color:var(--light-theme-color);"><a class="subheader">Notifications</a></li>';
 			for (let i = 0; i < response.notifications.notifications.length; i++) {

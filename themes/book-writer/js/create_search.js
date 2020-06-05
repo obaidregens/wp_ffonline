@@ -142,7 +142,6 @@ function trigger_search(page = false){
     words[1] = parseInt(words[1].replace(/[,]+/g,'').replace(' Words',''));
     words = words.join();
     var data = {
-        ajax: 1,
         search_id: document.getElementById('search_id').innerHTML,
         words: words,
         sort: jQuery('#sort').val(),
@@ -172,12 +171,10 @@ function trigger_search(page = false){
             data[multi_tax[i] + '_excluded'] = selected.excluded.join();
         }
     }
-    jQuery.ajax({
-        url: '/wp-content/themes/book-writer/php/search.php',
-        type: 'post',
+    api('search',{
         data: data,
         dataType: 'JSON',
-        success: function(response){
+        callback: function(response){
             if (response['output'] == 6){
                   M.toast({html: 'An error occured.'});
                   window.location.reload();

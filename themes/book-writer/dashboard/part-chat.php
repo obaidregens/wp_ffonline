@@ -19,11 +19,9 @@ if(isset($_POST['id']) && preg_replace('/[0-9]+/', '', $_POST['id']) == ''){
         </main>
         <script>
 		function block_this(user){
-        	jQuery.ajax({
-        		url: '/wp-content/themes/book-writer/php/block_user.php',
-        		type: 'post',
-        		data: {ajax: 1,user:user},
-        		success: function(response){
+        	api('block_user',{
+        		data: {user:user},
+        		callback: function(response){
 					if (response == 0){
 						jQuery('.btn-block').addClass('active');
 					}
@@ -77,11 +75,9 @@ if(isset($_POST['id']) && preg_replace('/[0-9]+/', '', $_POST['id']) == ''){
         
         function refresh_chat () {
             var to = document.getElementById("user_info").getAttribute('value');
-        	jQuery.ajax({
-        		url: '/wp-content/themes/book-writer/dashboard/ajax/resend_chat.php',
-        		type: 'post',
-        		data: {ajax: 1,to:to},
-        		success: function(response){
+        	api('resend_chat',{
+        		data: {to:to},
+        		callback: function(response){
                     var scroll = jQuery(".chat-window").scrollTop();
                     var message = jQuery("#message").val();
                     var btn_status = jQuery("#send_message").prop('disabled');
@@ -144,11 +140,9 @@ if(isset($_POST['id']) && preg_replace('/[0-9]+/', '', $_POST['id']) == ''){
             jQuery("#message").val('');
             jQuery("#send_message").prop('disabled', true);
             jQuery(".chat-window").scrollTop(jQuery(".chat-window")[0].scrollHeight);
-        	jQuery.ajax({
-        		url: '/wp-content/themes/book-writer/dashboard/ajax/send_message.php',
-        		type: 'post',
-        		data: {ajax: 1,to:to,message:message},
-        		success: function(response){
+        	api('send_mail',{
+        		data: {to:to,message:message},
+        		callback: function(response){
         		    var msg_status = jQuery('#temp_id-' + temp_id + ' .message-status')[0];
         		    if (typeof msg_status !== "undefined"){
             		    msg_status.innerHTML = '<i class="fa fa-check fa-1" aria-hidden="true">';

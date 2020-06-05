@@ -148,16 +148,14 @@ jQuery('body').on("click",'.save-collection',function(){
 
 	renderBookCollections(id);
 	const data_submit = {
-		ajax: 1,
 		book_collections: {}
 	}
 	data_submit.book_collections[id] = collections;
-	jQuery.ajax({
-		url: '/wp-content/themes/book-writer/php/add_to_collection.php',
-		type: 'post',
-		dataType: 'JSON',
-		data: {data_: JSON.stringify(data_submit)},
-		success: function(response){
+	api('add_to_collection',{
+		data: {
+			data_: JSON.stringify(data_submit)			
+		},
+		callback: function(response) {
 			if (response.code == 6){
 				jQuery('#login-modal').modal('open');
 			}

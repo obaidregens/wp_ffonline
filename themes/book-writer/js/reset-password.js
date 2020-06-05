@@ -14,11 +14,10 @@ jQuery("form[name='resetpassform']").submit(function(event) {
 	    var urlParams = new URLSearchParams(location.search);
 	    var key = urlParams.get('key');
 	    var login = urlParams.get('login');
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/set_password.php',
-			type: 'post',
-			data: {ajax: 1,key:key,reCAPTCHA:grecaptcha.getResponse(),login:login,password:pass2},
-			success: function(response){
+		api('set_password',{
+			reCAPTCHA:grecaptcha.getResponse(),
+			data: {key:key,login:login,password:pass2},
+			callback: function(response){
 			    grecaptcha.reset();
 				if (response == '0' || response == '2'){
 					M.toast({html: 'An unknown error occured'});

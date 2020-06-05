@@ -24,11 +24,9 @@ if (empty($bookmarks)){
 <script>
 	function bookmark_this(para,chapter){
 		jQuery('#li-' + chapter + '_' + para + ' .secondary-content')[0].innerHTML = '<div class="loader" style="width:1rem;height:1rem;"></div>';
-		jQuery.ajax({
-			url: '/wp-content/themes/book-writer/php/bookmark_this.php',
-			type: 'post',
-			data: {ajax:1,para:para,chapter:chapter},
-			success: function(response){
+		api('bookmark_this',{
+			data: {para:para,chapter:chapter},
+			callback: function(response){
 				jQuery('#li-' + chapter + '_' + para + ' .secondary-content')[0].innerHTML = '<i onclick="bookmark_this(' + para + ',' + chapter + ')" class="btn-bookmark btn-favorite far fa-bookmark"></i>';
 				if (response == 0){
 					jQuery('#li-' + chapter + '_' + para + ' .btn-bookmark').removeClass('active');
