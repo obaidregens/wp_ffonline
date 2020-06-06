@@ -94,7 +94,6 @@ class js_bundle {
             $total_js .= file_get_contents($this->theme_dir . '/' .  $file . '.js');
             $total_js .= "\n\r";
         }
-        file_put_contents($this->theme_dir . '/total_js.error',$total_js);
         $url = 'https://javascript-minifier.com/raw';
         $ch = curl_init();
         curl_setopt_array($ch, [

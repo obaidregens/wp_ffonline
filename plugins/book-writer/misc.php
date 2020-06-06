@@ -11,65 +11,6 @@ function title_regex_valid($string){
 	}
 	return true;
 }
-//All Objs
-function _link($id,$type){
-	if (in_array($type,array('home'))){
-		$home_id = (new WP_Query(array(
-			'name'			    => 'read',
-			'title'             => 'Read',
-			'post_type'		    => 'page',
-			'posts_per_page'	=>  1,
-			'fields'            => 'ids'
-		)))->posts[0];
-		return get_permalink($home_id);
-	}
-	else if (in_array($type,array('book','chapter','post','page'))){
-		return get_permalink($id);
-	}
-	else if (in_array($type,array('collection','term'))){
-		return get_term_link($id);
-	}
-	else if (in_array($type,array('author','user'))){
-		return get_author_posts_url($id);
-	}
-	else if (in_array($type,array('survey'))){
-		return '/manage/survey/' . $id;
-	}
-	else{
-		return false;
-	}
-}
-function _title($id,$type){
-	if (in_array($type,array('home'))){
-		$home_id = (new WP_Query(array(
-			'name'			    => 'read',
-			'title'             => 'Read',
-			'post_type'		    => 'page',
-			'posts_per_page'	=>  1,
-			'fields'            => 'ids'
-		)))->posts[0];
-		return get_the_title($home_id);
-	}
-	else if (in_array($type,array('chapter'))){
-		$obj = get_post($id);
-		return $obj->post_title . ' - ' . get_the_title($obj->post_parent);
-	}
-	else if (in_array($type,array('book','post','page'))){
-		return get_the_title($id);
-	}
-	else if (in_array($type,array('collection','term'))){
-		return get_term($id)->name;
-	}
-	else if (in_array($type,array('author','user'))){
-		return get_the_author_meta('display_name',$id);
-	}
-	else if (in_array($type,array('survey'))){
-		return 'Survey ' . $id;
-	}
-	else{
-		return false;
-	}
-}
 //SMTP SETUp
 
 add_action( 'phpmailer_init', 'wpse8170_phpmailer_init' );

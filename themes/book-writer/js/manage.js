@@ -2,7 +2,7 @@ const data = JSON.parse(document.querySelector('json_data').innerHTML);
 for (let i = 0; i < data.length; i++) {
     let element = data[i];
     let time = timestamp_to_local(element.timestamp);
-    jQuery('tbody').append('<tr vfs="' + element.cookie_id + '"><td>' + element.user_id + '</td><td>' + time + '</td><td>' + (element.IP) + '</td></tr>');
+    jQuery('tbody').append('<tr vfs="' + element.vfs + '"><td>' + element.user_id + '</td><td>' + time + '</td><td>' + (element.IP) + '</td></tr>');
 }
 jQuery('tr').click(function(){
     jQuery('#track_user').modal('open');
@@ -13,8 +13,32 @@ jQuery('tr').click(function(){
         },
 		callback: function(response){
             const user_data = JSON.parse(response);
-            const type_icon = {book: 'menu_book',chapter: 'edit',page: 'description', home: 'home', collection: 'collections_bookmark', author: 'person',survey: 'poll'};
-            const type_color = {book: 'purple',chapter: 'yellow',page: 'green', home: 'blue', collection: 'brown darken-1', author: 'pink lighten-1', survey: 'orange darken-4'};
+            const type_icon = {
+                book: 'menu_book',
+                chapter: 'edit',
+                page: 'description',
+                collection_index: 'description',
+                home: 'home',
+                collection: 'collections_bookmark',
+                author: 'person',
+                author_books: 'person',
+                author_updates: 'person',
+                author_collections: 'person',
+                survey: 'poll'
+            };
+            const type_color = {
+                book: 'purple',
+                chapter: 'yellow',
+                page: 'green',
+                collection_index: 'green',
+                home: 'blue',
+                collection: 'brown darken-1',
+                author: 'pink lighten-1',
+                author_books: 'pink lighten-1',
+                author_updates: 'pink lighten-1',
+                author_collections: 'pink lighten-1',
+                survey: 'orange darken-4'
+            };
             let construct = "";
             for (let i = 0; i < user_data.length; i++) {
                 let session = user_data[i];
@@ -30,8 +54,8 @@ jQuery('tr').click(function(){
                     let stat = session[j];
                     title = ucfirst(stat[0].stat) + ' | ' + ucfirst(stat[0].type);
                     p_content = "";
-                    icon = type_icon[stat[0].type];
-                    color = type_color[stat[0].type];
+                    icon = type_icon[stat[0].type.replace('-','_')];
+                    color = type_color[stat[0].type.replace('-','_')];
                     for (let p = 0; p < stat.length; p++) {
                         let hit = stat[p];
                         p_content += hit.link + ' - ' + timestamp_to_local(hit.timestamp) + '<br>';

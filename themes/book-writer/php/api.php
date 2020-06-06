@@ -1140,15 +1140,84 @@ function api_manage(){
     if (! current_user_can( 'administrator' )){
         exit();
     }
-    
+    function _link($id,$type){
+        if (in_array($type,array('home'))){
+            $home_id = (new WP_Query(array(
+                'name'			    => 'read',
+                'title'             => 'Read',
+                'post_type'		    => 'page',
+                'posts_per_page'	=>  1,
+                'fields'            => 'ids'
+            )))->posts[0];
+            return get_permalink($home_id);
+        }
+        else if (in_array($type,array('book','chapter','post','page'))){
+            return get_permalink($id);
+        }
+        else if (in_array($type,array('term'))){
+            return get_term_link($id);
+        }
+        else if (in_array($type,array('collection'))){
+            return collection::link($id);
+        }
+        else if (in_array($type,array('author','user'))){
+            return get_author_posts_url($id);
+        }
+        else if (in_array($type,array('survey'))){
+            return '/manage/survey/' . $id;
+        }
+        else{
+            return false;
+        }
+    }
+    function _title($id,$type){
+        if (in_array($type,array('home'))){
+            $home_id = (new WP_Query(array(
+                'name'			    => 'read',
+                'title'             => 'Read',
+                'post_type'		    => 'page',
+                'posts_per_page'	=>  1,
+                'fields'            => 'ids'
+            )))->posts[0];
+            return get_the_title($home_id);
+        }
+        else if (in_array($type,array('chapter'))){
+            $obj = get_post($id);
+            return $obj->post_title . ' - ' . get_the_title($obj->post_parent);
+        }
+        else if (in_array($type,array('book','post','page'))){
+            return get_the_title($id);
+        }
+        else if (in_array($type,array('term'))){
+            return get_term($id)->name;
+        }
+        else if (in_array($type,array('collection'))){
+            return collection::query(array(
+                'ids'   => array($id)
+            ))[0]['title'];
+        }
+        else if (in_array($type,array('author','user'))){
+            return get_the_author_meta('display_name',$id);
+        }
+        else if (in_array($type,array('survey'))){
+            return 'Survey ' . $id;
+        }
+        else{
+            return false;
+        }
+    }
+        
     $vfs = $_POST['data']['vfs'];
     global $wpdb;
-    $table_name = 'custom_stats';
-    $result = $wpdb->get_results ( "
-        SELECT * FROM $table_name
-        WHERE cookie_id = '$vfs'
-        ORDER BY timestamp ASC
-    " );
+    $sql = $wpdb->prepare("
+        SELECT * FROM stats_actions
+        WHERE landing_id IN ( 
+            SELECT ID FROM stats_landings
+            WHERE vfs = %s
+        )
+        ORDER BY timestamp DESC
+    ",array($vfs));
+    $result = $wpdb->get_results ( $sql );
     $zero_result = array(
         'stat'      => $result[0]->stat,
         'type'      => $result[0]->type,
@@ -1173,6 +1242,12 @@ function api_manage(){
             'timestamp' => $stat->timestamp
         );
         $prev_stat = $result[$key-1];
+        if ($stat->type_id === $prev_stat->type_id &&
+            $stat->type === $prev_stat->type &&
+            $stat->timestamp - $prev_stat->timestamp < 60
+            ){
+                continue;
+        }
         if (
             ($new_stat['timestamp'] - $prev_stat->timestamp) > 1800
         ){
@@ -1193,6 +1268,7 @@ function api_manage(){
                 $new_stat
             );
         }
+
     }
     echo json_encode($return);
 }
@@ -1202,12 +1278,13 @@ function api_poll(){
             'code'			=>	$code,
             'notifications'	=>  notifications::get()
         );
-        if ($extra !== 0){
+            if ($extra !== 0){
             $_return['extra'] = $extra;
         }
         echo json_encode($_return);
         exit();
     }
+    return_code(112);
     $types = _landing::decrypt($_POST['data']['data']);
     if ($types === null){
         return_code(9);

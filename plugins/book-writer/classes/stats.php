@@ -4,9 +4,18 @@
 function query_mec($fields,$args,$base_sql){
     $error = new err();
 
+    $scale_fields = array();
+    foreach ($fields as $key => $field ) {
+        if ($field['type'] === 'scale'){
+            $scale_fields[] = $field;
+            unset($fields[$key]);
+        }
+    }
+    sort($fields);
+    $base_sql .= ' WHERE 1';
     $prepare = array();
     $text_protocol = (isset($args['text_search_protocol']) && $args['text_search_protocol'] === 'lenient') ? '%' : '';
-    foreach ($fields as $key => $field) {
+    foreach ($fields as $field) {
         $data_type = $field['data_type'] === 'int' ? '%d' : '%s';
         if ($field['type'] === 'option'){
             $value = isset($args[$field['arg']]) ? $args[$field['arg']] : null;
@@ -36,27 +45,29 @@ function query_mec($fields,$args,$base_sql){
                 $base_sql .= ' AND ' . $field['field'] . ' LIKE %s';
                 $args[$arg] = (string) $args[$arg];
                 $prepare[] = $text_protocol . $args[$arg] . $text_protocol;
-            }        
+            }   
         }
-        else if ($field['type'] === 'scale'){
-            $arg = $field['arg'];
-            if (isset($args[$arg])){
-                $base_sql .= ' AND ' . $field['field'] . ' >= ' . $data_type . ' AND ' . $field['field'] . ' <= ' . $data_type;
-                $prepare[] = isset($args[$arg]['from']) ? intval($args[$arg]['from']) : $field['default_from'];
-                $prepare[] = isset($args[$arg]['to']) ? intval($args[$arg]['to']) : $field['default_to'];
-            }
+    }
+
+    $base_sql .= ' HAVING 1';
+    foreach ($scale_fields as $field) {
+        $arg = $field['arg'];
+        if (isset($args[$arg])){
+            $base_sql .= ' AND ' . $field['field'] . ' >= ' . $data_type . ' AND ' . $field['field'] . ' <= ' . $data_type;
+            $prepare[] = isset($args[$arg]['from']) ? intval($args[$arg]['from']) : $field['default_from'];
+            $prepare[] = isset($args[$arg]['to']) ? intval($args[$arg]['to']) : $field['default_to'];
         }
     }
     $args['orderby'] = isset($args['orderby']) ? $args['orderby'] : 'ID';
     $args['order'] = isset($args['order']) ? strtoupper(strval($args['order'])) : 'ASC';
-
-    if (! in_array($args['orderby'],array_column($fields,'field'))){
+    $base_sql .= ' ORDER BY ' . $args['orderby'] . ' ' . $args['order'];
+    if (! in_array($args['orderby'],array_column($fields,'field')) &&
+        ! in_array($args['orderby'],array_column($scale_fields,'field'))){
         $error->add('orderby','Field doesn\'t exist.');
     }
     if (! in_array($args['order'],array('ASC','DESC'))){
         $error->add('order','Pass ASC or DESC.');
     }
-    $base_sql .= ' ORDER BY ' . $args['orderby'] . ' ' . $args['order'];
 
     $args['limit'] = isset($args['limit']) ? intval($args['limit']) : 10;
     $base_sql .= ' LIMIT %d';
@@ -65,6 +76,14 @@ function query_mec($fields,$args,$base_sql){
     $args['page'] = isset($args['page']) ? intval($args['page']) : 1;
     $base_sql .= ' OFFSET %d';
     $prepare[] = ($args['page'] - 1) * $args['limit'];
+
+    if ( isset($args['unique']) ) {
+        $base_sql = 'SELECT * FROM ( ' . $base_sql . ') AS sub';
+        $base_sql .= ' GROUP BY ' . $args['unique'];
+        if ( ! in_array($args['unique'],array_column($fields,'field')) ){
+            $error->add('unique','Unknown Field passed.');
+        }
+    }
 
     if ($error->has()){
         return $error;
@@ -198,7 +217,8 @@ class _landing extends stats {
             'page-dashboard.php',
             'page-contact.php',
             'page-reset-password.php',
-            'page-create-cat.php'
+            'page-create-cat.php',
+            'manage/index.php'
         ))){
             global $post;
             $type = 'page';
@@ -353,6 +373,14 @@ class _landing extends stats {
                 'type'      => 'text',
                 'arg'       => 'ips',
                 'data_type' => 'string'
+            ),
+            array(
+                'field'         => 'actions',
+                'type'          => 'scale',
+                'arg'           => 'actions',
+                'data_type'     => 'int',
+                'default_from'  => 0,
+                'default_to'    => 999999999999999
             )
         );
         $error = new err();
@@ -362,8 +390,7 @@ class _landing extends stats {
             FROM " . stats::$actions_table . "
             WHERE " . stats::$landing_table . ".ID = " . stats::$actions_table . ".landing_id
         ) AS actions
-        FROM " . stats::$landing_table . "
-        WHERE 1";
+        FROM " . stats::$landing_table;
         $sql = query_mec($fields,$args,$base_sql);
         $error->merge($sql);
         if ($error->has()){
@@ -507,8 +534,7 @@ class _action extends stats {
         $error = new err();
         $base_sql =
         "SELECT *
-        FROM " . stats::$actions_table . "
-        WHERE 1";
+        FROM " . stats::$actions_table;
         $sql = query_mec($fields,$args,$base_sql);
         $error->merge($sql);
         if ($error->has()){

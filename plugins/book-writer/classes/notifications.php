@@ -11,8 +11,6 @@ class notifications {
         $last_opened = stats::last_online(array(
             'user_ids'      => array(get_current_user_id()),
             'stats'         => array('notifications'),
-            'orderby'       => 'timestamp',
-            'order'         => 'DESC'
         ));
         $new = 0;
         $all = array();

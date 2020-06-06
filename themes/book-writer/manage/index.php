@@ -1,12 +1,21 @@
 <?php
 /* Template Name: Dashboard */ 
 admin_only();
-// js_bundle::reWrite('manage');
 global $js_bundle;
 $js_bundle = global_bundle('manage');
 $js_bundle->add('manage');
 $js_bundle->enqueue();
 get_header();
+
+//Query Database
+$stats = _landing::query(array(
+    'unique'        => 'vfs',
+    'actions'       => array(
+        'from'      => 1
+    ),
+    'order'         => 'DESC',
+    'orderby'       => 'ID'
+));
 ?>
 <style>
     /* Timeline Start */
@@ -135,23 +144,7 @@ get_header();
         display:none;
     }
 </style>
-<?php
-//Query Database
-global $wpdb;
-$table_name = 'custom_stats';
-$result = $wpdb->get_results ( "
-    SELECT *
-    FROM (
-        SELECT * FROM custom_stats
-        ORDER BY ID DESC
-        LIMIT 18446744073709551615
-    ) AS sub
-    GROUP BY cookie_id
-    ORDER BY ID DESC
-" );
-$result = json_encode($result);
-?>
-<json_data><?= $result; ?></json_data>
+<json_data><?= json_encode($stats); ?></json_data>
 
 <div class="sidebar-left">
     <li class="btn-hover active">
