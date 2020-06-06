@@ -88,7 +88,9 @@ jQuery(window).on('touchstart touchmove click wheel mousedown mouseup focus blur
 			}
 			jQuery('#notification-sidenav').children().remove();
 			jQuery('#notification-sidenav').append(construct);
-			jQuery('.pulse.notification-badge')[0].innerHTML = response.notifications.unread > 0 ? response.notifications.unread : '';	
+			if (jQuery('.pulse.notification-badge')[0]){
+				jQuery('.pulse.notification-badge')[0].innerHTML = response.notifications.unread > 0 ? response.notifications.unread : '';
+			}
 		}
 	});
 });

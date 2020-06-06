@@ -218,7 +218,8 @@ class _landing extends stats {
             'page-contact.php',
             'page-reset-password.php',
             'page-create-cat.php',
-            'manage/index.php'
+            'manage/index.php',
+            'page-login.php'
         ))){
             global $post;
             $type = 'page';

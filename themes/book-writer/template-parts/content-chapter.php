@@ -18,9 +18,39 @@ $js_bundle->enqueue();
 	</div>
 </div>
 <div id="primary" class="content-area">
-<main id="main" class="site-main" role="main">
+<style>
+:root {
+	--acs-font-size: 16;
+	--acs-margin: 0;
+	--acs-line-height: 7;
+	--acs-p-height: 3;
+}
+.acs-main{
+	margin: 0 calc(var(--acs-margin) * 10px) !important;
+}
+.acs-content{
+	font-size: calc( var(--acs-font-size) * 1px ) !important;
+	line-height: calc( var(--acs-line-height) * 0.25) !important;
+}
+.acs-content p{
+	margin: 0 !important;
+	margin-bottom: calc(var(--acs-p-height) * 7px) !important;
+}
+.acs-btn{
+	font-size:20px !important;
+}
+.acs-icon{
+	margin: 0 10px !important;
+	font-size:24px !important;
+	user-select: none;
+}
+.acs-icon.width-icon{
+	transform: rotate(90deg);
+}
+</style>
+<main id="main" class="site-main" role="main" style="margin: 0 5px;">
 		<input type="hidden" id="chapter_id" value="<?php echo $post->ID; ?>">
-		<header class="mobile-margin">
+		<header>
 			<div>
 				<?php
 				echo '<h5> <a href="' .get_permalink($post->post_parent). '">' . get_the_title($post->post_parent) . '</a></h5>';

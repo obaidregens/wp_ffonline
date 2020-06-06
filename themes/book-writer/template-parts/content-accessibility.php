@@ -9,17 +9,34 @@
 <!--Accessibility Menu-->
 <div id="accessibility" class="modal accessibility-menu" style="background-color:var(--background-color);">
     <div class="modal-content" style="text-align:center;">
-		<div class="section"><h4>Reading Settings</h4></div>
-		
-		<div class="portion">
-		    <i class="fas fa-font fa-lg"></i>
-				<a id="increasefontsize" class="btn-floating blue"><i class="fas fa-plus"></i></a>
-			<a id="decreasefontsize" class="btn-floating blue"><i class="fas fa-minus"></i></a>
+		<div class="section"><h4>Reading Preferences</h4></div>
+		<div>
+			<a inc="+" action="font-size" class="acs-btn"><i class="fas fa-plus"></i></a>
+			<span class="acs-icon material-icons">
+				format_size
+			</span>
+			<a inc="-" action="font-size" class="acs-btn"><i class="fas fa-minus"></i></a>
 	    </div>
-	    <div class="portion">
-			<i class="fas fa-bars fa-lg"></i>
-			<a id="increaselineheight" class="btn-floating blue"><i class="fas fa-plus"></i></a>
-			<a id="decreaselineheight" class="btn-floating blue"><i class="fas fa-minus"></i></a>
+	    <div>
+			<a inc="+" action="line-height" class="acs-btn"><i class="fas fa-plus"></i></a>
+			<span class="acs-icon material-icons">
+				format_line_spacing
+			</span>
+			<a inc="-" action="line-height" class="acs-btn"><i class="fas fa-minus"></i></a>
+	    </div>
+		<div>
+			<a inc="+" action="p-height" class="acs-btn"><i class="fas fa-plus"></i></a>
+			<span class="acs-icon material-icons">
+				height
+			</span>
+			<a inc="-" action="p-height" class="acs-btn"><i class="fas fa-minus"></i></a>
+	    </div>
+	    <div>
+			<a inc="+" action="margin" class="acs-btn"><i class="fas fa-plus"></i></a>
+			<span class="acs-icon width-icon material-icons">
+				vertical_align_center
+			</span>
+			<a inc="-" action="margin" class="acs-btn"><i class="fas fa-minus"></i></a>
 	    </div>
     </div>
     <div class="modal-footer">

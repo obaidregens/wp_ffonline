@@ -18,10 +18,10 @@ if (!empty(preg_replace('/\s+/', '', get_post_meta($post->ID,'pre-chapter_notes'
   </ul>
 <?php } ?>
 
-<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+<article class="acs-main">
 	
-	<?php the_title( '<h1 style="display:block;" class="mobile-margin page-title section">', '</h1>' ); ?>
-	<div class="entry-content chapter-content" >
+	<?php the_title( '<h1 style="display:block;" class="section">', '</h1>' ); ?>
+	<div class="acs-content" >
 		<?php
 		    $content = explode('</p>',$post->post_content);
 			unset($content[count($content)-1]);

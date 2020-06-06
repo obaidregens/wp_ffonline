@@ -1,145 +1,108 @@
 ////HTML is located in Chapter Page Template
 ////Script included in 'footer.php'
 
-//fontSize default
-var originalfontSize = parseInt(jQuery(".chapter-content").css("font-size"));
-		
-//Line Height setting
-jQuery(".entry-content").get(0).style.setProperty("line-height",cookies["line-height"] + "px");
-
-//Font Size setting
-jQuery(".chapter-content").get(0).style.setProperty("font-size",cookies["font-size"] + "px");
-
-
-//Container Settings
-if (cookies["line-height"]/cookies["font-size"] <= 1.2){jQuery("#decreaselineheight").get(0).style.setProperty("display", "none");}
-else if (cookies["line-height"]/cookies["font-size"] >= 3.5){jQuery("#increaselineheight").get(0).style.setProperty("display", "none");}
-if (cookies["font-size"] > 42){jQuery("#increasefontsize").get(0).style.setProperty("display", "none");}
-else if (cookies["font-size"] < 10){jQuery("#decreasefontsize").get(0).style.setProperty("display", "none");}
-
-
-
-jQuery("#increasefontsize").click
-(
-	function()
-	{
-		
-		var lineHeight = parseInt(jQuery(".chapter-content").css("line-height"));
-		var fontSize = parseInt(jQuery(".chapter-content").css("font-size"));
-		if (fontSize <= 42){
-			var newfontSize = fontSize + 4;
-			lineHeight = ((lineHeight / (fontSize/originalfontSize)) * (newfontSize/originalfontSize));
-			jQuery(".chapter-content").get(0).style.setProperty("font-size",newfontSize + "px");
-			jQuery("#decreasefontsize").get(0).style.setProperty("display", "inline-block");
-			jQuery(".chapter-content").get(0).style.setProperty("line-height",lineHeight + "px");
+function acs(action){
+	const root = document.documentElement;
+	if (action === 'set'){
+		const acs_vars = ['font-size','margin','line-height','p-height'];
+		let acs_cookie = '';
+		for (let i = 0; i < acs_vars.length; i++) {
+			acs_cookie += acs_vars[i] + '>' + parseInt(getComputedStyle(root).getPropertyValue('--acs-' + acs_vars[i])) + '/';
 		}
-		var fontSize = parseInt(jQuery(".chapter-content").css("font-size"));
-		if (fontSize > 42){
-			jQuery("#increasefontsize").get(0).style.setProperty("display", "none");
-		}
-		setCookie("font-size", parseInt(jQuery(".chapter-content").css("font-size")), { expires:30, path: '/' });
-		setCookie("line-height", parseInt(jQuery(".entry-content").css("line-height")), { expires:30, path: '/' });
+		setCookie("acs",acs_cookie, { expires:30, path: '/' });
 	}
-	
-);
-jQuery("#decreasefontsize").click
-(
-	function() 
-	{
-		var lineHeight = parseInt(jQuery(".chapter-content").css("line-height"));
-		var fontSize = parseInt(jQuery(".chapter-content").css("font-size"));
-		if (fontSize >= 10){
-			var newfontSize = fontSize - 4;
-			lineHeight = ((lineHeight / (fontSize/originalfontSize)) * (newfontSize/originalfontSize));
-			jQuery(".chapter-content").get(0).style.setProperty("font-size",newfontSize + "px");
-			jQuery(".chapter-content").get(0).style.setProperty("line-height",lineHeight + "px");
-			jQuery("#increasefontsize").get(0).style.setProperty("display", "inline-block");
+	else if (action === 'get'){
+		if (! cookies.acs){
+			return {};
 		}
-		var fontSize = parseInt(jQuery(".chapter-content").css("font-size"));
-		if (fontSize < 10){
-			jQuery("#decreasefontsize").get(0).style.setProperty("display", "none");
+		const acs = cookies.acs.split('/');
+		acs.pop()
+		const acs_styles = {};
+		for (let i = 0; i < acs.length; i++) {
+			let split = acs[i].split('>');
+			acs_styles[split[0]] = split[1];
 		}
-		setCookie("font-size", parseInt(jQuery(".chapter-content").css("font-size")), { expires:30, path: '/' });
-		setCookie("line-height", parseInt(jQuery(".entry-content").css("line-height")), { expires:30, path: '/' });				}
-)
-jQuery("#increaselineheight").click
-(
-	function()
-	{
-		var lineHeight = parseInt(jQuery(".entry-content").css("line-height"));
-		var fontSize = parseInt(jQuery(".entry-content").css("font-size"));
-		if (lineHeight/fontSize < 3.5){
-			lineHeight = lineHeight + (4 * fontSize/originalfontSize);
-			jQuery(".entry-content").get(0).style.setProperty("line-height",lineHeight + "px");
-			jQuery("#decreaselineheight").get(0).style.setProperty("display", "inline-block");
-		}
-		var lineHeight = parseInt(jQuery(".entry-content").css("line-height"));
-		if (lineHeight/fontSize >= 3.5){
-			jQuery("#increaselineheight").get(0).style.setProperty("display", "none");
-		}
-		setCookie("font-size", parseInt(jQuery(".chapter-content").css("font-size")), { expires:30, path: '/' });
-		setCookie("line-height", parseInt(jQuery(".entry-content").css("line-height")), { expires:30, path: '/' });				}
-);
-jQuery("#decreaselineheight").click
-(
-	function() 
-	{
-		var lineHeight = parseInt(jQuery(".entry-content").css("line-height"));
-		var fontSize = parseInt(jQuery(".entry-content").css("font-size"));
-		if (lineHeight/fontSize > 1.2){
-			lineHeight = lineHeight - (4 * fontSize/originalfontSize);
-			jQuery(".entry-content").get(0).style.setProperty("line-height",lineHeight + "px");
-			jQuery("#increaselineheight").get(0).style.setProperty("display", "inline-block");
-		}
-		var lineHeight = parseInt(jQuery(".entry-content").css("line-height"));
-		if (lineHeight/fontSize <= 1.2){
-			jQuery("#decreaselineheight").get(0).style.setProperty("display", "none");
-		}
-		setCookie("font-size", parseInt(jQuery(".chapter-content").css("font-size")), { expires:30, path: '/' });
-		setCookie("line-height", parseInt(jQuery(".entry-content").css("line-height")), { expires:30, path: '/' });				}
-)
-
-jQuery("#increasemargin").click
-(
-	function()
-	{
-		jQuery("#ans").text(jQuery('.chapter-content')[0].style.margin);
-		var margin = jQuery('.chapter-content')[0].style.margin;
-		margin = parseInt((margin.split(" ")[1]).replace("%",""));
-		if (margin < 20){
-			margin = margin + 3;
-			jQuery(".chapter-content").get(0).style.setProperty("margin-right",margin + "%");
-			jQuery(".chapter-content").get(0).style.setProperty("margin-left",margin + "%");
-			jQuery("#decreasemargin").get(0).style.setProperty("display", "inline-block");
-		}
-		var margin = jQuery('.chapter-content')[0].style.margin;
-		margin = parseInt((margin.split(" ")[1]).replace("%",""));
-
-		if (margin >= 20){
-			jQuery("#increasemargin").get(0).style.setProperty("display", "none");
-			
-		}
+		return acs_styles;
 	}
-);
-jQuery("#decreasemargin").click
-(
-	function()
-	{
-		var margin = jQuery('.chapter-content')[0].style.margin;
-		margin = parseInt((margin.split(" ")[1]).replace("%",""));
-		if (margin > 2){
-			margin = margin - 3;
-			jQuery(".chapter-content").get(0).style.setProperty("margin-right",margin + "%");
-			jQuery(".chapter-content").get(0).style.setProperty("margin-left",margin + "%");
-			jQuery("#increasemargin").get(0).style.setProperty("display", "inline-block");
-		}
-		var margin = jQuery('.chapter-content')[0].style.margin;
-		margin = parseInt((margin.split(" ")[1]).replace("%",""));
-		if (margin <= 2){
-			jQuery("#decreasemargin").get(0).style.setProperty("display", "none");
-		}
+}
+function css_var({which,adder,min,max}){
+	const new_value = parseInt(getComputedStyle(document.documentElement).getPropertyValue(which)) + adder;
+	if (new_value < min || new_value > max){
+		return;
 	}
-);
+	document.documentElement.style.setProperty(which,new_value);
+}
+const _acs = acs('get');
+const _acs_keys = Object.keys(_acs);
+for (let i = 0; i < _acs_keys.length; i++) {
+	const key_ = _acs_keys[i];
+	document.documentElement.style.setProperty('--acs-' + key_,_acs[key_]);
+}
+jQuery('.acs-btn').click(function(){
+	const options = {};
+	const action = this.getAttribute('action');
+	const inc = this.getAttribute('inc');
+	if (action === 'font-size'){
+		options.which = '--acs-font-size';
+		options.min = 10;
+		options.max = 30;
+	}
+	else if (action === 'line-height'){
+		options.which = '--acs-line-height';
+		options.min = 5;
+		options.max = 15;
+	}
+	else if (action === 'p-height'){
+		options.which = '--acs-p-height';
+		options.min = 0;
+		options.max = 10;
+	}
+	else if (action === 'margin'){
+		options.which = '--acs-margin';
+		options.min = 0;
+		options.max = 20;
+	}
+	if (inc === '+'){
+		options.adder = 1;
+	}
+	else if (inc === '-'){
+		options.adder = -1;
+	}
+	css_var(options);
+	acs('set');
+});
+jQuery("#increasefontsize").click(function(){
+	css_var({
+		which: '--acs-font-size',
+		adder: 1,
+		min: 10,
+		max: 30
+	});
+});
+jQuery("#decreasefontsize").click(function(){
+	css_var({
+		which: '--acs-font-size',
+		adder: -1,
+		min: 10,
+		max: 30
+	});
+});
+jQuery("#increaselineheight").click(function(){
+	css_var({
+		which: '--acs-line-height',
+		adder: 1,
+		min: 5,
+		max: 15
+	});
+});
+jQuery("#decreaselineheight").click(function(){
+	css_var({
+		which: '--acs-line-height',
+		adder: -1,
+		min: 5,
+		max: 15
+	});
+});
 
 
 /////Other Chapter Scripts

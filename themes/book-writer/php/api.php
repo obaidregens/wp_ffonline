@@ -1284,7 +1284,6 @@ function api_poll(){
         echo json_encode($_return);
         exit();
     }
-    return_code(112);
     $types = _landing::decrypt($_POST['data']['data']);
     if ($types === null){
         return_code(9);
