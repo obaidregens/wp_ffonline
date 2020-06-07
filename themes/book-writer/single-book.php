@@ -1,7 +1,7 @@
 <?php
 
 global $js_bundle;
-$js_bundle = global_bundle('book');
+$js_bundle = global_bundle('books');
 $js_bundle->add('book');
 $js_bundle->add('book-options');
 $js_bundle->enqueue();

@@ -166,7 +166,7 @@ class _landing extends stats {
         $this->referrer = _landing::referrer();
         $this->log();
     }
-    private function type(){
+    public static function get_type(){
         $error = new err();
         global $template;
         if ($template === false){
@@ -239,8 +239,20 @@ class _landing extends stats {
             $error->add('template','Unknown Template: "' . $template_file . '"');
             return $error;
         }
-        $this->type = $type;
-        $this->type_id = $type_id;
+        return array(
+            'type'      => $type,
+            'type_id'   => $type_id
+        );
+    }
+    private function type(){
+        $error = new err();
+        $get_type = _landing::get_type();
+        $error->merge($get_type);
+        if ($error->has()){
+            return $error;
+        }
+        $this->type    = $get_type['type'];
+        $this->type_id = $get_type['type_id'];
         return true;
     
     }

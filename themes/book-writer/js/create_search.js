@@ -142,7 +142,6 @@ function trigger_search(page = false){
     words[1] = parseInt(words[1].replace(/[,]+/g,'').replace(' Words',''));
     words = words.join();
     var data = {
-        search_id: document.getElementById('search_id').innerHTML,
         words: words,
         sort: jQuery('#sort').val(),
     };
@@ -172,7 +171,11 @@ function trigger_search(page = false){
         }
     }
     api('search',{
-        data: data,
+        data: {
+            search: data,
+            placeholder: document.getElementById('placeholder_data').innerHTML,
+            prev: document.getElementById('prev_ss').innerHTML
+        },
         dataType: 'JSON',
         callback: function(response){
             if (response['output'] == 6){
@@ -182,7 +185,7 @@ function trigger_search(page = false){
             jQuery("#box").removeClass("center-align");
             jQuery("#search-btn").removeClass("disabled");
             var response_arr  = response;
-            document.getElementById('search_id').innerHTML = response_arr['search_id'];
+            document.getElementById('prev_ss').innerHTML = response_arr['prev'];
 
             document.getElementById('pagination-wrapper').innerHTML = response_arr.paginate;
 

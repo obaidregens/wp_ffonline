@@ -5,7 +5,6 @@ function setSortParams(){
     params = new URL(window.location.href).searchParams;
     params.set('sort',sort);
     params.set('sortby',sortby);
-    console.log(params.toString());
     window.location.href = '?' + params.toString();
 }
 jQuery('.sort-collections').change(setSortParams);

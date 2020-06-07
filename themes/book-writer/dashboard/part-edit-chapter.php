@@ -60,7 +60,7 @@
 		<!-- Chapter Title -->
 		<div class="row">
 			<div class="input-field col s12">
-				<textarea id="chapter_title" name="chapter_title" class="materialize-textarea"><?= $title ?></textarea>
+				<input id="chapter_title" name="chapter_title" type="text" data-length="40" value="<?= $title ?>" class="validate valid">
 				<label for="chapter_title">Chapter Title*</label>
 			</div>
 		</div>
@@ -145,10 +145,13 @@
             }
             if (event.keyCode == 13){
                 event.preventDefault();
-                document.execCommand('formatblock',false,'p');
+				document.execCommand('formatblock',false,'p');
             	document.execCommand('insertParagraph');
             }
             if (event.ctrlKey == true){
+				if ([67,86,88,65].includes(event.keyCode)){
+					return;
+				}
                 event.preventDefault();
                 if (event.keyCode == 65){
                     document.execCommand('selectAll');
@@ -215,6 +218,10 @@
     		if( document.querySelector("#chapter_title").value.replace(/\s+/g, '') == "" && document.querySelector("#publish").checked == true) {
     			error = 1;
 				M.toast({html: 'Your Chapter has to have a title.'});
+			}
+			if( document.querySelector("#chapter_title").value.replace(/\s+/g, '').length > 40 && document.querySelector("#publish").checked == true) {
+    			error = 1;
+				M.toast({html: 'Title cannot be of more than 40 characters.'});
     		}
     		if(document.querySelector("#chapter_content").innerHTML.replace(/\s+/g, '') == "" && document.querySelector("#publish").checked == true) {
     			error = 1;
@@ -304,6 +311,7 @@
 			});   
     	}
 		intervalID = setInterval(autosave_content, 10000);
+		jQuery('textarea[data-length],input[data-length][type="text"]').characterCounter();
 	}
 	load_chapter_part();
     </script>

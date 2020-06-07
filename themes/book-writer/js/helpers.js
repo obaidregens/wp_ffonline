@@ -86,6 +86,9 @@ function object_attribute_array(object_or_array,attribute){
     return _return;
 }
 function forceArray(variable){
+    if (variable === null){
+        return [];
+    }
     var type = variable.constructor.name;
     if (type == 'Array'){
         return variable;

@@ -219,9 +219,6 @@
 						window.location.href = document.location.origin + '/dashboard/write/' + response.book_id;
 					}
 				},
-				error: function (first,second,third){
-					console.log(arguments);
-				}
 			});
 			
 		});

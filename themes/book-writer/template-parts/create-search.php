@@ -1,4 +1,17 @@
+<?php
+//Find Args from Url
+$args = unpack_search($_GET);
 
+$placeholder = _landing::get_type();
+$args = type_args($args,$placeholder);
+if (err::is($args)){
+    _404();
+}
+//Max Count
+$max_count = max_search_words($args);
+?>
+<span id="prev_ss" style="display:none;"><?= ctrk_encrypt($args); ?></span>
+<span id="max_count" style="display:none;"><?= $max_count; ?></span>
 <style>
     [type=checkbox].cross:checked+span:not(.lever):before{
         top: -3px;
@@ -65,49 +78,6 @@
     }
 </style>
 <?php
-//Find Args from Url
-$args = unpack_search($_GET);
-//Max Count
-$max_count = max_search_words($args);
-?> <span id="max_count" style="display:none;"><?php echo $max_count; ?></span> <?php
-
-//Log Search
-$search_id = log_search($args);
-?> <span id="search_id" style="display:none;"><?php echo $search_id; ?></span> <?php
-global $collection;
-if (isset($collection)){
-    $collection_books = array_column(collection::book_query(array($collection['ID'])),'ID');
-    if (! isset($args['post__in'])){
-        $args['post__in'] = $collection_books;
-    }
-    else{
-        $args['post__in'] = array_merge($args['post__in'],$collection_books);
-    }
-    if (empty($args['post__in'])){
-        $args['post__in'] = array(0);
-    }
-}
-else if (get_template_page() == 'author/books.php'){
-    global $author;
-    if (! isset($args['author__in'])){
-        $args['author__in'] = array($author);
-    }
-    else{
-        $args['author__in'][] = $author;
-    }
-}
-else if (get_template_page() == 'author/favorites.php'){
-    global $author;
-    if (! isset($args['post__in'])){
-        $args['post__in'] = collection::get_favorites($author);
-    }
-    else{
-        $args['post__in'] = array_merge(collection::get_favorites($author),$args['post__in']);
-    }
-    if (empty($args['post__in'])){
-        $args['post__in'] = array(0);
-    }
-}
 $default_query = new WP_Query( $args );
 $original_query = $wp_query;
 $wp_query = null;
@@ -132,7 +102,7 @@ $wp_query = $default_query;
 	}
 	?>
 </div></div>
-<div  id="pagination-wrapper">
+<div id="pagination-wrapper">
 <?php get_template_part( 'template-parts/content', 'bookpaginate' ); ?>
 </div>
 <?php

@@ -87,7 +87,7 @@ function can_publish($data,$post_type){
     if ($post_type == 'chapter'){
         //$chapter = get_post($data['chapter_id]);
         //$book = get_post($data['book_id']);
-        if (! isset($data['title']) || $data['title'] == ''){
+        if (! isset($data['title']) || $data['title'] == '' || strlen($data['title']) > 40){
             return false;
         }
         if (! isset($data['content']) || $data['content'] == ''){
@@ -126,6 +126,9 @@ function can_publish_saved_chapter($chapter_id){
 }
 
 function published_chapters($book_id,$limit = -1,$fields = 'all'){
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
 	$chapters = (new WP_Query(array(
         'post_parent'   => $book_id,
         'post_type'		=> 'chapter',
@@ -139,6 +142,9 @@ function published_chapters($book_id,$limit = -1,$fields = 'all'){
     return $chapters;
 }
 function draft_chapters($book_id,$limit = -1,$fields = 'all'){
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
 	$chapters = (new WP_Query(array(
         'post_parent'   => $book_id,
         'post_type'		=> 'chapter',
@@ -149,7 +155,10 @@ function draft_chapters($book_id,$limit = -1,$fields = 'all'){
     return $chapters;
 }
 function all_chapters($book_id,$limit = -1,$fields = 'all'){
-	$chapters = (new WP_Query(array(
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
+    $chapters = (new WP_Query(array(
         'post_parent'   => $book_id,
         'post_type'		=> 'chapter',
         'post_status'	=> array('publish','draft','future'),
@@ -158,8 +167,8 @@ function all_chapters($book_id,$limit = -1,$fields = 'all'){
     )))->posts;
     return $chapters;
 }
-function draft_these_chapters($book_id,$chapter_ids = false){
-    if (! $chapter_ids){
+function draft_these_chapters($book_id,$chapter_ids = null){
+    if ($chapter_ids === null){
         $chapter_ids = draft_chapters($book_id,-1,'ids');
     }
     $chapter_ids = (array) $chapter_ids;

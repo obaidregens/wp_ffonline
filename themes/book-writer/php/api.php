@@ -452,31 +452,25 @@ function api_search_book_contents(){
 	}
 }
 function api_search(){
-
-	if (! in_array(intval($_POST['data']['search_id']),$_SESSION['search_ids']) ){
-		print_r( array('output' => 6));
-		exit();
-	}
- 	global $force_template_page;
- 	global $force_template_id;
-	$prev_search = get_search(intval($_POST['data']['search_id']));
-	$force_template_page = $prev_search['type'];
-	$force_template_id = $prev_search['type_id'];
-	if (isset($_POST['data']['search_id']) && isset($_POST['data']['page']) && in_array(intval($_POST['data']['search_id']),$_SESSION['search_ids']) ){
-		$args = $prev_search['args'];
-		$args['paged'] = intval($_POST['data']['page']);
-	}
-	else{
-		$args = unpack_search($_POST);
-	}
+    if (isset($_POST['data']['search']['page'])
+        && is_numeric($_POST['data']['search']['page'])
+    ){
+        $args = (array) ctrk_decrypt($_POST['data']['prev']);
+        $args['paged'] = $_POST['data']['search']['page'];
+    }
+    else{
+        $args = unpack_search($_POST['data']['search']);
+        $placeholder = (array) ctrk_decrypt($_POST['data']['placeholder']);
+        $args = type_args($args,$placeholder);
+    }
     // The Query
     global $wp_query;
 	$default_query = new WP_Query( $args );
 	$original_query = $wp_query;
 	$wp_query = null;
 	$wp_query = $default_query;
-	$response = array();
-	$response['search_id'] = log_search($args);
+    $response = array();
+    $response['prev'] = ctrk_encrypt($args);
 	$response['pages'] = $wp_query->max_num_pages;
 	ob_start();
 	if (have_posts()){
@@ -940,7 +934,6 @@ function api_submit_book(){
         exit();
     }
 
-
     $_POST['data'] = process_data($_POST['data'],'book');
     if (! $_POST['data']){
         return_code(9);
@@ -971,7 +964,8 @@ function api_submit_book(){
     }
     $all_chapters = all_chapters($_POST['data']['book_id'],-1,'ids');
     $non_selected = array_diff($all_chapters,$_POST['data']['selected_chapters']);
-    draft_these_chapters($_POST['data']['book_id'],$non_selected);
+    draft_these_chapters($_POST['data']['book_id']);
+
     // Add the content of the form to $post as an array
     $book = array(
         'post_title'    	=> htmlspecialchars($_POST['data']['title']),
@@ -994,7 +988,6 @@ function api_submit_book(){
         wp_update_post($book);
     }
     update_post_meta($book_id,'anon_review',$_POST['data']['anonymous_reviews']);
-
 
     //Taxonomies
     //Simple taxonomies
@@ -1029,7 +1022,6 @@ function api_submit_book(){
     }
     wp_set_object_terms($book_id,$pairings_to_set,'pairing');
 
-
     $updated = get_post($book_id);
     if ($updated->post_status == 'publish'){
         $response = 1;
@@ -1063,7 +1055,6 @@ function api_submit_chapter(){
         echo json_encode($_return);
         exit();
     }
-    
     if (! headers_sent() && ! isset($_SESSION) ){
         session_start();
     }
@@ -1099,6 +1090,7 @@ function api_submit_chapter(){
     if ($_POST['data']['chapter_id'] == 'new'){
         $chapter_id = wp_insert_post($new_post);
     }
+    
     else{
         $chapter_id = $_POST['data']['chapter_id'];
         $new_post['ID'] = $chapter_id;
@@ -1111,6 +1103,7 @@ function api_submit_chapter(){
     else{
         draft_these_chapters($_POST['data']['book_id'],array($chapter_id));
     }
+    global $wpdb;
     $wpdb->delete( 'custom_autosaves', array( 'chapter_id' => $_POST['data']['chapter_id'],'book_id' => $_POST['data']['book_id']) );
     $updated = get_post($chapter_id);
     if ($updated->post_status == 'publish'){
@@ -1278,7 +1271,7 @@ function api_poll(){
             'code'			=>	$code,
             'notifications'	=>  notifications::get()
         );
-            if ($extra !== 0){
+        if ($extra !== 0){
             $_return['extra'] = $extra;
         }
         echo json_encode($_return);

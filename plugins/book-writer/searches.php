@@ -10,178 +10,6 @@ function packed_to_url($packed){
 	$construct .= 'page=1';
 	return $construct;
 }
-//get searches by search_id from databse
-function get_search($id,$fields = 'all'){
-	if (! is_array($fields) && $fields != 'all'){
-		return false;
-	}
-	global $wpdb;
-	$id = intval($id);
-	$table_name = 'searches';
-	$result = $wpdb->get_results ( "
-	    SELECT * FROM $table_name
-	        WHERE ID = $id
-	" );
-	$return = array();
-	$result_arr = get_object_vars($result[0]);
-	$allowed_fields = array_keys($result_arr);
-	if ($fields == 'all'){
-		$fields = $allowed_fields;
-	}
-	foreach($fields as $field ){
-		if (! in_array($field,$allowed_fields)){
-			return false;
-		}
-		if ($field == 'args'){
-			$return['args'] = unserialize($result_arr['args']);
-		}
-		else{
-			$return[$field] = $result_arr[$field];
-		}
-	}
-	return $return;
-}
-//get_template_page() wrapper to give exact type & type_id (also considers forced)
-function get_type_template(){
-	$template_page = get_template_page();
-	global $author;
-	$return = array();
-	if ($template_page == 'collections/single.php'){
-		$return['type'] = 'collection';
-		global $collection;
-		$return['type_id'] = $collection['ID'];
-	}
-	else if ($template_page == 'page-search.php'){
-		$return['type'] = 'main';
-		$return['type_id'] = 0;
-	}
-	else if ($template_page == 'author/books.php'){
-		$return['type'] = 'author-books';
-		$return['type_id'] = $author;
-	}
-	else if ($template_page == 'author/favorites.php'){
-		$return['type'] = 'author-favorites';
-		$return['type_id'] = $author;
-	}
- 	global $force_template_page;
- 	global $force_template_id;
- 	if ($force_template_page != null && $force_template_page != ''){
- 		$return['type'] = $force_template_page;
- 	}
- 	if ($force_template_id != null && $force_template_id != ''){
- 		$return['type_id'] = $force_template_id;
- 	}
- 	if (! isset($return['type']) || ! isset($return['type_id'])){
- 		return false;
- 	}
- 	return $return;
-}
-//get template page relative to book-writer theme
-function get_template_page(){
- 	global $template;
-	$to_remove = explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/';
-	$to_remove = str_replace('\\','/',$to_remove);
-	$template = str_replace('\\','/',$template);
-	$template_page = str_replace($to_remove,"",$template);
-	return $template_page;
-}
-//Add Search to Database
-function log_search($unpacked){
-	global $wpdb;
-	$this_type_template =  get_type_template();
-	if ($this_type_template == false){
-		return false;
-	}
-	$type = $this_type_template['type'];
-	$type_id = $this_type_template['type_id'];
-	$wpdb->insert(
-		'searches', 
-		array(
-			'type' => $type,
-			'type_id' => $type_id,
-			'timestamp' => current_time('timestamp',true), 
-			'IP' => $_SERVER['REMOTE_ADDR'], 
-			'args' => serialize($unpacked), 
-		)
-	);
-	$id = $wpdb->insert_id;
-	if (! headers_sent() && ! isset($_SESSION) )	{
-		session_start();
-	}
-	if (isset($_SESSION['search_ids']) && is_array($_SESSION['search_ids'])){
-		$_SESSION['search_ids'][] = $id;
-	}
-	else{
-		$_SESSION['search_ids'] = array($id);
-	}
-	$packed = pack_search($unpacked);
-	$taxonomies = array('tag','fandom','rating','language','status','genre','character','pairing');
-	foreach ($taxonomies as $key => $taxonomy) {
-		$options = array('included','excluded');
-		foreach ($options as $key => $option) {
-			if (isset($packed[$taxonomy . '_' . $option])){
-				$terms = explode(',',$packed[$taxonomy . '_' . $option]);
-				foreach ($terms as $key => $term) {
-					$wpdb->insert(
-						'searchparams', 
-						array( 
-							'search_id' => $id, 
-							'parameter' => $taxonomy . '_' . $option, 
-							'value' => $term, 
-						)
-					);
-				}
-			}
-		}
-	}
-	if (isset($packed['words'])){
-		$words_array = explode(',',$packed['words']);
-		$wpdb->insert(
-			'searchparams', 
-			array( 
-				'search_id' => $id, 
-				'parameter' => 'min_words', 
-				'value' => $words_array[0],
-			)
-		);
-		$wpdb->insert(
-			'searchparams', 
-			array( 
-				'search_id' => $id, 
-				'parameter' => 'max_words', 
-				'value' => $words_array[1],
-			)
-		);
-	}
-	$sort = explode('/', $packed['sort']);
-	$wpdb->insert(
-		'searchparams', 
-		array( 
-			'search_id' => $id, 
-			'parameter' => 'sort_order', 
-			'value' => $sort[1],
-		)
-	);
-	$wpdb->insert(
-		'searchparams',
-		array( 
-			'search_id' => $id, 
-			'parameter' => 'sort_by', 
-			'value' => $sort[0],
-		)
-	);
-	if (isset($packed['search'])){
-		$wpdb->insert(
-			'searchparams',
-			array( 
-				'search_id' => $id, 
-				'parameter' => 'search', 
-				'value' => $packed['search'],
-			)
-		);
-	}
-	return $id;
-}
 //Max Words
 function max_search_words($unpacked){
 	//Find Word Count
@@ -434,7 +262,35 @@ function unpack_search($packed){
 	}
 	return $args;
 }
-
+function type_args($args,$placeholder){
+	if ($placeholder['type'] === 'home'){}
+	else if ($placeholder['type'] === 'collection'){
+		$collection_books = array_column(collection::book_query(array($placeholder['type_id'])),'ID');
+		if (! isset($args['post__in'])){
+			$args['post__in'] = $collection_books;
+		}
+		else{
+			$args['post__in'] = array_merge($args['post__in'],$collection_books);
+		}
+		if (empty($args['post__in'])){
+			$args['post__in'] = array(0);
+		}
+	}
+	else if ($placeholder['type'] === 'author-books') {
+		if (! isset($args['author__in'])){
+			$args['author__in'] = array($placeholder['type_id']);
+		}
+		else{
+			$args['author__in'][] = $placeholder['type_id'];
+		}
+	}
+	else{
+		$error = new err();
+		$error->add('type','Unknown type for search: ' . $placeholder['type']);
+		return $error;
+	}
+	return $args;
+}
 
 /////Saved Searches
 function save_search($name,$search_id){

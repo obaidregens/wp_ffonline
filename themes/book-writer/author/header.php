@@ -3,7 +3,7 @@
 ?>
 
 <?php
-$template_page = get_template_page();
+$template_page = _landing::get_type()['type'];
 $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 global $wp_query;
 ?>
@@ -13,10 +13,10 @@ global $wp_query;
 	</div>
 	<div class="author-menu">
 		<div class="author-tabs">
-			<a href="<?php echo $author_base; ?>" <?php if ($template_page == 'author.php'){?> class="active" <?php } ?> >About</a>
-			<a href="<?php echo $author_base . 'books'; ?>" <?php if ($template_page == 'author/books.php'){?> class="active" <?php } ?> >Books</a>
-			<a href="<?php echo $author_base . 'updates'; ?>" <?php if ($template_page == 'author/updates.php'){?> class="active" <?php } ?> >Updates</a>
-			<a href="<?php echo $author_base . 'collections'; ?>" <?php if (isset($wp_query->query_vars['collections'])){?> class="active" <?php } ?> >Collections</a>
+			<a href="<?php echo $author_base; ?>" <?php if ($template_page == 'author'){?> class="active" <?php } ?> >About</a>
+			<a href="<?php echo $author_base . 'books'; ?>" <?php if ($template_page == 'author-books'){?> class="active" <?php } ?> >Books</a>
+			<a href="<?php echo $author_base . 'updates'; ?>" <?php if ($template_page == 'author-updates'){?> class="active" <?php } ?> >Updates</a>
+			<a href="<?php echo $author_base . 'collections'; ?>" <?php if ($template_page == 'author-collections'){?> class="active" <?php } ?> >Collections</a>
 		</div>
 		<div class="author-actions">
 			<!--<a><i class="fas fa-user-plus"></i></a>-->
