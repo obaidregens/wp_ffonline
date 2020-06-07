@@ -191,7 +191,8 @@ foreach($fandoms as $fandom){
 		}
 	}
 	foreach ($existing as $book){
-	    update_post_meta($book['ID'],'source_author',$book['author']);
+		update_post_meta($book_id,'source_author_name',$book['author_name']);
+		update_post_meta($book_id,'source_author_link',$book['author_link']);
 		$start = count(get_posts( array(
 			'post_type'		 => 'chapter',
 			'posts_per_page' => -1,

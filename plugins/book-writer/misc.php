@@ -1,21 +1,23 @@
 <?php
 function author_href($_post_id){
 	$book = get_post($_post_id);
+	$_author = intval($book->post_author);
 	$a_href = "";
-	if ($book->post_author === 37){
+	if ($_author === 37){
 		$a_href .= '<a href="' . get_post_meta( $book->ID,'source_author_link',true ) . '">' . get_post_meta( $book->ID,'source_author_name',true ) . '</a> (';
 	}
-	$a_href .= '<a href="' . get_author_posts_url($book->post_author) . '">' . get_the_author_meta( 'display_name',$book->post_author ) . '</a>';
-	$a_href .= $book->post_author === 37 ? ')' : '';
+	$a_href .= '<a href="' . get_author_posts_url($_author) . '">' . get_the_author_meta( 'display_name',$_author ) . '</a>';
+	$a_href .= $_author === 37 ? ')' : '';
 	return $a_href;
 }
 function author_name_single($_post_id){
 	$book = get_post($_post_id);
+    $_author = intval($book->post_author);
 	$meta_author = get_post_meta( $book->ID,'source_author_name',true );
-	if ($book->post_author === 37 && $meta_author !== ''){
+	if ($_author === 37 && $meta_author !== ''){
 		return $meta_author;
 	}
-	return get_the_author_meta( 'display_name',$book->post_author );
+	return get_the_author_meta( 'display_name',$_author );
 }
 
 function username_regex_valid($string){

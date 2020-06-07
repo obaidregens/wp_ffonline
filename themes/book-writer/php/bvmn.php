@@ -3,19 +3,16 @@ define('WP_USE_THEMES', false);
 require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
 
 $meta_query = array(
-	'relation' => 'AND',
+	'relation' => 'OR',
 	array(
-		'key'     => 'source_author_name',
-		'compare' => 'NOT EXISTS',
-	),
-	array(
+		'key'     => 'source_author_link',
+		'compare' => '=',
+		'value'   => ''
+    ),
+    array(
 		'key'     => 'source_author_link',
 		'compare' => 'NOT EXISTS',
     ),
-    array(
-		'key'     => 'source_author',
-		'compare' => 'EXISTS',
-	),
 );
 $args = array(
     'post_type'              => array( 'book' ),
@@ -35,7 +32,7 @@ for ($i=1; $i <= $num_pages; $i++) {
     foreach ($books as $id) {
         $full = get_post_meta( $id,'source_author',true );
         $full_arr = explode('">',$full);
-        $author_link = ltrim($full_arr[0],'<a href="');
+        $author_link = ltrim(ltrim($full_arr[0],'<a href='),'"');
         $author_name = rtrim($full_arr[1],'</a>');
         update_post_meta( $id,'source_author_name',$author_name);
         update_post_meta( $id,'source_author_link',$author_link);
