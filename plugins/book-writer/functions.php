@@ -71,56 +71,7 @@ function run_at_activation(){
 	//Activate Theme
 	switch_theme('book-writer');
 	flush_rewrite_rules();
-
-
-	//Add Searches Table
-	global $wpdb;
-	$searches_table_name = 'searches';
-	$searchparams_table_name = 'searchparams';
-	$charset_collate = $wpdb->get_charset_collate();
-
-	$searches_table = "CREATE TABLE $searches_table_name (
-		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-		  `user_id` BIGINT UNSIGNED NOT NULL DEFAULT '0' ,
-		  `type` VARCHAR(20) NOT NULL DEFAULT 'main' ,
-		  `type_id` BIGINT UNSIGNED NOT NULL DEFAULT '0' ,
-		  `timestamp` BIGINT UNSIGNED NOT NULL ,
-		  `IP` VARCHAR(100) NOT NULL ,
-		  `args` LONGTEXT NOT NULL ,
-		  PRIMARY KEY (`ID`),
-		  KEY user_id (user_id),
-		  KEY type (type),
-		  KEY type_id (type_id),
-		  KEY IP (IP)
-		) $charset_collate;";
-
-	$searchparams_table = "CREATE TABLE $searchparams_table_name (
-		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-		  `search_id` BIGINT UNSIGNED NOT NULL ,
-		  `parameter` VARCHAR(500) NOT NULL ,
-		  `value` VARCHAR(500) NOT NULL ,
-		  PRIMARY KEY (`ID`),
-		  KEY search_id (search_id),
-		  KEY parameter (parameter),
-		  KEY value (value)
-		) $charset_collate;";
     
-
-	//Add Stats Table (redundant)
-	$custom_stats_table_name = 'custom_stats';
-	$custom_stats_table = "CREATE TABLE $custom_stats_table_name (
-	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-	`cookie_id` VARCHAR(100) NOT NULL ,
-	`timestamp` BIGINT NOT NULL ,
-	`stat` VARCHAR(50) NOT NULL ,
-	`type` VARCHAR(50) NOT NULL ,
-	`type_id` BIGINT NOT NULL ,
-	`user_id` BIGINT NOT NULL ,
-	`IP` VARCHAR(100) NOT NULL ,
-	`referrer_host` VARCHAR(150) NULL ,
-	`referrer_path` VARCHAR(300) NULL ,
-	PRIMARY KEY (`ID`)
-	) $charset_collate;";
 
 	//Stats
 	//Landing
@@ -213,9 +164,6 @@ function run_at_activation(){
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
-	dbDelta( $searches_table );
-	dbDelta( $searchparams_table );
-	dbDelta( $custom_stats_table );
 	dbDelta( $stats_landings_table );
 	dbDelta( $stats_actions_table );
 	dbDelta( $custom_autosaves_table );

@@ -26,13 +26,8 @@
         }
 		echo '</a></h2>';
 		?>
-		<?php 
-		if ($post->post_author == 37 && metadata_exists('post',$post->ID,'source_author')){
-			echo '<h5 class="entry-author" style="margin-bottom:1.05em;">by ' . get_post_meta($post->ID,'source_author',true) .  ' (<a href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )) . '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a>)</h5>';
-		}
-		else{
-			echo '<h5 class="entry-author" style="margin-bottom:1.05em;">by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )) . '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></h5>';
-		}
+		<?php
+		echo '<h5 class="entry-author" style="margin-bottom:1.05em;">by ' . author_href($post->ID) . '</h5>';
 		?>
 	</header><!-- .entry-header -->
 		

@@ -286,10 +286,9 @@ function api_post_survey(){
     ));
 }
 function api_save_search(){
-    $_POST['data']['id'] = intval($_POST['data']['id']);
     if (isset($_POST['data']['to_delete'])){
-        delete_search($_POST['data']['id']);
-        if (saved_search_exists('',$_POST['data']['id']) == false){
+        delete_search($_POST['data']['prev']);
+        if (saved_search_exists('',$_POST['data']['prev']) == false){
             echo 2;
             exit();
         }
@@ -298,7 +297,7 @@ function api_save_search(){
         echo 3;
         exit();
     }
-    $exists = saved_search_exists($_POST['data']['name'],$_POST['data']['id']);
+    $exists = saved_search_exists($_POST['data']['name'],$_POST['data']['prev']);
     if ($_POST['data']['name'] == ''){
         echo 'Name cannot be empty.';
         exit();
@@ -307,7 +306,7 @@ function api_save_search(){
         echo $exists;
         exit();
     }
-    $save_search_r = save_search($_POST['data']['name'],$_POST['data']['id']);
+    $save_search_r = save_search($_POST['data']['name'],$_POST['data']['prev']);
     if ($save_search_r != false){
         echo 1;
         exit();

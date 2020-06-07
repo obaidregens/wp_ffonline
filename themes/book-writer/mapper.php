@@ -59,7 +59,7 @@ $collections = collection::query(array(
     )
 ));
 $xml .= url_field(
-    'https://fanfiction.online/collection/',
+    'https://fanfiction.online/collections/',
     f_stamp($collections[0]['modified']),
     'daily'
 );
@@ -191,7 +191,7 @@ for ($i=1; $i <= $num_pages; $i++) {
                 'monthly'
             );
             $xml .= url_field(
-                dss(get_author_posts_url($user->ID) . '/collection/'),
+                dss(get_author_posts_url($user->ID) . '/collections/'),
                 $author_time,
                 'monthly'
             );

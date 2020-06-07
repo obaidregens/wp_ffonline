@@ -41,7 +41,8 @@ foreach($fandoms as $fandom){
 			foreach($divClass->find("a[href^='/u']") as $author ) {
 				$author_name = $author->plaintext;
 				$author_link = $author->href;
-				$current_book['author'] = '<a href="https://www.fanfiction.net' . $author_link . '">' . $author_name .'</a>';
+				$current_book['author_name'] = $author_name;
+				$current_book['author_link'] = 'https://www.fanfiction.net' . $author_link;
 				break;
 			}
 			foreach($divClass->find(".z-indent.z-padtop") as $desc_full ) {
@@ -171,17 +172,19 @@ foreach($fandoms as $fandom){
 		}
 		wp_set_object_terms($book_id,$fandom['name'],'category');
 		update_post_meta($book_id,'link',$book['link']);
-		update_post_meta($book_id,'source_author',$book['author']);
-		for ($x = 1; $x <= count($book['chapters']); ++$x)
-		{
+		update_post_meta($book_id,'source_author_name',$book['author_name']);
+		update_post_meta($book_id,'source_author_link',$book['author_link']);
+
+		for ($x = 1; $x <= count($book['chapters']); ++$x){
 			$chapter = array
 			(
-				'post_title' => $book['chapters'][$x]['title'],
-				'post_content' => $book['chapters'][$x]['content'],
-				'post_status' => 'publish',
-				'post_author' => 37,
-				'post_type'   => 'chapter',
-				'post_parent' => $book_id
+				'post_title' 		=> $book['chapters'][$x]['title'],
+				'post_content' 		=> $book['chapters'][$x]['content'],
+				'post_status' 		=> 'publish',
+				'post_author' 		=> 37,
+				'comment_status'	=> 'closed',
+				'post_type'   		=> 'chapter',
+				'post_parent' 		=> $book_id
 			);
 			$id = wp_insert_post($chapter);
 			update_post_meta($id,'chapter_order',$x);

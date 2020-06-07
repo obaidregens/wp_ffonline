@@ -54,7 +54,7 @@ $js_bundle->enqueue();
 			<div>
 				<?php
 				echo '<h5> <a href="' .get_permalink($post->post_parent). '">' . get_the_title($post->post_parent) . '</a></h5>';
-				echo '<h6>by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )). '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></h6>';
+				echo '<h6>by ' . author_href($post->post_parent) . '</h6>';
 				?>
 			</div>
 			<div style="float:right;">

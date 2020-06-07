@@ -30,7 +30,7 @@ get_header();
                         <?php
                             $searches = get_saved_searches();
                             foreach ($searches as $search){
-                                ?><a href="<?php echo packed_to_url(pack_search($search[1])); ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
+                                ?><a href="<?php echo packed_to_url(pack_search(ctrk_decrypt($search[1]))); ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
                             }
                         ?>
                     </ul>
@@ -63,12 +63,12 @@ get_header();
 <script>
 	function save_current_search(){
         var name = document.getElementById('new_search_name').value;
-        var id = document.getElementById('search_id').innerHTML;
-        jQuery('.progress').css('display','block');
+        var prev = document.getElementById('prev_ss').innerHTML;
+        progress(true);
     		api('save_search',{
-    			data: {name:name,id:id},
+    			data: {name,prev},
     			callback: function(response){
-    				jQuery('.progress').css('display','none');
+            progress(false);
     				if (response == 3){
     				    M.toast({html: 'Please login.'});
     				}
@@ -82,10 +82,10 @@ get_header();
     			}
     		});
     }
-    function delete_search(id){
+    function delete_search(prev){
         jQuery('.progress').css('display','block');
     		api('save_search',{
-    			data: {to_delete:'to_delete',id:id},
+    			data: {to_delete:'to_delete',prev:prev},
     			callback: function(response){
     				jQuery('.progress').css('display','none');
     				if (response == 3){

@@ -53,7 +53,7 @@ get_header();
               <div id="about" class="scrollspy">
                 <?php
             	echo '<h2 style="margin:0" class="page-title book-title"> <a href="' .get_permalink($post->ID). '">' . get_the_title($post->ID) . '</a></h2>';
-            	echo '<h4>by <a href="' .get_author_posts_url(get_post_field( 'post_author', $post->ID)). '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->ID )).'</a></h4>';
+            	echo '<h4>by ' . author_href($post->ID) . '</h4>';
                 ?>
               </div>
               <div class="divider" style="margin:10px 0;"></div>

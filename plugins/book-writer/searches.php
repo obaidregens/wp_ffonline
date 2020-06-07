@@ -29,14 +29,12 @@ function max_search_words($unpacked){
 }
 //Search API (pack_search,unpack_search)
 function pack_search($unpacked){
+	$unpacked = json_decode(json_encode( $unpacked ),true);
 	//turn in
 	$pack = array();
-
 	//Taxonomies
 	$taxonomies = array('tag','category','rating','language','status','genre','character','pairing');
-	if (isset($unpacked['tax_query']['relation'])){
-		unset($unpacked['tax_query']['relation']);
-	}
+	unset($unpacked['tax_query']['relation']);
 	if (isset($unpacked['tax_query'])){
 		foreach ($unpacked['tax_query'] as $key => $value) {
 			if (! in_array($value['taxonomy'],$taxonomies)){
@@ -293,32 +291,25 @@ function type_args($args,$placeholder){
 }
 
 /////Saved Searches
-function save_search($name,$search_id){
-	if (! is_numeric($search_id)){
-		return false;
-	}
-	$search_id = intval($search_id);
+function save_search($name,$e_args){
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
-		update_user_meta(get_current_user_id(),'saved_searches',array(array($name,$search_id)));
+		update_user_meta(get_current_user_id(),'saved_searches',array(array($name,$e_args)));
 		return;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
-	if (saved_search_exists($name,$search_id) != false){
+	if (saved_search_exists($name,$e_args) != false){
 		return false;
 	}
-	$searches[] = array($name,$search_id);
+	$searches[] = array($name,$e_args);
 	update_user_meta(get_current_user_id(),'saved_searches',$searches);
 	return true;
 }
-function saved_search_exists($name,$search_id){
-	if (! is_int($search_id)){
-		return 'Not Integer';
-	}
+function saved_search_exists($name,$e_args){
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
 		return false;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
-	if (in_array($search_id,array_column($searches,1))){
+	if (in_array($e_args,array_column($searches,1))){
 		return 'Search exists.';
 	}
 	else if (in_array($name,array_column($searches,0))){
@@ -334,13 +325,13 @@ function get_saved_searches(){
 	}
 	return get_user_meta(get_current_user_id(),'saved_searches',true);
 }
-function delete_search($name_or_search_id){
+function delete_search($name_or_args){
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){
 		return;
 	}
 	$searches = get_user_meta(get_current_user_id(),'saved_searches',true);
 	foreach($searches as $key => $search){
-		if ($search[0] == $name_or_search_id || $search[1] == $name_or_search_id){
+		if ($search[0] == $name_or_args || $search[1] == $name_or_args){
 			unset($searches[$key]);
 			$searches = array_values($searches);
 			update_user_meta(get_current_user_id(),'saved_searches',$searches);

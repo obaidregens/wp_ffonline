@@ -91,11 +91,11 @@ add_filter( 'document_title_parts', function($title){
     }
     else if( is_singular("chapter")){
         global $post;
-        $title['title'] = 'Chapter ' . get_post_meta($post->ID,'chapter_order',true) . ' - ' . get_post($post->post_parent)->post_title . ' - by ' . get_the_author_meta('display_name',$post->post_author);
+        $title['title'] = 'Chapter ' . get_post_meta($post->ID,'chapter_order',true) . ' - ' . get_post($post->post_parent)->post_title . ' - by ' . author_name_single($post->post_parent);
     }
     else if( is_singular("book")){
         global $post;
-        $title['title'] = $post->post_title . ' - by ' . get_the_author_meta('display_name',$post->post_author);
+        $title['title'] = $post->post_title . ' - by ' . author_name_single($post->ID);
     }
     else if (isset($wp_query->query_vars['collections'])){
         global $collection;
