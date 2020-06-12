@@ -38,7 +38,10 @@ class notifications {
             }
         }
         //Messages
-        $received_messages = find_current_user_chats(true);
+        $received_messages = chats::query(array(
+            'users_included'    => array(get_current_user_id()),
+            'author__not_in'    => array(get_current_user_id())
+        ));
         foreach ($received_messages as $message) {
             $timestamp = strtotime($message->post_modified);
             $new += $timestamp > $last_opened ? 1 : 0;

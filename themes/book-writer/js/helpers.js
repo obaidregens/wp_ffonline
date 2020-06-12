@@ -135,6 +135,13 @@ function prompt_login(){
 }
 function timestamp_to_local(timestamp){
     const time = new Date(timestamp * 1000);
+    return time_obj_local(time);
+}
+function utc_dt_to_local(dt){
+    const time = new Date(dt + ' UTC');
+    return time_obj_local(time);
+}
+function time_obj_local(time){
     let time_formatted = time.toString();
     time_formatted = time_formatted.split(' GMT')[0];
     time_formatted = time_formatted.substring(0,time_formatted.length-3);
@@ -262,4 +269,48 @@ function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
         options.success = callback;
     }
     jQuery.ajax(options);
+}
+jQuery('body').append(`
+<div
+id="full_backdrop_spinner"
+style="
+    background: black;
+    width: 100%;
+    display: none;
+    z-index: 1000000;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: scale(1.5);
+    transition: opacity 0.5s;
+    opacity: 0;
+"
+></div>
+`);
+function full_spin(show){
+    if (show === false) {
+        jQuery('#full_backdrop_spinner').css('opacity',0);
+        setTimeout(function(){
+            jQuery('#full_backdrop_spinner').css('display','none');
+        },500);
+    }
+    else{
+        jQuery('#full_backdrop_spinner').css('display','flex');
+        jQuery('#full_backdrop_spinner').css('opacity',1);
+        spin('#full_backdrop_spinner');
+    }
+}
+function htmlspecialchars(text){
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });  
 }

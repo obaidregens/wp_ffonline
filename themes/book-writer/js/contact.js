@@ -15,7 +15,7 @@ jQuery("form[name='message']").submit(function(event) {
 	var email = jQuery('#email').val();
 	var message = jQuery('#message').val();
 	var label = jQuery('input[name=contact_options]:checked').attr('value');
-	api('send_message',{
+	api('send_mail',{
 		data: {email:email,message:message,label:label},
 		callback: function(response){
 			if (response != '1'){

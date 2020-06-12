@@ -173,10 +173,14 @@ i.fas.offline{
     color: #ff1818;
 }
 /*Messages*/
+.btn-hover.block_user.blocked i {
+    color: red;
+}
 .chat{
     margin: .5rem 0 1rem 0;
     border: 1px solid #e0e0e0;
-    border-radius: 20px;    
+    border-radius: 5px;    
+    position: relative;
 }
 @media only screen and (max-width : 992px) {
     .chat{
@@ -189,6 +193,7 @@ i.fas.offline{
     max-height: 50vh;
     margin: 0;
     overflow: auto;
+    position: relative;
 }
 .message-block{
     display: block;
@@ -214,12 +219,16 @@ i.fas.offline{
 }
 .my .message-data{
     text-align:left;
+    width: fit-content;
+}
+.my .message-status{
+    float: right;
 }
 .message{
     margin: 5px 0 0 0;
     position: relative;
-    padding: 20px;
-    border-radius: 25px;
+    padding: 10px;
+    border-radius: 3px;
     max-width: 90%;
 }
 .other .message{
@@ -233,26 +242,6 @@ i.fas.offline{
 }
 .message-time{
     color:grey;
-}
-/*Chat Window Scroller */
-.chat-window{
-    overscroll-behavior:contain;
-}
-.chat-window::-webkit-scrollbar {
-	width: 7px;
-	background-color: var(--background-color);
-}
-.chat-window::-webkit-scrollbar-thumb {
-  border-radius: 100px;
-  background: var(--light-theme-color);
-}
-
-.chat-window::-webkit-scrollbar-thumb:hover {
-  background: var(--mid-theme-color);
-}
-
-.chat-window::-webkit-scrollbar-thumb:active {
-  background: var(--mid-theme-color);
 }
 
 /* Tooltips */

@@ -45,7 +45,7 @@ let im_books = [];
 let im_collections = [];
 let lastSend = Date.now() - 20000;
 jQuery(window).on('touchstart touchmove click wheel mousedown mouseup focus blur keydown change resize scroll',function(event){
-	if (event.originalEvent && event.originalEvent.isTrusted !== true){
+	if (! event.originalEvent || event.originalEvent.isTrusted !== true){
 		return;
 	}
 	im_books = array_unique(im_books.concat(im('books')));

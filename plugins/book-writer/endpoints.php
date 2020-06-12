@@ -16,7 +16,7 @@ function wpa_author_endpoints(){
     add_rewrite_endpoint( 'updates', EP_AUTHORS);
     // Favorites will be a subsection of collections
     // add_rewrite_endpoint( 'favorites', EP_AUTHORS);
-    $parms = array('write','profile','stats','messages','chat','settings','bookmarks');
+    $parms = array('write','profile','stats','chat','settings','bookmarks');
     foreach ($parms as $key => $value) {
         add_rewrite_endpoint( $value, EP_PAGES,false);
     }

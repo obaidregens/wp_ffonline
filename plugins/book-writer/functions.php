@@ -201,7 +201,8 @@ $includes = array(
 	'classes/stats',
 	'classes/collections',
 	'classes/notifications',
-	'classes/error'
+	'classes/error',
+	'classes/chats'
 );
 foreach($includes as $include){
 	require ($include . '.php');

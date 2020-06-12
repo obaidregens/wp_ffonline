@@ -20,7 +20,7 @@ if (is_sticky()){
 </ul>
 <article id="update-<?php the_ID(); ?>" >
 	<?php if (get_current_user_id() == $post->post_author) { ?>
-	<a class='dropdown-trigger right btn-hover btn-floating' data-target='update-options-<?php the_ID(); ?>'><i class="fas fa-angle-down"></i></a>
+	<a class='dropdown-trigger right waves-effect waves-light btn-hover btn-floating' data-target='update-options-<?php the_ID(); ?>'><i class="fas fa-angle-down"></i></a>
 	<?php } ?>
 	<header class="entry-header">
 		<?php

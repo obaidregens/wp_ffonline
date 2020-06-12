@@ -28,12 +28,13 @@ get_header();
             ?><li class="stats_li btn-hover"><a onclick="load_page('stats')"><i style="margin:0;" class="fas fa-chart-line"></i>Book Stats</a></li><?php
         }
         ?>
-        <li class="messages_li chat_li btn-hover"><a onclick="load_page('messages')"><i style="margin:0;" class="fas fa-envelope"></i>Messages</a></li>
+        <li class="messages_li chat_li btn-hover"><a onclick="load_page('chat')"><i style="margin:0;" class="fas fa-envelope"></i>Messages</a></li>
         <li class="bookmarks_li btn-hover"><a onclick="load_page('bookmarks')"><i style="margin:0;" class="fas fa-bookmark"></i>Bookmarks</a></li>
         <li class="collections_li btn-hover"><a onclick="load_page('collections')"><i style="margin:0;" class="fas fa-list-ul"></i>Collections</a></li>
         <li class="settings_li btn-hover"><a onclick="load_page('settings')"><i style="margin:0;" class="fas fa-cog"></i>Settings</a></li>
         <li class="logout_li btn-hover"><a href="/dashboard?logged_out=true" onclick="return confirm('Do you want to logout?')">Logout</a></li>
     </ul>
     <a href="#" data-target="dashboard-sidenav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    <div id="page-main"><?php get_template_part('dashboard/part','dashboard');?></div>
+    <div id="page-main">
+    </div>
 <?php get_footer(); ?>

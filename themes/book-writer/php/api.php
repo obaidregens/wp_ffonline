@@ -30,17 +30,16 @@ function api_add_to_collection(){
     return_code(1);
 }
 function api_block_user(){
-    if(! is_user_logged_in()){
-        echo 3;
+    $success = false;
+    if ($_POST['data']['action'] === 'block'){
+        $return = chats::block($_POST['data']['username']);
     }
-    else if (! is_in_block_list($_POST['data']['user'])){
-        add_to_block_list($_POST['data']['user']);
-        echo 0;
+    else if ($_POST['data']['action'] === 'unblock'){
+        $return = chats::unblock($_POST['data']['username']);
     }
-    else{
-        delete_from_block_list($_POST['data']['user']);
-        echo 1;
-    }
+    echo json_encode(array(
+        'success'   => $return,
+    ));
 }
 function api_bookmark_this(){
     if(! is_user_logged_in()){
@@ -799,16 +798,65 @@ function api_delete_book(){
     ));
     echo 1;
 }
-function api_resend_chat(){
-    global $this_user;
-    $this_user = get_user_by('id',$_POST['data']['to'])->data;
-    get_template_part('dashboard/part','chatdiv');
+function api_get_chat(){
+    function return_err(){
+        echo json_encode(array(
+            'messages' => false,
+        ));
+        exit();
+    }
+    $user = get_user_by( 'login', $_POST['data']['username'] );
+    if ($user === false) {
+        return_err();
+    }
+    $users_in_chat = array(
+        intval( get_current_user_id() ),
+        intval( $user->ID )
+    );
+    if ($users_in_chat[0] === $users_in_chat[1]){
+        return_err();
+    }
+    $chats = chats::query(array(
+        'users_included'  => $users_in_chat
+    ));
+    $read_chats = chats::query(array(
+        'limit'             => -1,
+        'users_included'    => $users_in_chat,
+        'status_included'   => array('Read'),
+        'fields'            => 'ids'
+    ));
+    $chats_f = array();
+    foreach ( $chats as $chat ) {
+        $chat_author = intval($chat->post_author);
+        $this_chat_obj = array(
+            'from'      => $users_in_chat[0] === $chat_author ? 'my' : 'other',
+            'date'      => $chat->post_date,
+            'message'   => $chat->post_content
+        );
+        if ($this_chat_obj['from'] === 'my'){
+            $this_chat_obj['status'] = in_array($chat->ID,$read_chats) ? 'read' : 'sent';
+        }
+        $chats_f[] = $this_chat_obj;
+        if ($chat_author !== $users_in_chat[0] && ! in_array($chat->ID,$read_chats)){
+            wp_set_object_terms($chat->ID,'Read', 'message_status');            
+        }
+    }
+    echo json_encode(array(
+        'user'          => array(
+                'name'      => $user->display_name
+        ),
+        'messages'      => array_reverse($chats_f),
+        'blocked'       => chats::is_blocked(
+                $users_in_chat[1],$users_in_chat[0]
+                ) === true ? 'blocked' : '',
+        'chat_blocked'  => chats::is_chat_blocked($users_in_chat)
+    ));
 }
 function api_resend_dashboard(){
     get_template_part('dashboard/part','dashboarddiv');
 }
-function api_resend_messages(){
-    get_template_part('dashboard/part','messagesdiv');
+function api_get_messages(){
+    echo json_encode(chats::with());
 }
 function api_save_collection(){
     function return_code($code,$extra = 0){
@@ -896,29 +944,24 @@ function api_save_collection(){
 }
 function api_save_settings(){
     update_user_meta(get_current_user_id(),'email_me_notifications',$_POST['data']['emails_notifications']);
-    update_user_meta(get_current_user_id(),'read_receipts',$_POST['data']['messages_read']);
-    update_user_meta(get_current_user_id(),'online_status',$_POST['data']['messages_online']);
-    update_user_meta(get_current_user_id(),'allow_messaging',$_POST['data']['messages_status']);
 }
 function api_send_message(){
+    $user = get_user_by( 'login', $_POST['data']['to'] );
+    if ($user === false){
+        echo json_encode(array(
+            'sent'      => false
+        ));
+        exit();
+    }
     // Add the content of the form to $post as an array
-    $new_post = array(
-        'post_title'    	=> 'None',
-        'post_content'  	=> $_POST['data']['message'],
-        'post_status'   	=> 'publish',  
-        'post_type'			=> 'message',
-    );
-    //save the new post and return its ID
-    $post_id = wp_insert_post($new_post);
-    wp_set_object_terms($post_id,'Sent', 'message_status');
-    if(get_current_user_id() == $_POST['data']['to']){
-        wp_set_object_terms($post_id,array($_POST['data']['to']), 'message_between');
+    $chat_obj = new chats($_POST['data']['message'],$user->ID);
+    $success = true;
+    if ($chat_obj->error->has()){
+        $success = false;
     }
-    else{
-        wp_set_object_terms($post_id,array(strval(get_current_user_id()),strval($_POST['data']['to'])), 'message_between');
-    }
-    add_notification('message',$post_id);
-    echo $post_id . ',' . get_post($post_id)->post_date;
+    echo json_encode(array(
+        'sent'      => $success
+    ));
 }
 function api_submit_book(){
     function return_code($code,$extra = 0){
