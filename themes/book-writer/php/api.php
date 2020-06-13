@@ -524,54 +524,62 @@ function api_set_password(){
     }
 }
 function api_update_profile(){
-    	//Validations -> Fields (email,^about,display_name,password);
-	if ($_POST['data']['email'] == '' || $_POST['data']['display_name'] == ''){
-		echo '6';
-		exit();
-	}
-	if (! filter_var($_POST['data']['email'], FILTER_VALIDATE_EMAIL)){
-		echo '6';
-		exit();
-	}
-	if (strlen($_POST['data']['password']) < 8 && $_POST['data']['password'] != ''){
-		echo '6';
-		exit();
-	}
-	$new_email = $_POST['data']['email'];
-	send_confirmation_on_profile_email();
+    function return_code($code){
+        echo json_encode(array(
+            'code'  => $code
+        ));
+        exit();
+    }
+    $validation = (new v_user(
+        $_POST['data'],
+        array(
+            'email'
+        )
+    ))->return;
+    if ($validation !== true){
+        return_code(10);
+    }
+    $existing_user = get_user_by('ID', get_current_user_id() );
+
+    $new_email_set = $existing_user->user_email !== $_POST['data']['email'];
 
 	$userdata = array(
-	    'ID'            => get_current_user_id(),
-	    'nickname'      => $_POST['data']['display_name'],
-	    'user_nicename' => $_POST['data']['display_name'],
+	    'ID'            => $existing_user->ID,
 	    'description'   => htmlspecialchars($_POST['data']['about']),
-
     );
-    if ($_POST['data']['password'] != ''){
+    if (isset($_POST['data']['password']) && $_POST['data']['password'] !== ''){
         $userdata['user_pass'] = $_POST['data']['password'];
     }
-	wp_update_user($userdata);
-	if ($new_email != get_the_author_meta('user_email',get_current_user_id())){
-	    echo '1';
+    wp_update_user($userdata);
+    
+	if ( $new_email_set ){
+        mail_user::change_email($_POST['data']['email']);
+	    return_code(1);
 	}
 	else{
-	    delete_user_meta( $current_user->ID, '_new_email' );
-	    echo '2';
+	    delete_user_meta( $existing_user->ID, '_new_email' );
+	    return_code(2);
 	}
 }
 function api_validate_email(){
-    foreach($_POST['data'] as $value){
-		$value = strip_tags($value,array('<p>','<br>','<strong>','<em>','<u>','<i>'));
-	}
-    if ($_POST['data']['email'] == get_the_author_meta('user_email',get_current_user_id())){
-        echo '1';
+    function return_code($code){
+        echo json_encode(array(
+            'code'  => $code
+        ));
+        exit();
     }
-    else if (email_exists($_POST['data']['email']) == false)
-    {
-        echo '2';
+    if (
+        $_POST['data']['email'] ===
+        get_the_author_meta('user_email',get_current_user_id())
+    ){
+        return_code(1);
+    }
+    $validation = (new v_user())->email($_POST['data']['email']);
+    if ($validation->has()){
+        return_code(9);
     }
     else{
-        echo '0';
+        return_code(2);
     }
 }
 function api_validate_login(){
@@ -706,15 +714,25 @@ function api_validate_forgot(){
         echo '0';
     }
 }
-function api_validate_penname(){
-    if (username_exists($_POST['data']['username']) ){
-        echo '1';
+function api_validate_username(){
+    function return_code($code){
+        echo json_encode(array(
+            'code'  => $code
+        ));
+        exit();
     }
-    else if ($_POST['data']['username'] === get_the_author_meta( 'user_login',get_current_user_id() ) ) {
-    	echo '2';
+    if (
+        $_POST['data']['username'] ===
+        get_the_author_meta('user_login',get_current_user_id())
+    ){
+        return_code(1);
+    }
+    $validation = (new v_user())->username($_POST['data']['username']);
+    if ( $validation->has() ){
+        return_code(9);
     }
     else{
-        echo '0';
+        return_code(2);
     }
 }
 function api_validate_signup(){

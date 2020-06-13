@@ -6474,6 +6474,7 @@ textarea.materialize-textarea + label:after, .select-wrapper + label:after {
 
 .input-field.col label {
   left: 0.75rem;
+  user-select: none;
 }
 
 .input-field.col .prefix ~ label,

@@ -1,5 +1,5 @@
-////HTML is located in Chapter Page Template
-////Script included in 'footer.php'
+//HTML is located in Chapter Page Template
+//Script included in 'footer.php'
 
 function acs(action){
 	const root = document.documentElement;
@@ -9,6 +9,7 @@ function acs(action){
 		for (let i = 0; i < acs_vars.length; i++) {
 			acs_cookie += acs_vars[i] + '>' + parseInt(getComputedStyle(root).getPropertyValue('--acs-' + acs_vars[i])) + '/';
 		}
+		acs_cookie += 'auto_scroller>' + (jQuery('#autoscroll')[0].checked === true ? (parseInt( jQuery('#autoscroll-s').val() ) || 0) : 0) + '/';
 		setCookie("acs",acs_cookie, { expires:30, path: '/' });
 	}
 	else if (action === 'get'){
@@ -71,39 +72,6 @@ jQuery('.acs-btn').click(function(){
 	css_var(options);
 	acs('set');
 });
-jQuery("#increasefontsize").click(function(){
-	css_var({
-		which: '--acs-font-size',
-		adder: 1,
-		min: 10,
-		max: 30
-	});
-});
-jQuery("#decreasefontsize").click(function(){
-	css_var({
-		which: '--acs-font-size',
-		adder: -1,
-		min: 10,
-		max: 30
-	});
-});
-jQuery("#increaselineheight").click(function(){
-	css_var({
-		which: '--acs-line-height',
-		adder: 1,
-		min: 5,
-		max: 15
-	});
-});
-jQuery("#decreaselineheight").click(function(){
-	css_var({
-		which: '--acs-line-height',
-		adder: -1,
-		min: 5,
-		max: 15
-	});
-});
-
 
 /////Other Chapter Scripts
 //Materialize Intialization
@@ -273,4 +241,55 @@ function delete_comment(id){
 			}
 		}
 	});
+}
+//Auto Scroller
+jQuery('#autoscroll').change(function(){
+	jQuery('#autoscroll-s-wrapper').css('display',jQuery('#autoscroll')[0].checked === true ? 'inline-block' : 'none');
+});
+
+let auto_scroll_interval = -1;
+jQuery('#autoscroll-s').val(acs('get').auto_scroller || 0);
+jQuery('#autoscroll')[0].checked = true;
+jQuery('#autoscroll').change();
+accessibility_close();
+
+jQuery('#accessibility').modal({onCloseEnd: accessibility_close});
+function accessibility_close(){
+	jQuery('.stop_autoscroll').remove();
+	clearInterval(auto_scroll_interval);
+	acs('set');
+	if (jQuery('#autoscroll')[0].checked === false){
+		return;
+	}
+	$seconds = parseInt( jQuery('#autoscroll-s').val() ) || 0;
+	if ($seconds === 0){
+		jQuery('#autoscroll')[0].checked = false;
+		jQuery('#autoscroll').change();
+		return;
+	}
+	jQuery('#autoscroll-s').val($seconds);
+	jQuery('html').append('<button style="z-index:997;position:fixed;top:5px;right:10px;" class="btn-small stop_autoscroll waves-effect waves-light btn">AutoScroll Off</button>');
+	jQuery('.stop_autoscroll').click(function(){
+		jQuery('#accessibility').modal('open');
+		jQuery('#autoscroll')[0].checked = false;
+		jQuery('#autoscroll').change();
+		jQuery('#accessibility').modal('close');
+	});
+	set_autoscroll($seconds);
+}
+function set_autoscroll($seconds){
+	auto_scroll_interval = setInterval(function(){
+		const win = document.documentElement;
+		const skip = win.clientHeight * 0.9;
+		const new_height = win.scrollTop + skip;
+
+		jQuery('html').animate({
+			scrollTop: new_height
+		}, 1500);
+
+		if ( jQuery('.acs-main')[0].getBoundingClientRect().bottom <= win.clientHeight ){
+			// jQuery('#autoscroll')[0].checked = false;
+			// clearInterval(auto_scroll_interval);
+		}
+	},$seconds * 1000);
 }

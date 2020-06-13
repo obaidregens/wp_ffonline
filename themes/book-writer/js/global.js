@@ -1,22 +1,21 @@
-jQuery(document).ready(function(){
-	jQuery('.dropdown-trigger').dropdown();
-    jQuery('.modal:not(#searchbook)').modal();
-    jQuery('.scrollspy').scrollSpy();
-    
-	jQuery('.tabs').tabs();
-	var links_tabs = jQuery('#nav-tabs a');
-	var active_exists = 0;
-	for (var i = 0; i < links_tabs.length; i++) {
-		if(jQuery(links_tabs[i]).hasClass('pagenow') == true){
-			active_exists = 1;
-		}
+jQuery('.dropdown-trigger').dropdown();
+
+jQuery('.modal:not(#searchbook)').modal();
+jQuery('.scrollspy').scrollSpy();
+
+jQuery('.tabs').tabs();
+var links_tabs = jQuery('#nav-tabs a');
+var active_exists = 0;
+for (var i = 0; i < links_tabs.length; i++) {
+	if(jQuery(links_tabs[i]).hasClass('pagenow') == true){
+		active_exists = 1;
 	}
-	if(active_exists == 0){
-		jQuery('#nav-tabs .indicator').remove();
-	}
-	jQuery('.tooltipped').tooltip();
-	jQuery('.collapsible').collapsible();
-});
+}
+if(active_exists == 0){
+	jQuery('#nav-tabs .indicator').remove();
+}
+jQuery('.tooltipped').tooltip();
+jQuery('.collapsible').collapsible();
 
 
 function im(type){

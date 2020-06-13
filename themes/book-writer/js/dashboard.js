@@ -141,7 +141,7 @@ function load_chat(page_chain_arr){
                     ${new_messages}
                     </div>`);
                     jQuery(chat_window).on('scroll.new_msg_blob',function(event){
-                        if ((chat_window.scrollTop + 5) >= (chat_window.scrollHeight - jQuery(chat_window).outerHeight())){
+                        if ((chat_window.scrollTop + 5) >= (chat_window.scrollHeight - jQuery(chat_window).outerHeight()) ){
                             jQuery('#new_message_blob')[0].remove();
                             jQuery(chat_window).off('scroll.new_msg_blob');
                         }

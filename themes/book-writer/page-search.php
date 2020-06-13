@@ -14,7 +14,6 @@ if ($front_cache && ! is_user_logged_in() && empty($_GET) ){
   exit();
 }
 get_header();
-js_bundle::reWriteAll();
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
