@@ -110,14 +110,19 @@ jQuery("#search_book").keyup(function(event){
 });
 //Text Highlight Handler
 function define_text(){
-	
-	if (window.getSelection().anchorNode !== null && (jQuery(window.getSelection().anchorNode.parentElement).parents('#define').length != 0 || window.getSelection().anchorNode.parentElement.id == 'define')){}
-	else if (window.getSelection().anchorNode === null || window.getSelection().toString() == '' || jQuery(window.getSelection().anchorNode.parentElement).parents('.chapter-content').length == 0){
+	const sel = window.getSelection();
+	if (sel.anchorNode !== null && (jQuery(sel.anchorNode.parentElement).parents('#define').length != 0 || sel.anchorNode.parentElement.id == 'define')){
+	}
+	else if (
+		sel.anchorNode === null ||
+		sel.toString() == '' ||
+		jQuery(sel.anchorNode.parentElement).parents('.acs-main').length == 0
+	){
 		jQuery('#define').css('display','none');
 		jQuery('#define-full').modal('close');
 	}
 	else{
-		var define = window.getSelection().toString().split(' ')[0];
+		var define = sel.toString().split(' ')[0];
 		jQuery.get('https://api.dictionaryapi.dev/api/v1/entries/en/' + define, function(response){
 			var word = response[0].word;
 			jQuery('#define .word').html(word);
@@ -144,9 +149,9 @@ function define_text(){
 		});
 	}
 }
-//jQuery(".chapter-content").mouseup(define_text);
-//jQuery(".chapter-content").change(define_text);
-//jQuery(".chapter-content").click(define_text);
+//jQuery(".acs-main").mouseup(define_text);
+//jQuery(".acs-main").change(define_text);
+//jQuery(".acs-main").click(define_text);
 document.addEventListener("selectionchange", define_text);
 
 
@@ -244,13 +249,18 @@ function delete_comment(id){
 }
 //Auto Scroller
 jQuery('#autoscroll').change(function(){
-	jQuery('#autoscroll-s-wrapper').css('display',jQuery('#autoscroll')[0].checked === true ? 'inline-block' : 'none');
+	const is_chec = jQuery('#autoscroll')[0].checked;
+	jQuery('#autoscroll-s-wrapper').css('display',is_chec === true ? 'inline-block' : 'none');
+	const falsey_scroll = jQuery('#autoscroll-s').val() === '' || jQuery('#autoscroll-s').val() === '0';
+	if (is_chec === true && falsey_scroll === true){
+		jQuery('#autoscroll-s').val(40);
+	}
 });
 
 let auto_scroll_interval = -1;
-jQuery('#autoscroll-s').val(acs('get').auto_scroller || 0);
 jQuery('#autoscroll')[0].checked = true;
 jQuery('#autoscroll').change();
+jQuery('#autoscroll-s').val(acs('get').auto_scroller || 0);
 accessibility_close();
 
 jQuery('#accessibility').modal({onCloseEnd: accessibility_close});
@@ -268,7 +278,13 @@ function accessibility_close(){
 		return;
 	}
 	jQuery('#autoscroll-s').val($seconds);
-	jQuery('html').append('<button style="z-index:997;position:fixed;top:5px;right:10px;" class="btn-small stop_autoscroll waves-effect waves-light btn">AutoScroll Off</button>');
+	jQuery('html').append(`<button style="
+			z-index: 997;
+			position: fixed;
+			top: 9px;
+			transform: scale(0.8);
+			right: 32px;
+		" class="btn-small stop_autoscroll waves-effect waves-light btn">AutoScroll Off</button>`);
 	jQuery('.stop_autoscroll').click(function(){
 		jQuery('#accessibility').modal('open');
 		jQuery('#autoscroll')[0].checked = false;
@@ -280,7 +296,7 @@ function accessibility_close(){
 function set_autoscroll($seconds){
 	auto_scroll_interval = setInterval(function(){
 		const win = document.documentElement;
-		const skip = win.clientHeight * 0.9;
+		const skip = win.clientHeight * 0.85;
 		const new_height = win.scrollTop + skip;
 
 		jQuery('html').animate({
@@ -293,3 +309,11 @@ function set_autoscroll($seconds){
 		}
 	},$seconds * 1000);
 }
+//Theme
+jQuery('#theme_switch')[0].checked = current_theme === 'light' ? false : true ;
+jQuery('#triggerTheme').click(function(){
+	jQuery('#theme_switch')[0].checked = ! jQuery('#theme_switch')[0].checked;
+})
+jQuery('#theme_switch').change(function(){
+	this.checked === true ? dark_mode() : light_mode()
+});

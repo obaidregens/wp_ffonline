@@ -1,4 +1,3 @@
-
 <article book_id="<?php the_ID(); ?>" id="book-<?php the_ID(); ?>" class="mainsearch-item" <?php //post_class(); ?>>
 	<a class='dropdown-trigger book-options btn-hover waves-effect waves-light btn-floating' data-target='book-options-<?php the_ID(); ?>'><i class="fas fa-angle-down"></i></a>
 	<!-- Dropdown Structure -->

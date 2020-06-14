@@ -1,4 +1,4 @@
-<div class="fixed-action-btn" style="top:75px;">
+<div class="fixed-action-btn" style="top:40px;">
     <a class="btn-floating btn-small modal-trigger" style="background-color:var(--theme-color);" href="#searchbook">
         <i class="fas fa-search"></i>
     </a>

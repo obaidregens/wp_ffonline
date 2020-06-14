@@ -111,10 +111,10 @@ function setCookie(name, value, options = { expires: 30, path: '/' }) {
   document.cookie = name + "=" + value + ";" + expires + ";path=" + options.path;
 }
 
-var current_theme = 'light';
+let current_theme = 'light';
 function dark_mode(){
     current_theme = 'dark';
-    var root = document.documentElement;
+    const root = document.documentElement;
     root.style.setProperty("--theme-color", "#265f86");
     root.style.setProperty("--text-color", "#b7bfc4");
     root.style.setProperty("--background-color", "#121212");
@@ -123,7 +123,7 @@ function dark_mode(){
 }
 function light_mode() {
     current_theme = 'light';
-    var root = document.documentElement;
+    const root = document.documentElement;
     root.style.setProperty("--theme-color", "#007ACC");
     root.style.setProperty("--text-color", "#262828");
     root.style.setProperty("--background-color", "#fdfdfd");

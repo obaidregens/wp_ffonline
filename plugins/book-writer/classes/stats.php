@@ -169,8 +169,8 @@ class _landing extends stats {
     public static function get_type(){
         $error = new err();
         global $template;
-        if ($template === false){
-            $error->add('template','Template is false');
+        if ($template === false || $template === null){
+            $error->add('template','Template is false/null.');
             return $error;
         }
         $template_file = str_replace('/themes/book-writer/','',explode('wp-content',$template)[1]);
