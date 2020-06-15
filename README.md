@@ -15,3 +15,6 @@ Updated jQuery to latest 3.5.0
 
 Version 2.1.0
 uploads/logo.svg added (New Logo)
+
+Version 3.0.10
+Clear custom-cache folder in root because new system of cache is in place.

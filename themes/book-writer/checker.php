@@ -6,6 +6,8 @@
  */
 define('WP_USE_THEMES', false);
 require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
+
+
 require_once (explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/php/simplehtmldom/simple_html_dom.php');
 $fandoms = array(
 	array(

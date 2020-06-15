@@ -9,6 +9,7 @@ function initialize_custom_cache_dir(){
 }
 function add_front_cache(){
 	initialize_custom_cache_dir();
+	$_GET = array();
 	global $template;
 	$template = (explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/page-search.php');
 	global $post;
@@ -19,7 +20,7 @@ function add_front_cache(){
 	)))->posts[0];
 	//GET HTML
 	ob_start();
-	load_template( locate_template( 'page-search.php' ) );
+	load_template( locate_template( 'template-parts/create-search.php' ) );
 	$raw_html = ob_get_contents();
 	$html = $raw_html;
 	if (is_ssl()){
