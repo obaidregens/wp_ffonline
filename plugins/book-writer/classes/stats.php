@@ -565,14 +565,16 @@ function ctrk_encrypt($custom_data){
     $encrypted = bin2hex(openssl_encrypt(json_encode($custom_data),$encrypt_method,$secret_key,0,$iv));
     return $encrypted;
 }
-function ctrk_decrypt($hash){
+function ctrk_decrypt($hash,$assoc = false){
     if (! is_string($hash) || strlen($hash) % 2 !== 0){
         return null;
     }
+    $assoc = (bool) $assoc;
+    
     $encrypt_method = "AES-256-CBC";
     $secret_key = 'ygj6410386b3a7369pcs22b8dq21388430025v118143thu6baj41';
     $iv  =        'flkdd5ge63w1bb51';
-    $decrypted = json_decode(openssl_decrypt(hex2bin($hash),$encrypt_method,$secret_key,0,$iv));
+    $decrypted = json_decode(openssl_decrypt(hex2bin($hash),$encrypt_method,$secret_key,0,$iv),$assoc);
     return $decrypted;
 }
 

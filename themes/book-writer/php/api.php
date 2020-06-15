@@ -453,12 +453,12 @@ function api_search(){
     if (isset($_POST['data']['search']['page'])
         && is_numeric($_POST['data']['search']['page'])
     ){
-        $args = (array) ctrk_decrypt($_POST['data']['prev']);
+        $args = ctrk_decrypt($_POST['data']['prev'],true);
         $args['paged'] = $_POST['data']['search']['page'];
     }
     else{
         $args = unpack_search($_POST['data']['search']);
-        $placeholder = (array) ctrk_decrypt($_POST['data']['placeholder']);
+        $placeholder = ctrk_decrypt($_POST['data']['placeholder'],true);
         $args = type_args($args,$placeholder);
     }
     // The Query

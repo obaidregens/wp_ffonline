@@ -5,6 +5,7 @@
  * Search page
  *
  */
+
 get_header();
 ?>
 <div id="primary" class="content-area">
@@ -14,33 +15,33 @@ get_header();
 						<li>
 							<div class="collapsible-header">Saved Searches</div>
 							<div class="collapsible-body">
-										<ul class="collection">
-											<a data-target="save_search_modal" disabled class="modal-trigger collection-item" style="font-weight:bold;border:none;">Save Current Search</a>
-										</ul>
-										<div class="row"></div>
-										<ul class="collection" id="searches-collection">
-												<?php
-														$searches = get_saved_searches();
-														foreach ($searches as $search){
-																?><a href="<?php echo packed_to_url(pack_search(ctrk_decrypt($search[1]))); ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
-														}
-												?>
-										</ul>
-									<!-- Modal Structure -->
-									<div id="save_search_modal" class="modal modal-mini">
-										<div class="modal-content" style="padding-bottom:0;">
-											<div class="row" style="margin-bottom:0;">
-												<div class="input-field col s12">
-													<input id="new_search_name" type="text" class="validate">
-													<label for="new_search_name">Search Name</label>
-												</div>
+								<ul class="collection">
+									<a data-target="save_search_modal" disabled class="modal-trigger collection-item" style="font-weight:bold;border:none;">Save Current Search</a>
+								</ul>
+								<div class="row"></div>
+								<ul class="collection" id="searches-collection">
+									<?php
+									$searches = get_saved_searches();
+									foreach ($searches as $search){
+										?><a href="<?php echo packed_to_url(pack_search(ctrk_decrypt($search[1]))); ?>" style="width:90%;display:inline-block;border:none;" class="collection-item"><?php echo $search[0]; ?></a><i onclick="delete_search('<?php echo $search[1]; ?>')" style="width:10%;text-align:center;font-size:19px;" class="btn-favorite far fa-trash-alt"></i><?php
+									}
+									?>
+								</ul>
+								<!-- Modal Structure -->
+								<div id="save_search_modal" class="modal modal-mini">
+									<div class="modal-content" style="padding-bottom:0;">
+										<div class="row" style="margin-bottom:0;">
+											<div class="input-field col s12">
+												<input id="new_search_name" type="text" class="validate">
+												<label for="new_search_name">Search Name</label>
 											</div>
 										</div>
-										<div class="modal-footer">
-												<a class="modal-close waves-effect btn-flat">Cancel</a>
-											<a onclick="save_current_search()" class="modal-close waves-effect btn-flat">Save</a>
-										</div>
 									</div>
+									<div class="modal-footer">
+											<a class="modal-close waves-effect btn-flat">Cancel</a>
+										<a onclick="save_current_search()" class="modal-close waves-effect btn-flat">Save</a>
+									</div>
+								</div>
 							</div>
 						</li>
 					</ul>
