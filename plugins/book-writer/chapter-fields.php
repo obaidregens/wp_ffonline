@@ -5,18 +5,12 @@ function word_counts($postid, $post_obj){
 	update_post_meta($postid,'word-count', str_word_count(strip_tags($post_obj->post_content)));
 	
 	$chapters = published_chapters($post_obj->post_parent);
-
 	//Add Book Word Count
-	if (empty($chapters)){
-		update_post_meta($post_obj->post_parent,'word-count',0);
+	$count = 0;
+	foreach ($chapters as $chapter){
+		$count += (int) get_post_meta($chapter->ID,'word-count',true);
 	}
-	else{
-		$count = 0;
-		foreach ($chapters as $chapter){
-			$count += get_post_meta($chapter->ID,'word-count',true);
-		}
-		update_post_meta($post_obj->post_parent,'word-count', $count);
-	}
+	update_post_meta($post_obj->post_parent,'word-count', $count);
 
 	//Update Time of book according to chapter time
 	$book_args = array(
