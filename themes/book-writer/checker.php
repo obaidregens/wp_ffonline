@@ -69,9 +69,8 @@ foreach($fandoms as $fandom){
 				}
 				$charpos = 0;
 				for ($x = 5; $x <= 10; $x++) {
-					if ((strpos($tags_raw[$x],"Reviews") === false && strpos($tags_raw[$x],"Favs") === false && strpos($tags_raw[$x],"Follows") === false && strpos($tags_raw[$x],"Updated") === false && strpos($tags_raw[$x],"Published") === false) && isset($tags_raw[$x])){
+					if (isset($tags_raw[$x]) && (strpos($tags_raw[$x],"Reviews") === false && strpos($tags_raw[$x],"Favs") === false && strpos($tags_raw[$x],"Follows") === false && strpos($tags_raw[$x],"Updated") === false && strpos($tags_raw[$x],"Published") === false)){
 						$charpos = $x;
-
 					}
 				}
 				if ($charpos != 0){
@@ -125,7 +124,11 @@ foreach($fandoms as $fandom){
 						$chapter = file_get_html('https://www.fanfiction.net/s/' . $link[0] . '/' . $x . '/' . $link[2], false);
 						$chapters[$x]['content'] = strip_tags($chapter->find("#storytext")[0],'<p>');
 						//print_r(explode('. ',$chapter->find("#chap_select option[selected]")[0]->innertext,2)[1]);
-						$chapters[$x]['title'] = explode('. ',$chapter->find("#chap_select option[selected]")[0]->innertext,2)[1];
+						$chapters_select = $chapter->find("#chap_select option[selected]");
+						$chapters[$x]['title'] = 'Chapter ' . $x;
+						if (! empty($chapters_select)){
+							$chapters[$x]['title'] = explode('. ',$chapters_select[0]->innertext,2)[1];
+						}
 					}
 					$current_book['chapters'] = $chapters;
 					if ($start == 1){
@@ -178,8 +181,7 @@ foreach($fandoms as $fandom){
 		update_post_meta($book_id,'source_author_link',$book['author_link']);
 
 		for ($x = 1; $x <= count($book['chapters']); ++$x){
-			$chapter = array
-			(
+			$chapter = array(
 				'post_title' 		=> $book['chapters'][$x]['title'],
 				'post_content' 		=> $book['chapters'][$x]['content'],
 				'post_status' 		=> 'publish',
@@ -193,24 +195,23 @@ foreach($fandoms as $fandom){
 		}
 	}
 	foreach ($existing as $book){
-		update_post_meta($book_id,'source_author_name',$book['author_name']);
-		update_post_meta($book_id,'source_author_link',$book['author_link']);
+		update_post_meta($book['ID'],'source_author_name',$book['author_name']);
+		update_post_meta($book['ID'],'source_author_link',$book['author_link']);
 		$start = count(get_posts( array(
-			'post_type'		 => 'chapter',
-			'posts_per_page' => -1,
-			'post_status' => array('publish','draft'),
-			'post_parent' => $book['ID'],
+			'post_type'		 	=> 'chapter',
+			'posts_per_page' 	=> -1,
+			'post_status' 		=> array('publish','draft'),
+			'post_parent' 	=> $book['ID'],
 		)))+1;
-		for ($x = $start; $x <= count($book['chapters']) + $start-1; ++$x)
-		{
-			$chapter = array
-			(
-				'post_title' => $book['chapters'][$x]['title'],
-				'post_content' => $book['chapters'][$x]['content'],
-				'post_status' => 'publish',
-				'post_author' => 37,
-				'post_type'   => 'chapter',
-				'post_parent' => $book['ID'],
+		for ($x = $start; $x <= count($book['chapters']) + $start-1; ++$x){
+			$chapter = array(
+				'post_title' 		=> $book['chapters'][$x]['title'],
+				'post_content' 		=> $book['chapters'][$x]['content'],
+				'post_status' 		=> 'publish',
+				'post_author' 		=> 37,
+				'comment_status' 	=> 'closed',
+				'post_type'   		=> 'chapter',
+				'post_parent' 		=> $book['ID'],
 			);
 			$id = wp_insert_post($chapter);
 			update_post_meta($id,'chapter_order',$x);

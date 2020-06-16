@@ -18,7 +18,7 @@ function messages_link($url,$post){
 	if ($post->post_type != 'message'){
 		return $url;
 	}
-	return 'https://fanfiction.online/dashboard/messages';
+	return 'https://fanfiction.online/dashboard/chat';
 }
 add_filter('post_type_link','messages_link',11,2);
 //Filter Chapter Link

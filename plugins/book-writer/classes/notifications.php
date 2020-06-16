@@ -49,7 +49,7 @@ class notifications {
                 'ID'        => $message->ID,
                 'from'      => get_the_author_meta('display_name',$message->post_author),
                 'timestamp' => $timestamp,
-                'link'      => '/dashboard/chat/' . $message->post_author,
+                'link'      => '/dashboard/chat/' . get_the_author_meta( 'user_login', $message->post_author ),
                 'type'      => 'message_received',
             );
             $all[] = $this_message;

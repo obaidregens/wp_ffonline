@@ -2,13 +2,17 @@
 
 function word_counts($postid, $post_obj){
 	//Add Word Count
-	update_post_meta($postid,'word-count', str_word_count(strip_tags($post_obj->post_content)));
+	$this_word_count = str_word_count(strip_tags($post_obj->post_content));
+	update_post_meta($postid,'word-count', $this_word_count);
 	
-	$chapters = published_chapters($post_obj->post_parent);
+	$chapters = published_chapters($post_obj->post_parent,-1,'ids');
 	//Add Book Word Count
 	$count = 0;
-	foreach ($chapters as $chapter){
-		$count += (int) get_post_meta($chapter->ID,'word-count',true);
+	foreach ($chapters as $chapter_id){
+		$count += (int) get_post_meta($chapter_id,'word-count',true);
+	}
+	if (! in_array($postid, $chapters) && $post_obj->post_status === 'publish'){
+		$count += $this_word_count;
 	}
 	update_post_meta($post_obj->post_parent,'word-count', $count);
 
