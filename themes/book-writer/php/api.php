@@ -173,6 +173,7 @@ function api_follow_collection(){
     }
     
     $return = collection::add_follow($_POST['data']['collection_id'],get_current_user_id(),$notifications);
+    
     if (err::is($return)){
         return_code(8);
     }
@@ -469,9 +470,11 @@ function api_search(){
 	$wp_query = $default_query;
     $response = array();
     $response['prev'] = ctrk_encrypt($args);
+    $response['tags_data'] = tags_data($args);
 	$response['pages'] = $wp_query->max_num_pages;
 	ob_start();
 	if (have_posts()){
+        get_template_part('template-parts/modal','collection');
 		// Start the loop.
 		while (have_posts() ) :
 			the_post();
@@ -746,7 +749,8 @@ function api_validate_signup(){
         echo '2';
     }
     else{
-        register_new_user($_POST['data']['login'],$_POST['data']['email']);
+        $user_id = register_new_user($_POST['data']['login'],$_POST['data']['email']);
+        collection::create_default($user_id);
         echo '0';
     }
 }

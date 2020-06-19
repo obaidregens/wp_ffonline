@@ -4669,3 +4669,31 @@ div.divider{
 .collection-content h5{
 	margin-bottom:1.05em;
 }
+/* Create Search */
+.custom-modal {
+	background-color: var(--background-color);
+	z-index: 1002;
+	max-height: 80%;
+	width: 85%;
+	overflow: auto;
+	position: fixed;
+	top: 10%;
+	left: 7.5%;
+	display: none;
+}
+.custom-modal > .modal-header {
+	padding: 15px 20px 0px 20px;
+	position: sticky;
+	top: 0;
+	left: 0;
+	background-color: var(--background-color);
+	z-index: 10;
+}
+.custom-modal > .modal-footer {
+	text-align: right;
+	padding: 15px 20px;
+	position: sticky;
+	bottom: 0;
+	background-color: var(--background-color);
+	z-index: 10;
+}

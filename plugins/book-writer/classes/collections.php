@@ -96,10 +96,11 @@ class collection {
         $pairs[reset($available)] = $values;
         
         $existing_ = collection::query(array(
-            'ids' => $pairs['collection']
+            'ids'   => $pairs['collection'],
+            'types' => array('Public', 'Unlisted', 'Private', 'Favorites', 'Trash')
         ));
         $existing_ids = array_column($existing_,'ID');
-        $diff_ids = array_unique(array_diff($pairs['collection'],$existing_ids));
+        $diff_ids = array_unique( array_diff($pairs['collection'],$existing_ids) );
         if (! empty($diff_ids)){
             $error->add('collection','Invalid collection ids: (' . implode(',',$diff_ids) . ')');
         }

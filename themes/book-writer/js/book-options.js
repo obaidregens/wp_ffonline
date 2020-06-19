@@ -58,25 +58,26 @@ function selectText(node) {
 		console.warn("Could not select text in node: Unsupported browser.");
 	}
 }
-
-
-const book_collections_elem = document.getElementById('book_collections');
 let book_collections = {};
-if (book_collections_elem){
-	book_collections = JSON.parse(book_collections_elem.innerHTML);
-}
-let all_articles = jQuery('article.mainsearch-item');
-for (let i = 0; i < all_articles.length; i++) {
-	let id = all_articles[i].id.replace('book-','');
-	if (! book_collections[id] ){
-		book_collections[id] = [];
+function book_collections_init(){
+	book_collections = {};
+	const book_collections_elem = document.getElementById('book_collections');
+	if (book_collections_elem){
+		book_collections = JSON.parse(book_collections_elem.innerHTML);
 	}
-	renderBookCollections(id);
+	let all_articles = jQuery('article.mainsearch-item');
+	for (let i = 0; i < all_articles.length; i++) {
+		let id = all_articles[i].id.replace('book-','');
+		if (! book_collections[id] ){
+			book_collections[id] = [];
+		}
+		renderBookCollections(id);
+	}
 }
+book_collections_init();
 
 //Render
 function renderBookCollections(id){
-
 	//Dropdown Render
 	const article = jQuery('article.mainsearch-item#book-' + id)[0];
 	if (article){

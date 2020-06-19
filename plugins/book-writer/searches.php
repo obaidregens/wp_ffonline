@@ -17,15 +17,17 @@ function max_search_words($unpacked){
 	$words_args['meta_key'] = 'word-count';
 	$words_args['orderby'] = 'meta_value_num';
 	$words_args['posts_per_page'] = 1;
+	$words_args['paged'] = 1;
 	$words_args['order'] = 'DESC';
-	$word_query = new WP_Query( $words_args );
-	if (empty($word_query->posts)){
+	$words_args['fields'] = 'ids';
+	$word_query = (new WP_Query( $words_args ))->posts;
+	if (empty($word_query)){
 		$max_count = 1;
 	}
 	else{
-		$max_count = get_post_meta( $word_query->posts[0]->ID, 'word-count', true );
+		$max_count = get_post_meta( $word_query[0], 'word-count', true );
 	}
-	return $max_count;
+	return intval($max_count);
 }
 //Search API (pack_search,unpack_search)
 function pack_search($unpacked){
@@ -289,7 +291,40 @@ function type_args($args,$placeholder){
 	}
 	return $args;
 }
-
+////Tags Data
+function tags_data($args){
+	$t_ = array(
+		'max_words'		=> max_search_words($args)
+	);
+	$args['posts_per_page'] = -1;
+	$args['fields'] = 'ids';
+	$ids = (new WP_Query($args))->posts;
+	$terms = array();
+	if (! empty($ids)){
+		$terms = (new WP_Term_Query(array(
+			'object_ids'    => $ids,
+			'fields'        => 'all_with_object_id',
+			'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+		)))->terms;	
+	}
+	$term_ids = array_column($terms,'term_id');
+	$counts = array_count_values($term_ids);
+	$zero_terms = (new WP_Term_Query(array(
+		'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+		'exclude'		=> array_unique($term_ids)
+	)))->terms;
+	$terms = array_merge($terms,$zero_terms);
+	foreach($terms as $term){
+		if ($term->taxonomy === 'category' && $term->parent === 0){
+			continue;
+		}
+		$t_[$term->taxonomy === 'category' ? 'fandom' : $term->taxonomy][$term->term_id] = array(
+			'name'	=> $term->name,
+			'count'	=> isset($counts[$term->term_id]) ? $counts[$term->term_id] : 0,
+		);
+	}
+	return $t_;
+}
 /////Saved Searches
 function save_search($name,$e_args){
 	if (! metadata_exists('user',get_current_user_id(),'saved_searches')){

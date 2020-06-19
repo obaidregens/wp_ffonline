@@ -1,5 +1,5 @@
 <?php
-//Find Args from Url
+// Find Args from Url
 $args = unpack_search($_GET);
 
 $placeholder = _landing::get_type();
@@ -7,11 +7,9 @@ $args = type_args($args,$placeholder);
 if (err::is($args)){
     _404();
 }
-//Max Count
-$max_count = max_search_words($args);
 ?>
+<span id="tags_data" style="display:none;"><?= json_encode(tags_data($args)); ?></span>
 <span id="prev_ss" style="display:none;"><?= ctrk_encrypt($args); ?></span>
-<span id="max_count" style="display:none;"><?= $max_count; ?></span>
 <style>
     [type=checkbox].cross:checked+span:not(.lever):before{
         top: -3px;
@@ -57,7 +55,7 @@ $max_count = max_search_words($args);
         border-bottom: 1px solid #9e9e9e;
         font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",font-family;
     }
-    [type=checkbox]:checked+span:not(.lever):before{
+    [type=checkbox]+span:not(.lever):before{
         transition:none!important;
     }
 	.noUi-tooltip span {
@@ -111,7 +109,6 @@ $wp_query = $default_query;
 $wp_query = null;
 $wp_query = $original_query;
 wp_reset_postdata();
-
 get_template_part( 'template-parts/content', 'searchmodal' );
 
 global $js_bundle;
