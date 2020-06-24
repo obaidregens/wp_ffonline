@@ -13,7 +13,7 @@
 				<div class="col s12">
 					<label>Sort</label>
 					<select class="browser-default" id="sort" name="sort">
-						<option value="updated/DESC">Last Updated</option>
+						<option value="modified/DESC">Last Updated</option>
 						<option value="date/DESC">Book Published</option>
 						<option value="favorites/DESC">Favorites</option>
 						<option value="words/DESC">Words</option>
@@ -24,10 +24,6 @@
 			<?php $tax_labels = array('Fandom','Rating','Language','Status','Genre','Characters','Pairings','Tags'); ?>
 			<?php $multi_taxonomies = array('fandom','genre','character','pairing','tag'); ?>
 			<?php foreach ($taxonomies as $key => $taxonomy){ ?>
-				<ul id='sort-tags-drop-<?= $taxonomy; ?>' class='dropdown-content'>
-					<li><a onclick="set_tags_of('<?= $taxonomy; ?>','count')">Count</a></li>
-					<li><a onclick="set_tags_of('<?= $taxonomy; ?>','alphabetical')">Alphabetical</a></li>
-				</ul>
                 <?php
                 $label = $tax_labels[$key];
                 ?>
@@ -51,12 +47,7 @@
 							<button style="width:48%;" type="button" class="right btn-exclude" onclick="trigger_exclude('<?= $taxonomy; ?>')">Exclude</button>
 						</span>
 					</div>
-					<div class="row" style="margin: 0;display:flex;align-items: center;">
-						<input placeholder="Search" class="col s9 m10 l11" style="padding: 0 0px 0 9px;" class="search-tags"/>
-						<div style="padding: 0;" class="sort-select-wrapper col s3 m2 l1 center-align">
-							<button type="button" data-target='sort-tags-drop-<?= $taxonomy; ?>' class="sort-tags-drop-button dropdown-trigger btn-small" style="padding: 0px 6px;font-size: 11px;overflow: hidden;">Sort</button>
-						</div>
-					</div>
+					<div><input placeholder="Search" class="search-tags"/></div>
 				</div>
 				<div style="padding:0 24px;">
 					<div class="row tags_list" style="margin-bottom:0;">

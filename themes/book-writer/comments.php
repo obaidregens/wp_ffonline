@@ -73,6 +73,10 @@ $book = get_post($post->post_parent);
 		<?php if (is_user_logged_in() || get_post_meta($book->ID,'anon_review',true) == 'true'){ ?>
 			<div style="padding-top:0px;" class="comment-form">
 				<div id="reply-wrapper">
+				<!--<div style="padding-bottom:2px;">Replying to Fanfiction Online <a style="padding-left:4px;" href="#">Cancel</a></div>
+				<blockquote style="margin:0;font-size:14px;">
+					This is an example quotation that uses the blockquote tag.
+				</blockquote>-->
 				</div>
 				<input type="hidden" id="reply_id" value="0">
 				<div class="row">

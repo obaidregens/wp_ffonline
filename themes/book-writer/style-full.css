@@ -4511,6 +4511,15 @@ div.divider{
 	height: fit-content !important;
 	width: fit-content !important;
 }
+.entry-title{
+	font-size:24px !important;
+}
+.home-tags,.search-summary,.update-time{
+	font-size:14px !important;
+}
+.entry-author{
+	font-size: 13px !important;
+}
 .home-tags .each-tag:not(.icon-tag){
 	display:block;
 }
@@ -4545,18 +4554,6 @@ div.divider{
 		width:100%;
 		text-align:center;
 	}
-}
-/* Main Search Item Font Sizes */
-.entry-title{
-	font-size:24px !important;
-}
-.home-tags,.search-summary,.update-time{
-	font-size:14px !important;
-}
-.entry-author{
-	font-size: 13px !important;
-}
-@media only screen and (max-width: 992px) {
 	.entry-title{
 		font-size:20px !important;
 	}
@@ -4580,7 +4577,7 @@ div.divider{
 }
 @media only screen and (max-width: 380px) {
 	.entry-title{
-		font-size:16px !important;
+		font-size:14px !important;
 	}
 	.home-tags,.search-summary,.update-time{
 		font-size:11.5px !important;
@@ -4591,7 +4588,7 @@ div.divider{
 }
 @media only screen and (max-width: 320px) {
 	.entry-title{
-		font-size:15px !important;
+		font-size:13px !important;
 	}
 	.home-tags,.search-summary,.update-time{
 		font-size:10.0px !important;

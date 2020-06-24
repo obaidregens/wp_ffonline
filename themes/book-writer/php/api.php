@@ -389,32 +389,35 @@ function api_search_book_contents(){
 	$s = $_POST['data']['s'];
     $book_id = get_post(intval($_POST['data']['chapter_id']))->post_parent;
 	$args = array(
-		'include_ids'           => array($book_id),
+		'post_type'              => array( 'book' ),
+		'post_status'            => array( 'publish' ),
+		'posts_per_page'		 => 1,
+		'post__in'	 => array($book_id),
 	);
-    $query = new book_query( $args );
-	$title = $query->books[0]->post_title;
+    $query = new WP_Query( $args );
+	$title = $query->posts[0]->post_title;
 	$strpos = stripos($title,$s);
 	if ($strpos !== false){
 		$index_total += 1;
 		?>
-		<div class="row search-item btn-hover" onclick="window.open('<?php echo get_permalink($query->books[0]->ID); ?>', '_blank')">
+		<div class="row search-item btn-hover" onclick="window.open('<?php echo get_permalink($query->posts[0]->ID); ?>', '_blank')">
 			<span>Book Title</span>
 			<p><?php echo preg_replace('/(' . $s . ')+/i','<mark>$1</mark>',$title); ?></p>
 		</div>
 		<?php
 	}
-	$excerpt = $query->books[0]->post_excerpt;
+	$excerpt = $query->posts[0]->post_excerpt;
 	$strpos = stripos($excerpt,$s);
 	if ($strpos !== false){
 		$index_total += 1;
 		?>
-		<div class="row search-item btn-hover" onclick="window.open('<?php echo get_permalink($query->books[0]->ID); ?>', '_blank')">
+		<div class="row search-item btn-hover" onclick="window.open('<?php echo get_permalink($query->posts[0]->ID); ?>', '_blank')">
 			<span>Book Summary</span>
 			<p><?php echo preg_replace('/(' . $s . ')+/i','<mark>$1</mark>',$excerpt); ?></p>
 		</div>
 		<?php
 	}
-	cut_and_echo($query->books[0]->post_content,$s,'<p>','Book Description',get_permalink($query->books[0]->ID));
+	cut_and_echo($query->posts[0]->post_content,$s,'<p>','Book Description',get_permalink($query->posts[0]->ID));
 	$args = array(
 		'post_type'              => array( 'chapter' ),
 		'post_status'            => array( 'publish' ),
@@ -447,45 +450,54 @@ function api_search_book_contents(){
 		echo '<div>Some results have been hidden because your search was too broad.</div>';
 	}
 }
-function api_search() {
-    global $book_query;
-    $book_query = new book_query;
-    if (
-        isset($_POST['data']['page'])
-        && is_numeric($_POST['data']['page'])
+function api_search(){
+    if (isset($_POST['data']['search']['page'])
+        && is_numeric($_POST['data']['search']['page'])
     ){
-        $book_query->args = ctrk_decrypt($_POST['data']['prev'],true);
-        $book_query->args['page'] = $_POST['data']['page'];
+        $args = ctrk_decrypt($_POST['data']['prev'],true);
+        $args['paged'] = $_POST['data']['search']['page'];
     }
     else{
-        $book_query->args_from_url($_POST['data']['search']);
+        $args = unpack_search($_POST['data']['search']);
         $placeholder = ctrk_decrypt($_POST['data']['placeholder'],true);
-        $book_query->args = type_args($book_query->args,$placeholder);
+        $args = type_args($args,$placeholder);
     }
-    $response = array(
-        'prev'      => ctrk_encrypt($book_query->args),
-        'tags_data' => tags_data($book_query->args),
-    );
-    $book_query->query();
+    // The Query
+    global $wp_query;
+	$default_query = new WP_Query( $args );
+	$original_query = $wp_query;
+	$wp_query = null;
+	$wp_query = $default_query;
+    $response = array();
+    $response['prev'] = ctrk_encrypt($args);
+    $response['tags_data'] = tags_data($args);
+	$response['pages'] = $wp_query->max_num_pages;
 	ob_start();
-	if ( $book_query->has() ){
+	if (have_posts()){
         get_template_part('template-parts/modal','collection');
-        global $book;
-        foreach ($book_query->books as $book) {
-            get_template_part( 'template-parts/content' , 'search' );
-        }
+		// Start the loop.
+		while (have_posts() ) :
+			the_post();
+			get_template_part( 'template-parts/content', 'search' );
+
+		// End the loop.
+		endwhile;
 	}
 	else {
 		get_template_part( 'template-parts/content', 'noresult' );
-    }
+	}
 	$response['output'] = ob_get_contents();
-    ob_end_clean();
+	ob_end_clean();
 	ob_start();
 	get_template_part( 'template-parts/content', 'bookpaginate' );
 	$response['paginate'] = ob_get_contents();
-    ob_end_clean();
-    $response['query'] = $book_query;
-    echo json_encode($response);
+	ob_end_clean();
+	//Reset Data
+	//This is because we dont want our meddling of the $wp-query to affect the whole site
+	$wp_query = null;
+	$wp_query = $original_query;
+	wp_reset_postdata();
+	print_r(json_encode($response));
 }
 function api_send_mail(){
     $message = 'Label- ' . $_POST['data']['label'] . "\r\n\r\n";

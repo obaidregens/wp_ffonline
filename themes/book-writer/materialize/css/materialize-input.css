@@ -2681,7 +2681,7 @@ a {
 .divider {
   height: 1px;
   overflow: hidden;
-  background-color: rgba(144, 137, 137, 0.48);
+  background-color: #e0e0e0;
 }
 
 blockquote {

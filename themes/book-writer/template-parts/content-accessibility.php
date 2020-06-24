@@ -80,7 +80,7 @@
 		</div>
     </div>
     <div class="modal-footer">
-        <a href="#!" class="modal-close waves-effect btn-flat">OK</a>
+        <a href="#" class="modal-close waves-effect btn-flat">OK</a>
     </div>
 </div>
 <?php

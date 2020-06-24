@@ -4,7 +4,7 @@ function author_href($_post_id){
 	$_author = intval($book->post_author);
 	$a_href = "";
 	if ($_author === 37){
-		$a_href .= '<a rel="nofollow" href="' . get_post_meta( $book->ID,'source_author_link',true ) . '">' . get_post_meta( $book->ID,'source_author_name',true ) . '</a> (';
+		$a_href .= '<a href="' . get_post_meta( $book->ID,'source_author_link',true ) . '">' . get_post_meta( $book->ID,'source_author_name',true ) . '</a> (';
 	}
 	$a_href .= '<a href="' . get_author_posts_url($_author) . '">' . get_the_author_meta( 'display_name',$_author ) . '</a>';
 	$a_href .= $_author === 37 ? ')' : '';

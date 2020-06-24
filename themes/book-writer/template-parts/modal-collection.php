@@ -1,7 +1,6 @@
 <!-- Modal Structure -->
 <?php
-global $book_query;
-$book_ids = array_column($book_query->books,'ID');
+$book_ids = array_column($wp_query->posts,'ID');
 $book_collections = collection::query_by_book($book_ids,'ID');
 $collections = collection::query(array(
     'authors'  => array(get_current_user_id()),

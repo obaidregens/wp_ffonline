@@ -63,30 +63,41 @@ $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 			?>
 			<div class="col s12 <?= $class; ?>">
 				<?php
-				global $book_query;
-				$book_query = new book_query(array(
-					'included'		=> array(
-						'author'		=> array($author)
-					),
-					'per_page'		=> 3
-				));
-				if ( $book_query->has() || get_current_user_id() == $author) {
-					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
+				$posts = array(
+					'post_type'      => array( 'book' ),
+					'orderby'        => 'modified',
+					'author__in'	 => $author,
+					'posts_per_page' => 3,
+					'order'          => 'DESC',
+				);
+				$posts = new WP_Query($posts);
+				$original_query = $wp_query;
+				$wp_query = null;
+				$wp_query = $posts;
+				if ( have_posts()   || get_current_user_id() == $author) :
 					$books_card = true;
 					get_template_part('template-parts/modal','collection');
-					global $book;
-					foreach ($book_query->books as $book) {
-						get_template_part( 'template-parts/content' , 'search' );
-					}
-					if ($book_query->count > 3){
+					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
+					while (have_posts() ) :
+						the_post();
+						?><div style="position: relative;"><div <?php if ($post->post_status == 'draft'){ ?>class="preview"<?php } ?> ><?php
+						get_template_part( 'template-parts/content', 'search' );
+						?></div></div><?php
+					endwhile;
+					if ($wp_query->found_posts > 3){
 						?><div class="divider"></div><?php
 						?><a href="<?php echo $author_base . 'books'; ?>" class="btn-hover more valign-wrapper"><i class="material-icons">expand_more</i>More Books</a><?php
 					}
-					if (get_current_user_id() === $author){
+					if (get_current_user_id() == $author){
 						?><a href="/dashboard/write" class="btn-hover more valign-wrapper"><i class="material-icons">add</i><span>Add book</span></a><?php
 					}
 					?></div><?php
-				}
+				endif;
+				//Reset Data
+				//This is because we dont want our meddling of the $wp-query to affect the whole site
+				$wp_query = null;
+				$wp_query = $original_query;
+				wp_reset_postdata();
 				?>
 				<?php
 				$collections = collection::query(array(
