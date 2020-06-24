@@ -34,7 +34,7 @@ get_header();
         <li class="settings_li btn-hover"><a onclick="load_page('settings')"><i style="margin:0;" class="fas fa-cog"></i>Settings</a></li>
         <li class="logout_li btn-hover"><a href="/dashboard?logged_out=true" onclick="return confirm('Do you want to logout?')">Logout</a></li>
     </ul>
-    <a href="#" data-target="dashboard-sidenav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <a href="#!" data-target="dashboard-sidenav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     <div id="page-main">
     </div>
 <?php get_footer(); ?>

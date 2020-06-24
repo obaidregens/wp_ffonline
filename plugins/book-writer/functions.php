@@ -72,7 +72,8 @@ function run_at_activation(){
 	switch_theme('book-writer');
 	flush_rewrite_rules();
     
-
+	global $wpdb;
+	$charset_collate = $wpdb->get_charset_collate();
 	//Stats
 	//Landing
 	$stats_landings_table_name = 'stats_landings';
@@ -160,27 +161,43 @@ function run_at_activation(){
 		PRIMARY KEY (`collection_id`,`user_id`)
 	) $charset_collate;";
 
+	$search_cache_table_name = 'search_cache';
+	$search_cache_table = "CREATE TABLE $search_cache_table_name (
+		`_key` VARCHAR(50) NOT NULL ,
+		`_value` VARCHAR(50) NOT NULL ,
+		`ids` LONGTEXT NOT NULL ,
+		`updated` BIGINT NOT NULL ,
+		PRIMARY KEY (`_key`,`_value`)
+	) $charset_collate;";
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	// ob_start();
+	ob_start();
+
+	// Stats
 	dbDelta( $stats_landings_table );
 	dbDelta( $stats_actions_table );
+	// Autosaves
 	dbDelta( $custom_autosaves_table );
+	// Surveys
 	dbDelta( $surveys_table );
+	// Collections
 	dbDelta( $collections_table );
 	dbDelta( $collection_books_table );
 	dbDelta( $collection_follow_table );
-	// file_put_contents( ABSPATH . 'this.err',ob_get_contents() );
-	// ob_end_clean();
+	// Cache
+	dbDelta( $search_cache_table );
+
 
 	//Create Default Collections for users
 	$users = get_users(array(
 		'fields'	=> array('ID')
 	));
 	foreach ($users as $user ) {
-		collection::create_default($user);
+		collection::create_default($user->ID);
 	}
+	file_put_contents( __DIR__ . '/this.err',ob_get_contents() );
+	ob_end_clean();
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
@@ -203,6 +220,7 @@ $includes = array(
 	'classes/notifications',
 	'classes/error',
 	'classes/chats',
+	'classes/book_query',
 	'classes/v_user'
 );
 foreach($includes as $include){

@@ -21,7 +21,7 @@ class notifications {
         foreach ($collections as $collection) {
             $books = collection::book_query($collection['ID'],array(
                 'order'     => 'DESC',
-                'orderby'   => 'modified'
+                'orderby'   => 'updated'
             ));
             foreach ($books as $book ) {
                 $timestamp = strtotime($book->post_modified);

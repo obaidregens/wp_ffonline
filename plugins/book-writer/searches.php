@@ -266,23 +266,10 @@ function type_args($args,$placeholder){
 	if ($placeholder['type'] === 'home'){}
 	else if ($placeholder['type'] === 'collection'){
 		$collection_books = array_column(collection::book_query(array($placeholder['type_id'])),'ID');
-		if (! isset($args['post__in'])){
-			$args['post__in'] = $collection_books;
-		}
-		else{
-			$args['post__in'] = array_merge($args['post__in'],$collection_books);
-		}
-		if (empty($args['post__in'])){
-			$args['post__in'] = array(0);
-		}
+		$args['include_ids'] = isset($args['include_ids']) ? array_intersect($args['include_ids'],$collection_books) : $collection_books;
 	}
 	else if ($placeholder['type'] === 'author-books') {
-		if (! isset($args['author__in'])){
-			$args['author__in'] = array($placeholder['type_id']);
-		}
-		else{
-			$args['author__in'][] = $placeholder['type_id'];
-		}
+		$args['included']['author'] = isset($args['included']['author']) ? array_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
 	}
 	else{
 		$error = new err();
@@ -293,12 +280,8 @@ function type_args($args,$placeholder){
 }
 ////Tags Data
 function tags_data($args){
-	$t_ = array(
-		'max_words'		=> max_search_words($args)
-	);
-	$args['posts_per_page'] = -1;
-	$args['fields'] = 'ids';
-	$ids = (new WP_Query($args))->posts;
+	$t_ = array();
+	$ids = (new book_query($args))->ids;
 	$terms = array();
 	if (! empty($ids)){
 		$terms = (new WP_Term_Query(array(

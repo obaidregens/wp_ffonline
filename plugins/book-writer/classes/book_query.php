@@ -1,0 +1,384 @@
+<?php
+// The idea is that we use packed data, with some alterations,
+// (like making included/excluded parents instead of a suffix)
+// the standard, and only use WP_Query for books within the class.
+// After caching, of course.
+function timer($logtext){
+    global $lastlogtime;
+    $now = microtime(true);
+    $diff = $now - ($lastlogtime ?? $now);
+    file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+    $lastlogtime = microtime(true);
+}
+class book_query{
+    protected static $table = 'search_cache';
+    protected static $taxonomies = array('genre','fandom','language','status','character','pairing','rating','sort','tag');
+    protected static $default_args = array(
+        'included'      => array(
+
+        ),
+        'excluded'      => array(
+
+        ),
+        'search'        => '',
+        'order'         => 'DESC',
+        'orderby'       => 'updated',
+        'words'         => array(
+            'from'  => 0,
+            'to'    => 3000000
+        ),
+        'per_page'      => 10,
+        'page'          => 1
+    );
+    protected static $wp_base_args = array(
+        'post_type'              => array( 'book' ),
+        'post_status'            => array( 'publish' ),
+        'posts_per_page'		 => 10,
+    );
+    protected function book_tags(){
+        $terms_ = (new WP_Term_Query(array(
+            'object_ids'	=> array_column($this->books,'ID'),
+            'orderby'		=> 'term_group',
+            'fields'        => 'all_with_object_id'
+        )))->terms;
+        $tax = [];
+        foreach ($terms_ as $term ) {
+            $term->taxonomy = $term->taxonomy === 'category' ? 'fandom' : $term->taxonomy;
+            $tax[$term->object_id][$term->taxonomy][] = array(
+                'ID'        => $term->term_id,
+                'name'      => $term->name,
+                'link'      => '<a href="/?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $term->name . '</a>',
+            );
+        }
+        return $tax;
+    }
+    function __construct($args = null){
+        if (! is_array($args)){
+            return;
+        }
+        $this->args = $args;
+        $this->query();
+    }
+    function query(){
+        $args = $this->args;
+        $args = array_replace_recursive(book_query::$default_args,$args);
+        $all_tags = array_merge_recursive($args['included'],$args['excluded']);
+        $prepared = array(
+            'sort',
+            $args['orderby'] . '/' . $args['order'],
+            'words',
+            $args['words']['from'],
+            'words',
+            $args['words']['to']
+        );
+        // Meant when cache for searching is enabled
+        // if ($args['search'] !== ''){
+        //     $prepared[] = 'search';
+        //     $prepared[] = $args['search'];
+        // }
+        foreach ( $all_tags as $key => $tag_ids ){
+            foreach ( $tag_ids as $value ) {
+                $prepared[] = $key;
+                $prepared[] = $value;
+            }
+        }
+        $fill = implode(',',array_fill(0,count($prepared)/2,'(%s,%s)'));
+        $query =
+        "SELECT * FROM " . book_query::$table . " WHERE (`_key`, `_value`) IN (
+            " . $fill . " 
+        );";
+        global $wpdb;
+        $full_query = $wpdb->prepare($query,$prepared);
+        $results = $wpdb->get_results($full_query);
+        $results_ = array();
+        foreach ($results as $value) {
+            $results_[$value->_key . '=' . $value->_value] = unserialize($value->ids);
+        }
+        // Words
+        $included = array_merge(
+            array_diff(
+                $results_['words=' . $args['words']['from']],
+                $results_['words=' . $args['words']['to']]
+            ),
+            array_intersect(
+                $results_['words=' . $args['words']['from']],
+                $results_['words=' . $args['words']['to']]
+            )
+        );
+        //Included
+        foreach ($args['included'] as $key => $ids) {
+            foreach ($ids as $id ) {
+                $akey = $key . '=' . $id;
+                $included = array_intersect($included, $results_[$akey] ?? array() );
+            }
+        }
+        // Excluded
+        $excluded = array();
+        foreach ($args['excluded'] as $key => $ids) {
+            foreach ($ids as $id ) {
+                $akey = $key . '=' . $id;
+                $excluded = array_merge($excluded,$results_[$akey] ?? array() );
+            }
+        }
+        $included = array_diff($included,$excluded);
+        // Search
+        if ($args['search'] !== ''){
+            $search = $args['search'];
+            $search_sql = '%' . $search . '%';
+            global $wpdb;
+            $search_result = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT ID FROM " . $wpdb->prefix . "posts
+                    WHERE post_title LIKE %s
+                    OR post_excerpt LIKE %s",
+                    array($search_sql,$search_sql)
+                )
+            );
+            $included = array_intersect($included,array_column($search_result,'ID'));
+        }
+        
+        // Sort
+        $included = array_intersect($included,$results_['sort=' . $args['orderby'] . '/' . $args['order'] ]);
+
+        // Custom Ids
+        if (isset($args['include_ids'])){
+            $included = array_intersect($included,$args['include_ids']);
+        }
+        if (isset($args['exclude_ids'])){
+            $included = array_diff($included,$args['exclude_ids']);
+        }
+
+        // Page
+        $paged_ids = $included;
+        if ($args['per_page'] !== 'all'){
+            $paged_ids = array_slice(
+                $included,
+                ($args['page']-1)*$args['per_page'],
+                $args['per_page']
+            );    
+        }
+
+        $this->args = $args;
+        $this->ids = $included;
+        $this->count = count($this->ids);
+        $this->pages = $this->count % 10 > 0 ? intval($this->count / 10)+1 : intval($this->count / 10);
+        $this->books = array();
+        if (! empty($paged_ids)){
+            $this->books = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM " . $wpdb->prefix . "posts
+                    WHERE ID IN(" . implode(',',array_fill(0,count($paged_ids),'%d')) . ")",
+                $paged_ids
+            ));    
+        }
+        $this->book_tags = $this->book_tags();
+    }
+    function args_from_url($url = true){
+        $args = array(
+            'included'  => array(),
+            'excluded'  => array()
+        );
+        $url = $url === true ? $_SERVER['QUERY_STRING'] : $url;
+        $url = urldecode($url);
+        $groups = explode('&',$url);
+        $types = array('included','excluded');
+        foreach ( $groups as $group ) {
+            $arr = explode('=',$group);
+            if (count($arr) < 2){
+                continue;
+            }
+            foreach ($types as $type ) {
+                $key = substr($arr[0],0,-9);
+                $suffix = substr($arr[0],-9,9);
+                if ($suffix === '_' . $type){
+                    if (! in_array($key,book_query::$taxonomies)){
+                        continue;
+                    }
+                    $args[$type][$key] = explode( ',', $arr[1] );
+                }
+                else if ($arr[0] === 'words'){
+                    $array = explode(',',$arr[1]);
+                    if (count($array) <= 1 ||
+                        ! is_numeric( $array[0] ) ||
+                        ! is_numeric( $array[1] )
+                    ){
+                        continue;
+                    }
+                    $args['words'] = array(
+                        'from'  => intval($array[0]),
+                        'to'    => intval($array[1])
+                    );
+                }
+                else if ($arr[0] === 'sort'){
+                    $array = explode('/',$arr[1]);
+                    if (count($array) <= 1){
+                        continue;
+                    }
+                    $args['orderby'] = $array[0];
+                    $args['order'] = $array[1];
+                }
+                else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
+                    $args['page'] = intval($arr[1]);
+                }
+                else if ($arr[0] === 'search'){
+                    $args['search'] = $arr[1];
+                }
+            }
+        }
+        $this->args = $args;
+    }
+    function get_url(){
+        $args = $this->args;
+        $get = array();
+        $types = array('included','excluded');
+        foreach ( $types as $type ) {
+            foreach ($args[$type] as $key => $ids ) {
+                $get[] = $key . '_' . $type . '=' . implode(',',$ids);
+            }
+        }
+        $string = implode('&',$get);
+        $string .= isset($args['page']) ? '&page=' . $args['page'] : '';
+        $string .= isset($args['order']) || isset($args['orderby']) ? '&sort=' . ($args['orderby'] ?? 'updated') . '/' . ($args['order'] ?? 'DESC') : '';
+        $string .= isset($args['words']) ? '&words=' . $args['words']['from'] . ',' . $args['words']['to'] : '';
+        return $string;
+    }
+    function has(){
+        return (isset($this->books) && ! empty($this->books));
+    }
+}
+class book_query_cache extends book_query {
+    protected static $midfix = '</--/>';
+    function __construct(){
+        $min_gap_min = 30;
+        $min_gap = $min_gap_min * 60;
+
+        global $wpdb;
+        $results = $wpdb->get_results("SELECT * FROM " . self::$table);
+        $t = time();
+        $this->existing = array();
+        foreach ($results as $value) {
+            if ($t - intval($value->updated) <= $min_gap){
+                $this->existing[$value->_key . self::$midfix . $value->_value] = 0;
+            }
+        }
+    }
+    function sort(){
+        $orders = array('DESC','ASC');
+        foreach ($orders as $order) {
+            $term_key = 'sort' . self::$midfix . 'updated/' . $order;
+            if ( isset($this->existing[$term_key]) ){
+                continue;
+            }
+            $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                'posts_per_page'    => -1,
+                'fields'            => 'ids',
+                'orderby'           => 'modified',
+                'order'             => $order
+            ))))->posts;
+            self::put(array(
+                array(
+                    '_key'      => 'sort',
+                    '_value'    => 'updated/' . $order,
+                    'ids'       => $sort_ids
+                )
+            ));
+        }
+    }
+    function tax(){
+        global $wpdb;
+        $ids = unserialize($wpdb->get_results("SELECT ids FROM " . self::$table . " WHERE _key = 'words' AND _value = '0'")[0]->ids);
+        $terms = (new WP_Term_Query(array(
+            'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+			'object_ids'    => $ids,
+			'fields'        => 'all_with_object_id'
+        )))->terms;
+        $key_value_ids = [];
+        foreach ( $terms as $term ) {
+            $term->taxonomy = $term->taxonomy === 'category' ? 'fandom' : $term->taxonomy;
+            $term_key = $term->taxonomy . self::$midfix . $term->term_id;
+            if (isset($this->existing[$term_key])){
+                continue;
+            }
+            if (! isset($key_value_ids[$term_key])){
+                $key_value_ids[$term_key] = array(
+                    '_key'       => $term->taxonomy,
+                    '_value'     => $term->term_id,
+                    'ids'       => array()
+                );
+            }
+            $key_value_ids[$term_key]['ids'][] = $term->object_id;
+        }
+        self::put($key_value_ids);
+    }
+    function author(){
+        global $wpdb;
+        $books_all = $wpdb->get_results(
+            "SELECT ID, post_author FROM " . $wpdb->prefix . "posts
+            WHERE post_type = 'book'
+            AND post_status = 'publish'"
+        );
+        $key_value_ids = array();
+        foreach ( $books_all as $book ) {
+            $term_key = 'author' . self::$midfix . $book->post_author;
+            if (isset($this->existing[$term_key])){
+                continue;
+            }
+            if (! isset($key_value_ids[$term_key])){
+                $key_value_ids[$term_key] = array(
+                    '_key'       => 'author',
+                    '_value'     => $book->post_author,
+                    'ids'       => array()
+                );
+            }
+            $key_value_ids[$term_key]['ids'][] = $book->ID;
+        }
+        self::put($key_value_ids);
+    }
+    function words(){
+        //Words
+        $word_limits = [
+            0,500,1000,2000,
+            5000,10000,15000,20000,30000,40000,50000,75000,
+            100000,150000,200000,300000,500000,
+            1000000,2000000,3000000,
+        ];
+        foreach ($word_limits as $from) {
+            $term_key = 'words' . self::$midfix . $from;
+            if (isset($this->existing[$term_key])){
+                continue;
+            }
+            $word_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                'posts_per_page'    => -1,
+                'fields'            => 'ids',
+                'meta_query'        => array(
+                    'relation' => 'AND',
+                    array(
+                        'key'     => 'word-count',
+                        'value'   => $from,
+                        'compare' => '>=',
+                        'type'    => 'NUMERIC',
+                    ),
+                )
+            ))))->posts;
+            self::put(array(
+                array(
+                    '_key'        => 'words',
+                    '_value'      => $from,
+                    'ids'         => $word_ids
+                )
+            ));
+        }
+    }
+    protected function put($key_value_ids){
+        global $wpdb;
+        $t = time();
+        foreach ($key_value_ids as $term) {
+            $term['updated'] = $t;
+            $term['ids']     = serialize($term['ids']);
+            $wpdb->replace(
+                book_query::$table,
+                $term
+            );
+        }
+    }
+}

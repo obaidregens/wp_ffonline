@@ -263,11 +263,9 @@ class collection {
             $error->add('collection','Invalid authors for some collections: (' . implode(',',$diff_users) . ')');
         }
 
-        $existing_ids = (new WP_Query(array(
-            'post__in'      => $pairs['book'],
-            'post_type'     => 'book',
-            'post_status'   => array('publish')
-        )))->posts;
+        $existing_ids = (new book_query(array(
+            'include_ids'      => $pairs['book'],
+        )))->ids;
         $diff_ids = array_unique(array_diff($pairs['book'],array_column($existing_ids,'ID')));
         if (! empty($diff_ids)){
             $error->add('book','Invalid book ids: (' . implode(',',$diff_ids) . ')');
@@ -477,15 +475,13 @@ class collection {
             return array();
         }
         $args = array(
-            'post__in'  => $book_ids,
-            'post_type' => 'book',
+            'include_ids'   => $book_ids,
         );
-        //These two values cannot be passed through custom_args
-        unset($wp_query_args_add['post__in']);
-        unset($wp_query_args_add['post_type']);
+        //These value(s) cannot be passed through custom_args
+        unset($wp_query_args_add['include_ids']);
 
         $args = array_merge($args,$wp_query_args_add);
-        $books = (new WP_Query($args))->posts;
+        $books = (new book_query($args))->books;
         return $books;
     }
     public static function update($id,$args){

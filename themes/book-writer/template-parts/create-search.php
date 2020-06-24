@@ -1,16 +1,20 @@
 <?php
 // Find Args from Url
-$args = unpack_search($_GET);
+$query = new book_query;
+$query->args_from_url();
 
 $placeholder = _landing::get_type();
-$args = type_args($args,$placeholder);
-if (err::is($args)){
+$query->args = type_args($query->args,$placeholder);
+if (err::is($query->args)){
     _404();
 }
 ?>
-<span id="tags_data" style="display:none;"><?= json_encode(tags_data($args)); ?></span>
-<span id="prev_ss" style="display:none;"><?= ctrk_encrypt($args); ?></span>
+<span id="tags_data" style="display:none;"><?= json_encode(tags_data($query->args)); ?></span>
+<span id="prev_ss" style="display:none;"><?= ctrk_encrypt($query->args); ?></span>
 <style>
+    #box{
+        position: relative;
+    }
     [type=checkbox].cross:checked+span:not(.lever):before{
         top: -3px;
         font-size: 22px;
@@ -76,41 +80,30 @@ if (err::is($args)){
     }
 </style>
 <?php
-$default_query = new WP_Query( $args );
-$original_query = $wp_query;
-$wp_query = null;
-$wp_query = $default_query;
+$query->query();
+global $book_query;
+$book_query = $query;
 ?>
 <div class="filters-button-wrapper mobile-margin"><button class="waves-effect waves-light btn-small" onclick="search_settings('open')">Filters</button></div>
 <div class="row" id="search-display"><div id="box" class="col s12">
 	<?php
-	if (have_posts()){
+	if ( $book_query->has() ){
         get_template_part('template-parts/modal','collection');
-		// Start the loop.
-		while (have_posts() ) :
-			the_post();
-			get_template_part( 'template-parts/content', 'search' );
-			
-			// End the loop.
-		endwhile;
-		
+        global $book;
+        foreach ($book_query->books as $book) {
+            get_template_part( 'template-parts/content' , 'search' );
+        }
 	}
 	else {
 		get_template_part( 'template-parts/content', 'noresult' );
-	}
+    }
 	?>
 </div></div>
 <div id="pagination-wrapper">
 <?php get_template_part( 'template-parts/content', 'bookpaginate' ); ?>
 </div>
 <?php
-//Reset Data
-//This is because we dont want our meddling of the $wp-query to affect the whole site
-$wp_query = null;
-$wp_query = $original_query;
-wp_reset_postdata();
 get_template_part( 'template-parts/content', 'searchmodal' );
-
 global $js_bundle;
 $js_bundle = global_bundle('create_search');
 $js_bundle->add('create_search');

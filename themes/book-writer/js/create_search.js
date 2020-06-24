@@ -72,7 +72,18 @@ function get_selected(group,output){
     };
     
 }
-
+function set_selected(group,{included, excluded}){
+    const _mixed = included.concat(excluded);
+    for (let m = 0; m < _mixed.length; m++) {
+        const elem_ = jQuery(`#${group}-select [type="checkbox"][value="${_mixed[m]}"]`)[0];
+        jQuery(elem_).prop('checked',true);
+        if (excluded.includes(_mixed[m])){
+            jQuery(elem_).addClass('cross');
+        }
+    }
+    trigger_custom_modal(group + '-select');
+    trigger_custom_modal(group + '-select');
+}
 function reset_settings(){
     var tax = all_tax;
     for (var i = 0; i < tax.length; i++) {
@@ -84,8 +95,8 @@ function reset_settings(){
     jQuery('#sort').val('modified/DESC');
     jQuery('#search').val('');
     const slider = document.getElementById('words-slider');
-    words_set(2000000);
-    slider.noUiSlider.set([0,2000000]);
+    words_set();
+    slider.noUiSlider.set([0,3000000]);
 }
 function trigger_custom_modal(id){
     var elem = document.getElementById(id);
@@ -126,26 +137,46 @@ function close_custom_modal(){
 }
 
 function trigger_search(page = false){
-    document.getElementById('box').innerHTML = '<div class="preloader-wrapper big active"><div class="spinner-layer"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>';
-    document.getElementById('pagination-wrapper').innerHTML = '';   
-    jQuery("#box").addClass("center-align");
-    jQuery("#search-btn").addClass("disabled");
-    search_settings('close');
-
+    let search_progress_interval = 0;
+    function progress_spinner(){
+        spin('#box','center');
+        jQuery('#box').append(`<div id="progress-within-spinner"
+        style="
+            position: absolute;
+            text-align: center;
+            top: 26%;
+            width: 100%;
+            left: 0;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--theme-color);
+            user-select: none;
+        ">0%</div>`);
+        search_progress_interval = setInterval(function(){
+            const this_elem = document.getElementById('progress-within-spinner');
+            const prev = parseInt(this_elem.innerHTML);
+            if (prev >= 100){
+                clearInterval(search_progress_interval);
+                return;
+            }
+            this_elem.innerHTML = (prev+1) + '%';
+        },100);
+        document.getElementById('pagination-wrapper').innerHTML = '';   
+        jQuery("#search-btn").addClass("disabled");
+        search_settings('close');    
+    }
+    progress_spinner();
     const slider = document.getElementById('words-slider');
-    var words = slider.noUiSlider.get();
+    let words = slider.noUiSlider.get();
     words[0] = parseInt(words[0].replace(/[,]+/g,'').replace(' Words',''));
     words[1] = parseInt(words[1].replace(/[,]+/g,'').replace(' Words',''));
     words = words.join();
-    var data = {
-        words: words,
+    const data = {
+        words,
         sort: jQuery('#sort').val(),
     };
-    if (page != false){
-        data.page = page;
-    }
-    var val = jQuery('#search').val();
-    if (val != ''){
+    const val = jQuery('#search').val();
+    if (val !== ''){
         data['search'] = val;
     }
     const multi_tax = all_tax;
@@ -158,42 +189,42 @@ function trigger_search(page = false){
             data[multi_tax[i] + '_excluded'] = selected.excluded.join();
         }
     }
+    let construct = '';
+    const keys = Object.keys(data);
+    for (let i = 0; i < keys.length; i++) {
+        if (keys[i] == 'ajax' || keys[i] == 'search_id'){
+            continue;
+        }
+        construct += keys[i] + '=' + data[keys[i]];
+        if (i < keys.length-1){
+            construct += '&';
+        }
+    }
     api('search',{
         data: {
-            search: data,
+            search: construct,
+            page,
             placeholder: document.getElementById('placeholder_data').innerHTML,
             prev: document.getElementById('prev_ss').innerHTML
         },
         dataType: 'JSON',
         callback: function(response){
-            if (response['output'] == 6){
-                  M.toast({html: 'An error occured.'});
-                  window.location.reload();
-            }
-            jQuery("#box").removeClass("center-align");
+            // Styling
+            clearInterval(search_progress_interval);
+            jQuery("#box").css('text-align','left');
+            jQuery('#progress-within-spinner').remove();
             jQuery("#search-btn").removeClass("disabled");
+            
+            // New Data
             const response_arr  = response;
             document.getElementById('prev_ss').innerHTML = response_arr['prev'];
             document.getElementById('tags_data').innerHTML = JSON.stringify( response_arr['tags_data'] );
             document.getElementById('pagination-wrapper').innerHTML = response_arr.paginate;
-
             document.getElementById('box').innerHTML = response_arr['output'];
-            var construct = '?';
-            var keys = Object.keys(data);
-            for (var i = 0; i < keys.length; i++) {
-                if (keys[i] == 'ajax' || keys[i] == 'search_id'){
-                    continue;
-                }
-                construct += keys[i] + '=' + data[keys[i]];
-                if (i < keys.length-1){
-                    construct += '&';
-                }
-            }
-            if (page == false){
-                construct += '&page=1';
-            }
-            window.history.pushState("object or string", document.getElementsByTagName("title")[0].innerHTML,construct);
-            jQuery('.dropdown-trigger').dropdown();
+            window.history.pushState("object or string", document.getElementsByTagName("title")[0].innerHTML,'?' + construct);
+
+            // Reinit
+            jQuery('.dropdown-trigger:not(.sort-tags-drop-button)').dropdown();
             jQuery('.modal:not(#searchbook)').modal();
             book_collections_init();
             load_tags_data();
@@ -215,22 +246,26 @@ function paginate(to){
 jQuery(document).ready(function(){
     jQuery('.tooltipped').tooltip();
     jQuery('select').formSelect();
+    jQuery('.sort-tags-drop-button').dropdown({
+        alignment: 'right'
+    });
 });
 
-function words_set(max){
+function words_set(){
     const slider = document.getElementById('words-slider');
     const range = {
-        'min': [0],
-        '10%': [4000],
-        '20%': [9000],
-        '30%': [15000],
-        '40%': [25000],
-        '50%': [50000],
-        '60%': [100000],
-        '70%': [200000],
-        '80%': [500000],
-        '90%': [1000000],
-        'max': [max]
+        'min': [0,500],//0,500
+        '10%': [1000,1000],//1K
+        '15%': [2000,3000],//2K
+        '20%': [5000,5000],//5K,10K,15K
+        '35%': [20000,10000],//20K,30K,40K
+        '50%': [50000,25000],//50K,75K
+        '60%': [100000,50000],//100K,150K
+        '70%': [200000,100000],//200K
+        '75%': [300000,200000],//300K
+        '80%': [500000,500000],//500K
+        '85%': [1000000,1000000],//1M,2M
+        'max': [3000000] //3M
     };
     if (slider.noUiSlider){
         slider.noUiSlider.updateOptions({
@@ -239,11 +274,11 @@ function words_set(max){
         return;
     }
     noUiSlider.create(slider, {
-        start: [0, max],
+        start: [0, 3000000],
         connect: true,
-        step: 100,
         orientation: 'horizontal',
         range,
+        tooltips: [true,true],
         format: wNumb({
             decimals: 0,
             thousand: ',',
@@ -251,41 +286,63 @@ function words_set(max){
         }),
     });
 }
+//Single Selects
+jQuery("div[id$=-select].custom-modal").on('change','input[type=checkbox]',function() {
+    const modal_elem = jQuery(this).parents('div[id$=-select].custom-modal')[0];
+    const select_status = modal_elem.getAttribute('select_status') || '';
+    const multiple = modal_elem.getAttribute('multiple') !== null;
+    if (multiple === false && select_status === '' && this.checked === true){
+        jQuery(modal_elem).find(`input[type=checkbox]:checked:not(.cross)`).prop("checked", false);
+        this.checked = true;
+    }
+    this.className = select_status;
+});
 function load_tags_data(){
     const tags_data = JSON.parse(document.getElementById('tags_data').innerHTML);
-    words_set(parseInt(tags_data.max_words));
+    words_set();
     const tags = Object.keys(tags_data);
-
     for (let y = 0; y < tags.length; y++) {
         const tag_name = tags[y];
-        if (tag_name === 'max_words'){
-            continue;
-        }
-        const this_tag_ids = Object.keys(tags_data[tag_name]);
-        let construct = '';
-        for (let u = 0; u < this_tag_ids.length; u++) {
-            const tag_id = this_tag_ids[u];
-            const tag = tags_data[tag_name][tag_id];
-            construct += `
-            <label class="col s12 btn-hover" style="color:var(--text-color) !important;padding:10px;">
-            <input type="checkbox" value="${tag_id}"/>
-            <span>${tag.name} (${tag.count})</span>
-            </label>
-            `;
-        }
-        jQuery(`#${tag_name}-select .tags_list`).children().remove();
-        jQuery(`#${tag_name}-select .tags_list`).append(construct);
+        set_tags_of(tag_name);
     }
-    jQuery("div[id$=-select].custom-modal input[type=checkbox]").change(function() {
-        const modal_elem = jQuery(this).parents('div[id$=-select].custom-modal')[0];
-        const select_status = modal_elem.getAttribute('select_status') || '';
-        const multiple = modal_elem.getAttribute('multiple') !== null;
-        if (multiple === false && select_status === ''){
-            jQuery(modal_elem).find(`input[type=checkbox]:checked:not(.cross)`).prop("checked", false);
-            this.checked = true;
+}
+function set_tags_of(tag_name, sort = 'count'){
+    const _selected = get_selected(tag_name,'value');
+
+    const tags_data = JSON.parse(document.getElementById('tags_data').innerHTML);
+    const this_tag_ids = Object.keys(tags_data[tag_name]);
+    const sortFunc = sort === 'alphabetical' ? function(a, b){
+        const nameA = tags_data[tag_name][a].name.toUpperCase();
+        const nameB = tags_data[tag_name][b].name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
         }
-        this.className = select_status;
-    });
+        if (nameA > nameB) {
+          return 1;
+        }
+        return 0;
+    } : function(a, b){
+        return tags_data[tag_name][a].count - tags_data[tag_name][b].count;
+    };
+    this_tag_ids.sort(sortFunc);
+    if (sort === 'count'){
+        this_tag_ids.reverse();
+    }
+    let construct = '';
+    for (let u = 0; u < this_tag_ids.length; u++) {
+        const tag_id = this_tag_ids[u];
+        const tag = tags_data[tag_name][tag_id];
+        construct += `
+        <label class="col s12 btn-hover" style="color:var(--text-color) !important;padding:10px;">
+        <input type="checkbox" value="${tag_id}"/>
+        <span>${tag.name} (${tag.count})</span>
+        </label>
+        `;
+    }
+    jQuery(`#${tag_name}-select .tags_list`).children().remove();
+    jQuery(`#${tag_name}-select .tags_list`).append(construct);
+
+    set_selected(tag_name,_selected);
 }
 function filters_from_url(){
     const urlParams = new URLSearchParams(location.search);
@@ -302,21 +359,14 @@ function filters_from_url(){
     }
     const multiselects = all_tax;
     for (let p = 0; p < multiselects.length; p++) {
-        
-        const _included = urlParams.get(multiselects[p] + '_included') === null ? [] : urlParams.get(multiselects[p] + '_included').split(',');
-        const _excluded = urlParams.get(multiselects[p] + '_excluded') === null ? [] : urlParams.get(multiselects[p] + '_excluded').split(',');
-        
-        const _mixed = _included.concat(_excluded);
-        for (let m = 0; m < _mixed.length; m++) {
-            const elem_ = jQuery(`#${multiselects[p]}-select [type="checkbox"][value="${_mixed[m]}"]`)[0];
-            jQuery(elem_).prop('checked',true);
-            if (_excluded.includes(_mixed[m])){
-                jQuery(elem_).addClass('cross');
-            }
-        }
-        trigger_custom_modal(multiselects[p] + '-select');
-        close_custom_modal();
+        const included = urlParams.get(multiselects[p] + '_included') === null ? [] : urlParams.get(multiselects[p] + '_included').split(',');
+        const excluded = urlParams.get(multiselects[p] + '_excluded') === null ? [] : urlParams.get(multiselects[p] + '_excluded').split(',');
+        set_selected(multiselects[p],{
+            included,
+            excluded
+        });
     }
 }
+
 load_tags_data();
 filters_from_url();

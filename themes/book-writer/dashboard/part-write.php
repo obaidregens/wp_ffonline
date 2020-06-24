@@ -17,11 +17,11 @@
 	}
 	//else continue
 	$books = array(
-		'author'		=> get_current_user_id(),
+		'author__in'	=> array(get_current_user_id()),
 		'post_type'		=> 'book',
-		'sort_column'	=> 'post_modified',
+		'orderby'		=> 'modified',
 		'post_status'	=> array('publish','draft'),
-		'sort_order'	=> 'DESC',
+		'order'			=> 'DESC',
 		'posts_per_page'=> 10,
 	);
 	if (isset($_GET['page']) && is_numeric($_GET['page'])){
