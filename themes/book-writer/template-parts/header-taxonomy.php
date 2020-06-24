@@ -1,5 +1,17 @@
 <?php
-if (is_home() || is_search() || is_archive()){
+global $book_query;
+global $book;
+global $post;
+$is_search = isset($book_query);
+if ($is_search){
+	$post = $book;
+}
+else {
+	$book_query = new book_query(array(
+		'include_ids'	=> array($post->ID)
+	));
+}
+if ( $is_search ){
     ?><div class="home-tags"><div><?php
 }
 else{ 
@@ -14,23 +26,16 @@ $collections = collection::query(array(
 echo '<span class="each-tag icon-tag"><i class="fas fa-clock"></i>' . get_the_time() . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-book-open"></i>' . get_post_meta($post->ID,'word-count',true) . '</span> ';
 echo '<span class="each-tag icon-tag"><i class="fas fa-list-ul"></i>' . count($collections) . '</span> ';
-if (is_home() == false && is_search() == false && is_archive() == false){
+if (! $is_search){
 	echo '<br>';
 }
 ?></div><?php
-$taxonomies = get_object_taxonomies('book');
-array_splice($taxonomies, 0, 1);
-the_terms( $post->ID, 'category', '<span class="each-tag"><strong>Category: </strong> ', '/', '</span> ' );
-if (is_home() == false && is_search() == false && is_archive() == false){
-	echo '<br>';
-}
-foreach ($taxonomies as $taxonomy)
-{
-	the_terms( $post->ID, $taxonomy, '<span class="each-tag"><strong>' . ucfirst($taxonomy) . ': </strong>', ', ', '</span>  ' );
-		if (is_home() == false && is_search() == false && is_archive() == false){
+foreach ($book_query->book_tags[$post->ID] as $taxonomy => $terms){
+	$sep = $taxonomy === 'fandom' ? '/' : ', ';
+	?><span class="each-tag"><strong><?= ucfirst($taxonomy); ?>: </strong><?= implode($sep,array_column($terms,'link')); ?></span> <?php
+	if (! $is_search){
 		echo '<br>';
 	}
-
 }
 ?>
 </div>

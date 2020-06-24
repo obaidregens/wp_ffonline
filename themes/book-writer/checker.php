@@ -12,17 +12,17 @@ require_once (explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer
 $fandoms = array(
 	array(
 		'name' => 'Harry Potter',
-		'link' => 'https://www.fanfiction.net/book/Harry-Potter/?&srt=1&r=10',
+		'link' => 'https://www.fanfiction.net/book/Harry-Potter/?&srt=1&r=10&len=5',
 		'id'   => 50,
 	),
 	array(
 		'name' => 'Twilight',
-		'link' => 'https://www.fanfiction.net/book/Twilight/?&srt=1&r=10',
+		'link' => 'https://www.fanfiction.net/book/Twilight/?&srt=1&r=10&len=5',
 		'id'   => 51,
 	),
 	array(
 		'name' => 'Percy Jackson and the Olympians',
-		'link' => 'https://www.fanfiction.net/book/Percy-Jackson-and-the-Olympians/?&srt=1&r=10',
+		'link' => 'https://www.fanfiction.net/book/Percy-Jackson-and-the-Olympians/?&srt=1&r=10&len=5',
 		'id'   => 52,
 	),
 );
@@ -48,12 +48,10 @@ foreach($fandoms as $fandom){
 				break;
 			}
 			foreach($divClass->find(".z-indent.z-padtop") as $desc_full ) {
-				$desc_full = explode("Rated: ",$desc_full->plaintext);
-				$current_book['desc'] = $desc_full[0];
-				$desc_full[1] = "Rated: " . $desc_full[1];
-				$tags_raw = explode(" - ",$desc_full[1]);
+				$current_book['desc'] = explode('<div class=\'z-padtop2 xgray\'>',$desc_full->innertext)[0];
+				$tags_raw = explode(" - ",$desc_full->find('.z-padtop2.xgray')[0]->plaintext);
 				$tags = array();
-				if (strpos($desc_full[1],' - Complete')){
+				if (in_array('Complete',array($tags_raw))){
 					$tags['status'] = 'Complete';
 				}
 				else{
@@ -61,36 +59,58 @@ foreach($fandoms as $fandom){
 				}
 				$tags['rating'] = str_replace('Rated: ','',$tags_raw[0]);
 				$tags['language'] = $tags_raw[1];
-				if (strpos($tags_raw[2],"Chapter") === false){
+				if (strpos($tags_raw[2],"Chapters: ") === false){
 					$tags['genre'] = explode("/",$tags_raw[2]);
 				}
 				else{
 					$tags['genre'] = array("General");
 				}
 				$charpos = 0;
-				for ($x = 5; $x <= 10; $x++) {
-					if (isset($tags_raw[$x]) && (strpos($tags_raw[$x],"Reviews") === false && strpos($tags_raw[$x],"Favs") === false && strpos($tags_raw[$x],"Follows") === false && strpos($tags_raw[$x],"Updated") === false && strpos($tags_raw[$x],"Published") === false)){
+				$not_char = array('Reviews: ','Favs: ','Follows: ','Published: ','Updated: ','Complete');
+				for ($x = 5; $x <= 11; $x++) {
+					if (! isset($tags_raw[$x])){
+						break;
+					}
+					$is_char = true;
+					foreach ($not_char as $v) {
+						if ( strpos($tags_raw[$x],$v) !== false ){
+							$is_char = false;
+						}
+					}
+					if ($is_char === true){
 						$charpos = $x;
+						break;
 					}
 				}
-				if ($charpos != 0){
-					if (strpos($tags_raw[$charpos],"] ") !== false){
-						$char_full = explode("] ",$tags_raw[$charpos]);
-
-						$char_full[0] = str_replace('[','',$char_full[0]);
-						$tags['pairing'] = str_replace(", ","/",$char_full[0]);
-						$tags_raw[$charpos] = str_replace('[','',$tags_raw[$charpos]);
-						$tags_raw[$charpos] = str_replace('] ',', ',$tags_raw[$charpos]);
+				if ($charpos != 0){					
+					$char_groups = explode("]",$tags_raw[$charpos]);
+					$all_characters = [];
+					$all_pairings = [];
+					foreach ($char_groups as $char_group ) {
+						if (trim($char_group) === ''){
+							continue;
+						}
+						$chars = explode(', ',trim(ltrim( trim($char_group), '[' )));
+						sort($chars);
+						$all_characters = array_merge($all_characters,$chars);
+						if (strpos($char_group,'[') !== false){
+							$all_pairings[] = implode('/',$chars);
+						}
 					}
-					$tags['character'] = explode(", ",$tags_raw[$charpos]);
+					if (! empty($all_pairings)){
+						$tags['pairing'] = $all_pairings;
+					}
+					if (! empty($all_characters)){
+						$tags['character'] = $all_characters;
+					}
 				}
-				if (strpos($tags_raw[3],"Chapters:") !== false){
+				if (strpos($tags_raw[3],"Chapters: ") !== false){
 					$num_chapters = str_replace('Chapters: ','',$tags_raw[3]);
 				}
-				else if (strpos($tags_raw[2],"Chapters:") !== false){
+				else if (strpos($tags_raw[2],"Chapters: ") !== false){
 					$num_chapters = str_replace('Chapters: ','',$tags_raw[2]);
 				}
-				else if (strpos($tags_raw[1],"Chapters:") !== false){
+				else if (strpos($tags_raw[1],"Chapters: ") !== false){
 					$num_chapters = str_replace('Chapters: ','',$tags_raw[1]);
 				}
 				$current_book['link'] = 'https://fanfiction.net' . $link;
@@ -142,6 +162,7 @@ foreach($fandoms as $fandom){
 				}
 			}
 			$i++;
+		break;
 		}
 	}
 	foreach ($answer as $book){
@@ -219,3 +240,4 @@ foreach($fandoms as $fandom){
 	}
 }
 add_front_cache();
+book_query::cache();

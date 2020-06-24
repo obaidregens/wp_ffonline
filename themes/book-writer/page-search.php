@@ -6,6 +6,26 @@
  *
  */
 get_header();
+function print_benchmark(){
+	$a = new book_query;
+	$a->args_from_url();
+	$start_ = microtime(true);
+	$a->query();
+	$total_ = microtime(true) - $start_;
+	$args = unpack_search($_GET);
+	$start = microtime(true);
+	$b = new WP_Query($args);
+	$total = microtime(true) - $start;
+	$faster = $total_ < $total ? 'Cache' : 'WP';
+	$slower = $total_ >= $total ? 'Cache' : 'WP';
+	$totals = array($total,$total_);
+	sort($totals);
+	echo $faster . ' is ' . (intval($totals[1] / $totals[0] * 100) - 100) . '% faster than ' . $slower;
+}
+if ( current_user_can('administrator') ){
+	print_benchmark();
+	// book_query::cache();
+}
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
