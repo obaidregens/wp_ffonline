@@ -1,4 +1,12 @@
 <?php
+function a_intersect($arrayOne, $arrayTwo){
+    $index = array_flip($arrayOne);
+    $second = array_flip($arrayTwo);
+
+    $x = array_intersect_key($index, $second);
+
+    return array_flip($x);
+}
 function timer($logtext){
     global $lastlogtime;
     $now = microtime(true);

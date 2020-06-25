@@ -266,10 +266,10 @@ function type_args($args,$placeholder){
 	if ($placeholder['type'] === 'home'){}
 	else if ($placeholder['type'] === 'collection'){
 		$collection_books = array_column(collection::book_query(array($placeholder['type_id'])),'ID');
-		$args['include_ids'] = isset($args['include_ids']) ? array_intersect($args['include_ids'],$collection_books) : $collection_books;
+		$args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;
 	}
 	else if ($placeholder['type'] === 'author-books') {
-		$args['included']['author'] = isset($args['included']['author']) ? array_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
+		$args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
 	}
 	else{
 		$error = new err();

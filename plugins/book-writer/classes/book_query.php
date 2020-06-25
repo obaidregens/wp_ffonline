@@ -99,7 +99,7 @@ class book_query{
                 $results_['words=' . $args['words']['from']],
                 $results_['words=' . $args['words']['to']]
             ),
-            array_intersect(
+            a_intersect(
                 $results_['words=' . $args['words']['from']],
                 $results_['words=' . $args['words']['to']]
             )
@@ -108,7 +108,7 @@ class book_query{
         foreach ($args['included'] as $key => $ids) {
             foreach ($ids as $id ) {
                 $akey = $key . '=' . $id;
-                $included = array_intersect($included, $results_[$akey] ?? array() );
+                $included = a_intersect($included, $results_[$akey] ?? array() );
             }
         }
         // Excluded
@@ -133,14 +133,14 @@ class book_query{
                     array($search_sql,$search_sql)
                 )
             );
-            $included = array_intersect($included,array_column($search_result,'ID'));
+            $included = a_intersect($included,array_column($search_result,'ID'));
         }
         
         // Sort
         $included = array_intersect($included,$results_['sort=' . $args['orderby'] . '/' . $args['order'] ]);
         // Custom Ids
         if (isset($args['include_ids'])){
-            $included = array_intersect($included,$args['include_ids']);
+            $included = a_intersect($included,$args['include_ids']);
         }
         if (isset($args['exclude_ids'])){
             $included = array_diff($included,$args['exclude_ids']);
@@ -420,7 +420,7 @@ class tag_query extends book_query{
         foreach ($results as $term) {
             $term->_value = intval($term->_value);
             $terms_with_count[$term->_key][$term->_value] = array(
-                'count'         => count(array_intersect($book_ids,unserialize($term->ids))),
+                'count'         => count(a_intersect($book_ids,unserialize($term->ids))),
                 'name'          => $tag_names[$term->_value]
             );
         }
