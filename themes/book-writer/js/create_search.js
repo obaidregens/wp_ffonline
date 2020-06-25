@@ -17,7 +17,7 @@ jQuery(".search-tags").keyup(function(event){
         return;
     }
     var modal_id = jQuery(this).parents('.custom-modal')[0].id;
-    var boxes = jQuery('#' + modal_id + ' [type=checkbox] + span');
+    var boxes = jQuery('#' + modal_id + ' [type=checkbox] + text');
     for (var g = 0; g < boxes.length; g++) {
         if (boxes[g].innerHTML.toLowerCase().search(search) != -1){
             jQuery('#' + modal_id).animate({
@@ -59,10 +59,10 @@ function get_selected(group,output){
     else if (output == 'name'){
         for (var g = 0; g < all.length; g++) {
             if (jQuery(all[g]).hasClass('cross') == true){
-                exclude.push(jQuery(all[g]).siblings('span')[0].innerHTML);
+                exclude.push(jQuery(all[g]).siblings('text')[0].innerHTML);
             }
             else{
-                include.push(jQuery(all[g]).siblings('span')[0].innerHTML);
+                include.push(jQuery(all[g]).siblings('text')[0].innerHTML);
             }            
         }
     }
@@ -334,8 +334,8 @@ function set_tags_of(tag_name, sort = 'count'){
         const tag = tags_data[tag_name][tag_id];
         construct += `
         <label class="col s12 btn-hover" style="color:var(--text-color) !important;padding:10px;">
-        <input type="checkbox" value="${tag_id}"/>
-        <span>${tag.name} (${tag.count})</span>
+            <input type="checkbox" checkbox value="${tag_id}"/>
+            <text>${tag.name} (${tag.count})</text>
         </label>
         `;
     }

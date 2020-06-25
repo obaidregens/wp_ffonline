@@ -162,7 +162,6 @@ foreach($fandoms as $fandom){
 				}
 			}
 			$i++;
-		break;
 		}
 	}
 	foreach ($answer as $book){

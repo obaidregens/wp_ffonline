@@ -282,9 +282,7 @@ function type_args($args,$placeholder){
 function tags_data($book_query){
 	$ids = $book_query->ids;
 	$terms = array();
-	if (! empty($ids)){
-		$terms = (new tag_query($ids))->terms_with_count;
-	}
+	$terms = (new tag_query($ids))->terms_with_count;
 	return $terms;
 }
 /////Saved Searches

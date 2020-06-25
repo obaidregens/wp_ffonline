@@ -288,7 +288,6 @@ class book_query_cache extends book_query {
                 'orderby'           => 'modified',
                 'order'             => $order
             ))))->posts;
-            var_dump($sort_ids);
             self::put(array(
                 array(
                     '_key'      => 'sort',
