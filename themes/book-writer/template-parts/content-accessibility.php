@@ -78,6 +78,44 @@
 				</label>
 			</div>
 		</div>
+		<style>
+		.shades-circles > div {
+			width: 44px;
+			cursor: pointer;
+			height: 44px;
+			display: inline-block;
+			margin: 0 5px;
+			border-radius: 50px;
+			background-color: black;
+			box-shadow: var(--text-color) 0 0 4px;
+		}
+		.shades-circles > div[color="peach"] {
+			background-color: #edd1b0;
+		}
+		.fonts-select > div {
+			cursor: pointer;
+			user-select:none;
+		}
+		</style>
+		<label><div class="section" style="padding-bottom:10px;"><h3>Shades</h3></div></label>
+		<div class="shades-circles" style="
+			max-width: 175px;
+			margin: auto;
+		">
+			<div class="acs-btn" action="shade" color="peach"></div>
+		</div>
+		<label><div class="section" style="padding-bottom:10px;"><h3>Fonts</h3></div></label>
+		<div class="fonts-select" style="
+			max-width: 175px;
+			margin: auto;
+		">
+			<div class="acs-btn" action="font" style="font-family: 'Varela Round', sans-serif;">Default</div>
+			<div class="acs-btn" action="font" style="font-family: 'Open Sans', sans-serif;">Open Sans</div>
+			<div class="acs-btn" action="font" style="font-family: 'Roboto', sans-serif;">Roboto</div>
+			<div class="acs-btn" action="font" style="font-family: 'Montserrat', sans-serif;">Montserrat</div>
+			<div class="acs-btn" action="font" style="font-family: 'Pangolin', cursive;">Pangolin</div>
+			<div class="acs-btn" action="font" style="font-family: 'Raleway', sans-serif;">Raleway</div>
+		</div>
     </div>
     <div class="modal-footer">
         <a href="#!" class="modal-close waves-effect btn-flat">OK</a>

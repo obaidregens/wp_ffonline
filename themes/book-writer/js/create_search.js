@@ -89,8 +89,9 @@ function reset_settings(){
     for (var i = 0; i < tax.length; i++) {
         clear_checkboxes(tax[i]);
         jQuery('#' + tax[i] + '_show .chips_s').children().remove();
-        jQuery('#' + tax[i] + '_show .all_label').children().remove();
-        jQuery('#' + tax[i] + '_show .all_label').append('<div class="grey-text">All</div>');
+        
+        const all_label = jQuery('#' + tax[i] + '_show .all_label')[0];
+        all_label.innerHTML = '<div class="grey-text">All</div>';
     }
     jQuery('#sort').val('modified/DESC');
     jQuery('#search').val('');
@@ -99,13 +100,13 @@ function reset_settings(){
     slider.noUiSlider.set([0,3000000]);
 }
 function trigger_custom_modal(id){
-    var elem = document.getElementById(id);
-    var dsply = jQuery(elem).css('display');
-    if (dsply == 'none'){
-        jQuery(elem).css('display','block');
-        jQuery('#custom_overlay').css('display','block');
+    const elem = document.getElementById(id);
+    const dsply = elem.style.display;
+    if (dsply === 'none' || dsply === ''){
+        elem.style.display = 'block';
+        document.getElementById('custom_overlay').style.display = 'block'
     }
-    else if (dsply == 'block'){
+    else if (dsply === 'block'){
         close_custom_modal();
     }
 }
@@ -125,12 +126,16 @@ function close_custom_modal(){
     if (selected.included.length == 0 && selected.excluded.length == 0){
         jQuery('#' + group + '_show .all_label').append('<div class="grey-text">All</div>');
     }
+    let included_construct = '';
     for (let i = 0; i < selected.included.length; i++) {
-        jQuery('#' + group + '_show .included_chips').append('<div class="chip">' + selected.included[i] + '</div>');
+        included_construct += '<div class="chip">' + selected.included[i] + '</div>';
     }
+    jQuery('#' + group + '_show .included_chips')[0].innerHTML = included_construct;
+    let excluded_construct = '';
     for (let i = 0; i < selected.excluded.length; i++) {
-        jQuery('#' + group + '_show .excluded_chips').append('<div class="chip">' + selected.excluded[i] + '</div>');
+        excluded_construct += '<div class="chip">' + selected.excluded[i] + '</div>';
     }
+    jQuery('#' + group + '_show .included_chips')[0].innerHTML = excluded_construct;
     jQuery(this_elem).css('display','none');
     jQuery('#custom_overlay').css('display','none');
     
@@ -339,9 +344,8 @@ function set_tags_of(tag_name, sort = 'count'){
         </label>
         `;
     }
-    jQuery(`#${tag_name}-select .tags_list`).children().remove();
-    jQuery(`#${tag_name}-select .tags_list`).append(construct);
-
+    const this_elem = jQuery(`#${tag_name}-select .tags_list`)[0];
+    this_elem.innerHTML = construct;
     set_selected(tag_name,_selected);
 }
 function filters_from_url(){

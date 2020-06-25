@@ -3,7 +3,7 @@
 global $js_bundle;
 $js_bundle = global_bundle('chapter');
 $js_bundle->add('chapter');
-$js_bundle->enqueue();
+$js_bundle->enqueue('dev');
 
 ?>
 <div id="define" style="box-shadow:0 24px 38px 3px var(--text-color), 0 35px 46px 8px rgba(0,0,0,.32), 0 11px 15px -7px rgba(0,0,0,.2);display:none;margin:0;width: 100%;height: fit-content;position: fixed;bottom: 0;padding: 10px;left: 0;border-radius: 5px 5px 0px 0px;color: var(--text-color);background-color: var(--background-color);z-index: 1000;" class="row">
@@ -19,18 +19,23 @@ $js_bundle->enqueue();
 </div>
 <div id="primary" class="content-area">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Pangolin&family=Raleway&family=Roboto&display=swap');
 :root {
 	--acs-font-size: 16;
 	--acs-margin: 0;
 	--acs-line-height: 7;
 	--acs-p-height: 3;
+	--acs-shade: #fdfdfd;
+	--background-color: var(--acs-shade) !important;	
+	--acs-font: var(--font);
 }
 .acs-main{
-	margin: 0 calc(var(--acs-margin) * 10px) !important;
+	margin: 0 calc(var(--acs-margin) * 1%) !important;
 }
 .acs-content{
 	font-size: calc( var(--acs-font-size) * 1px ) !important;
 	line-height: calc( var(--acs-line-height) * 0.25) !important;
+	font-family: var(--acs-font);
 }
 .acs-content p{
 	margin: 0 !important;

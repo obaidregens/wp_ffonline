@@ -10,6 +10,8 @@ function acs(action){
 			acs_cookie += acs_vars[i] + '>' + parseInt(getComputedStyle(root).getPropertyValue('--acs-' + acs_vars[i])) + '/';
 		}
 		acs_cookie += 'auto_scroller>' + (jQuery('#autoscroll')[0].checked === true ? (parseInt( jQuery('#autoscroll-s').val() ) || 0) : 0) + '/';
+		acs_cookie += 'shade>' + getComputedStyle(root).getPropertyValue('--acs-shade') + '/';
+		acs_cookie += 'font>' + getComputedStyle(root).getPropertyValue('--acs-font') + '/';
 		setCookie("acs",acs_cookie, { expires:30, path: '/' });
 	}
 	else if (action === 'get'){
@@ -33,12 +35,6 @@ function css_var({which,adder,min,max}){
 	}
 	document.documentElement.style.setProperty(which,new_value);
 }
-const _acs = acs('get');
-const _acs_keys = Object.keys(_acs);
-for (let i = 0; i < _acs_keys.length; i++) {
-	const key_ = _acs_keys[i];
-	document.documentElement.style.setProperty('--acs-' + key_,_acs[key_]);
-}
 jQuery('.acs-btn').click(function(){
 	const options = {};
 	const action = this.getAttribute('action');
@@ -61,7 +57,19 @@ jQuery('.acs-btn').click(function(){
 	else if (action === 'margin'){
 		options.which = '--acs-margin';
 		options.min = 0;
-		options.max = 20;
+		options.max = 30;
+	}
+	else if (action === 'shade'){
+		const root = document.documentElement;
+		root.style.setProperty("--theme-color", "#007ACC");
+		root.style.setProperty("--text-color", "#262828");
+		root.style.setProperty("--background-color", "#fdfdfd");
+		root.style.setProperty("--background-accent", "#ececec");
+		root.style.setProperty('--acs-shade',getComputedStyle(this).backgroundColor);
+	}
+	else if (action === 'font'){
+		const root = document.documentElement;
+		root.style.setProperty('--acs-font',this.style.getPropertyValue('font-family'));
 	}
 	if (inc === '+'){
 		options.adder = 1;
@@ -72,7 +80,15 @@ jQuery('.acs-btn').click(function(){
 	css_var(options);
 	acs('set');
 });
-
+const _acs = acs('get');
+const _acs_keys = Object.keys(_acs);
+for (let i = 0; i < _acs_keys.length; i++) {
+	const key_ = _acs_keys[i];
+	document.documentElement.style.setProperty('--acs-' + key_,_acs[key_]);
+}
+if (_acs.shade === 'rgb(237, 209, 176)'){
+	jQuery('.acs-btn[action="shade"][color="peach"]').click();
+}
 /////Other Chapter Scripts
 //Materialize Intialization
 jQuery('.collapsible').collapsible();

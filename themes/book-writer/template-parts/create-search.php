@@ -107,4 +107,4 @@ global $js_bundle;
 $js_bundle = global_bundle('create_search');
 $js_bundle->add('create_search');
 $js_bundle->add('book-options');
-$js_bundle->enqueue();
+$js_bundle->enqueue('dev');

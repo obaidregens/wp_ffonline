@@ -117,7 +117,8 @@ function dark_mode(){
     const root = document.documentElement;
     root.style.setProperty("--theme-color", "#265f86");
     root.style.setProperty("--text-color", "#b7bfc4");
-    root.style.setProperty("--background-color", "#121212");
+	root.style.setProperty("--background-color", "#121212");
+    root.style.setProperty("--acs-shade", "#121212");
     root.style.setProperty("--background-accent", "#212020");
     setCookie("theme","dark_mode", { expires:30, path: '/' });
 }
@@ -126,7 +127,8 @@ function light_mode() {
     const root = document.documentElement;
     root.style.setProperty("--theme-color", "#007ACC");
     root.style.setProperty("--text-color", "#262828");
-    root.style.setProperty("--background-color", "#fdfdfd");
+	root.style.setProperty("--background-color", "#fdfdfd");
+    root.style.setProperty("--acs-shade", "#fdfdfd");
     root.style.setProperty("--background-accent", "#ececec");
     setCookie("theme","light_mode", { expires:30, path: '/' });
 }
