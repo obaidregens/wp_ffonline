@@ -2,14 +2,14 @@
 // Find Args from Url
 $query = new book_query;
 $query->args_from_url();
-
 $placeholder = _landing::get_type();
 $query->args = type_args($query->args,$placeholder);
 if (err::is($query->args)){
     _404();
 }
+$query->query();
 ?>
-<span id="tags_data" style="display:none;"><?= json_encode(tags_data($query->args)); ?></span>
+<span id="tags_data" style="display:none;"><?= json_encode(tags_data($query)); ?></span>
 <span id="prev_ss" style="display:none;"><?= ctrk_encrypt($query->args); ?></span>
 <style>
     #box{
@@ -80,7 +80,6 @@ if (err::is($query->args)){
     }
 </style>
 <?php
-$query->query();
 global $book_query;
 $book_query = $query;
 ?>

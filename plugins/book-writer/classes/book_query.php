@@ -3,16 +3,15 @@
 // (like making included/excluded parents instead of a suffix)
 // the standard, and only use WP_Query for books within the class.
 // After caching, of course.
-function timer($logtext){
-    global $lastlogtime;
-    $now = microtime(true);
-    $diff = $now - ($lastlogtime ?? $now);
-    file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
-    $lastlogtime = microtime(true);
-}
 class book_query{
     protected static $table = 'search_cache';
-    protected static $taxonomies = array('genre','fandom','language','status','character','pairing','rating','sort','tag');
+    protected static $taxonomies = array('genre','fandom','language','status','character','pairing','rating','tag');
+    protected static $words = [
+        0,500,1000,2000,
+        5000,10000,15000,20000,30000,40000,50000,75000,
+        100000,150000,200000,300000,500000,
+        1000000,2000000,3000000
+    ];
     protected static $default_args = array(
         'included'      => array(
 
@@ -139,7 +138,6 @@ class book_query{
         
         // Sort
         $included = array_intersect($included,$results_['sort=' . $args['orderby'] . '/' . $args['order'] ]);
-
         // Custom Ids
         if (isset($args['include_ids'])){
             $included = array_intersect($included,$args['include_ids']);
@@ -157,18 +155,19 @@ class book_query{
                 $args['per_page']
             );    
         }
-
         $this->args = $args;
         $this->ids = $included;
         $this->count = count($this->ids);
         $this->pages = $this->count % 10 > 0 ? intval($this->count / 10)+1 : intval($this->count / 10);
         $this->books = array();
         if (! empty($paged_ids)){
+            $fill = implode(',',array_fill(0,count($paged_ids),'%d'));
             $this->books = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT * FROM " . $wpdb->prefix . "posts
-                    WHERE ID IN(" . implode(',',array_fill(0,count($paged_ids),'%d')) . ")",
-                $paged_ids
+                    WHERE ID IN(" . $fill . ")
+                    ORDER BY FIELD(ID, " . $fill . ")",
+                array_merge($paged_ids,$paged_ids)
             ));    
         }
         $this->book_tags = $this->book_tags();
@@ -204,9 +203,23 @@ class book_query{
                     ){
                         continue;
                     }
+                    $words = self::$words;
+                    sort($words);
+                    foreach ($words as $key => $num) {
+                        $this_diff_0 = abs(intval($array[0]) - $num);
+                        $this_diff_1 = abs(intval($array[1]) - $num);
+                        $next_diff_0 = abs(intval($array[0]) - ($words[$key+1] ?? 0) );
+                        $next_diff_1 = abs(intval($array[1]) - ($words[$key+1] ?? 0) );
+                        if ($this_diff_0 <= $next_diff_0 && ! isset($word_0)){
+                            $word_0 = $num;
+                        }
+                        if ($this_diff_1 <= $next_diff_1 && ! isset($word_1)){
+                            $word_1 = $num;
+                        }
+                    }
                     $args['words'] = array(
-                        'from'  => intval($array[0]),
-                        'to'    => intval($array[1])
+                        'from'  => $word_0,
+                        'to'    => $word_1
                     );
                 }
                 else if ($arr[0] === 'sort'){
@@ -214,8 +227,8 @@ class book_query{
                     if (count($array) <= 1){
                         continue;
                     }
-                    $args['orderby'] = $array[0];
-                    $args['order'] = $array[1];
+                    $args['orderby'] = in_array($array[0],array('updated','words','favorites')) ? $array[0] : 'updated';
+                    $args['order'] = in_array($array[1],array('DESC','ASC')) ? $array[1] : 'DESC';
                 }
                 else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
                     $args['page'] = intval($arr[1]);
@@ -275,6 +288,7 @@ class book_query_cache extends book_query {
                 'orderby'           => 'modified',
                 'order'             => $order
             ))))->posts;
+            var_dump($sort_ids);
             self::put(array(
                 array(
                     '_key'      => 'sort',
@@ -336,12 +350,7 @@ class book_query_cache extends book_query {
     }
     function words(){
         //Words
-        $word_limits = [
-            0,500,1000,2000,
-            5000,10000,15000,20000,30000,40000,50000,75000,
-            100000,150000,200000,300000,500000,
-            1000000,2000000,3000000,
-        ];
+        $word_limits = self::$words;
         foreach ($word_limits as $from) {
             $term_key = 'words' . self::$midfix . $from;
             if (isset($this->existing[$term_key])){
@@ -369,6 +378,21 @@ class book_query_cache extends book_query {
             ));
         }
     }
+    function tag_names(){
+        $term_key = 'tag_names' . self::$midfix . 'all';
+        if (isset($this->existing[$term_key])){
+            return;
+        }
+        $terms =  (new WP_Term_Query(array(
+            'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+            'fields'        => 'id=>name'
+        )))->terms;
+        self::put(array(array(
+            '_key'      => 'tag_names',
+            '_value'    => 'all',
+            'ids'       => $terms
+        )));
+    }
     protected function put($key_value_ids){
         global $wpdb;
         $t = time();
@@ -380,5 +404,26 @@ class book_query_cache extends book_query {
                 $term
             );
         }
+    }
+}
+class tag_query extends book_query{
+    function __construct($book_ids){
+        global $wpdb;
+        $results = $wpdb->get_results(
+            "SELECT * FROM " . self::$table . "
+            WHERE `_key` IN ('" . implode('\', \'',self::$taxonomies) . "','tag_names')"
+        );
+        $index_of_names = array_search('tag_names',array_column($results,'_key'));
+        $tag_names = unserialize($results[$index_of_names]->ids);
+        unset($results[$index_of_names]);
+        $terms_with_count = [];
+        foreach ($results as $term) {
+            $term->_value = intval($term->_value);
+            $terms_with_count[$term->_key][$term->_value] = array(
+                'count'         => count(array_intersect($book_ids,unserialize($term->ids))),
+                'name'          => $tag_names[$term->_value]
+            );
+        }
+        $this->terms_with_count = $terms_with_count;
     }
 }

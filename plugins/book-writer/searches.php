@@ -279,34 +279,13 @@ function type_args($args,$placeholder){
 	return $args;
 }
 ////Tags Data
-function tags_data($args){
-	$t_ = array();
-	$ids = (new book_query($args))->ids;
+function tags_data($book_query){
+	$ids = $book_query->ids;
 	$terms = array();
 	if (! empty($ids)){
-		$terms = (new WP_Term_Query(array(
-			'object_ids'    => $ids,
-			'fields'        => 'all_with_object_id',
-			'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
-		)))->terms;	
+		$terms = (new tag_query($ids))->terms_with_count;
 	}
-	$term_ids = array_column($terms,'term_id');
-	$counts = array_count_values($term_ids);
-	$zero_terms = (new WP_Term_Query(array(
-		'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
-		'exclude'		=> array_unique($term_ids)
-	)))->terms;
-	$terms = array_merge($terms,$zero_terms);
-	foreach($terms as $term){
-		if ($term->taxonomy === 'category' && $term->parent === 0){
-			continue;
-		}
-		$t_[$term->taxonomy === 'category' ? 'fandom' : $term->taxonomy][$term->term_id] = array(
-			'name'	=> $term->name,
-			'count'	=> isset($counts[$term->term_id]) ? $counts[$term->term_id] : 0,
-		);
-	}
-	return $t_;
+	return $terms;
 }
 /////Saved Searches
 function save_search($name,$e_args){

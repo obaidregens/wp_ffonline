@@ -1,4 +1,11 @@
 <?php
+function timer($logtext){
+    global $lastlogtime;
+    $now = microtime(true);
+    $diff = $now - ($lastlogtime ?? $now);
+    file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+    $lastlogtime = microtime(true);
+}
 function author_href($_post_id){
 	$book = get_post($_post_id);
 	$_author = intval($book->post_author);

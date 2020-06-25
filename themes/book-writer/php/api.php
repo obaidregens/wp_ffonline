@@ -462,11 +462,11 @@ function api_search() {
         $placeholder = ctrk_decrypt($_POST['data']['placeholder'],true);
         $book_query->args = type_args($book_query->args,$placeholder);
     }
+    $book_query->query();
     $response = array(
         'prev'      => ctrk_encrypt($book_query->args),
-        'tags_data' => tags_data($book_query->args),
+        'tags_data' => tags_data($book_query),
     );
-    $book_query->query();
 	ob_start();
 	if ( $book_query->has() ){
         get_template_part('template-parts/modal','collection');
