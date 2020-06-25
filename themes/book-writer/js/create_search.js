@@ -135,7 +135,7 @@ function close_custom_modal(){
     for (let i = 0; i < selected.excluded.length; i++) {
         excluded_construct += '<div class="chip">' + selected.excluded[i] + '</div>';
     }
-    jQuery('#' + group + '_show .included_chips')[0].innerHTML = excluded_construct;
+    jQuery('#' + group + '_show .excluded_chips')[0].innerHTML = excluded_construct;
     jQuery(this_elem).css('display','none');
     jQuery('#custom_overlay').css('display','none');
     
