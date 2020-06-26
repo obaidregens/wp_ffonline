@@ -9,11 +9,10 @@ function search_settings(method){
         jQuery('#search-display').css('display','block');
     }
 }
-
 jQuery(".search-tags").keyup(function(event){
-    var search = this.value.toLowerCase();
+    const search = this.value.toLowerCase();
     var invalidKeys = [13,38,40,39,37,33,34,16,17,255,18,20,9];
-    if (invalidKeys.indexOf(event.keyCode) != -1 || search == ''){
+    if (invalidKeys.includes(event.keyCode) || search == ''){
         return;
     }
     var modal_id = jQuery(this).parents('.custom-modal')[0].id;

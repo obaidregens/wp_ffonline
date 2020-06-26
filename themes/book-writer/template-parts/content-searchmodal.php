@@ -52,7 +52,7 @@
 						</span>
 					</div>
 					<div class="row" style="margin: 0;display:flex;align-items: center;">
-						<input placeholder="Search" class="col s9 m10 l11" style="padding: 0 0px 0 9px;" class="search-tags"/>
+						<input placeholder="Search" class="col s9 m10 l11 search-tags" style="padding: 0 0px 0 9px;"/>
 						<div style="padding: 0;" class="sort-select-wrapper col s3 m2 l1 center-align">
 							<button type="button" data-target='sort-tags-drop-<?= $taxonomy; ?>' class="sort-tags-drop-button dropdown-trigger btn-small" style="padding: 0px 6px;font-size: 11px;overflow: hidden;">Sort</button>
 						</div>

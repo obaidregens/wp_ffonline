@@ -51,7 +51,7 @@ foreach($fandoms as $fandom){
 				$current_book['desc'] = explode('<div class=\'z-padtop2 xgray\'>',$desc_full->innertext)[0];
 				$tags_raw = explode(" - ",$desc_full->find('.z-padtop2.xgray')[0]->plaintext);
 				$tags = array();
-				if (in_array('Complete',array($tags_raw))){
+				if (in_array('Complete',$tags_raw)){
 					$tags['status'] = 'Complete';
 				}
 				else{
