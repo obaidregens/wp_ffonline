@@ -101,12 +101,15 @@ class chats {
             'users_included'    => array( $current_user_id ),
             'fields'            => 'ids',
         ));
-        $all_users = (new WP_Term_Query(array(
-            'object_ids'    => $all_chats,
-            'orderby'       => 'include',
-            'taxonomy'      => 'message_between',
-            'fields'        => 'all_with_object_id',
-        )))->terms;
+        $all_users = array();
+        if (! empty($all_chats)){
+            $all_users = (new WP_Term_Query(array(
+                'object_ids'    => $all_chats,
+                'orderby'       => 'include',
+                'taxonomy'      => 'message_between',
+                'fields'        => 'all_with_object_id',
+            )))->terms;
+        }
         array_multisort( array_column($all_users, "object_id"), SORT_DESC, $all_users );
         $all_users = array_unique(array_column($all_users,'name'));
 

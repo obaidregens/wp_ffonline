@@ -215,6 +215,7 @@ foreach($fandoms as $fandom){
 		}
 	}
 	foreach ($existing as $book){
+		update_post_meta($book['ID'],'link',$book['link']);
 		update_post_meta($book['ID'],'source_author_name',$book['author_name']);
 		update_post_meta($book['ID'],'source_author_link',$book['author_link']);
 		$start = count(get_posts( array(
@@ -238,4 +239,3 @@ foreach($fandoms as $fandom){
 		}
 	}
 }
-add_front_cache();

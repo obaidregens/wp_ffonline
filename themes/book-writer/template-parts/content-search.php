@@ -18,7 +18,7 @@ global $book;
 	<div class="home-desc">
 	<header>
 		<?php
-		echo '<h2 class="entry-title" style="font-weight:500;display: inline-block;margin-bottom:0em;"><a href="' . get_permalink() . '" rel="bookmark">';
+		echo '<h2 class="entry-title" style="font-weight:500;display: inline-block;margin-bottom:0em;"><a href="' . get_permalink($book->ID) . '" rel="bookmark">';
         if( isset($book_query->args['search']) && $book_query->args['search'] !== ''){
             $title = $book->post_title;
 			$title = preg_replace('/(' . $book_query->args['search'] . ')+/i','<mark>$1</mark>',$title);

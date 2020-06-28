@@ -7,3 +7,4 @@ $cache->tax();
 $cache->sort();
 $cache->author();
 $cache->tag_names();
+add_front_cache();
