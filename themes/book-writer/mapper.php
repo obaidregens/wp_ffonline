@@ -108,7 +108,7 @@ for ($i=1; $i <= $num_pages; $i++) {
     }
 }
 
-$num_pages = (intval(collection::query(array(
+$total_num = (collection::query(array(
     'select'    => 'count',
     'orderby'   => 'modified',
     'order'     => 'DESC',
@@ -117,7 +117,11 @@ $num_pages = (intval(collection::query(array(
     'count'     => array(
         'from'      => 1,
     )
-)))/100)+1;
+)));
+$num_pages = intval($total_num/100+1);
+if ($total_num % 100 === 0){
+    $num_pages = intval($total_num/100);
+}
 for ($i=1; $i <= $num_pages; $i++) {
     $file = $dir . '/sitemap-collection-' . $i . '.xml';
     if (! file_exists($file) || filemtime($file) < time() - 172800){
@@ -129,14 +133,14 @@ for ($i=1; $i <= $num_pages; $i++) {
             'order'     => 'DESC',
             'types'     => array('Public','Favorites'),
             'limit'     => 100,
-            'page'      => $i
+            'page'      => $i,
             'count'     => array(
                 'from'      => 1,
             )
         ));
         foreach($collections as $collection){
             $xml .= url_field(
-                rtrim(collection::link($collection), '/') . '/' ,
+                rtrim(collection::link($collection['ID']), '/') . '/' ,
                 f_stamp($collection['modified']),
                 'weekly'
             );

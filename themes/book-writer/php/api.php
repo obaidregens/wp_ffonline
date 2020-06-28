@@ -24,7 +24,7 @@ function api_add_to_collection(){
     foreach ($_POST['data']['book_ids'] as $key => $book_id) {
         $return = collection::set('book',$book_id,$_POST['data']['book_collections'][$book_id],null,get_current_user_id());
         if (err::is($return) ){
-            return_code($return);
+            return_code(7);
         }
     }
     return_code(1);

@@ -266,7 +266,7 @@ class collection {
         $existing_ids = (new book_query(array(
             'include_ids'      => $pairs['book'],
         )))->ids;
-        $diff_ids = array_unique(array_diff($pairs['book'],array_column($existing_ids,'ID')));
+        $diff_ids = array_unique(array_diff($pairs['book'],$existing_ids));
         if (! empty($diff_ids)){
             $error->add('book','Invalid book ids: (' . implode(',',$diff_ids) . ')');
         }
@@ -329,9 +329,8 @@ class collection {
             $args['types'] = array('Public','Unlisted','Private','Favorites');
         }
         $error = new err();
-        $select_what = (isset($args['select']) && $args['select'] === 'count') ? 'COUNT(*)' : '*';
         $base_sql =
-        "SELECT " . $select_what . ",(
+        "SELECT *,(
             SELECT COUNT(*)
             FROM collection_books
             WHERE collections.ID = collection_books.collection_id
@@ -456,9 +455,16 @@ class collection {
         if ($error->has()){
             return $error;
         }
+        $select_what = (isset($args['select']) && $args['select'] === 'count') ? 'count' : 'all';
+        if ($select_what === 'count'){
+            $base_sql = "SELECT COUNT(*) c FROM ( " . $base_sql . " ) AS _c";
+        }
         global $wpdb;
         $sql = $wpdb->prepare( $base_sql, $prepare );
         $results = $wpdb->get_results( $sql ,ARRAY_A );
+        if ($select_what === 'count'){
+            $results = intval($results[0]['c']);
+        }
         return $results;
     }
     public static function book_query($collection_ids,$wp_query_args_add = array()){
