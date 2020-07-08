@@ -1,10 +1,11 @@
 <?php
 
-global $js_bundle;
-$js_bundle = global_bundle('books');
-$js_bundle->add('book');
-$js_bundle->add('book-options');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('books');
+$bundle->mix('switch');
+$bundle->mix('search-options');
+$bundle->js('js/book');
+$bundle->enqueue();
 
 get_header();
 ?>
@@ -45,6 +46,7 @@ get_header();
                 <a class="btn-hover" href="<?php echo get_post_meta($post->ID,'link',true); ?>" rel="nofollow" target="_blank">Source</a>
                 <?php } ?>
                 <a class="btn-hover right book-collections" book_id="<?= $post->ID ?>"><i class="fas fa-plus"></i>Add to collection</a>
+                <a class="btn-hover right book-share" book_id="<?= $post->ID ?>"><i class="fas fa-share-square"></i>Share</a>
               </ul>
             </div>
           </div>
@@ -53,7 +55,7 @@ get_header();
               <div id="about" class="scrollspy">
                 <?php
             	echo '<h2 style="margin:0" class="page-title book-title"> <a href="' .get_permalink($post->ID). '">' . get_the_title($post->ID) . '</a></h2>';
-            	echo '<h4>by ' . author_href($post->ID) . '</h4>';
+            	echo '<h4 class="book-author" >by ' . author_href($post->ID) . '</h4>';
                 ?>
               </div>
               <div class="divider" style="margin:10px 0;"></div>
@@ -62,7 +64,7 @@ get_header();
               </div>
               <div class="divider" style="margin:10px 0;"></div>
               <div id="tags" class="scrollspy">
-                <?php get_template_part( 'template-parts/header', 'taxonomy' ); ?>
+                <?php get_template_part( 'template-parts/book', 'taxonomy' ); ?>
               </div>
               <div class="divider" style="margin:10px 0;"></div>
               <div id="index" class="scrollspy">
@@ -74,7 +76,12 @@ get_header();
               <div class="divider" style="margin:10px 0;"></div>
             </div>
           </div>
-          <?php get_template_part('template-parts/modal','collection'); ?>
+          <?php
+          ?>
+          <collections_data hidden><?= json_encode(collection::query(array(
+            'authors'  => array(get_current_user_id()),
+          ))); ?></collections_data>
+          <book_collections hidden><?= json_encode( collection::query_by_book( array($post->ID), 'ID' ) ); ?></book_collections>
 		<?php } else {
 			get_template_part( 'template-parts/content', 'bookempty' );
 		} ?>

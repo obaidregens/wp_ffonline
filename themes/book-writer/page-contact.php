@@ -5,10 +5,10 @@
  * Contact form
  *
  */
-global $js_bundle;
-$js_bundle = global_bundle('contact');
-$js_bundle->add('contact');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('contact');
+$bundle->js('js/contact');
+$bundle->enqueue();
 ?>
 <?php get_header(); ?>
 <div id="primary" class="content-area">

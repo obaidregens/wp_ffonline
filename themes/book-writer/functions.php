@@ -12,8 +12,4 @@ function my_theme_enqueue_styles() {
     	wp_register_script('jquery', false);
 	}
 
-	//General Includes
-	wp_enqueue_style( 'materialize_css', get_stylesheet_directory_uri() . '/materialize/css/materialize-input.min.css');	
-
-	wp_enqueue_style( 'main',get_stylesheet_directory_uri() . '/style.css');
 }

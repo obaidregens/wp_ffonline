@@ -1,0 +1,149 @@
+filter-books {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}
+filter-books > button{
+    margin-left: auto;
+}
+next-screen > div {
+    max-width: 750px;
+    margin: auto;
+}
+@media only screen and (min-width: 800px) {
+    next-screen > div {
+        padding: 20px;
+        box-shadow: var(--shadow-light);
+    }
+}
+select-tag {
+    position: relative;
+    display: block;
+    margin: 25px 0;
+    border-bottom: 1px solid #9e9e9e;
+    padding: 12px 9px 6px;
+}
+select-tag::before {
+    content: attr(label);
+    position: absolute;
+    font-size: 0.65rem;
+    color: #9e9e9e;
+    top: -11px;
+    left: 4px;
+}
+select-tag:empty::after {
+    content: 'All';
+    color: #9e9e9e;
+    font-size: 0.9rem;
+}
+select-tag > tag {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: rgba(0,0,0,.6);
+    line-height: 27px;
+    padding: 0 11px;
+    border-radius: 16px;
+    background-color: #f0f8ff;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+select-tag > tag[excluded] {
+    background-color: #fcd7d7;
+}
+words-slider::before {
+    content: 'Words';
+    position: absolute;
+    font-size: 0.7rem;
+    color: #9e9e9e;
+    top: -36px;
+    left: -11px;
+}
+words-slider {
+    position: relative;
+    display: block;
+    margin: 50px 15px 70px;
+}
+words-slider  div {
+    overflow: initial;
+}
+next-screen > div > button {
+    margin-top: 10px;
+}
+next-screen > div > button[label="Search"] {
+    float: right;
+}
+next-screen > div > button[label="Close"] {
+    float: right;
+}
+/* Popup */
+popup[tag-name] {
+    padding: 0;
+}
+popup > wrap {
+    padding: 20px;
+    position: sticky;
+    left: 0;
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    z-index: 1;
+    background-color: var(--background-accent);
+}
+popup > wrap:first-child {
+    top: 0;
+}
+popup > wrap:last-child {
+    bottom: 0;
+}
+popup > tag_list {
+    padding: 0 10px;
+}
+popup > wrap > button.include::before {
+    content: 'Include';
+}
+popup > wrap > button.exclude::before {
+    content: 'Exclude';
+}
+popup > wrap > button.exclude.active, popup > wrap > button.exclude:hover {
+    background-color: #f44336;
+}
+
+popup > wrap >  button {
+    font-size: 10px;
+    width: min-content;
+    display: block;
+    margin: 0 5px;
+    margin-bottom: 10px;
+}
+popup > wrap:first-child > button {
+    padding: 0 9px;
+}
+
+popup > wrap > text-input {
+    width: 100%;
+    margin: 5px;
+}
+popup > wrap > button[label="OK"], popup > wrap > button[label="Sort"] {
+    margin-left: auto;
+}
+popup > tag_list:empty::before {
+    content: 'No Tags';
+    font-size: 0.85rem;
+    color: #9e9e9e;
+    display: block;
+    margin: 0 18px;
+}
+popup > tag_list > label.checkbox {
+    display: block;
+    padding: 11px 10px 9px 10px;
+    padding-top: 12px;
+    margin: 0;
+}
+popup > tag_list > label.checkbox:hover {
+    background-color: var(--hover);
+}
+popup > tag_list {
+    display: block;
+}

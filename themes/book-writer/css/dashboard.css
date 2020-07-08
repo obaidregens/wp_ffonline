@@ -1,3 +1,6 @@
+#page-main {
+    margin-top: 40px;
+}
 :root
 {
 	--sidebar-size: 210px;
@@ -114,6 +117,9 @@
 }
 #dashboard-sidenav{
     width: var(--sidebar-size);
+}
+.sidenav li > a {
+    width: 100%;
 }
 #wpadminbar{
 	display:none !important;

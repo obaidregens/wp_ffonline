@@ -22,11 +22,11 @@ if (is_sticky()){
 	<?php if (get_current_user_id() == $post->post_author) { ?>
 	<a class='dropdown-trigger right waves-effect waves-light btn-hover btn-floating' data-target='update-options-<?php the_ID(); ?>'><i class="fas fa-angle-down"></i></a>
 	<?php } ?>
-	<header class="entry-header">
+	<header-c class="entry-header">
 		<?php
 		echo $pinned;
 		?>
-	</header><!-- .entry-header -->
+	</header-c><!-- .entry-header -->
 	<div>
 	<?php
 		echo '<div><span style="display:block;height:15px;"><a style="color:var(--text-color) !important;font-weight:bold;" href="' .get_author_posts_url(get_post_field( 'post_author', $post->post_parent )) . '">' .get_the_author_meta('display_name',get_post_field( 'post_author', $post->post_parent )) . '</a></span>';

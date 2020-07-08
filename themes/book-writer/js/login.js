@@ -1,3 +1,4 @@
+
 jQuery("form[name='login']").submit(function(event) {
 	event.preventDefault();
 	var login = jQuery('#login_username').val();

@@ -5,10 +5,10 @@
  ?>
 <?php
 //page_header
-global $js_bundle;
-$js_bundle = global_bundle('create-cat');
-$js_bundle->add('create-cat');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('create-cat');
+$bundle->js('js/create-cat');
+$bundle->enqueue();
 
 get_header(); ?>
 

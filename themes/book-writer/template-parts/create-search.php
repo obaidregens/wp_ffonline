@@ -8,103 +8,72 @@ if (err::is($query->args)){
     _404();
 }
 $query->query();
-?>
-<span id="tags_data" style="display:none;"><?= json_encode(tags_data($query)); ?></span>
-<span id="prev_ss" style="display:none;"><?= ctrk_encrypt($query->args); ?></span>
-<style>
-    #box{
-        position: relative;
-    }
-    [type=checkbox].cross:checked+span:not(.lever):before{
-        top: -3px;
-        font-size: 22px;
-        left: 2px;
-        color: red;
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        content: "\f00d";
-        border: none !important;
-        transform: rotate(0deg) !important;
-    }
-    .btn-include,.btn-exclude{
-        background-color:transparent;
-        color: var(--text-color);
-    }
-    .btn-include.active,.btn-include:hover,.btn-include:focus{
-        background-color:var(--theme-color);
-        color:white;
-    }
-    .btn-exclude.active,.btn-exclude:hover,.btn-exclude:focus{
-        background-color:#f44336;
-        color:white;
-    }
-    .btn-clear:hover{
-        color:var(--background-color);
-        background-color:var(--text-color);
-    }
-    .btn-clear:focus{
-        background-color:transparent;
-        color:var(--text-color);
-    }
-    .included_chips .chip{
-        background-color:#f0f8ff;
-    }
-    .excluded_chips .chip{
-        background-color:#fcd7d7;
-    }
-    .all_label div {
-        font-weight: 400;
-        padding-bottom: 10px;
-        padding-left: 8px;
-        border-bottom: 1px solid #9e9e9e;
-        font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",font-family;
-    }
-    [type=checkbox]+span:not(.lever):before{
-        transition:none!important;
-    }
-	.noUi-tooltip span {
-		width: fit-content;
-		text-align: center;
-		color: var(--text-color);
-		font-size: 12px;
-		opacity: 0;
-		position: absolute;
-		top: 40px;
-		left: -50px;
-		transition: opacity .25s cubic-bezier(.215,.61,.355,1);
-    }
-    .filters-button-wrapper{
-        text-align:right;
-        margin-bottom: 50px;
-        margin-top:20px;
-    }
-</style>
-<?php
+
 global $book_query;
 $book_query = $query;
+
+$collections = collection::query(array(
+    'authors'  => array(get_current_user_id()),
+));
+
 ?>
-<div class="filters-button-wrapper mobile-margin"><button class="waves-effect waves-light btn-small" onclick="search_settings('open')">Filters</button></div>
-<div class="row" id="search-display"><div id="box" class="col s12">
-	<?php
-	if ( $book_query->has() ){
-        get_template_part('template-parts/modal','collection');
-        global $book;
-        foreach ($book_query->books as $book) {
-            get_template_part( 'template-parts/content' , 'search' );
-        }
-	}
-	else {
-		get_template_part( 'template-parts/content', 'noresult' );
-    }
-	?>
-</div></div>
-<div id="pagination-wrapper">
-<?php get_template_part( 'template-parts/content', 'bookpaginate' ); ?>
-</div>
+<collections_data hidden><?= json_encode($collections); ?></collections_data>
+<tags_data hidden><?= json_encode(tags_data($query)); ?></tags_data>
+<prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
+
+<filter-books>
+    <button class="next-screen">
+        Filters
+    </button>
+    <next-screen>
+        <div>
+            <text-input label="Search"></text-input>
+            <select>
+                <option value="updated/DESC">Last Updated</option>
+                <option value="date/DESC">Book Published</option>
+                <option value="favorites/DESC">Favorites</option>
+                <option value="words/DESC">Words</option>
+            </select>
+            <label label="Sort"></label>
+            <select-tag label="Fandom" name="fandom"></select-tag>
+            <select-tag label="Rating" name="rating"></select-tag>
+            <select-tag label="Language" name="language"></select-tag>
+            <select-tag label="Status" name="Status"></select-tag>
+            <select-tag label="Genre" name="genre"></select-tag>
+            <select-tag label="Characters" name="character"></select-tag>
+            <select-tag label="Pairings" name="pairing"></select-tag>
+            <select-tag label="Tags" name="tag"></select-tag>
+            <words-slider></words-slider>
+            <button label="Reset"></button>
+            <button label="Search" theme></button>
+            <button class="close_next-screen" label="Close"></button>
+        </div>
+    </next-screen>
+</filter-books>
+
+<loader xl></loader>
+
+<books-container>
+<book_collections hidden><?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?></book_collections>
 <?php
-get_template_part( 'template-parts/content', 'searchmodal' );
-global $js_bundle;
-$js_bundle = global_bundle('create_search');
-$js_bundle->add('create_search');
-$js_bundle->add('book-options');
-$js_bundle->enqueue();
+if ( $book_query->has() ){
+    global $book;
+    foreach ($book_query->books as $book) {
+        get_template_part( 'template-parts/content' , 'search' );
+    }
+}
+else {
+    get_template_part( 'template-parts/content', 'noresult' );
+}
+?>
+</books-container>
+<pagination>
+<?php get_template_part( 'template-parts/content', 'bookpaginate' ); ?>
+</pagination>
+<?php
+global $bundle;
+$bundle = new bundle('create_search_custom');
+$bundle->mix('jquery');
+$bundle->mix('global_new');
+$bundle->mix('create_search_new');
+$bundle->enqueue();

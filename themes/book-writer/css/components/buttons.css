@@ -1,0 +1,62 @@
+/* Buttons */
+button,
+.button {
+    position: relative;
+    display: inline-block;
+    min-width: min-content;
+    font-size: 12px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+    padding: 0px 14px;
+    height: 30px;
+    margin: 0 10px;
+}
+button:hover:not([disabled]),
+button.active:not([disabled]),
+.button:hover:not([disabled]),
+.button.active:not([disabled]) {
+    border: 1px solid transparent;
+    background-color: var(--theme-color);
+    color: white;
+}
+button:focus,
+.button:focus {
+    outline: none;
+}
+button[theme],
+.button[theme] {
+    border: none;
+    background-color: var(--theme-color);
+    color: white;
+}
+button[theme]:hover:not([disabled]),
+.button[theme]:hover:not([disabled]) {
+    box-shadow: var(--shadow-light);
+}
+button[label]::before,
+.button[label]::before {
+    content: attr(label);
+}
+/* Polyfills for anchor tags */
+a.button {
+    display: inline-flex;
+    align-items: center;
+}
+/* Disabled Button */
+button[disabled],.button[disabled] {
+    pointer-events: none;
+    color: #2f2f2f;
+    background-color: #9c9c9c;
+    cursor: default;
+    border: 1px solid #9c9c9c;
+}

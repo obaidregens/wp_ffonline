@@ -44,8 +44,8 @@ if (is_author()){
 	</main>
 </div>
 <?php
-$js_b = new js_bundle('collection-single');
-$js_b->add('collection-single');
+$js_b = new bundle('collection-single');
+$js_b->js('js/collection-single');
 $js_b->enqueue();
 get_footer();
 exit();

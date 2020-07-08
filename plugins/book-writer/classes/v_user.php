@@ -35,7 +35,7 @@ class v_user extends user {
         $error = new err();
         $fields = array('password','username','email');
         foreach ($fields as $field ) {
-            if ( isset($args[$field]) ){
+            if ( isset($args[$field]) && $args[$field] !== '' ){
                 $error->merge( $this->{$field}($args[$field]) );
             }
             else if ( in_array($field,$required) ){
@@ -44,6 +44,7 @@ class v_user extends user {
         }
         if ($error->has()){
             $this->return = $error;
+            return;
         }
         $this->return = true;
     }
@@ -60,6 +61,9 @@ class v_user extends user {
     }
     function username($value){
         $error = new err();
+        if ( strlen ($value) < 5 ) {
+            $error->add('username','Username must be of at least 5 characters.');
+        }
         if (strlen (preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$value) ) > 0){
             $error->add('username','Must only contain dots(.), underscores(_), english alphabets, or numbers.');
         }

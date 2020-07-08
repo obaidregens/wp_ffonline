@@ -223,8 +223,8 @@ class collection {
             $collections = collection::query(array(
                 'book_ids'	=> array($book_id),
             ));
-            if ($columns == 'all'){
-                $book_collections[$book_id] = $collection;
+            if ($columns === 'all'){
+                $book_collections[$book_id] = $collections;
             }
             else{
                 $book_collections[$book_id] = array_column($collections,$columns);

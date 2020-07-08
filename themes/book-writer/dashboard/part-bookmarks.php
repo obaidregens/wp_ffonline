@@ -36,7 +36,7 @@ if (empty($bookmarks)){
 				}
 				else if (response == 3){
 				    jQuery('#li-' + chapter + '_' + para + ' .btn-bookmark').removeClass('active');
-				    jQuery('#login-modal').modal('open');
+				    prompt_login();
 				}
 			}
 		});			

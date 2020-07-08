@@ -1,0 +1,33 @@
+next-screen {
+    padding: 20px;
+    transition: left 0.2s;
+    z-index: 53;
+    background-color: var(--background-color);
+    position: fixed;
+    top: 0;
+    left: 100%;
+    width: 100%;
+    overflow-y: auto;
+    height: 100%;
+    will-change: left;
+}
+next-screen.show {
+    left: 0;
+}
+next-screen > cross-button {
+    cursor: pointer;
+    color: #ff3c3c;
+    font-size: 20px;
+    padding: 0px 15px;
+    border-radius: 0 0 0 10px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+}
+next-screen > cross-button:before {
+    content: '\00D7';
+}
+next-screen > cross-button:hover {
+    background-color: var(--hover);
+}

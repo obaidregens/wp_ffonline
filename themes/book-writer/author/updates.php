@@ -5,10 +5,10 @@
  * Search page
  *
  */
-global $js_bundle;
-$js_bundle = global_bundle('author_updates');
-$js_bundle->add('updates');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('author_updates');
+$bundle->js('js/updates');
+$bundle->enqueue();
 get_header();
 $author_obj = get_user_by('ID',$author);
 ?>

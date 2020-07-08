@@ -14,10 +14,10 @@ if (! isset($_GET['sort']) || ! in_array(strtoupper($_GET['sort']),array('ASC','
 if (! isset($_GET['sortby']) || ! in_array($_GET['sortby'],array('created','count'))){
     $_GET['sortby'] = 'created';
 }
-global $js_bundle;
-$js_bundle = global_bundle('collection-index');
-$js_bundle->add('collection-index');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('collection-index');
+$bundle->js('js/collection-index');
+$bundle->enqueue();
 ?>
 <?php
 if (is_author()){

@@ -1,0 +1,53 @@
+<svg width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 904 352">
+	<style>
+		svg.custom-logo{
+			user-select: none;
+		}
+		svg.custom-logo text{
+		    font-family:'Varela Round' !important;
+		    font-weight:bold;
+		}
+	</style>
+
+	<defs>
+		<clipPath id="a"><rect x="603" y="176" width="80" height="147.56" fill="none"/></clipPath>
+		<clipPath id="c"><rect x="654" y="201" width="5.24" height="9.67" fill="none"/></clipPath>
+	</defs>
+	<title>Fanfiction Online</title>
+	<text transform="translate(10 130.91) scale(0.96 1)" font-size="149.61" fill="var(--text-color)">
+		<tspan x="0" y="0">FANFICTION</tspan>
+		<tspan x="0" y="179.53">ONLINE</tspan>
+	</text>
+	<g clip-path="url(#a)">
+		<g clip-path="url(#a)">
+			<rect x="608.71" y="180.08" width="69.66" height="140.48" rx="6.18" fill="none" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="3"/>
+			<path d="M660.47,184.79H626.6c-1.33,0-2.42-.74-2.42-1.65v-.66a2,2,0,0,0-.56-1.34l-.24-.2H663.7l-.25.2a2,2,0,0,0-.56,1.34v.66c0,.91-1.09,1.65-2.42,1.65" fill="var(--text-color)"/>
+		</g>
+	</g>
+	<text transform="translate(615.14 198.05) scale(0.96 1)" font-size="9.8" fill="var(--text-color)">
+		<tspan x="0" y="0">FANFICTION</tspan>
+		<tspan x="0" y="11.76">ONLINE</tspan>
+	</text>
+	<g clip-path="url(#c)">
+		<g clip-path="url(#c)">
+			<rect x="654.37" y="201.27" width="4.56" height="9.2" rx="0.4" fill="none" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.2"/>
+			<path d="M657.77,201.58h-2.22c-.09,0-.16-.05-.16-.11v-.05a.15.15,0,0,0,0-.08v0H658l0,0a.15.15,0,0,0,0,.08v.05c0,.06-.07.11-.15.11" fill="var(--text-color)"/>
+		</g>
+	</g>
+	<line x1="617" y1="226" x2="669" y2="226" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="220" x2="669" y2="220" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="232" x2="669" y2="232" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="244" x2="669" y2="244" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="238" x2="669" y2="238" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="250" x2="669" y2="250" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="262" x2="669" y2="262" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="256" x2="669" y2="256" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="268" x2="669" y2="268" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="280" x2="669" y2="280" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="274" x2="669" y2="274" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="286" x2="669" y2="286" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="292" x2="669" y2="292" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="298" x2="669" y2="298" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="304" x2="669" y2="304" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+	<line x1="617" y1="310" x2="669" y2="310" fill="var(--text-color)" stroke="var(--text-color)" stroke-miterlimit="10" stroke-width="0.5"/>
+</svg>

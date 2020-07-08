@@ -130,9 +130,6 @@ function progress(state = true){
     }
     jQuery('.progress').css('display','none');
 }
-function prompt_login(){
-    jQuery('#login-modal').modal('open');
-}
 function timestamp_to_local(timestamp){
     const time = new Date(timestamp * 1000);
     return time_obj_local(time);

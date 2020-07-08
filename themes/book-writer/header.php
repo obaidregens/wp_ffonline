@@ -29,33 +29,25 @@ else{
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<!--Let browser know website is optimized for mobile-->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 	<?php wp_head(); ?>
 </head>
 <body>
 	<span style="display:none;" id="nonce"><?= $nonce; ?></span>
 	<span style="display:none;" id="placeholder_data"><?= $landing_key; ?></span>
-	<ul style="user-select: none;-moz-user-select: none;-khtml-user-select: none;-webkit-user-select: none;-o-user-select: none;width:55%;" id="notification-sidenav" class="sidenav">
-	</ul>
+	<placeholder_data hidden><?= $landing_key; ?></placeholder_data>
+	<logged_in hidden value="<?= is_user_logged_in() ? 'true' : 'false'; ?>"></logged_in>
 <div id="page" class="site">
 	<div class="site-inner">
-		<header id="masthead" class="site-header" role="banner">
-			<div class="site-header-main">
-				<nav class="nav-wrapper" style="width:100%">
-					<div class="nav-logo">						
-						<a href="/" ><?php include(explode('wp-content',__FILE__)[0] . 'wp-content/uploads/logo.svg'); ?></a>
-					</div>
-					<div class="nav-content">
-						<li><a target="_self" href="/">Read</a></li>
-						<li><a target="_self" href="/collections">Collections</a></li>
-						<li><a target="_self" href="/dashboard">Dashboard</a></li>
-					    <?php if (is_user_logged_in()) { ?>
-						<li style="position:relative;">
-							<a data-target="notification-sidenav" class="sidenav-trigger btn-hover btn-floating"><i class="fas fa-bell"></i></a>
-							<span class="pulse notification-badge"></span></li>
-	                    <?php } ?>
-					</div>
-				</nav>				
-			</div><!-- .site-header-main -->
-		</header><!-- .site-header -->
+		<header>
+			<a class="logo" href="/">
+				<?php include(explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/images/logo.svg'); ?>
+    		</a>
+			<nav>
+				<a href="/">Read</a>
+				<a href="/collections">Collections</a>
+				<a href="/dashboard">Dashboard</a>
+			</nav>
+		</header>
 		
 		<div id="content" class="site-content">

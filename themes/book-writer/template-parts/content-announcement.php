@@ -9,7 +9,7 @@
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="entry-header">
+	<header-c class="entry-header">
 		<?php
 		$pinned = '';
 		if (is_sticky()){
@@ -17,7 +17,7 @@
 		}
 		
 		the_title( '<h1 class="entry-title">', '  ' . $pinned . '</h1>'); ?>
-	</header><!-- .entry-header -->
+	</header-c><!-- .entry-header -->
 
 
 

@@ -17,7 +17,7 @@ jQuery("form[id='update_form']").submit(function(event) {
 				window.location.reload();
 			}
 			else if (response == 3){
-				jQuery('#login-modal').modal('open');
+				prompt_login();
 			}
 			else if (response == 6){
 				M.toast({html: 'An error occured.'});
@@ -62,7 +62,7 @@ jQuery('.delete-update,.stick-update').click(function(event){
 				window.location.reload();
 			}
 			else if (response == 3){
-				jQuery('#login-modal').modal('open');
+				prompt_login();
 			}
 			else if (response == 6){
 				M.toast({html: 'An error occured.'});

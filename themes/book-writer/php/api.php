@@ -195,63 +195,42 @@ function api_load_page(){
     }
 }
 function api_post_comment(){
-
+    function return_code($code){
+        $_return = array(
+            'code'			=>	$code,
+        );
+        echo json_encode($_return);
+        exit();
+    }
+    global $post;
     $post = get_post($_POST['data']['chapter_id']);
     if (! $post){
-        echo '2';
-        exit();
-    }
-    global $withcomments;
-    $withcomments = 1;
-    if (! comments_open($post->ID)){
-        echo '2';
-        exit();
-    }
-    if (! is_user_logged_in() && get_post_meta($post->post_parent,'anon_review',true) != 'true'){
-        echo '3';
-        exit();
+        return_code(7);
     }
     if ($_POST['data']['action'] == 'insert'){
-        $comment_id = wp_insert_comment(array(
-            'user_id'           => get_current_user_id(),
-            'comment_post_ID'   => $post->ID,
-            'comment_content'   => htmlspecialchars($_POST['data']['comment']),
-            'comment_author_IP' => $_SERVER['REMOTE_ADDR']
-        ));  
-		add_notification('comment',$comment_id);
+        reviews::new(array(
+            'chapter_id'    => $_POST['data']['chapter_id'],
+            'review'        => $_POST['data']['comment']
+        ));
     }
     else if ($_POST['data']['action'] == 'delete'){
-        $comment = get_comment($_POST['data']['id']);
-        if (! $comment){
-            echo '2';
-            exit();
-        }
-        if (get_current_user_id() != $comment->user_id){
-            echo '2';
-            exit();
-        }
-        wp_delete_comment($comment->comment_ID);
+        reviews::delete($_POST['data']['id']);
     }
     else if ($_POST['data']['action'] == 'reply'){
-        $comment = get_comment($_POST['data']['id']);
-        if (! $comment){
-            echo '2';
-            exit();
-        }
-        if ($post->post_author != get_current_user_id()){
-			echo '4';
-			exit();
-		}
-		$comment_id = wp_insert_comment(array(
-            'user_id'           => get_current_user_id(),
-            'comment_post_ID'   => $post->ID,
-			'comment_parent'	=> $comment->comment_ID,
-            'comment_content'   => htmlspecialchars($_POST['data']['comment']),
-            'comment_author_IP' => $_SERVER['REMOTE_ADDR']
+        reviews::new(array(
+            'chapter_id'    => $_POST['data']['chapter_id'],
+            'reply_to'      => $_POST['data']['id'],
+            'review'        => $_POST['data']['comment']
         ));
-        add_notification('comment',$comment_id);
     }
+    ob_start();
     get_template_part('comments');
+    $new_comments = ob_get_contents();
+    ob_end_clean();
+    echo json_encode(array(
+        'code'      => 1,
+        'comments'  => $new_comments
+    ));
 }
 function api_post_survey(){
     if (
@@ -467,9 +446,13 @@ function api_search() {
         'prev'      => ctrk_encrypt($book_query->args),
         'tags_data' => tags_data($book_query),
     );
-	ob_start();
+    ob_start();
+    ?>
+    <book_collections hidden>
+        <?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?>
+    </book_collections>
+    <?php
 	if ( $book_query->has() ){
-        get_template_part('template-parts/modal','collection');
         global $book;
         foreach ($book_query->books as $book) {
             get_template_part( 'template-parts/content' , 'search' );
@@ -574,34 +557,42 @@ function api_validate_email(){
     }
 }
 function api_validate_login(){
-	$result = wp_authenticate($_POST['data']['login'],$_POST['data']['password']);
+    function return_code($code){
+        echo json_encode(array(
+            'code'  => $code
+        ));
+        exit();
+    }
+    $username = $_POST['data']['username'];
+    $pass = $_POST['data']['password'];
+	$result = wp_authenticate($username,$pass);
     if (is_wp_error($result)){
-        echo '1';
+        return_code(7);
     }
     else{
-		$creds = array();
-		$creds['user_login'] = $_POST['data']['login'];
-		$creds['user_password'] = $_POST['data']['password'];
-		$creds['remember'] = true;
-		$user = wp_signon( $creds, true);
-		update_user_meta($user->ID,'user_ip',$_SERVER['REMOTE_ADDR']);
-		echo $user->display_name;
+		$user = wp_signon( array(
+            'user_login'    => $username,
+            'user_password' => $pass,
+            'remember'      => true
+        ), true);
+        update_user_meta($user->ID,'user_ip',$_SERVER['REMOTE_ADDR']);
+        return_code(1);
     }
 
 }
 function api_validate_forgot(){
-	function retrieve_password() {
+	function retrieve_password($user_login) {
 		$errors = new WP_Error();
 
-		if ( empty( $_POST['data']['user_login'] ) || ! is_string( $_POST['data']['user_login'] ) ) {
+		if ( empty( $user_login ) || ! is_string( $user_login ) ) {
 			$errors->add( 'empty_username', __( '<strong>ERROR</strong>: Enter a username or email address.' ) );
-		} elseif ( strpos( $_POST['data']['user_login'], '@' ) ) {
-			$user_data = get_user_by( 'email', trim( wp_unslash( $_POST['data']['user_login'] ) ) );
+		} elseif ( strpos( $user_login, '@' ) ) {
+			$user_data = get_user_by( 'email', trim( wp_unslash( $user_login ) ) );
 			if ( empty( $user_data ) ) {
 				$errors->add( 'invalid_email', __( '<strong>ERROR</strong>: There is no account with that username or email address.' ) );
 			}
 		} else {
-			$login     = trim( $_POST['data']['user_login'] );
+			$login     = trim( $user_login );
 			$user_data = get_user_by( 'login', $login );
 		}
 
@@ -696,14 +687,19 @@ function api_validate_forgot(){
 		}
 
 		return true;
-	}
-    if (username_exists($_POST['data']['user_login']) || email_exists($_POST['data']['user_login'])){
-        echo '1';
-		retrieve_password();
     }
-    else{
-        echo '0';
+    function return_code($code) {
+        echo json_encode(array(
+            'code'  => $code
+        ));
+        exit();
     }
+    $username = $_POST['data']['username'];
+    if (username_exists($username) || email_exists($username)){
+        retrieve_password($username);
+        return_code(1);
+    }
+    return_code(1);
 }
 function api_validate_username(){
     function return_code($code){
@@ -727,20 +723,27 @@ function api_validate_username(){
     }
 }
 function api_validate_signup(){
-    if (! username_possible($_POST['data']['login']) && email_exists($_POST['data']['email'])){
-        echo '12';
+    function return_code($code,$merge = array()){
+        echo json_encode(array_merge(array(
+            'code'  => $code
+        ),$merge));
+        exit();
     }
-    else if (! username_possible($_POST['data']['login'])){
-        echo '1';
+    $return = (new v_user($_POST['data'],array(
+        'username',
+        'email'
+    )))->return;
+    if (err::is($return)){
+        return_code(7,array(
+            'errors'     => array_column($return->errors,'error','name')
+        ));
     }
-    else if (email_exists($_POST['data']['email'])){
-        echo '2';
-    }
-    else{
-        $user_id = register_new_user($_POST['data']['login'],$_POST['data']['email']);
-        collection::create_default($user_id);
-        echo '0';
-    }
+    $user_id = register_new_user(
+        $_POST['data']['username'],
+        $_POST['data']['email']
+    );
+    collection::create_default($user_id);
+    return_code(1);
 }
 function api_autosave_content(){
     
@@ -1344,9 +1347,9 @@ function api_poll(){
         $instance->log_impression('collection',$collection_id);
     }
     $instance->log_view($types->type,$types->type_id);
-    if ($_POST['data']['notification_open'] === 'true'){
-        $instance->log_notifications($types->type,$types->type_id);
-    }
+    // if ($_POST['data']['notification_open'] === 'true'){
+    //     $instance->log_notifications($types->type,$types->type_id);
+    // }
     return_code(1);
 }
 

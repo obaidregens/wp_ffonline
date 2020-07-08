@@ -220,6 +220,7 @@ $includes = array(
 	'classes/notifications',
 	'classes/error',
 	'classes/chats',
+	'classes/reviews',
 	'classes/book_query',
 	'classes/v_user'
 );

@@ -1,11 +1,12 @@
 <?php
 global $wp;
 
-global $js_bundle;
-$js_bundle = global_bundle('author');
-$js_bundle->add('updates');
-$js_bundle->add('book-options');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('author');
+$bundle->js('js/updates');
+$bundle->js('js/views/search-options');
+$bundle->js('js/views/search-content');
+$bundle->enqueue();
 get_header();
 $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 ?>
@@ -73,7 +74,11 @@ $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 				if ( $book_query->has() || get_current_user_id() == $author) {
 					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
 					$books_card = true;
-					get_template_part('template-parts/modal','collection');
+					?>
+					<book_collections hidden>
+						<?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?>
+					</book_collections>
+					<?php
 					global $book;
 					foreach ($book_query->books as $book) {
 						get_template_part( 'template-parts/content' , 'search' );

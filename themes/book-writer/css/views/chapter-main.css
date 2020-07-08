@@ -1,0 +1,224 @@
+chapter {
+	display: block;
+	margin-bottom: 60px;
+}
+chapter > chapter-header {
+	user-select: none;
+	cursor: pointer;
+	display: flex;
+	margin-bottom: 40px;
+	padding: 10px;
+	transition: background-color 0.2s;
+	will-change: background-color;
+}
+chapter > chapter-header:hover {
+	background-color: var(--hover);
+}
+chapter > chapter-header:focus {
+	outline: none;
+}
+chapter > chapter-header.dropdown > dropdown {
+	counter-reset: chapter-num;
+	width: 100%;
+}
+chapter > chapter-header.dropdown > dropdown > *::before{
+	counter-increment: chapter-num;
+	content: counter(chapter-num) ". \00a0";
+}
+chapter > chapter-header.dropdown > dropdown > *[selected]{
+	border-left: .25rem solid var(--theme-color);
+    padding-left: 0.5rem;
+    color: var(--theme-color);
+	font-weight: bold;
+	cursor: default;
+}
+chapter > chapter-header > .down-arrow {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	font-size: 25px;
+}
+chapter > chapter-header > .down-arrow::after {
+	font-family: 'icons';
+	content: '\e904';
+}
+chapter > chapter-header > book-info {
+	display: block;
+}
+chapter > chapter-header > book-info > a.title {
+	display: block;
+}
+chapter > chapter-header > book-info > author {
+    display: block;
+    margin-top: -4px;
+    font-size: 12px;
+}
+chapter > chapter-header > book-info > author > a:first-child::before {
+	content: 'by ';
+}
+chapter > chapter-header > book-info > author > a:nth-child(2) {
+    display: block;
+    color: var(--text-color);
+    opacity: .85;
+    text-transform: uppercase;
+    letter-spacing: 0;
+	font-size: 11px;
+}
+chapter > chapter-header > book-info > author > a:nth-child(2)::before {
+	content: 'FROM ';
+}
+chapter > chapter-header > book-info > author > a:nth-child(2)::after {
+	content: 'Fanfiction Online Auto';
+}
+chapter > chapter-title {
+	font-size: 2rem;
+}
+chapter > content > p{
+	--paragraph-margin: 2;
+	margin-block-end: calc(var(--paragraph-margin) * 0.5em);
+	margin-block-start: calc(var(--paragraph-margin) * 0.5em);
+}
+chapter > .next-chapter {
+	width: 100%;
+	margin: 0;
+	justify-content: center;
+}
+chapter > .next-chapter[href]::before {
+	content: 'Continue';
+}
+chapter > .next-chapter[href]::after {
+    font-family: 'icons';
+    content: '\e903';
+    font-size: 1.4em;
+    margin-top: -1px;
+    margin-left: 10px;
+}
+chapter > .next-chapter:not([href]) {
+	cursor: default;
+}
+chapter > .next-chapter:not([href]):hover {
+	box-shadow: none !important;
+}
+chapter > .next-chapter:not([href])::before {
+	content: 'Finished Reading';
+}
+/* Reviews */
+reply-to > review, review > review {
+	margin-left: 50px;
+}
+review, reply-to {
+	position: relative;
+	display: block;
+}
+reply-to {
+	border-left: 4px solid var(--theme-color);
+    padding-left: 15px;
+}
+reply-to::before {
+    content: 'Replying to:';
+    display: block;
+    font-size: 0.9rem;
+    padding-bottom: 10px;
+    color: #9c9c9c;
+    margin-left: -20px;
+    background-color: var(--background-color);
+}
+cancel {
+    display: block;
+    color: #9c9c9c;
+    font-size: 0.7rem;
+    cursor: pointer;
+    background-color: var(--background-color);
+    padding-left: 20px;
+    padding-top: 10px;
+	margin-left: -40px;
+}
+cancel:hover {
+	color: #b0afaf;
+}
+reply-to > cancel::before {
+	content: 'Cancel';
+}
+review > a.author, reply-to > a.author {
+	display: block;
+	font-size: 1.1rem;
+}
+review > a.author.book-author::after, reply-to > a.author.book-author::after {
+    font-family: 'icons';
+    margin-left: 6px;
+    font-size: 11px;
+    display: inline-block;
+    content: '\e909';
+    transform: rotate(-8deg);
+}
+review > review-time, reply-to > review-time {
+	display: block;
+	margin-top: -5px;
+	margin-left: 1px;
+	font-size: 0.75rem;
+	margin-bottom: 5px;
+}
+review > review-content {
+	display: block;
+	white-space: pre-wrap;
+	margin-bottom: 40px;
+}
+review > button.dropdown::before {
+	font-family: 'icons';
+	content: '\e904'
+}
+review > button.dropdown {
+	padding: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    top: 0;
+    right: 0;
+	background-color: transparent;
+	border: none;
+}
+review > button.dropdown:hover {
+    color: var(--text-color);
+}
+review > button.dropdown > dropdown > *::after {
+	content: attr(label);
+}
+review > button.dropdown > dropdown > *::before {
+	font-family: 'icons';
+	width: 20px;
+	margin-right: 10px;
+}
+review > button.dropdown > dropdown > [label="Delete"]::before {
+	content: '\e921';
+}
+review > button.dropdown > dropdown > [label="Pin"]::before {
+	font-size: 110%;
+	content: '\e920';
+}
+review > button.dropdown > dropdown > [label="Reply"]::before {
+	font-size: 110%;
+	content: '\e919';
+}
+review > button.dropdown:hover {
+	border: none;
+	background-color: var(--hover);
+}
+/* Write Review */
+write-review {
+	display: flex;
+	flex-wrap: wrap;
+}
+write-review > text-input {
+	width: 100%;
+}
+write-review > recaptcha {
+	margin-right: 20px;
+}
+write-review > button {
+	margin: auto 0;
+    margin-left: auto;
+}

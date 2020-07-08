@@ -1,10 +1,10 @@
 <?php
 /* Template Name: Dashboard */ 
 admin_only();
-global $js_bundle;
-$js_bundle = global_bundle('manage');
-$js_bundle->add('manage');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('manage');
+$bundle->js('js/manage');
+$bundle->enqueue();
 get_header();
 
 //Query Database

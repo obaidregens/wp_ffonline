@@ -1,9 +1,9 @@
 <?php
 
-global $js_bundle;
-$js_bundle = global_bundle('reset-password');
-$js_bundle->add('reset-password');
-$js_bundle->enqueue();
+global $bundle;
+$bundle = global_bundle('reset-password');
+$bundle->js('js/reset-password');
+$bundle->enqueue();
 
 
 get_header(); ?>
