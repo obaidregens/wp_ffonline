@@ -1,11 +1,9 @@
 <?php
-global $wp;
 
 global $bundle;
 $bundle = global_bundle('author');
 $bundle->js('js/updates');
-$bundle->js('js/views/search-options');
-$bundle->js('js/views/search-content');
+$bundle->mix('search-content');
 $bundle->enqueue();
 get_header();
 $author_base = rtrim(get_author_posts_url($author),'/') . '/';
@@ -71,10 +69,17 @@ $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 					),
 					'per_page'		=> 3
 				));
+				$collections = collection::query(array(
+					'authors'  => array(get_current_user_id()),
+				));
 				if ( $book_query->has() || get_current_user_id() == $author) {
-					?><div class="card author-books"><h2 class="type-title">Books</h2><?php
+					?>
+					<collections_data hidden><?= json_encode($collections); ?></collections_data>
+					<div class="card author-books"><h2 class="type-title">Books</h2>
+					<?php
 					$books_card = true;
 					?>
+					<books-container>
 					<book_collections hidden>
 						<?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?>
 					</book_collections>
@@ -90,7 +95,10 @@ $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 					if (get_current_user_id() === $author){
 						?><a href="/dashboard/write" class="btn-hover more valign-wrapper"><i class="material-icons">add</i><span>Add book</span></a><?php
 					}
-					?></div><?php
+					?>
+					</books-container>
+					</div>
+					<?php
 				}
 				?>
 				<?php

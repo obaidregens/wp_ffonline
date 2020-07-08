@@ -21,25 +21,27 @@ function curl_minify($post,$url){
     curl_close($ch);
     return $minified;
 }
-class js_bundle {
-    public static function reWrite($name){
-        $_js_bundle = new js_bundle($name);
-        $_js_bundle->write();
-    }
-    public static function reWriteAll() {
-        $bundles_dir = explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/js/bundles';
-        $files = scandir($bundles_dir);
-        foreach($files as $file){
-            if ($file == 'index.idn'){
-                continue;
+class bundle {
+    public static function reWrite() {
+        $theme_dir = explode('wp-content',__FILE__)[0] . 'wp-content/themes/book-writer/';
+        $bundles_dir = $theme_dir . 'bundles/';
+        $index = json_decode(file_get_contents($bundles_dir . 'index.idn'),true);
+        foreach ($index as $bundle_name => $bundle) {
+            $bundle_wo_suffix = $bundles_dir . $bundle_name;
+            $last_edited = max(array(filemtime($bundle_wo_suffix . '.css'),filemtime($bundle_wo_suffix . '.js')));
+            $raw_files = self::raw_urls($bundle);
+            foreach ($raw_files as $extension => $files) {
+                foreach ($files as $file) {
+                    $file_full = $theme_dir . $file . '.' . $extension;
+                    if ( filemtime($file_full) >= $last_edited ) {
+                        $bundle = new bundle($bundle_name);
+                        $bundle->write();
+                        break 2;
+                    }
+                }
             }
-            $name = str_replace('.js','',$file);
-            js_bundle::reWrite($name);
         }
     }
-
-}
-class bundle {
     protected static $default_index = array(
         'css'       => array(),
         'js'        => array(),
@@ -145,16 +147,19 @@ class bundle {
         return true;
     }
     protected function get_raw_urls(){
+        return self::raw_urls($this->bundle);
+    }
+    protected static function raw_urls($bundle) {
         $raw_urls = array(
             'css'   => array(),
             'js'    => array()
         );
-        foreach ($this->bundle['mix'] as $mix_name) {
+        foreach ($bundle['mix'] as $mix_name) {
             $raw_urls['css'] = array_merge($raw_urls['css'], self::$mix[$mix_name]['css']);
             $raw_urls['js'] = array_merge($raw_urls['js'], self::$mix[$mix_name]['js']);
         }
-        $raw_urls['css'] = array_merge($raw_urls['css'],$this->bundle['css']);
-        $raw_urls['js'] = array_merge($raw_urls['js'],$this->bundle['js']);
+        $raw_urls['css'] = array_merge($raw_urls['css'],$bundle['css']);
+        $raw_urls['js'] = array_merge($raw_urls['js'],$bundle['js']);
         return $raw_urls;
     }
     protected static $mix = [
@@ -260,10 +265,15 @@ class bundle {
         ),
         'search-content'    => array(
             'css'   => array(
+                'css/components/dropdown',
+                'css/js-components/switch',
                 'css/views/search-content',
+                'css/views/search-options',
             ),
             'js'    => array(
+                "js/components/switch",
                 "js/views/search-content",
+                "js/views/search-options",
             ),
         ),
         'search-filters'    => array(

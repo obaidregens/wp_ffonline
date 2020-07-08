@@ -43,7 +43,6 @@ function update_collections(collection_data){
             }
         });
     });
-
     const existing = document.querySelector('popup.collections');
     if (existing){
         existing.replaceWith(_popup);

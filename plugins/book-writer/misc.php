@@ -354,14 +354,14 @@ function get_chapters_query()
 
 
 
-function time_format_change($time)
+function time_format_change($time,$format,$post)
 {
-	return human_time_diff(get_post_modified_time('U'));
+	return human_time_diff(get_post_modified_time('U',false,$post));
 }
-add_filter( 'get_date', "time_format_change", 100);
-add_filter( 'get_the_date', "time_format_change", 100);
-add_filter( 'get_the_time', "time_format_change", 100);
-add_filter( 'post_date_column_time' , 'time_format_change', 100);
+add_filter( 'get_date', "time_format_change", 100, 3);
+add_filter( 'get_the_date', "time_format_change", 100, 3);
+add_filter( 'get_the_time', "time_format_change", 100, 3);
+add_filter( 'post_date_column_time' , 'time_format_change', 100, 3);
 function time_form($status)
 {
 	return "Updated";

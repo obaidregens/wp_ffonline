@@ -17,9 +17,13 @@ function login_only(){
 	}
 	if(! is_user_logged_in()){
 		get_header();
-		get_template_part( 'template-parts/content', 'login' );
-		get_sidebar();
-		get_footer();
+        get_footer();
+        ?><script>
+        document.addEventListener('DOMContentLoaded',function(){
+            prompt_login();
+            document.querySelector('popup-overlay').style.pointerEvents = 'none';
+        });
+        </script><?php
 		exit();
 	}
 }
