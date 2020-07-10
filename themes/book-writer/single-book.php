@@ -1,7 +1,7 @@
 <?php
 
 global $bundle;
-$bundle = new bundle('new_chapters_bundle');
+$bundle = new bundle('book');
 $bundle->mix('jquery');	
 $bundle->mix('global_new');
 $bundle->mix('search-options');
