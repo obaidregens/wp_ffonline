@@ -1,0 +1,49 @@
+/* Book Meta */
+book-meta {
+    display: flex;
+}
+book-meta > span {
+    margin-right: 10px;
+    color: var(--theme-color);
+}
+book-meta > span::after {
+    font-family: 'icons';
+    float: left;
+    margin-right: 5px;
+}
+
+book-meta > span[tooltip-top="Words"]::after{
+    content: '\e915';
+}
+book-meta > span[tooltip-top="Last Updated"]::after{
+    content: '\e918';
+}
+book-meta > span[tooltip-top="Collections"]::after{
+    content: '\e907';
+}
+/* Book Tags */
+tags {
+    display: block;
+    cursor: text;
+}
+tags > tag-group {
+    content: attr(before);
+}
+tags > tag-group:not([name="Fandom"]):before {
+    font-weight: bold;
+    content: attr(name) ": ";
+}
+tags > tag-group:not(:last-child):after {
+    content: ' - ';
+}
+tags > tag-group > a:not(:last-child):after {
+    content: ', ';
+    color: var(--text-color);
+}
+tags > tag-group[name="Fandom"] > a:not(:last-child):after {
+    content: ' /';
+}
+tag-group > a {
+    color: var(--text-color);
+    opacity: 0.85;
+}

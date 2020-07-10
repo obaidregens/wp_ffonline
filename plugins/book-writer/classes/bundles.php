@@ -87,6 +87,12 @@ class bundle {
         }
         $this->bundle['mix'][] = $mix;
     }
+    function link($mix){
+        if (in_array( $mix, $this->bundle['mix'] )){
+            return;
+        }
+        $this->bundle['mix'][] = $mix;
+    }
     function write(){
         $raw_urls = $this->get_raw_urls();
         $total_css = '';
@@ -248,6 +254,7 @@ class bundle {
                 'css/js-components/switch',
                 'css/components/dropdown',
                 'css/js-components/next-screen',
+                'css/views/search-tags',
                 'css/views/search-content',
                 'css/views/search-filters',
                 'css/views/search-options',
@@ -266,7 +273,9 @@ class bundle {
         'search-content'    => array(
             'css'   => array(
                 'css/components/dropdown',
+                'css/components/tooltips',
                 'css/js-components/switch',
+                'css/views/search-tags',
                 'css/views/search-content',
                 'css/views/search-options',
             ),
@@ -286,18 +295,12 @@ class bundle {
         ),
         'search-options'    => array(
             'css'   => array(
+                'css/js-components/switch',
                 'css/views/search-options',
             ),
             'js'    => array(
-                "js/views/search-options",
-            ),
-        ),
-        'switch'     => array(
-            'css'       => array(
-                'css/js-components/switch',
-            ),
-            'js'        => array(
                 "js/components/switch",
+                "js/views/search-options",
             ),
         ),
     ];

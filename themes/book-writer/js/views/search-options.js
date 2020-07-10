@@ -62,7 +62,6 @@ function collections_open(book_id) {
     const
         collections_popup = document.querySelector('popup.collections'),
         book_collections = JSON.parse(document.querySelector('book_collections').innerText)[book_id];
-    
     collections_popup.setAttribute('book_id',book_id);
     const switches = collections_popup.querySelectorAll('input');
     for (let i = 0; i < switches.length; i++) {

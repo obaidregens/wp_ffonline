@@ -1,4 +1,32 @@
 <?php
+function print_book_tags($book_id,$book_query) {
+	?>
+	<tags>
+	<?php
+	foreach ($book_query->book_tags[$book_id] as $taxonomy => $terms){
+		?>
+		<tag-group name="<?= ucfirst($taxonomy) ?>">
+			<?= implode('',array_column($terms,'link')); ?>
+		</tag-group>
+		<?php
+	}
+	?>
+	</tags>
+	<?php
+}
+function print_book_meta($book_id) {
+	$collections = collection::query(array(
+		'book_ids'		=> array($book_id),
+		'types'			=> array('Favorites','Public')
+	));
+	?>
+	<book-meta>
+		<span tooltip-top="Last Updated"><?= get_the_time('',$book_id); ?></span>
+		<span tooltip-top="Words"><?= get_post_meta($book_id,'word-count',true); ?></span>
+		<span tooltip-top="Collections"><?= count($collections); ?></span>
+	</book-meta>
+	<?php
+}
 function a_intersect($arrayOne, $arrayTwo){
     $index = array_flip($arrayOne);
     $second = array_flip($arrayTwo);

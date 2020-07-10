@@ -1,0 +1,24 @@
+index {
+    display: table;
+    width: 100%;
+    vertical-align: middle;
+}
+index > * {
+    vertical-align: inherit;
+    height: 40px;
+    display: table-row;
+    color: var(--text-color);
+    will-change: background-color;
+    transition: background-color .2s;
+}
+index > *:hover {
+    color: var(--text-color);
+}
+index > * > cell {
+    min-width: 20px;
+    vertical-align: inherit;
+    display: table-cell;
+}
+index > *:not(:first-child):hover {
+    background-color: var(--hover);
+}

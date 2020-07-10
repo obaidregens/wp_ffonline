@@ -171,6 +171,25 @@ const select_tags = document.querySelectorAll('select-tag');
 for (let i = 0; i < select_tags.length; i++) {
     const elem = select_tags[i];
     const tag_name = elem.getAttribute('name');
+    
+    const tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name];
+    const urlParams = new URLSearchParams(window.location.search);
+    const url_selected = {
+        included: urlParams.get(tag_name + '_included') ? urlParams.get(tag_name + '_included').split(',') : [],
+        excluded: urlParams.get(tag_name + '_excluded') ? urlParams.get(tag_name + '_excluded').split(',') : []
+    };
+    elem.setAttribute('selected',JSON.stringify(url_selected));
+    const url_mixed = url_selected.included.concat(url_selected.excluded);
+    for (let yb = 0; yb < url_mixed.length; yb++) {
+        const _tag = tags_data[url_mixed[yb]];
+        const selected_tag_elem = document.createElement('tag');
+        selected_tag_elem.innerText = _tag.name + ' (' + _tag.count + ')';
+        if (url_selected.excluded.includes(url_mixed[yb])){
+            selected_tag_elem.setAttribute('excluded','');
+        }
+        elem.appendChild(selected_tag_elem);
+    }
+
     elem.addEventListener('click',function(){
         const _popup = create_tags_popup(tag_name);
         popup.create(_popup,{
@@ -233,7 +252,7 @@ document.querySelector('filter-books > next-screen > div > button[label="Reset"]
 });
 // Search
 function trigger_search(page = false){
-    document.querySelector('filter-books > next-screen').classList.remove('show');
+    document.querySelector('filter-books > next-screen > cross-button').dispatchEvent(new Event('click'));
     let search_progress_interval = 0;
     const loader = document.querySelector('loader');
     function progress_spinner(){
@@ -262,8 +281,8 @@ function trigger_search(page = false){
         }
         const name = select_tags[i].getAttribute('name');
         const selected = JSON.parse(raw_selected);
-        construct += '&' + name + '_included=' + selected.included.join(',');
-        construct += '&' + name + '_excluded=' + selected.excluded.join(',');
+        construct += selected.included.length === 0 ? '' : ('&' + name + '_included=' + selected.included.join(','));
+        construct += selected.excluded.length === 0 ? '' : ('&' + name + '_excluded=' + selected.excluded.join(','));
     }
     const prev_ss = document.querySelector('prev_ss');
     api('search',{

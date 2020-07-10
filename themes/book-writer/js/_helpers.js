@@ -1,5 +1,12 @@
 class _ {
-    static moveAttr (from, to){;
+    static prop (elem, prop, bool){
+        if (bool) {
+            elem.setAttribute(prop,'');
+            return;
+        }
+        elem.removeAttribute(prop);
+    }
+    static moveAttr (from, to){
         const attributes = from.cloneNode(true).attributes;        
         for (let x = 0; x < attributes.length; x++) {
             const attr = attributes[x];
@@ -21,7 +28,7 @@ class _ {
         const events = ['touchstart', 'touchmove', 'click', 'wheel', 'mousedown', 'mouseup', 'focus', 'blur', 'keydown', 'change', 'resize', 'scroll'];
         for (let i = 0; i < events.length; i++) {
             const event = events[i];
-            window.addEventListener(event,func);
+            window.addEventListener(event,func,{passive: true});
         }
         return true;
     }

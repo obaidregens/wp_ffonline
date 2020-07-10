@@ -9,6 +9,7 @@ button,
     color: var(--text-color);
     border: 1px solid var(--text-color);
     border-radius: 4px;
+    user-select: none;
     text-decoration: none;
     font-weight: bold;
     text-align: center;
@@ -41,7 +42,8 @@ button[theme],
 }
 button[theme]:hover:not([disabled]),
 .button[theme]:hover:not([disabled]) {
-    box-shadow: var(--shadow-light);
+    border: none;
+    filter: brightness(1.1);
 }
 button[label]::before,
 .button[label]::before {

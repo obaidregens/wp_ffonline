@@ -1,3 +1,4 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Pangolin&family=Raleway&family=Roboto&display=swap" rel="stylesheet">
 <?php
 
 global $bundle;
@@ -10,6 +11,8 @@ $bundle->css('css/components/loader');
 $bundle->css('css/components/tooltips');
 $bundle->css('css/views/chapter-main');
 $bundle->js('js/views/chapter-main');
+$bundle->css('css/views/chapter-acs');
+$bundle->js('js/views/chapter-acs');
 $bundle->enqueue();
 
 $chapter = $post;
@@ -64,4 +67,41 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 	<?php }	else if (! $comments_open) { ?>
 		<text>Comments are closed.</text>
 	<?php } ?>
+	<button class="acs-button popup"></button>
+	<popup>
+		<change-options action="font">
+			<button theme class="dropdown">
+				Font
+				<dropdown class="right">
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+					<li></li>
+				</dropdown>
+			</button>
+		</change-options>
+		<change-options action="fontSize">
+			<button></button>
+			<button></button>
+		</change-options>
+		<change-options action="lineHeight">
+			<button></button>
+			<button></button>
+		</change-options>
+		<change-options action="paragraphHeight">
+			<button></button>
+			<button></button>
+		</change-options>
+		<change-options action="width">
+			<button></button>
+			<button></button>
+		</change-options>
+		<change-options action="theme">
+			<div color="light"></div>
+			<div color="dark"></div>
+			<div color="peach"></div>
+		</change-options>
+	</popup>
 </main>

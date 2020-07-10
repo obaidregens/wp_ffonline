@@ -19,7 +19,7 @@ books-container {
         grid-template-columns: repeat(2, auto);
     }
 }
-book {
+books-container > book {
     display: block;
     position: relative;
     cursor: pointer;
@@ -27,10 +27,10 @@ book {
     transition: box-shadow 0.3s;
     will-change: box-shadow;
 }
-book:hover {
+books-container > book:hover {
     box-shadow: var(--shadow-light); 
 }
-book > button.dropdown {
+books-container > book > button.dropdown {
     display: flex;
     align-items: center;
     border: none;
@@ -41,54 +41,54 @@ book > button.dropdown {
     border-radius: 100px;
     transition: background-color .2s;
 }
-book > button.dropdown:hover {
+books-container > book > button.dropdown:hover {
     color: var(--theme-color);
     background-color: var(--hover);
 }
-book > button.dropdown:before {
+books-container > book > button.dropdown:before {
     font-family: 'icons';
     font-size: 180%;
     content: '\e904';
 }
-book > button.dropdown > dropdown > *::before {
+books-container > book > button.dropdown > dropdown > *::before {
     font-family: 'icons';
     margin-right: 12px;
 }
-book > button.dropdown > dropdown > [label="Collections"]::before {
+books-container > book > button.dropdown > dropdown > [label="Collections"]::before {
     content: '\e907';
 }
-book > button.dropdown > dropdown > [label="Edit"]::before {
+books-container > book > button.dropdown > dropdown > [label="Edit"]::before {
     content: '\e909';
 }
-book > button.dropdown > dropdown > [label="Hide"]::before {
+books-container > book > button.dropdown > dropdown > [label="Hide"]::before {
     content: '\e906';
     font-size: 130%;
     margin-left: -2px;
     margin-right: 10px;
 }
-book > button.dropdown > dropdown > [label="Share"]::before {
+books-container > book > button.dropdown > dropdown > [label="Share"]::before {
     content: '\e908';
 }
-book > button.dropdown > dropdown > [label="Favorite"]::before {
+books-container > book > button.dropdown > dropdown > [label="Favorite"]::before {
     content: '\e905';
 }
-book > button.dropdown > dropdown > *::after {
+books-container > book > button.dropdown > dropdown > *::after {
     content: attr(label);
 }
-book > .title {
+books-container > book > .title {
     display: block;
     font-size: 1.5rem;
     line-height: 1;
 }
-book > .author {
+books-container > book > .author {
     display: block;
     font-size: 1rem;
     margin-bottom: 1rem;
 }
-book > .author::before {
+books-container > book > .author::before {
     content: 'by ';
 }
-book > .author > a:nth-child(2) {
+books-container > book > .author > a:nth-child(2) {
     display: block;
     color: var(--text-color);
     opacity: 0.85;
@@ -96,61 +96,12 @@ book > .author > a:nth-child(2) {
     letter-spacing: 0px;
     font-size: 12px;
 }
-book > .author > a:nth-child(2)::before {
+books-container > book > .author > a:nth-child(2)::before {
     content: 'FROM ';
 }
-book > .description {
+books-container > book > .description {
     cursor: text;
     margin-bottom: 1rem;
-}
-/* Book Meta */
-book-meta {
-    display: flex;
-}
-book-meta > span {
-    margin-right: 10px;
-    color: var(--theme-color);
-}
-book-meta > span::after {
-    font-family: 'icons';
-    float: left;
-    margin-right: 5px;
-}
-
-book-meta > span[tooltip-top="Words"]::after{
-    content: '\e915';
-}
-book-meta > span[tooltip-top="Last Updated"]::after{
-    content: '\e918';
-}
-book-meta > span[tooltip-top="Collections"]::after{
-    content: '\e907';
-}
-/* Book Tags */
-tags {
-    display: block;
-    cursor: text;
-}
-tags > tag-group {
-    content: attr(before);
-}
-tags > tag-group:not([name="Fandom"]):before {
-    font-weight: bold;
-    content: attr(name) ": ";
-}
-tags > tag-group:not(:last-child):after {
-    content: ' - ';
-}
-tags > tag-group > a:not(:last-child):after {
-    content: ', ';
-    color: var(--text-color);
-}
-tags > tag-group[name="Fandom"] > a:not(:last-child):after {
-    content: ' /';
-}
-tag-group > a {
-    color: var(--text-color);
-    opacity: 0.85;
 }
 /* Pagination */
 pagination {
