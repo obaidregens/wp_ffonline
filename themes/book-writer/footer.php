@@ -30,7 +30,7 @@ if (! isset($bundle)){
 	
 <!-- Google Tools -->
 <!-- reCAPTCHA -->
-<script src='https://www.google.com/recaptcha/api.js' async defer></script>
+<script src='https://www.google.com/recaptcha/api.js' defer></script>
 <script>
 	function recaptchaOnload(){
 		if (document.getElementById('reCAPTCHA_div')){

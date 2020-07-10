@@ -39,7 +39,6 @@ class Personalize_Login_Plugin {
 		add_filter( 'retrieve_password_message', array( $this, 'replace_retrieve_password_message' ), 10, 4 );
 
 		// Setup
-		add_action( 'wp_print_footer_scripts', array( $this, 'add_captcha_js_to_footer' ) );
 		add_filter( 'admin_init' , array( $this, 'register_settings_fields' ) );
 
 		// Shortcodes

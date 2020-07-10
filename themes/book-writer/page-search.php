@@ -5,7 +5,7 @@
  * Search page
  *
  */
-get_header();
+ get_header();
 ?>
 <div>
 	<main>

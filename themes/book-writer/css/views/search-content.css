@@ -5,7 +5,7 @@
 
 /* Books Container */
 books-container {
-    padding: 20px;
+    padding: 5px;
     margin-bottom: 20px;
     display: grid;
     grid-template-columns: repeat(1, auto);
@@ -17,6 +17,7 @@ books-container {
     books-container {
         box-shadow: var(--shadow-light);
         grid-template-columns: repeat(2, auto);
+        padding: 20px;
     }
 }
 books-container > book {
