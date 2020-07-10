@@ -81,6 +81,12 @@ header > nav > a {
     align-items: center;
     width: fit-content;
 }
+@media only screen and (max-width: 400px) {
+    header > nav > a {
+        padding: 0 5px;
+        font-size: 0.8rem;
+    }
+}
 header > nav > a:hover {
     background-color: var(--hover);
 }
@@ -98,4 +104,30 @@ main {
         max-width: 960px;
         padding: 20px 5px;
     }
+}
+/* Dark Mode */
+dark-mode {
+    --size: 15px;
+    background: black;
+    height: calc(var(--size) * 2);
+    width: var(--size);
+    border-bottom-right-radius: calc(var(--size) * 2);
+    border-top-right-radius: calc(var(--size) * 2);
+    z-index: 10;
+    position: absolute;
+    right: 50%;
+    top: 38px;
+    cursor: pointer;
+    box-shadow: var(--shadow-strong);
+}
+dark-mode::before {
+    content: '';
+    background: white;
+    height: calc(var(--size) * 2);
+    width: var(--size);
+    border-bottom-left-radius: calc(var(--size) * 2);
+    border-top-left-radius: calc(var(--size) * 2);
+    position: absolute;
+    right: var(--size);
+    box-shadow: var(--shadow-strong);
 }

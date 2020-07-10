@@ -52,6 +52,10 @@ const themes = class {
             cookies.set("theme", theme );
         }
     }
+    static switch (){
+        const set_theme = themes.current === 'dark' ? 'light' : 'dark';
+        themes.set(set_theme);
+    }
     static get current () {
         return cookies.all.theme;
     }

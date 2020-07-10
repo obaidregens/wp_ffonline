@@ -25,6 +25,7 @@ else{
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?> class="no-js">
+<dark-mode onclick="themes.switch();"></dark-mode>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<!--Let browser know website is optimized for mobile-->
