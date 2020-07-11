@@ -45,6 +45,7 @@ books-container > book > button.dropdown {
 books-container > book > button.dropdown:hover {
     color: var(--theme-color);
     background-color: var(--hover);
+    border: none;
 }
 books-container > book > button.dropdown:before {
     font-family: 'icons';

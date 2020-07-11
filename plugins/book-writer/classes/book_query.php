@@ -392,7 +392,7 @@ class book_query_cache extends book_query {
             'ids'       => $terms
         )));
     }
-    protected function put($key_value_ids){
+    public static function put($key_value_ids){
         global $wpdb;
         $t = time();
         foreach ($key_value_ids as $term) {
@@ -407,7 +407,20 @@ class book_query_cache extends book_query {
 }
 class tag_query extends book_query{
     function __construct($book_ids){
+        $no_cache_hours = 48;
+
+        $book_ids_hash = md5(serialize($book_ids));
         global $wpdb;
+        $prepared = $wpdb->prepare(
+            "SELECT * FROM " . self::$table . "
+            WHERE `_key` = %s
+            AND `_value` = %s "
+        ,array('tags_of',$book_ids_hash));
+        $existing = $wpdb->get_results($prepared);
+        if (! empty($existing) && (time() - intval($existing[0]->updated)) <= ($no_cache_hours*60*60) ){
+            $this->terms_with_count = unserialize($existing[0]->ids);
+            return;
+        }
         $results = $wpdb->get_results(
             "SELECT * FROM " . self::$table . "
             WHERE `_key` IN ('" . implode('\', \'',self::$taxonomies) . "','tag_names')"
@@ -418,11 +431,19 @@ class tag_query extends book_query{
         $terms_with_count = [];
         foreach ($results as $term) {
             $term->_value = intval($term->_value);
+            if (! isset($tag_names[$term->_value])){
+                continue;
+            }
             $terms_with_count[$term->_key][$term->_value] = array(
                 'count'         => count(a_intersect($book_ids,unserialize($term->ids))),
                 'name'          => $tag_names[$term->_value]
             );
         }
         $this->terms_with_count = $terms_with_count;
+        book_query_cache::put(array(array(
+            '_key'      => 'tags_of',
+            '_value'    => $book_ids_hash,
+            'ids'       => $terms_with_count,
+        )));
     }
 }

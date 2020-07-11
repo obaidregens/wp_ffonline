@@ -38,7 +38,7 @@ $collections = collection::query(array(
             <select-tag label="Fandom" name="fandom"></select-tag>
             <select-tag label="Rating" name="rating"></select-tag>
             <select-tag label="Language" name="language"></select-tag>
-            <select-tag label="Status" name="Status"></select-tag>
+            <select-tag label="Status" name="status"></select-tag>
             <select-tag label="Genre" name="genre"></select-tag>
             <select-tag label="Characters" name="character"></select-tag>
             <select-tag label="Pairings" name="pairing"></select-tag>
