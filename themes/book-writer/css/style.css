@@ -11,6 +11,7 @@
     --shadow-strong: 0px 0px 10px 0px #646464;
 }
 html {
+    position: relative;
     background-color: var(--background-color);
     color: var(--text-color);
     font-size: 15px;
