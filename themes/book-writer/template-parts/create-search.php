@@ -8,7 +8,6 @@ if (err::is($query->args)){
     _404();
 }
 $query->query();
-
 global $book_query;
 $book_query = $query;
 

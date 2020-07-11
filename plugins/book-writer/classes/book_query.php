@@ -240,8 +240,11 @@ class book_query{
         }
         $this->args = $args;
     }
-    function get_url(){
+    function get_url($page = null){
         $args = $this->args;
+        if ($page !== null){
+            $args['page'] = $page;
+        }
         $get = array();
         $types = array('included','excluded');
         foreach ( $types as $type ) {
