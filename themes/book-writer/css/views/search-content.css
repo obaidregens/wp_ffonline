@@ -33,7 +33,6 @@ books-container > book:hover {
 }
 books-container > book > button.dropdown {
     display: flex;
-    align-items: center;
     border: none;
     background-color: transparent;
     color: var(--theme-color);
@@ -51,6 +50,8 @@ books-container > book > button.dropdown:before {
     font-family: 'icons';
     font-size: 180%;
     content: '\e904';
+    position: relative;
+    top: -5px;
 }
 books-container > book > button.dropdown > dropdown > *::before {
     font-family: 'icons';

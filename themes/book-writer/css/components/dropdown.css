@@ -1,12 +1,18 @@
 .dropdown {
     position: relative;
+    z-index: 10;
+}
+button.dropdown:active {
+    transform: none;
 }
 .dropdown > dropdown {
+    display: table;
     z-index: 10;
     opacity: 0;
     text-transform: none;
     font-weight: normal;
     width: fit-content;
+    width: -moz-fit-content;
     min-width: 10rem;
     font-size: 1rem;
     background-color: var(--background-accent);
@@ -14,11 +20,16 @@
     transition: opacity .3s cubic-bezier(0.22, 0.61, 0.36, 1);
     top: -10000px;
     will-change: opacity, top;
-    overflow: overlay;
+    overflow: auto;
     height: fit-content;
+    height: -moz-fit-content;
     box-shadow: var(--shadow-strong);
 }
 .dropdown:focus-within > dropdown{
+    top: -1px;
+    opacity: 1;
+}
+.dropdown:focus > dropdown{
     top: -1px;
     opacity: 1;
 }

@@ -39,6 +39,7 @@ main > book > book-header > a.button {
 }
 main > book > book-header > book-meta {
     width: fit-content;
+    width: -moz-fit-content;
     margin: 0 auto;
     margin-bottom: 10px;
 }

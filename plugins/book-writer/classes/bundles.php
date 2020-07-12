@@ -187,6 +187,7 @@ class bundle {
         ),
         'global' => array(
             'js'    => array(
+                'js/normalize',
                 'js/_helpers',
                 'js/classes',
                 'js/helpers',
@@ -234,6 +235,7 @@ class bundle {
                 "css/views/global-login",
             ),
             'js'    => array(
+                'js/normalize',
                 'js/_helpers',
                 'js/helpers',
                 'js/classes',

@@ -226,6 +226,7 @@ i.fas.offline{
 .my .message-data{
     text-align:left;
     width: fit-content;
+    width: -moz-fit-content;
 }
 .my .message-status{
     float: right;

@@ -68,82 +68,99 @@ words-slider {
 words-slider  div {
     overflow: initial;
 }
-next-screen > div > button {
+next-screen > div > words-slider ~ button {
     margin-top: 10px;
 }
 next-screen > div > button[label="Search"] {
     float: right;
+    margin-right: 0;
 }
 next-screen > div > button[label="Close"] {
     float: right;
 }
-/* Popup */
+@media only screen and (max-width: 400px) {
+    next-screen > div > words-slider ~ button {
+        font-size: 10px;
+        padding: 0 10.5px;
+    }    
+}
+/* Popup[tag-name] */
 popup[tag-name] {
     padding: 0;
 }
-popup > wrap {
+popup[tag-name] > wrap {
     padding: 20px;
     position: sticky;
     left: 0;
     display: flex;
     width: 100%;
     flex-wrap: wrap;
-    z-index: 1;
+    z-index: 15;
     background-color: var(--background-accent);
 }
-popup > wrap:first-child {
+popup[tag-name] > wrap:first-child {
     top: 0;
 }
-popup > wrap:last-child {
+popup[tag-name] > wrap:last-child {
     bottom: 0;
 }
-popup > tag_list {
+popup[tag-name] > tag_list {
     padding: 0 10px;
 }
-popup > wrap > button.include::before {
+popup[tag-name] > wrap > button.include::before {
     content: 'Include';
 }
-popup > wrap > button.exclude::before {
+popup[tag-name] > wrap > button.exclude::before {
     content: 'Exclude';
 }
-popup > wrap > button.exclude.active, popup > wrap > button.exclude:hover {
+popup[tag-name] > wrap > button.exclude.active, popup[tag-name] > wrap > button.exclude:hover {
     background-color: #f44336;
 }
 
-popup > wrap >  button {
+popup[tag-name] > wrap >  button {
     font-size: 10px;
     width: min-content;
     display: block;
     margin: 0 5px;
     margin-bottom: 10px;
 }
-popup > wrap:first-child > button {
+@media only screen and (max-width: 400px) {
+    popup[tag-name] > wrap >  button {
+        font-size: 7.5px;
+    }
+}
+popup[tag-name] > wrap:first-child > button {
     padding: 0 9px;
 }
+@media only screen and (max-width: 400px) {
+    popup[tag-name] > wrap:first-child > button {
+        padding: 0 8px;
+    }
+}
 
-popup > wrap > text-input {
+popup[tag-name] > wrap > text-input {
     width: 100%;
     margin: 5px;
 }
-popup > wrap > button[label="OK"], popup > wrap > button[label="Sort"] {
+popup[tag-name] > wrap > button[label="OK"], popup[tag-name] > wrap > button[label="Sort"] {
     margin-left: auto;
 }
-popup > tag_list:empty::before {
+popup[tag-name] > tag_list:empty::before {
     content: 'No Tags';
     font-size: 0.85rem;
     color: #9e9e9e;
     display: block;
     margin: 0 18px;
 }
-popup > tag_list > label.checkbox {
+popup[tag-name] > tag_list > label.checkbox {
     display: block;
     padding: 11px 10px 9px 10px;
     padding-top: 12px;
     margin: 0;
 }
-popup > tag_list > label.checkbox:hover {
+popup[tag-name] > tag_list > label.checkbox:hover {
     background-color: var(--hover);
 }
-popup > tag_list {
+popup[tag-name] > tag_list {
     display: block;
 }

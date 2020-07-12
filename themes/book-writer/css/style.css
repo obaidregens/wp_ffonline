@@ -33,6 +33,7 @@ html {
 /* Styles General */
 a {
     width: fit-content;
+    width: -moz-fit-content;
     color: var(--theme-color);
     text-decoration: none;
 }
@@ -69,6 +70,7 @@ header {
 }
 header > .logo {
     width: fit-content;
+    width: -moz-fit-content;
     padding: 5px 10px 0px;
     white-space: nowrap;
 }
@@ -81,11 +83,12 @@ header > nav > a {
     display: flex;
     align-items: center;
     width: fit-content;
+    width: -moz-fit-content;
 }
 @media only screen and (max-width: 400px) {
     header > nav > a {
-        padding: 0 5px;
-        font-size: 0.8rem;
+        padding: 0 3px;
+        font-size: 0.75rem;
     }
 }
 header > nav > a:hover {

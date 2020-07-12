@@ -294,5 +294,7 @@ Tear Drop
 }
 .noUi-target.noUi-horizontal .noUi-handle.noUi-active .noUi-tooltip {
   width: fit-content;
+  width: -moz-fit-content;
   height: fit-content;
+  height: -moz-fit-content;
 }
