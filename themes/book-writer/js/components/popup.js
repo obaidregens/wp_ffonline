@@ -14,7 +14,9 @@ const popup = class {
         if (onOpen){
             _popup.addEventListener('onOpen',onOpen);
         }
-        document.documentElement.appendChild(_popup);
+        if (! _popup.parentNode){
+            document.documentElement.appendChild(_popup);
+        }
     }
     static init () {
         const overlay = popup.overlay;
@@ -26,11 +28,8 @@ const popup = class {
             popup.close();
             return;
         }
-        if (! event.target.classList.contains('popup')) {
-            return;
-        }
         const _popup = event.target.nextElementSibling;
-        if (_popup.tagName.toLowerCase() !== 'popup'){
+        if (! event.target.classList.contains('popup') || _popup.tagName.toLowerCase() !== 'popup' ) {
             return;
         }
         popup.open(_popup);

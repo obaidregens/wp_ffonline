@@ -122,7 +122,7 @@ jQuery("#search_book").keyup(function(event){
 		callback: function(response){
 			jQuery('#load_search_results')[0].innerHTML = response;
 		}
-	});    
+	});
 });
 //Text Highlight Handler
 function define_text(){

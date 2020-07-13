@@ -1,6 +1,7 @@
 <?php
 global $book_query;
 global $book;
+$search = $book_query->args['search'];
 ?>
 <book book_id="<?= $book->ID; ?>">
 	<button class="dropdown">
@@ -14,9 +15,9 @@ global $book;
 			<li label="Collections"></li>
 		</dropdown>
 	</button>
-	<a href="<?= get_permalink($book->ID); ?>" class="title"><?= $book->post_title; ?></a>
+	<a href="<?= get_permalink($book->ID); ?>" class="title"><?= mark_search($book->post_title, $search); ?></a>
 	<span class="author"><?= author_href($book->ID); ?></span>
-	<div class="description"><?= $book->post_excerpt; ?></div>
+	<div class="description"><?= mark_search($book->post_excerpt, $search); ?></div>
 	<?php print_book_meta($book->ID); ?>
 	<?php print_book_tags($book->ID,$book_query); ?>
 </book>

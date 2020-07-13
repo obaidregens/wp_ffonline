@@ -11,7 +11,6 @@
     --shadow-strong: 0px 0px 10px 0px #646464;
 }
 html {
-    position: relative;
     background-color: var(--background-color);
     color: var(--text-color);
     font-size: 15px;
@@ -134,4 +133,9 @@ dark-mode::before {
     position: absolute;
     right: var(--size);
     box-shadow: var(--shadow-strong);
+}
+/* Tags Default */
+mark {
+    background-color: var(--theme-color);
+    color: white;
 }

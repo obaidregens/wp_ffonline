@@ -125,6 +125,7 @@ function share_open({
             if (opt === 'copy'){
                 opt_elem.addEventListener('click',function(){
                     _.copyText(share_opts[opt]);
+                    new toast('Copied!');
                 });
                 continue;
             }

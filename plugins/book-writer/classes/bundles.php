@@ -305,5 +305,13 @@ class bundle {
                 "js/views/search-options",
             ),
         ),
+        'next-screen'      => array(
+            'css'   => array(
+                'css/js-components/next-screen'
+            ),
+            'js'    => array(
+                'js/components/next-screen'
+            )
+        )
     ];
 }

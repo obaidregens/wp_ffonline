@@ -13,6 +13,10 @@ $bundle->css('css/views/chapter-main');
 $bundle->js('js/views/chapter-main');
 $bundle->css('css/views/chapter-acs');
 $bundle->js('js/views/chapter-acs');
+$bundle->css('css/views/chapter-search');
+$bundle->js('js/views/chapter-search');
+
+$bundle->mix('next-screen');
 $bundle->enqueue();
 
 $chapter = $post;
@@ -103,5 +107,14 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 			<div color="dark"></div>
 			<div color="peach"></div>
 		</change-options>
+	</popup>
+	<button class="search-button popup"></button>
+	<popup>
+		<form>
+			<text-input label="Search"></text-input>
+			<button></button>
+		</form>
+		<results></results>
+		<loader medium></loader>
 	</popup>
 </main>

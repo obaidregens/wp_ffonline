@@ -1,4 +1,32 @@
 <?php
+
+function mark_search($in, $search, $trim = null) {
+	$should_trim = ! ($trim === null || strlen($in) <= $trim);
+	$unmarked_trim = $should_trim ? substr($in, 0, $trim) . '...' : $in;
+	if ($search === ''){
+		return $unmarked_trim;
+	}
+	$pos = stripos($in, $search);
+	if ($pos === false) {
+		return $unmarked_trim;
+	}
+	if ($should_trim) {
+		$in = substr($in, max(array($pos - (($trim/2) - strlen($search)) ,0)));
+		$in = substr($in, 0, $trim);
+		$pos = stripos($in, $search);
+	}
+	$occurrences = substr_count(strtolower($in),strtolower($search));
+	$full = '';
+	$trimmed = $in;
+	for ($i=0; $i < $occurrences; $i++) {
+		$pos = stripos($trimmed, $search);
+		$trimmed = substr_replace($trimmed, '<mark>', $pos, 0);
+		$trimmed = substr_replace($trimmed, '</mark>', $pos + 6 + strlen($search), 0);
+		$full .= substr($trimmed,0,$pos + 6 + strlen($search) + 7);
+		$trimmed = substr($trimmed,$pos + 6 + strlen($search) + 7);
+	}
+	return $should_trim ? $full . '...' : $full;
+}
 function print_book_tags($book_id,$book_query) {
 	?>
 	<tags>
