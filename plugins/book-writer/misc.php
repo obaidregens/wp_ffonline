@@ -63,11 +63,14 @@ function a_intersect($arrayOne, $arrayTwo){
 
     return array_flip($x);
 }
-function timer($logtext){
+function timer($logtext,$echo = false){
     global $lastlogtime;
     $now = microtime(true);
     $diff = $now - ($lastlogtime ?? $now);
-    file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+	file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+	if ($echo === true){
+		echo $logtext . ": " . $diff . "<br>";
+	}
     $lastlogtime = microtime(true);
 }
 function author_href($_post_id){
