@@ -1,6 +1,7 @@
 <?php
 
 function word_counts($postid, $post_obj){
+
 	//Add Word Count
 	$this_word_count = str_word_count(strip_tags($post_obj->post_content));
 	update_post_meta($postid,'word-count', $this_word_count);
@@ -16,13 +17,16 @@ function word_counts($postid, $post_obj){
 	}
 	update_post_meta($post_obj->post_parent,'word-count', $count);
 
-	//Update Time of book according to chapter time
-	$book_args = array(
-		'ID' => 				$post_obj->post_parent,
-		'post_modified' => 		$post_obj->post_modified,
-		'post_modified_gmt' => 	$post_obj->post_modified_gmt
-	);
-	wp_update_post($book_args);
+	if ($post_obj->post_status !== 'publish'){
+		return;
+	}
+	// Update Time of book according to chapter time
+	// Only if it's for publishing
+	wp_update_post(array(
+		'ID' 				=> $post_obj->post_parent,
+		'post_modified' 	=> $post_obj->post_modified,
+		'post_modified_gmt' => $post_obj->post_modified_gmt
+	));
 }
 add_action('save_post_chapter', 'word_counts', 11,2);
 

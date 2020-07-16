@@ -15,14 +15,18 @@ function term_replace($taxonomy, $term, $parent){
         )
     );
 }
-$temp_dir = $wp_dir . 'wp-content/themes/book-writer/archiver/temp/';
+if (! defined('ARCHIVER_PATH')){
+    echo 'ARCHIVER_PATH not defined';
+    exit();
+}
+$temp_dir = $wp_dir . trim(ARCHIVER_PATH,'/') . '/temp/';
 if (! file_exists($temp_dir)){
     mkdir($temp_dir);
 }
 $files = scandir($temp_dir);
 foreach ($files as $f_key => $file) {
     // Last Condition to give buffer InCase File is still being updated.
-    if ($file === '.' || $file === '..' || time() - filemtime($temp_dir . $file) < 900 ){
+    if ($file === '.' || $file === '..' || time() - intval(explode('-',$file)[0]) < 900 ){
         unset($files[$f_key]);
     }
 }

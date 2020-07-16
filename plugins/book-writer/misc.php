@@ -78,7 +78,14 @@ function author_href($_post_id){
 	$_author = intval($book->post_author);
 	$a_href = "";
 	if ($_author === 37){
-		$a_href .= '<a rel="nofollow" href="' . get_post_meta( $book->ID,'source_author_link',true ) . '">' . get_post_meta( $book->ID,'source_author_name',true ) . '</a>';
+		$old_link = get_post_meta( $book->ID,'source_author_link',true );
+		$new_link = 'https://www.fanfiction.net/u/' . get_post_meta( $book->ID,'ffn_author_id',true );
+		$old_name = get_post_meta( $book->ID,'source_author_name',true );
+		$new_name = get_post_meta( $book->ID,'author_name',true );
+		$tlink = $new_link !== '' ? $new_link : $old_link;
+		$tname = $new_name !== '' ? $new_name : $old_name;
+
+		$a_href .= "<a rel=\"nofollow\" href=\"$tlink\">$tname</a>";
 	}
 	$a_href .= '<a href="' . get_author_posts_url($_author) . '">' . get_the_author_meta( 'display_name', $_author ) . '</a>';
 	return $a_href;
@@ -86,11 +93,14 @@ function author_href($_post_id){
 function author_name_single($_post_id){
 	$book = get_post($_post_id);
     $_author = intval($book->post_author);
-	$meta_author = get_post_meta( $book->ID,'source_author_name',true );
-	if ($_author === 37 && $meta_author !== ''){
-		return $meta_author;
+
+	$ffonline_name = get_the_author_meta( 'display_name',$_author );
+	if ($_author === 37){
+		$old_name = get_post_meta( $book->ID,'source_author_name',true );
+		$new_name = get_post_meta( $book->ID,'author_name',true );
+		return $new_name !== '' ? $new_name : ($old_name !== '' ? $old_name : $ffonline_name);
 	}
-	return get_the_author_meta( 'display_name',$_author );
+	return $ffonline_name;
 }
 
 function username_regex_valid($string){
@@ -427,29 +437,7 @@ function time_form($status)
 }
 add_filter( 'post_date_column_status', 'time_form', 99);
 
-function book_count()
-{
-	global $post;
-	$args = array(
-		'post_type' 	=> 'chapter',
-		'post_status' 	=> 'publish',
-		'post_parent'	=> $post->ID
-	);
-	$chapters = get_posts($args);
-	if (empty($chapters))
-	{
-		return 0;
-	}
-	else
-	{
-		$count = 0;
-		foreach ($chapters as $chapter)
-		{
-			$count += str_word_count($chapter->post_content);
-		}
-		return $count;
-	}
-}
+
 
 function dont_show_cheatin_page() {
 	do_action( 'template_redirect' );
