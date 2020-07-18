@@ -2,7 +2,6 @@ function create_tags_popup(tag_name){
     const _tag_list = tag_list(tag_name);
 
     const _popup = document.createElement('popup');
-    _popup.classList.add('show');
     _popup.setAttribute('tag-name',tag_name);
 
     const wrap = document.createElement('wrap');
