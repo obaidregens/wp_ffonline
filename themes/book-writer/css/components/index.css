@@ -19,6 +19,21 @@ index > * > cell {
     vertical-align: inherit;
     display: table-cell;
 }
+@media screen and (max-width: 600px) {
+    index > * > cell {
+        font-size: 0.9rem;
+    }
+}
+@media screen and (max-width: 500px) {
+    index > * > cell {
+        font-size: 0.8rem;
+    }
+}
+@media screen and (max-width: 400px) {
+    index > * > cell {
+        font-size: 0.7rem;
+    }
+}
 index > *:not(:first-child):hover {
     background-color: var(--hover);
 }

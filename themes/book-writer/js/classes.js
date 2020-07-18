@@ -81,3 +81,46 @@ themes.all = {
     }
 }
 themes.set(themes.current);
+const DOM = class {
+    static create(tagName,opts = {}){
+        return DOM.update(document.createElement(tagName),opts);
+    }
+    static update(the_elem,{
+        classes = [],
+        innerText = null,
+        href = null,
+        attributes = {},
+        listeners = {}
+    }){
+        if (classes.length > 0){
+            the_elem.className = classes.join(' ');
+        }
+        if (innerText !== null){
+            the_elem.innerText = innerText;
+        }
+        if (href !== null){
+            the_elem.href = href;
+        }
+        const attr_entries = Object.entries(attributes);
+        for (let i = 0; i < attr_entries.length; i++) {
+            const attr_arr = attr_entries[i];
+            the_elem.setAttribute(attr_arr[0],attr_arr[1]);
+        }
+        const listener_entries = Object.entries(listeners);
+        for (let i = 0; i < listener_entries.length; i++) {
+            const listener = listener_entries[i];
+            the_elem.addEventListener(listener[0],listener[1]);
+        }
+        return the_elem;
+    }
+    static append(to,elems){
+        if (! elems instanceof Array){
+            to.appendChild(elems);
+            return;
+        }
+        for (let i = 0; i < elems.length; i++) {
+            to.appendChild( elems[i] );
+        }
+        return to;
+    }
+}

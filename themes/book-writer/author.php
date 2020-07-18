@@ -69,12 +69,9 @@ $author_base = rtrim(get_author_posts_url($author),'/') . '/';
 					),
 					'per_page'		=> 3
 				));
-				$collections = collection::query(array(
-					'authors'  => array(get_current_user_id()),
-				));
 				if ( $book_query->has() || get_current_user_id() == $author) {
 					?>
-					<collections_data hidden><?= json_encode($collections); ?></collections_data>
+					<collections_data hidden><?= json_encode(collection::js_data()) ?></collections_data>
 					<div class="card author-books"><h2 class="type-title">Books</h2>
 					<?php
 					$books_card = true;

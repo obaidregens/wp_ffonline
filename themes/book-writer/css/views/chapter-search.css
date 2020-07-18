@@ -1,5 +1,6 @@
 /* Toggle */
 button.search-button {
+    z-index: 20;
     --size: 12px;
     height: calc(var(--size) * 2);
     width: var(--size);

@@ -87,3 +87,18 @@ if (review_submit_btn){
         });
     });
 }
+// Book Options
+const book_info = document.querySelector('book-info');
+const book_id = book_info.getAttribute('book_id');
+document.querySelector('.book-collections').addEventListener('click',function(){
+    collections_open(book_id);
+});
+document.querySelector('.book-share').addEventListener('click',function(){
+    const book_title = book_info.querySelector('a.title');
+    share_open({
+        title: book_title.innerText,
+        href: book_title.href,
+        author: book_info.querySelector('author > a:first-child').innerText,
+        desc: book_info.querySelector('book-description').innerText
+    });
+});

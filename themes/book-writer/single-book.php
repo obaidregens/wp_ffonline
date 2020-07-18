@@ -34,9 +34,7 @@ get_header();
     <book-description><?= $book->post_excerpt; ?></book-description>
     <book-options>
         <collections_data hidden>
-            <?= json_encode(collection::query(array(
-                'authors'  => array(get_current_user_id()),
-            ))); ?>
+            <?= json_encode(collection::js_data()) ?>
         </collections_data>
         <book_collections hidden>
             <?= json_encode( collection::query_by_book( array($book->ID), 'ID' ) ); ?>

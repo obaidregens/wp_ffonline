@@ -80,6 +80,7 @@ chapter > .next-chapter {
 	width: 100%;
 	margin: 0;
 	justify-content: center;
+	margin-bottom: 20px;
 }
 chapter > .next-chapter[href]::before {
 	content: 'Continue';
@@ -99,6 +100,37 @@ chapter > .next-chapter:not([href]):hover {
 }
 chapter > .next-chapter:not([href])::before {
 	content: 'Finished Reading';
+}
+/* Book Options */
+chapter > book-options {
+	text-align: right;
+	display: block;
+}
+chapter > book-options > .book-share,chapter > book-options > .book-collections {
+	margin-left: 0;
+}
+chapter > book-options > .book-share::before,chapter > book-options > .book-collections::before {
+	position: absolute;
+	font-family: 'icons';
+}
+chapter > book-options > .book-share::before {
+	font-size: 125%;
+	content: '\e908';
+	top: 5px;
+	left: 11px;
+}
+chapter > book-options > .book-collections::before {
+	left: 12px;
+	content: '\e916';
+}
+chapter > book-options > .book-share::after,chapter > book-options > .book-collections::after{
+	margin-left: 17.5px;
+}
+chapter > book-options > .book-share::after {
+	content: 'Share';
+}
+chapter > book-options > .book-collections::after {
+	content: 'Collections';
 }
 /* Reviews */
 reply-to > review, review > review {

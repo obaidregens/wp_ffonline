@@ -3,12 +3,14 @@
 
 global $bundle;
 $bundle = new bundle('new_chapters_bundle');
-$bundle->mix('jquery');	
+$bundle->clear();
+$bundle->mix('jquery');
 $bundle->mix('global_new');
 $bundle->css('css/components/more');
 $bundle->css('css/components/dropdown');
 $bundle->css('css/components/loader');
 $bundle->css('css/components/tooltips');
+$bundle->mix('search-options');
 $bundle->css('css/views/chapter-main');
 $bundle->js('js/views/chapter-main');
 $bundle->css('css/views/chapter-acs');
@@ -19,6 +21,7 @@ $bundle->js('js/views/chapter-search');
 $bundle->mix('next-screen');
 $bundle->enqueue();
 
+collection::create_default(get_current_user_id());
 $chapter = $post;
 $author = get_user_by( 'ID', $chapter->post_author );
 $book = get_post($chapter->post_parent);
@@ -30,9 +33,10 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 <main>
 	<chapter chapter_id="<?= $chapter->ID; ?>">
 		<chapter-header tabindex="1" class="dropdown">
-			<book-info>
+			<book-info book_id="<?= $book->ID; ?>">
 				<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>
 				<author><?= author_href($chapter->post_parent); ?></author>
+				<book-description hidden><?= $book->post_excerpt; ?></book-description>
 			</book-info>
 			<div class="down-arrow"></div>
 			<dropdown>
@@ -54,6 +58,16 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 		<chapter-title><?= $chapter->post_title; ?></chapter-title>
 		<content><?= $chapter->post_content; ?></content>
 		<a <?= $next_chapter_href; ?> theme class="button next-chapter"></a>
+		<book-options>
+			<collections_data hidden>
+				<?= json_encode(collection::js_data()) ?>
+			</collections_data>
+			<book_collections hidden>
+				<?= json_encode( collection::query_by_book( array($book->ID), 'ID' ) ); ?>
+			</book_collections>
+			<button class="book-collections"></button>
+			<button class="book-share"></button>
+		</book-options>
 	</chapter>
 	<reviews>
 		<?php get_template_part('comments'); ?>

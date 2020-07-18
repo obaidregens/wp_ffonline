@@ -11,12 +11,8 @@ $query->query();
 global $book_query;
 $book_query = $query;
 
-$collections = collection::query(array(
-    'authors'  => array(get_current_user_id()),
-));
-
 ?>
-<collections_data hidden><?= json_encode($collections); ?></collections_data>
+<collections_data hidden><?= json_encode(collection::js_data()) ?></collections_data>
 <tags_data hidden><?= json_encode(tags_data($query)); ?></tags_data>
 <prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
 

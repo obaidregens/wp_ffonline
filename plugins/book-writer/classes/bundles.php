@@ -297,6 +297,7 @@ class bundle {
         ),
         'search-options'    => array(
             'css'   => array(
+                'css/components/select',
                 'css/js-components/switch',
                 'css/views/search-options',
             ),

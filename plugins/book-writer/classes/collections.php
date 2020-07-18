@@ -1,5 +1,23 @@
 <?php
 class collection {
+    public static function js_data(){
+        $collections_data = collection::query(array(
+            'authors'  => array(get_current_user_id()),
+        ));
+        foreach($collections_data as $key => $collection){
+            unset($collection['slug']);
+            unset($collection['created']);
+            unset($collection['modified']);
+            unset($collection['author']);
+            unset($collection['count']);
+            if ($collection['type'] === 'Favorites'){
+                $collection['type'] = 'Public';
+            }
+            $collection['link'] = collection::link($collection['ID']);
+            $collections_data[$key] = $collection;
+        }
+        return $collections_data;
+    }
     public static function get_hidden($author = null){
         if ($author === null){
             $author = get_current_user_id();
@@ -504,6 +522,10 @@ class collection {
             $error->add('id','Doesn\'t exist');
             return $error;
         }
+        if (in_array($existing[0]['title'],array('Favorites','Hidden'))){
+            $error->add('Collection','Favorites & Hidden can\'t be edited.');
+            return $error;
+        }
         $args = array_replace($existing[0],$args);
         $args = collection::validate($args);
         if (err::is($args)){
@@ -572,7 +594,7 @@ class collection {
             $error->add('title','Required');
         }
         else if ($args['title'] == ''){
-            $error->add('title','Cannot be empty');
+            $error->add('title','Title is required.');
         }
         else if (! title_regex_valid($args['title'])){
             $error->add('title','Only underscores, dots, hyphens,question marks & alphanumeric characters allowed.');

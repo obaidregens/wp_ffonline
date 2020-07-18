@@ -10,6 +10,10 @@
     --shadow-light: 0px 0px 4px 0px #646464;
     --shadow-strong: 0px 0px 10px 0px #646464;
 }
+/* Colors */
+:root {
+    --red: #a02121;
+}
 html {
     background-color: var(--background-color);
     color: var(--text-color);

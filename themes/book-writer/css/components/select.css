@@ -23,3 +23,7 @@ select + label::before {
 select:focus {
     outline: none;
 }
+select > option {
+    background-color: var(--background-accent);
+    color: var(--text-color);
+}

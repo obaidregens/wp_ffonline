@@ -35,6 +35,7 @@ const popup = class {
         popup.open(_popup);
     }
     static open (_popup) {
+        popup.close();
         const popup_overlay = popup.overlay;
         _popup.classList.add('show');
         popup_overlay.classList.add('show');

@@ -1276,6 +1276,53 @@ function api_poll(){
     // }
     return_code(1);
 }
+function api_update_collection(){
+    function return_code($code){
+        $_return = array(
+            'code'			=> $code,
+        );
+        if ($code === 1 || $code === 2){
+            $_return['collections_data'] = collection::js_data();
+            $_return['book_collections'] = collection::query_by_book( $_POST['data']['book_ids'], 'ID' );
+        }
+        echo json_encode($_return);
+        exit();
+    }
+    $collection_id = $_POST['data']['collection_id'];
+    if ($_POST['data']['delete'] === "true"){
+        $return = collection::update($collection_id,array(
+            'type'                 => 'Trash'
+        ));
+        if (err::is($return) || $collection_id === 'new'){
+            return_code(10);
+        }
+        return_code(2);
+    }
+    $title = $_POST['data']['title'];
+    if (strlen($title) > 50){
+        return_code(7);
+    }
+    $privacy = $_POST['data']['privacy'];
+    if (! in_array($privacy,array('Public','Private','Unlisted'))){
+        return_code(8);
+    }
+    $arguments = array(
+        'title' => $title,
+        'type'  => $privacy
+    );
+    if ($collection_id === 'new'){
+        $return_collection = collection::create($arguments);
+    }
+    else{
+        $return_collection = collection::update(intval($collection_id),$arguments);
+    }
+    if (err::is($return_collection)){
+        return_code(9);
+    }
+    return_code(1);
+
+
+}
 
 if(! headers_sent() && ! isset($_SESSION) ){ 
     session_start(); 

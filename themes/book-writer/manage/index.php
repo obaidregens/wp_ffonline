@@ -4,174 +4,64 @@ admin_only();
 global $bundle;
 $bundle = global_bundle('manage');
 $bundle->js('js/manage');
+$bundle->css('css/components/index');
 $bundle->enqueue();
 get_header();
 
-//Query Database
-$stats = _landing::query(array(
-    'unique'        => 'vfs',
-    'actions'       => array(
-        'from'      => 1
-    ),
-    'order'         => 'DESC',
-    'orderby'       => 'ID'
-));
+global $wpdb;
+$old_landings = $wpdb->get_results("SELECT * FROM stats_landings WHERE referrer_host IS NOT NULL AND referrer_host != 'local' ORDER BY ID ASC",ARRAY_A);
+$actions = $wpdb->get_results("SELECT * FROM stats_actions WHERE landing_id IN(" . implode(',',array_keys($old_landings)) . ")",ARRAY_A);
+$gactions = [];
+foreach ($actions as $action ) {
+    $landing_id = $action['landing_id'];
+    if (! isset($gactions[$landing_id])){
+        $gactions[$landing_id] = [];
+    }
+    $action['timestamp'] = (int) $action['timestamp'];
+    $gactions[$landing_id][] = $action;
+}
+$stat = [];
+$session_start = $old_landings[0]['timestamp'];
+foreach ($old_landings as $key => $landing ) {
+    $landing_id = $landing['ID'];
+    $vfs = $landing['vfs'];
+    if (! isset($gactions[$landing_id])){
+        continue;
+    }
+    $landing['actions'] = $gactions[$landing_id];
+    // Now for Data from $landing
+    $start_timestamp = $landing['timestamp'];
+    if ($key !== 0 && $start_timestamp - $end_timestamp >= 30*60){
+        $stat[$landing['referrer_host']][] = array(
+            'timespan'      => $end_timestamp - $session_start,
+            'vfs'           => $old_landings[$key-1]['vfs'],
+            'user_id'       => $old_landings[$key-1]['user_id']
+        );
+        $session_start = $start_timestamp;
+    }
+    $action_stamps = array_column($landing['actions'],'timestamp');
+    rsort($action_stamps);
+    $end_timestamp = $action_stamps[0];
+}
+$to_echo = [];
+foreach ($stat as $referrer => $visits) {
+    $timestamps = array_column($visits,'timespan');
+    $timespan = array_sum($timestamps)/count($timestamps);
+    $to_echo[$referrer] = human_time_diff(0,$timespan);
+}
 ?>
-<style>
-    /* Timeline Start */
-    .container{
-        width: 90% !important;
-    }
-    .timeline {
-    position: relative;
-    }
-
-    .timeline .timeline-event {
-    position: relative;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    }
-
-    .timeline .timeline-event .timeline-content {
-    position: relative;
-    width: calc(50% - 50px);
-    }
-
-    .timeline-content{
-        padding:0 !important;
-    }
-
-    .timeline .timeline-event::before {
-    display: block;
-    content: "";
-    width: 2px;
-    height: calc(50% - 30px);
-    position: absolute;
-    background: #d2d2d2;
-    left: calc(50% - 1px);
-    top: 0;
-    }
-
-    .timeline .timeline-event::after {
-    display: block;
-    content: "";
-    width: 2px;
-    height: calc(50% - 30px);
-    position: absolute;
-    background: #d2d2d2;
-    left: calc(50% - 1px);
-    top: calc(50% + 30px);
-    }
-
-    .timeline .timeline-event:first-child::before {
-    display: none;
-    }
-
-    .timeline .timeline-event:last-child::after {
-    display: none;
-    }
-
-    .timeline .timeline-event:nth-child(even) .timeline-content {
-    margin-left: calc(50% + 50px);
-    }
-
-    .timeline .timeline-event:nth-child(odd) .timeline-content {
-    margin-left: 0;
-    }
-
-    .timeline .timeline-badge {
-    display: block;
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    background: #d2d2d2;
-    top: calc(50% - 20px);
-    right: calc(50% - 20px);
-    border-radius: 50%;
-    text-align: center;
-    cursor: default;
-    }
-
-    .timeline .timeline-badge i {
-    font-size: 25px;
-    line-height: 40px;
-    }
-
-    @media (max-width: 600px) {
-    .timeline .timeline-event .timeline-content {
-        width: calc(100% - 70px);
-    }
-    .timeline .timeline-event::before {
-        left: 19px;
-    }
-    .timeline .timeline-event::after {
-        left: 19px;
-    }
-    .timeline .timeline-event:nth-child(even) .timeline-content {
-        margin-left: 70px;
-    }
-    .timeline .timeline-event:nth-child(odd) .timeline-content {
-        margin-left: 70px;
-    }
-    .timeline .timeline-badge {
-        left: 0;
-    }
-    }
-    /* Timeline End */
-    main,header#masthead{
-        padding-left:210px;
-    }
-    .user_info{
-        transform-origin: top;
-        transform: scale(0.7);
-    }
-    .sidebar-left{
-        width: 210px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        z-index: 999;
-        padding-top: 50px;
-        background-color: var(--background-accent);
-    }
-    .sidebar-left li{
-        display:block;
-        padding: 15px 20px;
-        color: var(--text-color);
-    }
-    json_data{
-        display:none;
-    }
-</style>
-<json_data><?= json_encode($stats); ?></json_data>
-
-<div class="sidebar-left">
-    <li class="btn-hover active">
-        Users
+<h1>Average time by referrer.</h1>
+<index>
+    <li>
+        <cell>Referrer</cell>
+        <cell>Average Time</cell>
     </li>
-</div>
-<main>
-<table class="responsive-table highlight">
-    <thead>
-        <tr>
-            <th>User ID</th>
-            <th>Most Recent Visit</th>
-            <th>Most Recent IP</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
-</main>
-<div id="track_user" class="modal modal-large">
-    <div class="modal-content">
-        <h3 class="row">Track User</h3>
-        <div class="container">
-            <div class="user_info timeline"></div>
-        </div>
-
-    </div>
-</div>
+    <?php foreach( $to_echo as $first => $second) { ?>
+    <li>
+        <cell><?= $first; ?></cell>
+        <cell><?= $second; ?></cell>
+    </li>
+    <?php } ?>
+</index>
 <?php
 get_footer( );
