@@ -19,10 +19,10 @@ function login_only(){
 		get_header();
         get_footer();
         ?><script>
-        document.addEventListener('DOMContentLoaded',function(){
+        window.onload = function(){
             prompt_login();
             document.querySelector('popup-overlay').style.pointerEvents = 'none';
-        });
+        }
         </script><?php
 		exit();
 	}

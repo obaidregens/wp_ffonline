@@ -367,7 +367,7 @@ class Personalize_Login_Plugin {
 	 * at the end of the page.
 	 */
 	public function add_captcha_js_to_footer() {
-		echo "<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>";
+		// echo "<script src='https://www.google.com/recaptcha/api.js?hl=en'></script>";
 	}
 
 	/**

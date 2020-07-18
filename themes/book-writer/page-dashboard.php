@@ -1,11 +1,11 @@
 <?php
 /* Template Name: Dashboard */ 
 //page_header
-login_only();
 global $bundle;
 $bundle = global_bundle('dashboard');
 $bundle->mix('dashboard');
 $bundle->enqueue();
+login_only();
 get_header();
 ?>
 <?php $books = get_pages(array(

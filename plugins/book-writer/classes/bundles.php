@@ -32,6 +32,9 @@ class bundle {
             $raw_files = self::raw_urls($bundle);
             foreach ($raw_files as $extension => $files) {
                 foreach ($files as $file) {
+                    if (substr ($file ,0,3) === '://'){
+                        continue;
+                    }
                     $file_full = $theme_dir . $file . '.' . $extension;
                     if ( filemtime($file_full) >= $last_edited ) {
                         $bundle = new bundle($bundle_name);
@@ -97,14 +100,24 @@ class bundle {
         $raw_urls = $this->get_raw_urls();
         $total_css = '';
         foreach ($raw_urls['css'] as $file) {
-            $total_css .= file_get_contents($this->theme_dir .  $file . '.css');
+            if (substr ($file ,0,3) === '://'){
+                $total_css .= file_get_contents('https' . $file . '.css');
+            }
+            else {
+                $total_css .= file_get_contents($this->theme_dir .  $file . '.css');
+            }
             $total_css .= "\r\n";
         }
         $minified_css = curl_minify( $total_css, 'https://cssminifier.com/raw' );
 
         $total_js = '';
         foreach ($raw_urls['js'] as $file) {
-            $total_js .= file_get_contents($this->theme_dir .  $file . '.js');
+            if (substr ($file ,0,3) === '://'){
+                $total_js .= file_get_contents('https' . $file . '.js');
+            }
+            else {
+                $total_js .= file_get_contents($this->theme_dir .  $file . '.js');
+            }
             $total_js .= "\r\n";
         }
         $minified_js = curl_minify( $total_js, 'https://javascript-minifier.com/raw' );

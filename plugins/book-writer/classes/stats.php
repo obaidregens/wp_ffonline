@@ -486,6 +486,108 @@ class _action extends stats {
         return $results;
     }
 }
+class reports extends stats {
+    public static $dir = null;
+    public static function init_dir(){
+        self::$dir = explode('wp-content',__FILE__)[0] . 'reports/';
+        if (! file_exists(self::$dir)){
+            mkdir(self::$dir);
+            file_put_contents(self::$dir . '.htaccess','Deny from all');
+        }
+    }
+    public static function average_time_by_referrer(){
+        $filename = self::$dir . 'average_time_by_referrer';
+        if (file_exists($filename) && time() - filemtime($filename) <= 60*60*24*5){
+            return file_get_contents($filename);
+        }
+        global $wpdb;
+        $old_landings = $wpdb->get_results("SELECT * FROM stats_landings WHERE referrer_host IS NOT NULL ORDER BY ID ASC",ARRAY_A);
+        $actions = $wpdb->get_results("SELECT * FROM stats_actions WHERE landing_id IN(" . implode(',',array_column($old_landings,'ID')) . ")",ARRAY_A);
+        
+        $gactions = [];
+        foreach ($actions as $action ) {
+            $landing_id = $action['landing_id'];
+            if (! isset($gactions[$landing_id])){
+                $gactions[$landing_id] = [];
+            }
+            $action['timestamp'] = (int) $action['timestamp'];
+            $gactions[$landing_id][] = $action;
+        }
+        $vfs_full = [];
+        foreach ($old_landings as $key => $landing ) {
+            $landing_id = $landing['ID'];
+            $vfs = $landing['vfs'];
+            if (! isset($gactions[$landing_id])){
+                continue;
+            }
+            $landing['actions'] = $gactions[$landing_id];
+            if (! isset($vfs_full[$vfs])){
+                $vfs_full[$vfs] = [];
+            }
+            $vfs_full[$vfs][] = $landing;
+        }
+        $stat = [];
+        foreach($vfs_full as $vfs => $landings){
+            $session_start = $landings[0]['timestamp'];
+            foreach ($landings as $key => $landing){
+                $start_timestamp = $landing['timestamp'];
+                if ($key !== 0 && $start_timestamp - $end_timestamp >= 30*60){
+                    $prev_landing = $landings[$key-1];
+                    $stat[$prev_landing['referrer_host']][] = array(
+                        'timespan'      => $end_timestamp - $session_start,
+                        'vfs'           => $prev_landing['vfs'],
+                        'user_id'       => $prev_landing['user_id']
+                    );
+                    $session_start = $start_timestamp;
+                }
+                $action_stamps = array_column($landing['actions'],'timestamp');
+                rsort($action_stamps);
+                $end_timestamp = $action_stamps[0];
+            }
+            $prev_landing = $landings[count($landings)-1];
+            $stat[$prev_landing['referrer_host']][] = array(
+                'timespan'      => $end_timestamp - $session_start,
+                'vfs'           => $prev_landing['vfs'],
+                'user_id'       => $prev_landing['user_id']
+            );
+        }
+        $to_echo = [];
+        $the_count = 0;
+        foreach ($stat as $referrer => $visits) {
+            $timestamps = array_column($visits,'timespan');
+            $visit_count = count($timestamps);
+            $the_count += $visit_count;
+            $timespan = array_sum($timestamps)/$visit_count;
+            $to_echo[$referrer] = [
+                human_time_diff(0,$timespan),
+                $visit_count
+            ];
+        }
+        ob_start();
+        ?>
+        <h1>Average time by referrer.</h1>
+        <index>
+            <li>
+                <cell>Referrer</cell>
+                <cell>Average Time</cell>
+                <cell>Visits</cell>
+            </li>
+            <?php foreach( $to_echo as $first => $array) { ?>
+            <li>
+                <cell><?= $first; ?></cell>
+                <cell><?= $array[0]; ?></cell>
+                <cell><?= $array[1]; ?></cell>
+            </li>
+            <?php } ?>
+        </index>
+        <?php
+        $ml = ob_get_contents();
+        ob_end_clean();
+        file_put_contents($filename,$ml);
+        return $ml;
+    }
+}
+reports::init_dir();
 function ctrk_encrypt($custom_data){
     $encrypt_method = "AES-256-CBC";
     $secret_key = 'ygj6410386b3a7369pcs22b8dq21388430025v118143thu6baj41';
