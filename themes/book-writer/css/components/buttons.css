@@ -4,6 +4,7 @@ button,
     position: relative;
     display: inline-block;
     min-width: min-content;
+    min-width: -moz-min-content;
     font-size: 12px;
     background-color: transparent;
     color: var(--text-color);

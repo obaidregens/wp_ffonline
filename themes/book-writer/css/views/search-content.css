@@ -103,6 +103,7 @@ books-container > book > .author > a:nth-child(2)::before {
     content: 'FROM ';
 }
 books-container > book > .description {
+    word-break: break-word;
     cursor: text;
     margin-bottom: 1rem;
 }

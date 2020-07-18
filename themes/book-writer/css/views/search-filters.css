@@ -120,6 +120,7 @@ popup[tag-name] > wrap > button.exclude.active, popup[tag-name] > wrap > button.
 popup[tag-name] > wrap >  button {
     font-size: 10px;
     width: min-content;
+    width: -moz-min-content;
     display: block;
     margin: 0 5px;
     margin-bottom: 10px;
