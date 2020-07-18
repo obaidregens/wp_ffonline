@@ -586,6 +586,82 @@ class reports extends stats {
         file_put_contents($filename,$ml);
         return $ml;
     }
+    public static function popular_link_ins(){
+        $filename = self::$dir . 'popular_link_ins';
+        if (file_exists($filename) && time() - filemtime($filename) <= 60*60*24*5){
+            return file_get_contents($filename);
+        }
+        global $wpdb;
+        $old_landings = $wpdb->get_results("SELECT * FROM stats_landings WHERE referrer_host IS NOT NULL AND referrer_host != 'local' ORDER BY ID ASC",ARRAY_A);
+        $actions = $wpdb->get_results("SELECT * FROM stats_actions WHERE landing_id IN(" . implode(',',array_column($old_landings,'ID')) . ")",ARRAY_A);
+        
+        $gactions = [];
+        foreach ($actions as $action ) {
+            $landing_id = $action['landing_id'];
+            if (! isset($gactions[$landing_id])){
+                $gactions[$landing_id] = [];
+            }
+            $action['timestamp'] = (int) $action['timestamp'];
+            $gactions[$landing_id][] = $action;
+        }
+        $referrers = [];
+        foreach ($old_landings as $key => $landing ) {
+            $landing_id = $landing['ID'];
+            $ref = $landing['referrer_host'];
+            if (! isset($gactions[$landing_id])){
+                continue;
+            }
+            $collection = &$referrers[$landing['type']][$landing['type_id'] . '<->' . $ref];
+            if (! isset($collection)){
+                $collection = 0;
+            }
+            $collection += 1;
+        }
+        ob_start();
+        ?>
+        <style>
+        h2,h2 + index {
+            padding-left: 20px;
+        }
+        h1,h2 {
+            padding-top: 20px;
+        }
+        </style>
+        <h1>Popular Link-Ins</h1>
+        <?php foreach ($referrers as $type => $from) { ?>
+            <?php arsort($from); ?>
+            <h2><?= ucfirst($type); ?></h2>
+            <index>
+                <li>
+                    <cell>ID</cell>
+                    <cell>From</cell>
+                    <cell>Count</cell>
+                </li>
+                <?php foreach ($from as $ref => $each) { ?>
+                    <?php
+                    $ref = explode('<->',$ref);
+                    if (in_array($type,array('chapter','book'))){
+                        $ref[0] = '<a href="' . get_permalink( $ref[0] ) . '">' . get_the_title( $ref[0] ) . '</a>';
+                    }
+                    else if (in_array($type,array('author','author-updates','author-collections','author-books'))){
+                        $ref[0] = '<a href="' . get_author_posts_url( $ref[0] ) . '">' . get_the_author_meta( 'display_name',$ref[0] ) . '</a>';
+                    }
+                    ?>
+                    <li>
+                        <cell><?= $ref[0]; ?></cell>
+                        <cell><?= $ref[1]; ?></cell>
+                        <cell><?= $each; ?></cell>
+                    </li>
+                <?php } ?>
+            </index>
+        <?php } ?>
+        <?php
+        $ml = ob_get_contents();
+        ob_end_clean();
+        file_put_contents($filename,$ml);
+        return $ml;
+    }
+
 }
 reports::init_dir();
 function ctrk_encrypt($custom_data){
