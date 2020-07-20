@@ -66,3 +66,20 @@ class _ {
         copy_bubble.remove();
     }
 }
+const _a = class {
+    static intersect(array1,array2) {
+        let loop_arr = array1;
+        let in_arr = array2;
+        if (array1.length > array2.length){
+            loop_arr = array2;
+            in_arr = array1;
+        }
+        const results_arr = [];
+        for (let n = 0; n < loop_arr.length; n++) {
+            if ( in_arr.includes(loop_arr[n]) ){
+                results_arr.push(loop_arr[n]);
+            }
+        }
+        return results_arr;
+    }
+}

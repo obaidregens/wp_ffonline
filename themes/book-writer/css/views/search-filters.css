@@ -87,9 +87,14 @@ next-screen > div > button[label="Close"] {
 /* Popup[tag-name] */
 popup[tag-name] {
     padding: 0;
+    max-width: 450px;
+    max-height: 90%;
+}
+popup[tag-name].show {
+    top: 5%;
 }
 popup[tag-name] > wrap {
-    padding: 20px;
+    padding: 10px;
     position: sticky;
     left: 0;
     display: flex;
@@ -97,9 +102,11 @@ popup[tag-name] > wrap {
     flex-wrap: wrap;
     z-index: 15;
     background-color: var(--background-accent);
+    box-shadow: var(--shadow-light);
 }
 popup[tag-name] > wrap:first-child {
     top: 0;
+    padding-bottom: 5px;
 }
 popup[tag-name] > wrap:last-child {
     bottom: 0;
@@ -151,7 +158,20 @@ popup[tag-name] > tag_list:empty::before {
     font-size: 0.85rem;
     color: #9e9e9e;
     display: block;
-    margin: 0 18px;
+    margin: 18px;
+}
+popup[tag-name="character"] > tag_list.no-fandoms:empty::before {
+    content: 'No Fandoms Selected.';
+}
+popup[tag-name] > tag_list > fandom {
+    display: block;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 1.1em;
+    position: sticky;
+    top: 108px;
+    background-color: var(--background-accent);
+    z-index: 10;
 }
 popup[tag-name] > tag_list > label.checkbox {
     display: block;

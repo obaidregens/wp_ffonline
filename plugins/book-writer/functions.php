@@ -170,9 +170,30 @@ function run_at_activation(){
 		PRIMARY KEY (`_key`,`_value`)
 	) $charset_collate;";
 
+	$verification_codes_table_name = 'verification_codes';
+	$verification_codes_table = "CREATE TABLE $verification_codes_table_name (
+		`ID` BIGINT NOT NULL AUTO_INCREMENT,
+		`code` VARCHAR(8) NOT NULL ,
+		`issued` BIGINT NOT NULL ,
+		PRIMARY KEY (ID)
+	) $charset_collate;";
+
+	$user_connections_table_name = 'user_connections';
+	$user_connections_table = "CREATE TABLE $user_connections_table_name (
+		`ID` BIGINT NOT NULL AUTO_INCREMENT,
+		`user_id` BIGINT NOT NULL,
+		`connection_user` VARCHAR(50) NOT NULL ,
+		`connection_from` VARCHAR(20) NOT NULL ,
+		`status` VARCHAR(20) NOT NULL ,
+		`link_timestamp` BIGINT NULL ,
+		`unlink_timestamp` BIGINT NULL ,
+		`verification_ID` BIGINT NULL ,
+		PRIMARY KEY (ID)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	ob_start();
+	// ob_start();
 
 	// Stats
 	dbDelta( $stats_landings_table );
@@ -187,6 +208,10 @@ function run_at_activation(){
 	dbDelta( $collection_follow_table );
 	// Cache
 	dbDelta( $search_cache_table );
+	// Codes
+	dbDelta( $verification_codes_table );
+	// User Connections
+	dbDelta( $user_connections_table );
 
 
 	//Create Default Collections for users
@@ -196,8 +221,8 @@ function run_at_activation(){
 	foreach ($users as $user ) {
 		collection::create_default($user->ID);
 	}
-	file_put_contents( __DIR__ . '/this.err',ob_get_contents() );
-	ob_end_clean();
+	// file_put_contents( __DIR__ . '/this.err',ob_get_contents() );
+	// ob_end_clean();
 }
 register_activation_hook(__FILE__, 'run_at_activation' );
 
@@ -222,7 +247,9 @@ $includes = array(
 	'classes/chats',
 	'classes/reviews',
 	'classes/book_query',
-	'classes/v_user'
+	'classes/v_user',
+	'classes/v_code',
+	'classes/c_user'
 );
 foreach($includes as $include){
 	require ($include . '.php');

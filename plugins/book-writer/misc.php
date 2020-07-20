@@ -25,6 +25,7 @@ function mark_search($in, $search, $trim = null) {
 		$full .= substr($trimmed,0,$pos + 6 + strlen($search) + 7);
 		$trimmed = substr($trimmed,$pos + 6 + strlen($search) + 7);
 	}
+	$full .= $trimmed;
 	return $should_trim ? $full . '...' : $full;
 }
 function print_book_tags($book_id,$book_query) {

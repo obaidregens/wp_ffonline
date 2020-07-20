@@ -85,8 +85,8 @@ function create_tags_popup(tag_name){
     _popup.appendChild(_wrap);
     return _popup;
 }
-function words(action = 'set'){
-    let slider = document.querySelector('words-slider');
+function words(action = 'set',words){
+    const slider = document.querySelector('words-slider');
     if (slider.noUiSlider){
         if (action === 'reset'){
             slider.noUiSlider.reset();
@@ -128,12 +128,11 @@ function words(action = 'set'){
     });
 }
 words();
-function tag_list(tag_name, sort = 'count'){
-    const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
-    const this_tag_ids = Object.keys(tags_data[tag_name] || {});
+function sort_tags(tags,sort){
+    const this_tag_ids = Object.keys(tags);
     const sortFunc = sort === 'alphabetical' ? function(a, b){
-        const nameA = tags_data[tag_name][a].name.toUpperCase();
-        const nameB = tags_data[tag_name][b].name.toUpperCase();
+        const nameA = tags[a].name.toUpperCase();
+        const nameB = tags[b].name.toUpperCase();
         if (nameA < nameB) {
           return -1;
         }
@@ -142,12 +141,28 @@ function tag_list(tag_name, sort = 'count'){
         }
         return 0;
     } : function(a, b){
-        return tags_data[tag_name][a].count - tags_data[tag_name][b].count;
+        return tags[a].count - tags[b].count;
     };
     this_tag_ids.sort(sortFunc);
     if (sort === 'count'){
         this_tag_ids.reverse();
     }
+    return this_tag_ids;
+}
+function tags_checkboxes_fragment(tags,tag_ids){
+    const fragment = document.createDocumentFragment();
+    for (let u = 0; u < tag_ids.length; u++) {
+        const tag_id = tag_ids[u];
+        const tag = tags[tag_id];
+        const tag_elem = document.createElement('checkbox');
+        tag_elem.setAttribute('value',tag_id);
+        tag_elem.setAttribute('label',tag.name + ' (' + tag.count + ')');
+        fragment.appendChild(tag_elem);
+    }
+    return fragment;
+}
+function tag_list(tag_name, sort = 'count'){
+    const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
     const tag_wrapper = document.createElement('tag_list');
     tag_wrapper.addEventListener('click',function(event){
         if (event.target.tagName.toLowerCase() === 'input'){
@@ -156,23 +171,49 @@ function tag_list(tag_name, sort = 'count'){
             }
         }
     });
-    for (let u = 0; u < this_tag_ids.length; u++) {
-        const tag_id = this_tag_ids[u];
-        const tag = tags_data[tag_name][tag_id];
-        const tag_elem = document.createElement('checkbox');
-        tag_elem.setAttribute('value',tag_id);
-        tag_elem.setAttribute('label',tag.name + ' (' + tag.count + ')');
-        tag_wrapper.appendChild(tag_elem);
+    if (tag_name === 'character'){
+        const tags_entries =  Object.entries(tags_data[tag_name]);
+        for (let i = 0; i < tags_entries.length; i++) {
+            if (tags_entries[i][0] === "0"){
+                continue;
+            }
+            tag_wrapper.appendChild(DOM.create('fandom',{
+                innerText: tags_data['fandom'][tags_entries[i][0]].name
+            }));
+            const this_tags = tags_entries[i][1];
+            const this_tag_ids = sort_tags(this_tags, sort);
+            const chkbx = tags_checkboxes_fragment(this_tags,this_tag_ids);
+            tag_wrapper.appendChild(chkbx);
+        }
     }
+    else {
+        const this_tags = tags_data[tag_name] || {};
+        const this_tag_ids = sort_tags(this_tags, sort);
+        const chkbx = tags_checkboxes_fragment(this_tags,this_tag_ids);
+        tag_wrapper.appendChild(chkbx);
+    }
+
     return tag_wrapper;
 }
+const urlParams = new URLSearchParams(window.location.search);
+const urlParamsWords = (urlParams.get('words') || '0,3000000').split(',');
+document.querySelector('words-slider').noUiSlider.set([urlParamsWords[0], urlParamsWords[1]]);
+const filters_search_elem = document.querySelector('filter-books > next-screen > div > text-input:first-child > input');
+filters_search_elem.value = urlParams.get('search') || '';
+filters_search_elem.dispatchEvent(new Event('change'));
+const filters_sort_elem = document.querySelector('filter-books > next-screen > div > select');
+const sort_options = [];
+for (let k = 0; k < filters_sort_elem.children.length; k++) {
+    sort_options.push(filters_sort_elem.children[k].getAttribute('value'));
+}
+filters_sort_elem.value = sort_options.includes(urlParams.get('sort')) ? urlParams.get('sort') : sort_options[0];
+
 const select_tags = document.querySelectorAll('select-tag');
 for (let i = 0; i < select_tags.length; i++) {
     const elem = select_tags[i];
     const tag_name = elem.getAttribute('name');
     
     const tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name];
-    const urlParams = new URLSearchParams(window.location.search);
     const url_selected = {
         included: urlParams.get(tag_name + '_included') ? urlParams.get(tag_name + '_included').split(',') : [],
         excluded: urlParams.get(tag_name + '_excluded') ? urlParams.get(tag_name + '_excluded').split(',') : []
@@ -269,8 +310,8 @@ function trigger_search(page = false){
     progress_spinner();
 
     let construct = 'words=' + words('get');
-    construct += '&sort=' + document.querySelector('filter-books > next-screen > div > select').value;
-    const search = document.querySelector('filter-books > next-screen > div > text-input:first-child > input').value;
+    construct += '&sort=' + filters_sort_elem.value;
+    const search = filters_search_elem.value;
     construct += search === '' ? '' : '&search=' + search;
     const select_tags = document.querySelectorAll('select-tag');
     for (let i = 0; i < select_tags.length; i++) {

@@ -5,6 +5,9 @@
  * Search page
  *
  */
+// new c_user(array(
+// 	'connection_user'	=> '12f'
+// ));
 get_header();
 ?>
 <div>

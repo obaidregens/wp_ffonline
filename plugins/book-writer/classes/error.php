@@ -18,6 +18,7 @@ class err {
         if (! in_array($build_error,$this->errors)){
             $this->errors[] = $build_error;
         }
+        return $this;
     }
     function has(){
         if (empty($this->errors)){
