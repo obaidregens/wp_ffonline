@@ -313,14 +313,14 @@ class book_query_cache extends book_query {
         $key_value_ids = [];
         foreach ( $terms as $term ) {
             $term->taxonomy = $term->taxonomy === 'category' ? 'fandom' : $term->taxonomy;
+            if ($term->taxonomy === 'character'){
+                $fandoms_of_chars[intval($term->term_id)] = intval($term->parent);
+            }
             $term_key = $term->taxonomy . self::$midfix . $term->term_id;
             if (isset($this->existing[$term_key])){
                 continue;
             }
             if (! isset($key_value_ids[$term_key])){
-                if ($term->taxonomy === 'character'){
-                    $fandoms_of_chars[intval($term->term_id)] = intval($term->parent);
-                }
                 $key_value_ids[$term_key] = array(
                     '_key'      => $term->taxonomy,
                     '_value'    => $term->term_id,
