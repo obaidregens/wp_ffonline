@@ -45,7 +45,7 @@ function create_tags_popup(tag_name){
         if (_search === ''){
             return;
         }
-        const _boxes = _tag_list.querySelectorAll('[type=checkbox] + text');
+        const _boxes = _tag_list.querySelectorAll('.glide__slide--active > label.checkbox > text');
         for (let i = 0; i < _boxes.length; i++) {
             const box = _boxes[i];
             if (box.innerText.toLowerCase().search(_search) !== -1){
@@ -172,20 +172,64 @@ function tag_list(tag_name, sort = 'count'){
         }
     });
     if (tag_name === 'character'){
+        tags_data[tag_name][43] = {21: {name: 'Mine',count: 0}};
+        tags_data['fandom'][43] = {name: 'The Fand',count:1};
+        tags_data[tag_name][42] = {21: {name: 'fefeef',count: 0}};
+        tags_data['fandom'][42] = {name: 'Thefe',count:1};
         const tags_entries =  Object.entries(tags_data[tag_name]);
         const all_fandom_ids = Object.keys(tags_data['fandom']);
+        const slide_wrapper = DOM.create('ul',{
+            classes: ['glide__slides']
+        });
         for (let i = 0; i < tags_entries.length; i++) {
             if (! all_fandom_ids.includes(tags_entries[i][0])){
                 continue;
             }
-            tag_wrapper.appendChild(DOM.create('fandom',{
-                innerText: tags_data['fandom'][tags_entries[i][0]].name
-            }));
+            const slide = DOM.create('li',{
+                classes: ['glide__slide'],
+                attributes: {
+                    label: tags_data['fandom'][tags_entries[i][0]].name
+                }
+            });
             const this_tags = tags_entries[i][1];
             const this_tag_ids = sort_tags(this_tags, sort);
             const chkbx = tags_checkboxes_fragment(this_tags,this_tag_ids);
-            tag_wrapper.appendChild(chkbx);
+            slide.appendChild(chkbx);
+            slide_wrapper.appendChild(slide);
         }
+        const glide = DOM.create('div',{
+            classes: ['glide'],
+            children: [
+                DOM.create('div',{
+                    attributes: {
+                        "data-glide-el": "controls"
+                    },
+                    children: [
+                        DOM.create('button',{
+                            attributes: {
+                                "data-glide-dir": "<"
+                            }
+                        }),
+                        DOM.create('button',{
+                            attributes: {
+                                "data-glide-dir": ">"
+                            }
+                        })
+                    ]
+                }),
+                DOM.create('div',{
+                    classes: ['glide__track'],
+                    attributes: {
+                        "data-glide-el": "track"
+                    },
+                    children: [
+                        slide_wrapper
+                    ]
+                })
+            ]
+        });
+        tag_wrapper.appendChild(glide);
+
     }
     else {
         const this_tags = tags_data[tag_name] || {};
@@ -235,7 +279,7 @@ for (let i = 0; i < select_tags.length; i++) {
         const _popup = create_tags_popup(tag_name);
         popup.create(_popup,{
             onClose: function() {
-                const inputs = _popup.querySelectorAll('tag_list > label > input:checked');
+                const inputs = _popup.querySelectorAll('tag_list label.checkbox > input:checked');
                 const selected = {included: [], excluded: []};
                 const new_tags = document.createDocumentFragment();
                 for (let i = 0; i < inputs.length; i++) {
@@ -257,6 +301,21 @@ for (let i = 0; i < select_tags.length; i++) {
                 _popup.remove();
             }
         });
+        if (tag_name === 'character'){
+            const glide_elem = document.querySelector('popup[tag-name="character"] > tag_list > div.glide');
+            const glide = new Glide(glide_elem,{
+                type: 'carousel',
+                perView: 1
+            });
+            function setLabelOfGlide(){
+                const fandom_name = glide_elem.querySelector(`.glide__track > ul > .glide__slide--active`).getAttribute('label');
+                glide_elem.querySelector('[data-glide-el="controls"]').setAttribute('fandom',fandom_name);
+            }
+            glide.on('run.after', setLabelOfGlide);
+            glide.mount();
+            setLabelOfGlide();
+    
+        }
         init_text_input();
         init_checkbox();
         

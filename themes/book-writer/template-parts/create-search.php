@@ -70,5 +70,6 @@ global $bundle;
 $bundle = new bundle('create_search_custom');
 $bundle->mix('jquery');
 $bundle->mix('global_new');
+$bundle->mix('glide_js');
 $bundle->mix('create_search_new');
 $bundle->enqueue();

@@ -111,9 +111,6 @@ popup[tag-name] > wrap:first-child {
 popup[tag-name] > wrap:last-child {
     bottom: 0;
 }
-popup[tag-name] > tag_list {
-    padding: 0 10px;
-}
 popup[tag-name] > wrap > button.include::before {
     content: 'Include';
 }
@@ -145,13 +142,15 @@ popup[tag-name] > wrap:first-child > button {
         padding: 0 8px;
     }
 }
-
 popup[tag-name] > wrap > text-input {
     width: 100%;
     margin: 5px;
 }
 popup[tag-name] > wrap > button[label="OK"], popup[tag-name] > wrap > button[label="Sort"] {
     margin-left: auto;
+}
+popup[tag-name] > tag_list {
+    padding: 0 10px;
 }
 popup[tag-name] > tag_list:empty::before {
     content: 'No Tags';
@@ -160,28 +159,53 @@ popup[tag-name] > tag_list:empty::before {
     display: block;
     margin: 18px;
 }
-popup[tag-name="character"] > tag_list.no-fandoms:empty::before {
-    content: 'No Fandoms Selected.';
+popup[tag-name="character"] > tag_list > div > div.glide__track > ul {
+    margin: 0;
 }
-popup[tag-name] > tag_list > fandom {
-    display: block;
-    padding-top: 10px;
-    padding-bottom: 5px;
-    font-size: 1.1em;
-    position: sticky;
-    top: 108px;
-    background-color: var(--background-accent);
-    z-index: 10;
-}
-popup[tag-name] > tag_list > label.checkbox {
+popup[tag-name] > tag_list > label.checkbox,
+popup[tag-name="character"] > tag_list > div > div.glide__track > ul > li > label.checkbox {
     display: block;
     padding: 11px 10px 9px 10px;
     padding-top: 12px;
     margin: 0;
 }
-popup[tag-name] > tag_list > label.checkbox:hover {
+popup[tag-name] > tag_list > label.checkbox:hover,
+popup[tag-name="character"] > tag_list > div > div.glide__track > ul > li > label.checkbox:hover {
     background-color: var(--hover);
 }
 popup[tag-name] > tag_list {
     display: block;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) {
+    margin: 10px 0;
+    position: relative;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1)::before {
+    content: attr(fandom);
+    display: block;
+    position: absolute;
+    left: calc( 50% - 45px );
+    width: 90px;
+    top: 4px;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button {
+    border: none;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button:hover {
+    background-color: var(--hover);
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button[data-glide-dir="<"] {
+    float: left;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button[data-glide-dir="<"]::before {
+    font-family: 'icons';
+    content: '\e902';
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button[data-glide-dir=">"] {
+    float: right;
+}
+popup[tag-name="character"] > tag_list > div > div:nth-child(1) > button[data-glide-dir=">"]::before {
+
+    font-family: 'icons';
+    content: '\e903';
 }

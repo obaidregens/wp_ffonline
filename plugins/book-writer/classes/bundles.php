@@ -144,13 +144,15 @@ class bundle {
             $enqueued = [];
             foreach ($raw_urls['css'] as $key => $filename) {
                 $queue_name = 'bundle_' . $this->name . '_css_' . $key;
-                wp_enqueue_style( $queue_name, $this->theme_url . $filename . '.css', $enqueued, null );
+                $url_loc = substr($filename ,0,3) === '://' ? 'https' : $this->theme_url;
+                wp_enqueue_style( $queue_name, $url_loc . $filename . '.css', $enqueued, null );
                 $enqueued[] = $queue_name;
             }
             $enqueued = [];
             foreach ($raw_urls['js'] as $key => $filename) {
                 $queue_name = 'bundle_' . $this->name . '_js_' . $key;
-                wp_enqueue_script( $queue_name, $this->theme_url . $filename . '.js',$enqueued, null, true);
+                $url_loc = substr($filename ,0,3) === '://' ? 'https' : $this->theme_url;
+                wp_enqueue_script( $queue_name, $url_loc . $filename . '.js',$enqueued, null, true);
                 $enqueued[] = $queue_name;
             }
             return;
@@ -325,6 +327,14 @@ class bundle {
             ),
             'js'    => array(
                 'js/components/next-screen'
+            ),
+        ),
+        'glide_js'      => array(
+            'css'   => array(
+                '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core',
+            ),
+            'js'    => array(
+                '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide'
             )
         )
     ];

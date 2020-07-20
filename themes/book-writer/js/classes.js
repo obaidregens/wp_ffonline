@@ -90,7 +90,8 @@ const DOM = class {
         innerText = null,
         href = null,
         attributes = {},
-        listeners = {}
+        listeners = {},
+        children = []
     }){
         if (classes.length > 0){
             the_elem.className = classes.join(' ');
@@ -111,6 +112,7 @@ const DOM = class {
             const listener = listener_entries[i];
             the_elem.addEventListener(listener[0],listener[1]);
         }
+        the_elem = DOM.append(the_elem,children);
         return the_elem;
     }
     static append(to,elems){
