@@ -173,8 +173,9 @@ function tag_list(tag_name, sort = 'count'){
     });
     if (tag_name === 'character'){
         const tags_entries =  Object.entries(tags_data[tag_name]);
+        const all_fandom_ids = Object.keys(tags_data['fandom']);
         for (let i = 0; i < tags_entries.length; i++) {
-            if (tags_entries[i][0] === "0"){
+            if (! all_fandom_ids.includes(tags_entries[i][0])){
                 continue;
             }
             tag_wrapper.appendChild(DOM.create('fandom',{
