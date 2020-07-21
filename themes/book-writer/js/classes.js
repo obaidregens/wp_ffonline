@@ -89,6 +89,7 @@ const DOM = class {
         classes = [],
         innerText = null,
         href = null,
+        value = '',
         attributes = {},
         listeners = {},
         children = []
@@ -101,6 +102,9 @@ const DOM = class {
         }
         if (href !== null){
             the_elem.href = href;
+        }
+        if (value !== null){
+            the_elem.value = value;
         }
         const attr_entries = Object.entries(attributes);
         for (let i = 0; i < attr_entries.length; i++) {

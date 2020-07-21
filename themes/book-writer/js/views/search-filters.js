@@ -1,4 +1,28 @@
-// Function Not Complete, WIll be different for character and other tag
+function setSelectedTags(tag_name,selected){
+    let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name];
+    if (tag_name === 'character'){
+        const character_entries = Object.values(tags_data);
+        tags_data = {};
+        for (let i = 0; i < character_entries.length; i++) {
+            tags_data = Object.assign(tags_data,character_entries[i]);
+        }
+    }
+    const frag = document.createDocumentFragment();
+    const select_tag = document.querySelector(`select-tag[name="${tag_name}"]`);
+    select_tag.setAttribute('selected',JSON.stringify(selected));
+    const url_mixed = selected.included.concat(selected.excluded);
+    for (let yb = 0; yb < url_mixed.length; yb++) {
+        const _tag = tags_data[url_mixed[yb]];
+        const selected_tag_elem = document.createElement('tag');
+        selected_tag_elem.innerText = _tag.name + ' (' + _tag.count + ')';
+        if (selected.excluded.includes(url_mixed[yb])){
+            selected_tag_elem.setAttribute('excluded','');
+        }
+        frag.appendChild(selected_tag_elem);
+    }
+    select_tag.innerText = '';
+    select_tag.appendChild(frag);
+}
 const replaceTags = function(sort = 'count'){
     function sort_tags(tags,sort){
         const this_tag_ids = Object.keys(tags);
@@ -57,7 +81,6 @@ const replaceTags = function(sort = 'count'){
     }
     const this_tag_ids = sort_tags(this_tags, sort);
     const chkbx = tags_checkboxes_fragment(this_tags,this_tag_ids);
-
     // Selection
     const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
     const selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
@@ -65,7 +88,7 @@ const replaceTags = function(sort = 'count'){
     for (let m = 0; m < _mixed.length; m++) {
         const elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
         if (! elem_){
-            return;
+            continue;
         }
         elem_.checked = true;
         if (selected.excluded.includes(_mixed[m])){
@@ -88,39 +111,26 @@ function saveSelectedTags(){
     const tag_name = _pop_.getAttribute('tag-name');
     let tag_list = _pop_.querySelector('tag_list');
     let fandom_ID = null;
+    const selected = {included: [], excluded: []};
     if (tag_name === 'character'){
         const tags_wrapper = _pop_.querySelector('.glide__track > ul > .glide__slide.glide__slide--active');
         fandom_ID = tags_wrapper.getAttribute('value');
         tag_list = tags_wrapper.querySelector('tag_list');
+        const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
+        const characters = Object.keys(tags_data['character'][fandom_ID]);
+        const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
+        const old_selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
+        selected.included = _a.diff(old_selected.included,characters);
+        selected.excluded = _a.diff(old_selected.excluded,characters);
     }
-    const inputs = tag_list.querySelectorAll('tag_list > label.checkbox > input:checked');
-    const selected = {included: [], excluded: []};
-    const new_tags = document.createDocumentFragment();
+    const inputs = tag_list.querySelectorAll(' label.checkbox > input:checked');
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
-        const new_tag = document.createElement('tag');
-        new_tag.innerText = input.nextElementSibling.innerText;
-        if (input.classList.contains('cross')){
-            selected.excluded.push(input.value);
-            new_tag.setAttribute('excluded','');
-        }
-        else {
-            selected.included.push(input.value);
-        }
-        new_tags.appendChild(new_tag);
+        const loc = input.classList.contains('cross') ? 'excluded' : 'included';
+        selected[loc].push(input.value);
     }
-    const select_tag = document.querySelector(`select-tag[name="${tag_name}"]`);
-    select_tag.innerText = '';
-    select_tag.appendChild(new_tags);
-    if (tag_name === 'character') {
-        tag_list.innerText = '';
-        const characters = Object.keys(JSON.parse(document.querySelector('tags_data').innerText)['character'][fandom_ID]);
-        const selected_raw = select_tag.getAttribute('selected');
-        const old_selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
-        selected.included = (_a.diff(old_selected.included,characters)).concat(selected.included);
-        selected.excluded = (_a.diff(old_selected.excluded,characters)).concat(selected.excluded);
-    }
-    select_tag.setAttribute('selected',JSON.stringify(selected));
+    setSelectedTags(tag_name,selected);
+    tag_list.innerText = '';
 }
 function create_tags_popup(tag_name){
     let popup_content = DOM.create('tag_list');
@@ -247,33 +257,33 @@ function create_tags_popup(tag_name){
                         }),
                     ]
                 }),
-                DOM.create('text-input',{
+                DOM.update(create_text_input({
+                    label: 'Search'
+                }),{
                     listeners: {
                         input: function(){
-                            const _search = search.firstChild.value.toLowerCase();
+                            const _search = this.firstChild.value.toLowerCase();
                             if (_search === ''){
                                 return;
                             }
-                            const _boxes = _tag_list.querySelectorAll('.glide__slide--active > label.checkbox > text');
+                            const _popup = this.parentElement.parentElement;
+                            const tag_name = _popup.getAttribute('tag-name');
+                            let tag_list = _popup.querySelector('tag_list');
+                            let offset = -120;
+                            if (tag_name === 'character'){
+                                offset = 35 ;
+                                tag_list = _popup.querySelector(".glide__track > ul > .glide__slide.glide__slide--active > tag_list");
+                            }
+                            const _boxes = tag_list.querySelectorAll('label.checkbox > text');
                             for (let i = 0; i < _boxes.length; i++) {
                                 const box = _boxes[i];
                                 if (box.innerText.toLowerCase().search(_search) !== -1){
-                                    _popup.scrollTop = box.offsetTop - 150;
+                                    _popup.scrollTop = box.offsetTop + offset;
                                     break;
                                 }
                             }                        
                         }
-                    },
-                    children: [
-                        DOM.create('input',{
-                            attributes: {
-                                type: 'text'
-                            }
-                        }),
-                        DOM.create('label',{
-                            innerText: 'Search'
-                        })
-                    ]
+                    }
                 })
             ]
         }),
@@ -385,22 +395,11 @@ for (let i = 0; i < select_tags.length; i++) {
     const elem = select_tags[i];
     const tag_name = elem.getAttribute('name');
     
-    const tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name];
     const url_selected = {
         included: urlParams.get(tag_name + '_included') ? urlParams.get(tag_name + '_included').split(',') : [],
         excluded: urlParams.get(tag_name + '_excluded') ? urlParams.get(tag_name + '_excluded').split(',') : []
     };
-    elem.setAttribute('selected',JSON.stringify(url_selected));
-    const url_mixed = url_selected.included.concat(url_selected.excluded);
-    for (let yb = 0; yb < url_mixed.length; yb++) {
-        const _tag = tags_data[url_mixed[yb]];
-        const selected_tag_elem = document.createElement('tag');
-        selected_tag_elem.innerText = _tag.name + ' (' + _tag.count + ')';
-        if (url_selected.excluded.includes(url_mixed[yb])){
-            selected_tag_elem.setAttribute('excluded','');
-        }
-        elem.appendChild(selected_tag_elem);
-    }
+    setSelectedTags(tag_name,url_selected);
     elem.addEventListener('click',function(){
         __pop = create_tags_popup(tag_name);
         popup.open(__pop);

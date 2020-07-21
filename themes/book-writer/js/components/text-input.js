@@ -10,32 +10,51 @@ function init_text_input(){
         if (! ['email','password'].includes(input_type)){
             input_type = 'text';
         }
-        const input_e = document.createElement(type);
-        input_e.setAttribute('type',input_type);
-        input_e.value = elem.innerText;
-        if (type === 'textarea'){
-            input_e.addEventListener('input',function(){
-                this.style.height = 'auto';
-                this.style.height = this.scrollHeight + 'px';
-            });    
-        }
-        input_e.addEventListener('change', function (){
+        const text_input = create_text_input({
+            type,
+            label: elem.getAttribute('label'),
+            input_type,
+            value: elem.innerText
+        });
+        const input_e = text_input.querySelector('input');
+
+        elem.removeAttribute('label');
+        elem.removeAttribute('type');
+    
+        _.moveAttr(elem,input_e);
+        elem.replaceWith(text_input);
+    }
+}
+init_text_input();
+function create_text_input({type = 'input',input_type = 'text',label,value = ''}){
+    const listeners = {
+        change: function(){
             if (this.value === ''){
                 this.classList.remove('filled');
                 this.style.height = '43px';
                 return;
             }
             this.classList.add('filled');
-        });
-        const label = document.createElement('label');
-        label.innerText = elem.getAttribute('label');
-        elem.removeAttribute('label');
-        elem.removeAttribute('type');
-    
-        _.moveAttr(elem,input_e);
-    
-        elem.appendChild(input_e);
-        elem.appendChild(label);
+        }
+    };
+    if (type === 'textarea'){
+        listeners.input = function(){
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
     }
+    return DOM.create('text-input',{
+        children: [
+            DOM.create(type,{
+                value,
+                attributes: {
+                    type: input_type,
+                },
+                listeners
+            }),
+            DOM.create('label',{
+                innerText: label
+            })
+        ]
+    });
 }
-init_text_input();
