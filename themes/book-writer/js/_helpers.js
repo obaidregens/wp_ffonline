@@ -82,4 +82,11 @@ const _a = class {
         }
         return results_arr;
     }
+    static diff(array,array1){
+        return array.filter(function(element){
+            if (! array1.includes(element)){
+                return element;
+            }
+        });
+    }
 }

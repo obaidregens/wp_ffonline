@@ -48,6 +48,7 @@ const popup = class {
         if ( ! _popup ){
             return;
         }
+        _popup.dispatchEvent(new Event('onClose'));
         _popup.classList.remove('show');
         if (document.querySelectorAll('popup.show, next-screen.show').length === 0){
             document.documentElement.style.overflow = 'auto';
@@ -55,7 +56,6 @@ const popup = class {
         if (document.querySelectorAll('popup.show').length === 0){
             popup_overlay.classList.remove('show');
         }
-        _popup.dispatchEvent(new Event('onClose'));
     }
 }
 popup.init();
