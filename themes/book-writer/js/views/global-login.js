@@ -8,13 +8,21 @@ function prompt_login() {
 	login_popup =  document.createElement('popup');
 	login_popup.setAttribute('login','');
 	const form = document.createElement('form');
-	const login_input = document.createElement('text-input');
-	login_input.setAttribute('label','Username or Email');
-	login_input.setAttribute('name','username');
-	const password_input = document.createElement('text-input');
-	password_input.setAttribute('label','Password');
-	password_input.setAttribute('name','password');
-	password_input.setAttribute('input_type','password');
+	const login_input = DOM.update(create_text_input({
+		label: 'Username or Email',
+	}),{
+		attributes: {
+			name: 'username'
+		}
+	});
+	const password_input = DOM.update(create_text_input({
+		label: 'Password',
+		input_type: 'password'
+	}),{
+		attributes: {
+			name: 'password'
+		}
+	});
 	const reCAPTCHA_elem = document.createElement('recaptcha');
 	const submit_btn = document.createElement('button');
 	submit_btn.setAttribute('label','Login');
@@ -62,7 +70,6 @@ function prompt_login() {
 	login_popup.appendChild(signup_btn);
 
 	popup.create(login_popup);
-	init_text_input();
 	init_reCAPTCHA();
 	popup.close();
 	popup.open(login_popup);
@@ -77,13 +84,22 @@ function prompt_signup() {
 	signup_popup =  document.createElement('popup');
 	signup_popup.setAttribute('signup','');
 	const form = document.createElement('form');
-	const username_input = document.createElement('text-input');
-	username_input.setAttribute('label','Username');
-	username_input.setAttribute('name','username');
-	const email_input = document.createElement('text-input');
-	email_input.setAttribute('label','Email');
-	email_input.setAttribute('name','email');
-	email_input.setAttribute('input_type','email');
+
+	const username_input = DOM.update(create_text_input({
+		label: 'Username',
+	}),{
+		attributes: {
+			name: 'username'
+		}
+	});
+	const email_input = DOM.update(create_text_input({
+		label: 'Email',
+		input_type: 'email'
+	}),{
+		attributes: {
+			name: 'email'
+		}
+	});
 	const reCAPTCHA_elem = document.createElement('recaptcha');
 	const submit_btn = document.createElement('button');
 	submit_btn.setAttribute('label','Signup');
@@ -142,9 +158,13 @@ function prompt_forgot() {
 	forgot_popup = document.createElement('popup');
 	forgot_popup.setAttribute('forgot','');
 	const form = document.createElement('form');
-	const login_input = document.createElement('text-input');
-	login_input.setAttribute('label','Username or Email');
-	login_input.setAttribute('name','username');
+	const login_input = DOM.update(create_text_input({
+		label: 'Username or Email',
+	}),{
+		attributes: {
+			name: 'username'
+		}
+	});
 	const reCAPTCHA_elem = document.createElement('recaptcha');
 	const submit_btn = document.createElement('button');
 	submit_btn.setAttribute('label','Recover Password');
