@@ -18,3 +18,6 @@ uploads/logo.svg added (New Logo)
 
 Version 3.0.10
 Clear custom-cache folder in root because new system of cache is in place.
+
+Version 5.0.0
+Wordpress used headless from /wp folder. All routes except /static and /sitemap will be routed through index.php

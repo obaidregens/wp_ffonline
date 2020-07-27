@@ -1,0 +1,78 @@
+author-updates {
+    position: relative;
+}
+author-updates::before {
+    content: 'Updates';
+    font-weight: bold;
+}
+author-updates[empty]::after {
+    content: 'No updates posted.';
+    display: block;
+    position: absolute;
+    top: 50px;
+}
+author-updates > update {
+    display: block;
+    position: relative;
+    margin: 20px 0;
+}
+author-updates > update[pinned]::before {
+    font-family: 'icons';
+    content: '\e920';
+    position: absolute;
+    top: -1px;
+    font-size: 0.9rem;
+    color: gray;
+}
+author-updates > update[pinned] > update-time {
+    margin-left: 13px;
+}
+author-updates > update > update-time {
+    content: attr(time) ' ago';
+    display: block;
+    font-size: 0.8rem;
+    color: gray;
+}
+author-updates > update > button.dropdown::before {
+    content: '\e904';
+    font-family: 'icons';
+    transform: translateY(-2px) scale(1.2);
+    display: inline-block;
+}
+author-updates > update > button.dropdown {
+    border-color: transparent;
+    float: right;
+    border-radius: 50px;
+    padding: 10px;
+}
+author-updates > update > button.dropdown:hover {
+    background-color: var(--hover);
+    color: var(--text-color);
+}
+author-updates > update > button.dropdown > dropdown > [label="Pin"]::before {
+    font-family: 'icons';
+    content: '\e920';
+}
+author-updates > update > button.dropdown > dropdown > [label="Delete"]::before {
+    font-family: 'icons';
+    content: '\e921';
+}
+author-updates > update > button.dropdown > dropdown > *:after {
+    margin-left: 9px;
+    content: attr(label);
+}
+author-updates > .button.more {
+    position: relative;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    border-color: transparent;
+}
+author-updates > .button.more::before {
+    padding-right: 7px;
+    font-family: 'icons';
+    content: '\e904';
+    font-size: 16px;
+}
+author-updates > .button.more::after {
+    content: 'More Updates';
+}

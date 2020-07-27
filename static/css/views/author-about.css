@@ -1,0 +1,44 @@
+author-main {
+    --portion-gap: 20px;
+    display: block;
+    columns: 2 350px;
+    column-gap: var(--portion-gap);
+}
+author-main > * {
+    margin: var(--portion-gap) var(--portion-gap) var(--portion-gap) 0;
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+    box-shadow: var(--shadow-light);
+}
+author-bio {
+    word-break: break-word;
+}
+author-books::before {
+    display: block;
+    content: attr(books) ' Books';
+    color: var(--text-color);
+    opacity: 0.7;
+    padding: 0 0 20px 20px;
+    margin-bottom: -10px;
+}
+author-books > .button.more {
+    position: relative;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    border-color: transparent;
+    margin-bottom: 20px;
+}
+author-books > .button.more::before {
+    padding-right: 7px;
+    font-family: 'icons';
+    content: '\e904';
+    font-size: 16px;
+}
+author-books > .button.more::after {
+    content: 'More Books';
+}
+author-books > books-container.grid {
+    box-shadow: none;
+    padding: 0;
+}

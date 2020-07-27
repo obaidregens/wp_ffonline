@@ -1,0 +1,23 @@
+<div id="error"><p class="wpdberror"><strong>WordPress database error:</strong> [You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci&#039; at line 14]<br /><code>CREATE TABLE searches (
+		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		  `user_id` BIGINT UNSIGNED NOT NULL DEFAULT &#039;0&#039; ,
+		  `type` VARCHAR(20) NOT NULL DEFAULT &#039;main&#039; ,
+		  `type_id` BIGINT UNSIGNED NOT NULL DEFAULT &#039;0&#039; ,
+		  `timestamp` BIGINT UNSIGNED NOT NULL ,
+		  `IP` VARCHAR(100) NOT NULL ,
+		  `args` LONGTEXT NOT NULL ,
+		  PRIMARY KEY (`ID`),
+		  KEY user_id (user_id),
+		  KEY type (type),
+		  KEY type_id (type_id),
+		  KEY IP (IP),
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</code></p></div><div id="error"><p class="wpdberror"><strong>WordPress database error:</strong> [You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near &#039;) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci&#039; at line 10]<br /><code>CREATE TABLE searchparams (
+		  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		  `search_id` BIGINT UNSIGNED NOT NULL ,
+		  `parameter` VARCHAR(500) NOT NULL ,
+		  `value` VARCHAR(500) NOT NULL ,
+		  PRIMARY KEY (`ID`),
+		  KEY search_id (search_id),
+		  KEY parameter (parameter),
+		  KEY value (value),
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci</code></p></div>

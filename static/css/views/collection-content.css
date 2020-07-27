@@ -1,0 +1,39 @@
+collection.grid-item > button.follow-collection::before {
+    content: '\e916';
+    transition: transform .3s cubic-bezier(0.47, -0.24, 0.49, 5);
+}
+collection.grid-item > button.follow-collection.followed::before {
+    content: '\e901';
+    transform: scale(1.4);
+}
+collection > a.title {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+collection > a.author::before {
+    color: var(--text-color);
+    content: 'by ';
+}
+collection > collection-meta {
+    display: flex;
+    color: var(--theme-color);
+}
+collection > collection-meta > [tooltip-top] {
+    margin-right: 10px;
+}
+collection > collection-meta > [tooltip-top]::after {
+    float: left;
+    margin-right: 5px;
+    font-family: 'icons';
+}
+collection > collection-meta > [tooltip-top="Updated"]::after {
+    content: '\e918';
+}
+collection > collection-meta > [tooltip-top="Books"]::after {
+    content: '\e915';
+}
+collection > collection-meta > [tooltip-top="Follows"]::after {
+    content: '\e930';
+    transform: scale(0.9) translateY(-0.6px);
+}

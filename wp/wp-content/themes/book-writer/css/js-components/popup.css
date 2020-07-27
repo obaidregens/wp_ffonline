@@ -1,0 +1,42 @@
+popup-overlay {
+    transition: opacity 0.3s;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: -100%;
+    left: 0;
+    background-color: black;
+    z-index: 54;
+    will-change: opacity, top;
+}
+popup-overlay.show {
+    top: 0;
+    opacity: 0.5;
+}
+.popup {
+    z-index: 55;
+}
+popup {
+    display: block;
+    overflow-y: auto;
+    padding: 20px;
+    transition: opacity 0.3s, top 0.15s;
+    opacity: 0;
+    background-color: var(--background-accent);
+    border-radius: 5px;
+    position: fixed;
+    top: -100%;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 80%;
+    min-height: 10%;
+    max-height: 70%;
+    z-index: 55;
+    will-change: opacity, top;
+}
+popup.show {
+    opacity: 1;
+    top: 10%;
+}

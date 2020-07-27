@@ -1,0 +1,71 @@
+/* Buttons */
+button,
+.button {
+    position: relative;
+    display: inline-block;
+    min-width: min-content;
+    min-width: -moz-min-content;
+    font-size: 12px;
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--text-color);
+    border-radius: 4px;
+    user-select: none;
+    text-decoration: none;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    -webkit-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    cursor: pointer;
+    padding: 0px 14px;
+    height: 30px;
+    margin: 0 10px;
+}
+button:active:not([disabled]),
+.button:active:not([disabled]) {
+    transform: scale(0.97);
+    transform-origin: center;
+}
+button:hover:not([disabled]),
+button.active:not([disabled]),
+.button:hover:not([disabled]),
+.button.active:not([disabled]) {
+    border: 1px solid transparent;
+    background-color: var(--theme-color);
+    color: var(--white);
+}
+button:focus,
+.button:focus {
+    outline: none;
+}
+button[theme],
+.button[theme] {
+    border: none;
+    background-color: var(--theme-color);
+    color: var(--white);
+}
+button[theme]:hover:not([disabled]),
+.button[theme]:hover:not([disabled]) {
+    border: none;
+    filter: brightness(1.1);
+}
+button[label]::before,
+.button[label]::before {
+    content: attr(label);
+}
+/* Polyfills for anchor tags */
+a.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Disabled Button */
+button[disabled],.button[disabled] {
+    pointer-events: none;
+    color: #2f2f2f;
+    background-color: rgba(156, 156, 156, 0.61);
+    cursor: default;
+    border: 1px solid rgba(156, 156, 156, 0.61);
+}

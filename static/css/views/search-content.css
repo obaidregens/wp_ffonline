@@ -1,0 +1,136 @@
+:root {
+    --show-books-loader-time: 0.4s;
+}
+/* Main Page */
+
+/* Books Container */
+books-container {
+    margin-bottom: 20px;
+    transition: opacity var(--show-books-loader-time);
+    will-change: opacity;
+}
+@media only screen and (min-width: 400px) {
+    books-container {
+        grid-template-columns: repeat( auto-fill, minmax(280px, 1fr) );
+    }
+}
+@media only screen and (min-width: 800px) {
+    books-container {
+        grid-template-columns: repeat( auto-fill, minmax(350px, 1fr) );
+        box-shadow: var(--shadow-light);
+        padding: 20px;
+    }
+}
+books-container > book {
+    cursor: pointer;
+}
+books-container > book > button.dropdown:before {
+    content: '\e904';
+}
+books-container > book > button.dropdown > dropdown > *::before {
+    font-family: 'icons';
+    margin-right: 12px;
+}
+books-container > book > button.dropdown > dropdown > [label="Collections"]::before {
+    content: '\e907';
+}
+books-container > book > button.dropdown > dropdown > [label="Edit"]::before {
+    content: '\e909';
+}
+books-container > book > button.dropdown > dropdown > [label="Hide"]::before {
+    content: '\e906';
+    font-size: 130%;
+    margin-left: -2px;
+    margin-right: 10px;
+}
+books-container > book > button.dropdown > dropdown > [label="Share"]::before {
+    content: '\e908';
+}
+books-container > book > button.dropdown > dropdown > [label="Favorite"]::before {
+    content: '\e905';
+}
+books-container > book > button.dropdown > dropdown > *::after {
+    content: attr(label);
+}
+books-container > book > .title {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+books-container > book > .author {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+books-container > book > .author::before {
+    content: 'by ';
+}
+books-container > book > .author > a:nth-child(2) {
+    display: block;
+    color: var(--text-color);
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    font-size: 12px;
+}
+books-container > book > .author > a:nth-child(2)::before {
+    content: 'FROM ';
+}
+books-container > book > .description {
+    word-break: break-word;
+    cursor: text;
+    margin-bottom: 1rem;
+}
+/* Pagination */
+pagination {
+    display: flex;
+    justify-content: center;
+    transition: opacity var(--show-books-loader-time);
+    will-change: opacity;
+}
+pagination > a {
+    user-select: none;
+    text-align: center;
+    margin: 0 5px;
+    padding: 5px 10px;
+    min-width: 1rem;
+    border-radius: 2px;
+}
+pagination > a[paginate]:empty:not([previous]):not([next])::before {
+    content: attr(paginate);
+}
+pagination > a[paginate]:hover {
+    background-color: var(--hover);
+}
+pagination > a[active] {
+    background-color: var(--theme-color);
+    color: var(--white);
+}
+pagination > a:not([paginate]) {
+    cursor: default;
+}
+pagination > a[previous]::before,pagination > a[next]::before {
+    font-family: 'icons';
+}
+pagination > a[previous]::before {
+    content: '\e902';
+}
+pagination> a[next]::before {
+    content: '\e903';
+}
+/* Loader */
+main > loader {
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 35%;
+    left: calc(50% - 60px);
+    transition: opacity var(--show-books-loader-time);
+}
+main > loader.show {
+    opacity: 1;
+}
+main > loader.show ~ books-container, main > loader.show ~ pagination{
+    opacity: 0;
+    pointer-events: none;
+}

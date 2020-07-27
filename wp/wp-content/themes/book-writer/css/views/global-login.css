@@ -1,0 +1,42 @@
+/* General Popups */
+popup[login],
+popup[signup],
+popup[forgot] {
+    max-width: 300px;
+    text-align: center;
+}
+popup[login] > form,
+popup[signup] > form,
+popup[forgot] > form {
+    text-align: left;
+    margin-bottom: 15px;
+}
+popup[login] > form > text-input,
+popup[signup] > form > text-input,
+popup[forgot] > form > text-input {
+    margin: 20px 0;
+}
+popup[login] > form > recaptcha > div,
+popup[signup] > form > recaptcha > div,
+popup[forgot] > form > recaptcha > div {
+    transform: scale(0.55);
+    margin-right: -127px;
+}
+popup[login] > form > button,
+popup[signup] > form > button,
+popup[forgot] > form > button {
+    width: 100%;
+    margin: 0;
+}
+popup[login] > a::before,
+popup[signup] > a::before,
+popup[forgot] > a::before {
+    font-size: 85%;
+    font-weight: bold;
+    content: attr(label);
+}
+/* Login Popup */
+popup[login] > a:first-of-type::after {
+    content: ' - ';
+    cursor: default;
+}

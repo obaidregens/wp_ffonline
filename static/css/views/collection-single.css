@@ -1,0 +1,6 @@
+collections-container {
+    display: block;
+    border-bottom: 2px solid var(--grey);
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}

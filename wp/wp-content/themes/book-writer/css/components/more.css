@@ -1,0 +1,14 @@
+[more] {
+    max-height: 100px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg,var(--text-color) 60%,transparent);
+    mask-image: linear-gradient(180deg,var(--text-color) 60%,transparent);
+    transition: height 2s;
+}
+[more]:focus-within {
+    max-height: fit-content;
+    max-height: -moz-fit-content;
+    outline: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+}

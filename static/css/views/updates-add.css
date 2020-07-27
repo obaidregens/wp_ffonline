@@ -1,0 +1,20 @@
+author-updates > button.add-update::before {
+    content: 'Add Update';
+}
+author-updates > button.add-update {
+    display: block;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    margin-top: 10px;
+    border-color: transparent;
+}
+author-updates[empty] > button.add-update {
+    margin-top: 50px;
+}
+popup[add-update] {
+    max-width: 500px;
+}
+popup[add-update] > button {
+    margin-left: auto;
+    display: block;
+}
