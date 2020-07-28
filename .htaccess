@@ -1,5 +1,5 @@
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_URI} !^/sitemap/
-RewriteCond %{REQUEST_URI} !^/static/
-RewriteRule ^(.+)$ index.php [QSA,L]
+RewriteCond %{REQUEST_URI} !^/content/static/
+RewriteRule ^(.+)$ content/index.php [QSA,L]
