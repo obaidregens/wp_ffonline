@@ -1,2 +1,4 @@
 static/bundles
 *.jsonl
+sitemap
+*.log

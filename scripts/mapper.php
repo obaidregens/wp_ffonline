@@ -1,7 +1,7 @@
 <?php
 define('WP_USE_THEMES', false);
-require(explode('wp-content',__FILE__)[0] . 'wp-load.php');
-$dir = explode('wp-content',__FILE__)[0] . 'sitemap';
+require("../wp/wp-load.php");
+$dir = "../" . 'sitemap';
 if (! file_exists($dir)){
     mkdir($dir);
 }
@@ -26,30 +26,25 @@ function url_field($loc,$lastmod,$changefreq){
 }
 $xml = '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-$book_query = new WP_Query( array(
-    'post_type'              => array( 'book' ),
-    'post_status'            => array( 'publish' ),
-    'order'                  => 'DESC',
-    'orderby'                => 'modified',
-    'posts_per_page'		 => 10,
-) );
-//Main Page
+$book_query = new book_query( array() );
+$last_updated = f_dt($book_query->books[0]->post_modified);
+// Main Page
 $xml .= url_field(
     'https://fanfiction.online/',
-    f_dt($book_query->posts[0]->post_modified),
+    $last_updated,
     'hourly'
 );
-//Pages
-$num_pages = $book_query->max_num_pages;
+// Pages
+$num_pages = $book_query->pages;
 for ($i=2; $i <= $num_pages; $i++) { 
     $xml .= url_field(
         'https://fanfiction.online/?page=' . $i . '/',
-        f_dt($book_query->posts[0]->post_modified),
+        $last_updated,
         'hourly'
     );
 }
 
-//Collection Page
+// Collection Page
 $collections = collection::query(array(
     'orderby'   => 'modified',
     'order'     => 'DESC',
@@ -66,28 +61,20 @@ $xml .= url_field(
 $xml .= '</urlset>';
 file_put_contents ($dir . '/sitemap-general.xml',$xml);
 
-$book_query = new WP_Query( array(
-    'post_type'              => array( 'book' ),
-    'post_status'            => array( 'publish' ),
-    'order'                  => 'DESC',
-    'orderby'                => 'modified',
-    'posts_per_page'		 => 100,
+$book_query = new book_query( array(
+    'per_page'		 => 100,
 ) );
-$num_pages = $book_query->max_num_pages;
+$num_pages = $book_query->pages;
 for ($i=1; $i <= $num_pages; $i++) {
     $file = $dir . '/sitemap-book-' . $i . '.xml';
     if (! file_exists($file) || filemtime($file) < time() - 172800){
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';        
-        $books = (new WP_Query(array(
-            'post_type'              => array( 'book' ),
-            'post_status'            => array( 'publish' ),
-            'order'                  => 'DESC',
-            'orderby'                => 'modified',
-            'posts_per_page'		 => 100,
-            'paged'                  => $i,
-        )))->posts;
-        foreach($books as $book){
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $books = (new book_query(array(
+            'per_page'      => 100,
+            'page'          => $i,
+        )))->books;
+        foreach ($books as $book) {
             $xml .= url_field(
                 dss(get_permalink($book->ID) . '/'),
                 f_dt($book->post_modified),
@@ -97,7 +84,7 @@ for ($i=1; $i <= $num_pages; $i++) {
             $chapters = published_chapters($book->ID);
             foreach($chapters as $chapter){
                 $xml .= url_field(
-                    dss (get_permalink($chapter->ID) . '/'),
+                    dss(get_permalink($chapter->ID) . '/'),
                     f_dt($chapter->post_modified),
                     'weekly'
                 );

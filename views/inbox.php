@@ -9,7 +9,7 @@ $chats_with = chats::with();
 ?>
 <chat-list>
     <?php foreach ($chats_with as $key => $chat) { ?>
-        <chat username="@<?= $chat->name; ?>" unread="<?= $chat->unread; ?>"></chat>
+        <chat username="@<?= $chat->username; ?>" unread="<?= $chat->unread; ?>"></chat>
     <?php } ?>
 </chat-list>
 <user-info>
