@@ -30,7 +30,7 @@ function prompt_login() {
 	signup_btn.setAttribute('label','Signup');
 	signup_btn.setAttribute('onclick','prompt_signup()');
 	const forgot_btn = document.createElement('a');
-	forgot_btn.setAttribute('label','Login with OTP');
+	forgot_btn.setAttribute('label','Send OTP');
 	forgot_btn.setAttribute('onclick','prompt_forgot()');
 
 	submit_btn.addEventListener('click',function(event){
@@ -40,11 +40,13 @@ function prompt_login() {
 			username: login_input.querySelector('input').value,
 			password: password_input.querySelector('input').value
 		};
+		submit_btn.setAttribute('disabled','');
 		api('login',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
 			dataType: 'JSON',
 			data: data_submit,
 			callback: function(response){
+				submit_btn.removeAttribute('disabled');
 				grecaptcha.reset(widgetID);
 				if (response.code === 7){
 					new toast('Your username and/or password is incorrect.');
@@ -115,11 +117,13 @@ function prompt_signup() {
 			username: username_input.querySelector('input').value,
 			email: email_input.querySelector('input').value
 		};
+		submit_btn.setAttribute('disabled','');
 		api('signup',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
 			dataType: 'JSON',
 			data: data_submit,
 			callback: function(response){
+				submit_btn.removeAttribute('disabled');
 				grecaptcha.reset(widgetID);
 				if (response.code === 997){
 					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
@@ -183,11 +187,13 @@ function prompt_forgot() {
 			username: login_input.querySelector('input').value,
 		};	
 		const widgetID = reCAPTCHA_elem.getAttribute('widget-id');
+		submit_btn.setAttribute('disabled','');
 		api('login_with_code',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
 			dataType: 'JSON',
 			data: data_submit,
 			callback: function(response){
+				submit_btn.removeAttribute('disabled');
 				grecaptcha.reset(widgetID);
 				if (response.code === 997){
 					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
@@ -233,15 +239,17 @@ function prompt_email_code(existing_data) {
 			label: 'Verify'
 		},
 		listeners: {
-			click: function(event){
+			click: (event) => {
 				event.preventDefault();
 				existing_data.code = code_input.querySelector('input').value;
 				const widgetID = reCAPTCHA_elem.getAttribute('widget-id');
+				this.setAttribute('disabled','');
 				api('verify_code',{
 					reCAPTCHA: grecaptcha.getResponse(widgetID),
 					data: existing_data,
 					dataType: 'JSON',
 					callback: function(response){
+						this.removeAttribute('disabled');
 						grecaptcha.reset(widgetID);
 						if (response.code === 1){
 							window.location.reload();
