@@ -146,7 +146,10 @@ $app->listen('/book/:book/',function($self){
     $self->type = 'book';
     $self->type_id = intval($book->ID);
     $self->book = $book;
-    $self->header();
+    $self->header([
+        'title'         => 'Fanfiction Online - ' . $book->post_title . '  by ' . author_name_single($book->ID),
+        'description'   => $book->post_excerpt
+    ]);
     $self->template('/views/book');
     $self->footer();
     exit();
@@ -201,7 +204,10 @@ $app->listen('/book/:book/:chapter',function($self){
     $self->type_id = intval($chapter->ID);
     $self->book = $book;
     $self->chapter = $chapter;
-    $self->header();
+    $self->header([
+        'title'         => 'Fanfiction Online - ' . 'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true) . ' - ' . $book->post_title . ' by ' . author_name_single($book->ID),
+        'description'   => $book->post_excerpt
+    ]);
     $self->template('/views/chapter');
     $self->footer();
     exit();
@@ -266,7 +272,10 @@ function author_template_load($template){
     $app->type = $template === 'about' ? 'author' : 'author-' . $template;
     $app->type_id = intval($user->ID);
     $app->user = $user->data;
-    $app->header();
+    $app->header([
+        'title'         => 'Fanfiction Online - ' . '@' . $user->user_login . ($template === 'about' ? '' : ' - ' . ucfirst($template)),
+        'description'   => ''
+    ]);
     $app->template('/views/user/' . $template);
     $app->footer();
     exit();

@@ -2,7 +2,8 @@
 $start = microtime(true);
 
 define('WP_USE_THEMES', false);
-$wp_dir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
+$maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
+$wp_dir = $maindir . '/content/wp/';
 require( $wp_dir . 'wp-load.php');
 
 function term_replace($taxonomy, $term, $parent){
@@ -19,7 +20,7 @@ if (! defined('ARCHIVER_PATH')){
     echo 'ARCHIVER_PATH not defined';
     exit();
 }
-$temp_dir = $wp_dir . trim(ARCHIVER_PATH,'/') . '/temp/';
+$temp_dir = $maindir . trim(ARCHIVER_PATH,'/') . '/temp/';
 if (! file_exists($temp_dir)){
     mkdir($temp_dir);
 }
