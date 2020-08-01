@@ -147,7 +147,7 @@ $app->listen('/book/:book/',function($self){
     $self->type_id = intval($book->ID);
     $self->book = $book;
     $self->header([
-        'title'         => 'Fanfiction Online - ' . $book->post_title . '  by ' . author_name_single($book->ID),
+        'title'         => 'Fanfiction Online - ' . $book->post_title . ' by ' . author_name_single($book->ID),
         'description'   => $book->post_excerpt
     ]);
     $self->template('/views/book');

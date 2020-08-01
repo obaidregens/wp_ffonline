@@ -20,7 +20,7 @@ if (! defined('ARCHIVER_PATH')){
     echo 'ARCHIVER_PATH not defined';
     exit();
 }
-$temp_dir = $maindir . trim(ARCHIVER_PATH,'/') . '/temp/';
+$temp_dir = $maindir . '/' . trim(ARCHIVER_PATH,'/') . '/temp/';
 if (! file_exists($temp_dir)){
     mkdir($temp_dir);
 }

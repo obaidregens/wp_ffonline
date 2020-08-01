@@ -409,6 +409,7 @@ class book_query_cache extends book_query {
         )));
     }
     function ffn_author() {
+        global $wpdb;
         $all_meta = $wpdb->get_results("SELECT * FROM wp_postmeta WHERE meta_key = 'ffn_author_id'");
         $key_value_ids = array();
         foreach ( $all_meta as $meta ) {
