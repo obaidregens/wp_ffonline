@@ -1,9 +1,10 @@
 <?php
 $app->bundle = global_bundle('inbox');
 $app->bundle->css('css/components/loader');
+$app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/views/inbox-list');
 $app->bundle->js('js/views/inbox-list');
-$app->bundle->enqueue();
+$app->bundle->enqueue('dev');
 
 $chats_with = chats::with();
 ?>
@@ -15,7 +16,7 @@ $chats_with = chats::with();
 <user-info>
     <button class="back"></button>
     <a href="/@ffonline" target="_blank">@ffonline</a>
-    <button class="block"></button>
+    <button tooltip-bottom="Block" class="block"></button>
 </user-info>
 <messages></messages>
 <send-message>

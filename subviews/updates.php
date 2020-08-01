@@ -17,12 +17,14 @@ $updates = $updates_query->posts;
         <?php foreach ($updates as $update ) { ?>
             <update class="divider" <?= is_sticky( $update->ID ) ? 'pinned' : '' ?> update_id="<?= $update->ID; ?>">
                 <update-time><?= get_the_time( 'G', $update ); ?> ago</update-time>
-                <button class="dropdown">
-                    <dropdown class="right">
-                        <li label="Pin"></li>
-                        <li label="Delete"></li>
-                    </dropdown>
-                </button>
+                <?php if ($is_current_author) { ?>
+                    <button class="dropdown">
+                        <dropdown class="right">
+                            <li label="Pin"></li>
+                            <li label="Delete"></li>
+                        </dropdown>
+                    </button>
+                <?php } ?>
                 <content>
                     <?= $update->post_content; ?>
                 </content>

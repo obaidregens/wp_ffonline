@@ -408,6 +408,25 @@ class book_query_cache extends book_query {
             'ids'       => $terms
         )));
     }
+    function ffn_author() {
+        $all_meta = $wpdb->get_results("SELECT * FROM wp_postmeta WHERE meta_key = 'ffn_author_id'");
+        $key_value_ids = array();
+        foreach ( $all_meta as $meta ) {
+            $term_key = 'ffn_author' . self::$midfix . $meta->meta_value;
+            if (isset($this->existing[$term_key])){
+                continue;
+            }
+            if (! isset($key_value_ids[$term_key])){
+                $key_value_ids[$term_key] = array(
+                    '_key'       => 'ffn_author',
+                    '_value'     => $meta->meta_value,
+                    'ids'       => array()
+                );
+            }
+            $key_value_ids[$term_key]['ids'][] = $meta->post_id;
+        }
+        self::put($key_value_ids);
+    }
     public static function put($key_value_ids){
         global $wpdb;
         $t = time();
