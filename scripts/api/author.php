@@ -62,3 +62,20 @@ function api_update_action(){
         return_code(2);
     }
 }
+function api_update_bio() {
+    function return_code($code){
+        echo json_encode(array(
+            'code'  => $code,
+        ));
+        exit();
+    }
+    required_params('user','bio');
+    $user = intval($_POST['data']['user']);
+    $bio = $_POST['data']['bio'];
+    $is_current_author = intval(get_current_user_id()) === $user;
+    if(! $is_current_author ){
+        return_code(6);
+    }
+    update_user_meta( $user, 'description', htmlspecialchars($bio));
+    return_code(1);
+}

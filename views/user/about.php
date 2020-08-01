@@ -6,6 +6,7 @@ $app->bundle->mix('search-options');
 $app->bundle->css('/css/views/author-about');
 $app->bundle->css('/css/views/updates-add');
 $app->bundle->css('/css/views/updates-content');
+$app->bundle->js('/js/views/author-about');
 $app->bundle->js('/js/views/updates-add');
 $app->bundle->js('/js/views/updates-content');
 $app->bundle->enqueue();
@@ -20,15 +21,23 @@ $book_query = new book_query(array(
     'per_page'		=> 2
 ));
 $description = get_the_author_meta( 'description', $user->ID );
-// $description = 'This is my bio';
 ?>
-<author-main>
+<author-main user_id="<?= $user->ID; ?>">
     <?php if ($description !== ''){ ?>
     <author-bio>
-        <?= $description; ?>
+        <a class="edit-about"></a>
+        <content><?= $description; ?></content>
+        <text-input type="multi" label="About you"></text-input>
+        <button label="Save"></button>
+        <button label="Cancel"></button>
     </author-bio>
     <?php } else if ($is_current_author) { ?>
-    <author-bio><a>Add something about yourself.</a></author-bio>
+    <author-bio>
+        <a class="edit-about">Tell your readers something about yourself.</a>
+        <text-input type="multi" label="About you"></text-input>
+        <button label="Save"></button>
+        <button label="Cancel"></button>
+    </author-bio>
     <?php } ?>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">

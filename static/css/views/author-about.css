@@ -14,6 +14,31 @@ author-main > * {
 author-bio {
     word-break: break-word;
 }
+/* Edit */
+.edit-about:empty::before {
+    color: var(--theme-color);
+    font-family: 'icons';
+    content: '\e909';
+    padding: 10px;
+    border-radius: 50px;
+    transition: background-color .2s;
+}
+.edit-about:empty:hover::before {
+    color: var(--theme-color);
+    background-color: var(--hover);
+}
+.edit-about:empty {
+    float: right;
+}
+.edit-about.edit,
+.edit-about.edit ~ content,
+.edit-about:not(.edit) ~ text-input,
+.edit-about:not(.edit) ~ button {
+    display: none;
+}
+.edit-about ~ button {
+    float: right;
+}
 author-books::before {
     display: block;
     content: attr(books) ' Books';
