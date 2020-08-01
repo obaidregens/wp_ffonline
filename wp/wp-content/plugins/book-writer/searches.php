@@ -272,6 +272,9 @@ function type_args($args,$placeholder){
 	else if ($placeholder['type'] === 'author-books') {
 		$args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
 	}
+	else if ($placeholder['type'] === 'ffn_author-books') {
+		$args['included']['ffn_author'] = isset($args['included']['ffn_author']) ? a_intersect($args['included']['ffn_author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
+	}
 	else{
 		$error = new err();
 		$error->add('type','Unknown type for search: ' . $placeholder['type']);

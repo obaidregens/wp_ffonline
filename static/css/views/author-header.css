@@ -3,6 +3,9 @@ author-name {
     padding-bottom: 20px;
     justify-content: center;
     font-size: 2rem;
+    word-break: break-word;
+    margin: 0 20px;
+    text-align: center;
 }
 author-nav {
     display: flex;
@@ -28,4 +31,8 @@ author-nav > a[active],author-nav > a:hover {
 }
 author-nav > a[active] {
     pointer-events: none;
+}
+author-nav > a.logo-link {
+    margin-left: auto;
+    padding: 0 5px;
 }

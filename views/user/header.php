@@ -1,6 +1,5 @@
 <?php
 $user = $app->user;
-$template_page = _landing::get_type()['type'];
 $author_page = $app->type === 'author' ? 'about' : substr($app->type,7);
 $app->bundle = global_bundle('author-' . $author_page);
 $app->bundle->css('css/views/author-header');

@@ -86,14 +86,17 @@ function author_href($_post_id){
 	$_author = intval($book->post_author);
 	$a_href = "";
 	if ($_author === 37){
-		$old_link = get_post_meta( $book->ID,'source_author_link',true );
-		$new_link = 'https://www.fanfiction.net/u/' . get_post_meta( $book->ID,'ffn_author_id',true );
+		// Author Name
 		$old_name = get_post_meta( $book->ID,'source_author_name',true );
 		$new_name = get_post_meta( $book->ID,'author_name',true );
-		$tlink = $new_link !== '' ? $new_link : $old_link;
 		$tname = $new_name !== '' ? $new_name : $old_name;
 
-		$a_href .= "<a rel=\"nofollow\" href=\"$tlink\">$tname</a>";
+		$new_link = get_post_meta( $book->ID,'ffn_author_id',true );
+		if ($new_link !== ''){
+			return "<a href=\"/ffn@$new_link\">$tname</a>";
+		}
+		$old_link = get_post_meta( $book->ID,'source_author_link',true );
+		return "<a rel=\"nofollow\" href=\"$old_link\">$tname</a>";
 	}
 	$a_href .= '<a href="' . get_author_posts_url($_author) . '">' . get_the_author_meta( 'display_name', $_author ) . '</a>';
 	return $a_href;

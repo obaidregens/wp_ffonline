@@ -1,4 +1,7 @@
 <?php
+function construct_page_title(... $parts) {
+    return 'Fanfiction Online - ' . implode(" - ",$parts);
+}
 require_once(__DIR__ . '/helpers.php');
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
@@ -147,7 +150,7 @@ $app->listen('/book/:book/',function($self){
     $self->type_id = intval($book->ID);
     $self->book = $book;
     $self->header([
-        'title'         => 'Fanfiction Online - ' . $book->post_title . ' by ' . author_name_single($book->ID),
+        'title'         => construct_page_title($book->post_title . ' by ' . author_name_single($book->ID)),
         'description'   => $book->post_excerpt
     ]);
     $self->template('/views/book');
@@ -205,7 +208,10 @@ $app->listen('/book/:book/:chapter',function($self){
     $self->book = $book;
     $self->chapter = $chapter;
     $self->header([
-        'title'         => 'Fanfiction Online - ' . 'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true) . ' - ' . $book->post_title . ' by ' . author_name_single($book->ID),
+        'title'         => construct_page_title(
+            'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true),
+            $book->post_title . ' by ' . author_name_single($book->ID)
+        ),
         'description'   => $book->post_excerpt
     ]);
     $self->template('/views/chapter');
@@ -272,8 +278,11 @@ function author_template_load($template){
     $app->type = $template === 'about' ? 'author' : 'author-' . $template;
     $app->type_id = intval($user->ID);
     $app->user = $user->data;
+    $title = $template === 'about' ?
+        construct_page_title('@' . $user->user_login) :
+        construct_page_title('@' . $user->user_login,ucfirst($template));
     $app->header([
-        'title'         => 'Fanfiction Online - ' . '@' . $user->user_login . ($template === 'about' ? '' : ' - ' . ucfirst($template)),
+        'title'         => $title,
         'description'   => ''
     ]);
     $app->template('/views/user/' . $template);
@@ -307,6 +316,38 @@ $app->listen('/@:user/collections',function($self){
 });
 $app->listen('/@:user',function($self){
     author_template_load('about');
+});
+function ffn_author_template_load($template){
+    global $app;
+    $author_books = new book_query([
+        'included'      => [
+            'ffn_author'    => [$app->params['ffn_author']]
+        ]
+    ]);
+    if (empty($author_books->books)){
+        $app->_404();
+    }
+    $app->type = $template === 'about' ? 'ffn_author' : 'ffn_author-' . $template;
+    $app->type_id = intval($app->params['ffn_author']);
+    $app->author_id = intval($app->params['ffn_author']);
+    $app->author_books = $author_books;
+    $app->author_name = get_post_meta( $author_books->books[0]->ID, 'author_name', true );
+    $title = $template === 'about' ?
+        construct_page_title($app->author_name) :
+        construct_page_title($app->author_name,ucfirst($template));
+    $app->header([
+        'title'         => $title,
+        'description'   => ''
+    ]);
+    $app->template('/views/ffn_user/' . $template);
+    $app->footer();
+    exit();
+}
+$app->listen('/ffn@:ffn_author',function($self){
+    ffn_author_template_load('about');
+});
+$app->listen('/ffn@:ffn_author/books',function($self){
+    ffn_author_template_load('books');
 });
 // Inbox
 $app->listen('/inbox',function($self){

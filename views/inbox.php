@@ -4,7 +4,7 @@ $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/views/inbox-list');
 $app->bundle->js('js/views/inbox-list');
-$app->bundle->enqueue('dev');
+$app->bundle->enqueue();
 
 $chats_with = chats::with();
 ?>

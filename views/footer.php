@@ -3,7 +3,7 @@
 <?php
 if (! isset($app->bundle)){
 	$app->bundle = global_bundle('global');
-	$app->bundle->enqueue('dev');
+	$app->bundle->enqueue();
 }
 $app->bundle->print();
 ?>
