@@ -1,0 +1,39 @@
+verification-code:not(:empty) ~ select,
+verification-code:not(:empty) ~ text-input,
+verification-code:not(:empty) ~ button {
+    display: none;
+}
+select {
+    display: inline-block;
+    width: 70px;
+}
+text-input {
+    display: inline-block;
+    width: calc(100% - 75px);
+}
+button {
+    float: right;
+}
+verification-account {
+    display: block;
+    text-align: center;
+    font-size: 0.95rem;
+}
+verification-code::after {
+    font-family: 'icons';
+    content: '\e931';
+    margin-left: 10px;
+    display: inline-block;
+    transform: scale(0.9) translateY(1px);
+}
+verification-code {
+    position: relative;
+    display: table;
+    font-size: 2rem;
+    cursor: pointer;
+    margin: 40px auto;
+    margin-top: 0;
+}
+verification-code:empty {
+    display: none;
+}   

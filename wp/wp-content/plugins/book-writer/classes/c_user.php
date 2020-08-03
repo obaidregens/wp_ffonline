@@ -4,7 +4,7 @@ class c_user {
     function __construct($args){
         $table = self::$table;
         $args = array_replace(array(
-            'user_id'           => get_current_user_id(),
+            'user_id'              => get_current_user_id(),
             'connection_from'      => 'ffn'
         ),$args);
         if (! isset($args['connection_user'])){

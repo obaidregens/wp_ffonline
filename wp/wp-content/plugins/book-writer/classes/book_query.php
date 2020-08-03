@@ -3,6 +3,13 @@
 // (like making included/excluded parents instead of a suffix)
 // the standard, and only use WP_Query for books within the class.
 // After caching, of course.
+function json_or_serialize_decode($packed) {
+    $json_decode = json_decode($packed);
+    if ($json_decode !== null){
+        return $json_decode;
+    }
+    return unserialize($packed);
+}
 class book_query{
     protected static $table = 'search_cache';
     protected static $taxonomies = array('genre','fandom','language','status','character','pairing','rating','tag');
@@ -91,7 +98,7 @@ class book_query{
         $results = $wpdb->get_results($full_query);
         $results_ = array();
         foreach ($results as $value) {
-            $results_[$value->_key . '=' . $value->_value] = unserialize($value->ids);
+            $results_[$value->_key . '=' . $value->_value] = json_or_serialize_decode($value->ids);
         }
         // Words
         $included = array_merge(
@@ -303,7 +310,7 @@ class book_query_cache extends book_query {
     }
     function tax(){
         global $wpdb;
-        $ids = unserialize($wpdb->get_results("SELECT ids FROM " . self::$table . " WHERE _key = 'words' AND _value = '0'")[0]->ids);
+        $ids = json_or_serialize_decode($wpdb->get_results("SELECT ids FROM " . self::$table . " WHERE _key = 'words' AND _value = '0'")[0]->ids);
         $terms = (new WP_Term_Query(array(
             'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
 			'object_ids'    => $ids,
@@ -433,7 +440,7 @@ class book_query_cache extends book_query {
         $t = time();
         foreach ($key_value_ids as $term) {
             $term['updated'] = $t;
-            $term['ids']     = serialize($term['ids']);
+            $term['ids']     = json_encode($term['ids']);
             $wpdb->replace(
                 book_query::$table,
                 $term
@@ -454,7 +461,7 @@ class tag_query extends book_query{
         ,array('tags_of',$book_ids_hash));
         $existing = $wpdb->get_results($prepared);
         if (! empty($existing) && (time() - intval($existing[0]->updated)) <= ($no_cache_hours*60*60) ){
-            $this->terms_with_count = unserialize($existing[0]->ids);
+            $this->terms_with_count = json_or_serialize_decode($existing[0]->ids);
             return;
         }
         $results = $wpdb->get_results(
@@ -463,13 +470,13 @@ class tag_query extends book_query{
         );
         // Tag Names
         $index_of_names = array_search('tag_names',array_column($results,'_key'));
-        $tag_names = unserialize($results[$index_of_names]->ids);
+        $tag_names = json_or_serialize_decode($results[$index_of_names]->ids);
         unset($results[$index_of_names]);
         sort($results);
 
         // Character Fandom
         $index_of_char_fandoms = array_search('character_fandoms',array_column($results,'_key'));
-        $character_fandoms = unserialize($results[$index_of_char_fandoms]->ids);
+        $character_fandoms = json_or_serialize_decode($results[$index_of_char_fandoms]->ids);
         unset($results[$index_of_char_fandoms]);
         sort($results);
 
@@ -486,7 +493,7 @@ class tag_query extends book_query{
                 $ref = &$terms_with_count[$term->_key][$term->_value];
             }
             $ref = array(
-                'count'         => count(a_intersect($book_ids,unserialize($term->ids))),
+                'count'         => count(a_intersect($book_ids,json_or_serialize_decode($term->ids))),
                 'name'          => $tag_names[$term->_value]
             );
         }

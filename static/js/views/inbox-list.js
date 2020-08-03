@@ -20,6 +20,13 @@ document.querySelector('user-info > button.back').addEventListener('click',() =>
 // Block Button
 document.querySelector('user-info > button.block').addEventListener('click',function(){
     this.classList.toggle('blocked');
+    api('block',{
+        dataType: 'JSON',
+        data: {
+            block: document.querySelector('user-info > button.block').classList.contains('blocked'),
+            username: document.querySelector('messages').getAttribute('username').substr(1),
+        }
+    });
 });
 
 document.querySelector('chat-list').addEventListener('click',function(event){
@@ -102,8 +109,7 @@ function load_chat(username,callback = function(){}){
         api('get_chat',{
             dataType: 'JSON',
             data: {
-                username,
-                block: document.querySelector('user-info > button.block').classList.contains('blocked')
+                username
             },
             callback: (response) => {
                 const messages_wrapper = document.querySelector('messages');

@@ -38,7 +38,8 @@ $import = [
     'inbox',
     'login',
     'reviews',
-    'search-main'
+    'search-main',
+    'verify'
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

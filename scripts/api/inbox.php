@@ -1,7 +1,7 @@
 <?php
 function api_get_chat(){
     required_login();
-    required_params('username','block');
+    required_params('username');
     function return_err(){
         echo json_encode(array(
             'messages' => false,
@@ -44,14 +44,13 @@ function api_get_chat(){
             wp_set_object_terms($chat->ID,'Read', 'message_status');            
         }
     }
-    $_POST['data']['block'] === "true" ? chats::block($user->user_login) : chats::unblock($user->user_login);
     echo json_encode(array(
         'user'          => array(
                 'name'      => $user->display_name
         ),
         'messages'      => array_reverse($chats_f),
-        'blocked'       => chats::is_blocked($users_in_chat[1],$users_in_chat[0]),
-        'chat_blocked'  => chats::is_chat_blocked($users_in_chat)
+        'blocked'       => chats_blocking::is_blocked($users_in_chat[1]),
+        'chat_blocked'  => chats_blocking::is_chat_blocked($users_in_chat)
     ));
 }
 function api_send_message(){
@@ -73,4 +72,10 @@ function api_send_message(){
     echo json_encode(array(
         'sent'      => $success
     ));
+}
+function api_block () {
+    required_login();
+    required_params('block','username');
+    $user = get_user_by( 'login', $_POST['data']['username'] );
+    $_POST['data']['block'] === "true" ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
 }

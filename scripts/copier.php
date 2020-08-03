@@ -37,6 +37,7 @@ if ( count($files) < 1 ){
     exit();
 }
 foreach ($files as $file ) {
+    $books = null;
     $books = file($temp_dir . $file);
     $fandoms = array();
     foreach ($books as $book_line => $book ) {
@@ -89,19 +90,12 @@ foreach ($files as $file ) {
         if (isset($book['Tags']['Relationships'])){
             foreach ($book['Tags']['Relationships'] as $key => $value) {
                 sort($value);
-                $book['Tags']['Relationships'][$key] = implode('/',$value);
-            }    
-        }
-
-        $p_taxonomies = array(
-            'All Characters'      => 'character',
-            'Relationships'       => 'pairing'
-        );
-		foreach($p_taxonomies as $key => $taxonomy){
-            if (! isset($book['Tags'][$key])){
-                continue;
+                $value = implode('/',$value);
+                wp_set_object_terms($book_id,$value, 'pairing');
             }
-            wp_set_object_terms($book_id,$book['Tags'][$key], $taxonomy);
+        }
+        if (isset($book['Tags']['All Characters'])){
+            wp_set_object_terms($book_id,$book['Tags']['All Characters'], 'character');
         }
         update_post_meta($book_id,'ffn_book_id',$book['_id']);
         update_post_meta($book_id,'ffn_author_id',$book['Author ID']);

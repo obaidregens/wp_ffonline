@@ -382,6 +382,15 @@ $app->listen('/write',function($self){
     $self->footer();
     exit();
 });
+// Verify Account
+// $app->listen('/verify',function($self){
+//     $self->type = 'verify';
+//     $self->type_id = 0;
+//     $self->header();
+//     $self->template('/views/verify');
+//     $self->footer();
+//     exit();
+// });
 // Robots
 $app->listen('/robots.txt',function(){
 ?>

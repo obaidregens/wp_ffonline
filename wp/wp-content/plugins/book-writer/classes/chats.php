@@ -141,6 +141,8 @@ class chats {
         }
         return $users;
     }
+}
+class chats_blocking extends chats {
     public static function block($login){
         $error = new err();
         $user = get_user_by( 'login', $login );
@@ -189,7 +191,7 @@ class chats {
         $by_user_id = (int) $by_user_id;
 
         $by_user = get_user_by( 'ID', $by_user_id );
-                
+
         if ($by_user === false){
             $error->add('by_user_id(1)','Invalid User ID passed: ' . $by_user_id);
         }
@@ -209,10 +211,10 @@ class chats {
     public static function is_chat_blocked($user_ids){
         $error = new err();
         $return = false;
-        if (chats::is_blocked($user_ids[0],$user_ids[1]) === true){
+        if (self::is_blocked($user_ids[0],$user_ids[1]) === true){
             $return = true;
         }
-        else if (chats::is_blocked($user_ids[1],$user_ids[0]) === true){
+        else if (self::is_blocked($user_ids[1],$user_ids[0]) === true){
             $return = true;
         }
         return $return;
