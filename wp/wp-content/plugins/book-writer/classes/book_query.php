@@ -4,11 +4,11 @@
 // the standard, and only use WP_Query for books within the class.
 // After caching, of course.
 function json_or_serialize_decode($packed) {
-    $json_decode = json_decode($packed);
-    if ($json_decode !== null){
-        return $json_decode;
+    $unserialize = unserialize($packed);
+    if ($unserialize !== false ) {
+        return $unserialize;
     }
-    return unserialize($packed);
+    return json_decode($packed,true);
 }
 class book_query{
     protected static $table = 'search_cache';
@@ -440,7 +440,7 @@ class book_query_cache extends book_query {
         $t = time();
         foreach ($key_value_ids as $term) {
             $term['updated'] = $t;
-            $term['ids']     = json_encode($term['ids']);
+            $term['ids']     = serialize($term['ids']);
             $wpdb->replace(
                 book_query::$table,
                 $term
