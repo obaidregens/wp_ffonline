@@ -7,7 +7,6 @@ input.collapsible {
 }
 input.collapsible + label{
     pointer-events: none;
-    border: var(--border);
     display: flex;
     align-items: center;
     width: 100%;
@@ -19,7 +18,7 @@ input.collapsible + label{
 input.collapsible + label::after {
     font-family: 'icons';
     content: '\e904';
-    margin-left: auto;
+    margin-left: 10px;
 }
 input:checked.collapsible + label::after {
     content: '\e922';
@@ -31,8 +30,6 @@ input.collapsible + label + collapsible {
     padding-bottom: 0;
 
     margin-bottom: 10px;
-    border: var(--border);
-    border-top: none;
     width: 100%;
     display: block;
     max-height: 0;

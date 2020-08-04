@@ -6,9 +6,6 @@ $search = $book_query->args['search'];
 <book class="grid-item" book_id="<?= $book->ID; ?>">
 	<button class="dropdown options">
 		<dropdown class="right">
-			<?php if ( intval($book->post_author) === get_current_user_id() ) { ?>
-				<a href="/dashboard/write/<?= $book->ID; ?>" target="_blank" label="Edit"></a>
-			<?php } ?>
 			<li label="Share"></li>
 			<li label="Favorite"></li>
 			<li label="Hide"></li>

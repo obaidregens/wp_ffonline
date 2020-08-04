@@ -56,12 +56,13 @@ foreach ($files as $file ) {
                     exit();
                 }
                 $fandoms[$fandom_name] = term_replace($fandom_name,'category',$books_term->term_id);
-            }    
+            }
         }
+        $connection = c_user::get($book['Author ID']);
         $book_obj = array(
 			'post_title'        => $book['Title'],
 			'post_status'       => 'publish',
-			'post_author'       => 37,
+			'post_author'       => $connection === false ? 37 : $connection,
 			'post_type'         => 'book',
 			'post_excerpt'      => $book['Description'],
 			'comment_status'    => 'closed',

@@ -4,9 +4,14 @@ $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/select');
 $app->bundle->css('css/views/verify-main');
 $app->bundle->js('js/views/verify-main');
-$app->bundle->enqueue('dev');
+$app->bundle->enqueue();
+
 $logged_in = is_user_logged_in(  );
+$connected = c_user::current();
 ?>
+<?php if ($connected !== false) { ?>
+<h5>Your account is connected to a <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/u/<?= $connected; ?>">FFN account</a>.</h5>
+<?php } else { ?>
 <h1>Verify access to account.</h1>
 <ol>
 <?php if (! $logged_in) { ?>
@@ -28,4 +33,5 @@ If your account doesn't get connected within half an hour of sending the message
 </select>
 <text-input maxlength="10" label="User ID"></text-input>
 <button label="Submit"></button>
+<?php } ?>
 <?php } ?>

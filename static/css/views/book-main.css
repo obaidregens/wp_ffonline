@@ -80,3 +80,6 @@ main > book > book-options > .book-share::before {
     font-size: 1.4rem;
     content: '\e908';
 }
+main > book input.collapsible + label {
+    justify-content: center;
+}

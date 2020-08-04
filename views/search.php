@@ -67,7 +67,7 @@ else {
 </pagination>
 <?php
 if (! isset($app->bundle)){
-    $app->bundle = new bundle('create_search_custom');
+    $app->bundle = new bundle('search');
 }
 $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');

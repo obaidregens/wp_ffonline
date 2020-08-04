@@ -1,7 +1,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Pangolin&family=Raleway&family=Roboto&display=swap" rel="stylesheet">
 <?php
 
-$app->bundle = new bundle('new_chapters_bundle');
+$app->bundle = new bundle('chapters');
 $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
 $app->bundle->css('css/components/more');

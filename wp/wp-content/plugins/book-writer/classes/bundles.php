@@ -176,7 +176,7 @@ class bundle {
         $this->js_file = $this->bundles_url . $this->name . '.js';
         return true;
     }
-    protected function get_raw_urls(){
+    public function get_raw_urls(){
         return self::raw_urls($this->bundle);
     }
     protected static function raw_urls($bundle) {

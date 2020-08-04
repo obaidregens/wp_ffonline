@@ -34,6 +34,6 @@ index > * > cell {
         font-size: 0.7rem;
     }
 }
-index > *:not(:first-child):hover {
+index > *:not([head]):hover {
     background-color: var(--hover);
 }

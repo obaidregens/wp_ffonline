@@ -23,13 +23,17 @@ $book_query = new book_query(array(
 $description = get_the_author_meta( 'description', $user->ID );
 ?>
 <author-main user_id="<?= $user->ID; ?>">
-    <?php if ($description !== ''){ ?>
+    <?php if ($description !== '' && $is_current_author){ ?>
     <author-bio>
         <a class="edit-about"></a>
         <content><?= $description; ?></content>
         <text-input type="multi" label="About you"></text-input>
         <button label="Save"></button>
         <button label="Cancel"></button>
+    </author-bio>
+    <?php } else if ($description !== '') { ?>
+    <author-bio>
+        <content><?= $description; ?></content>
     </author-bio>
     <?php } else if ($is_current_author) { ?>
     <author-bio>

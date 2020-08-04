@@ -83,4 +83,33 @@ class c_user {
             )
         );
     }
+    public static function get($connection_user, $connection_from = 'ffn') {
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM user_connections WHERE status = 'verified' AND connection_user = %s AND connection_from = %s",
+            [$connection_user,$connection_from]
+        ));
+        if (empty($r)){
+            return false;
+        }
+        return intval($r[0]->user_id);
+
+    }
+    public static function current ($user = null) {
+        if ($user === null){
+            if (! is_user_logged_in() ){
+                return false;
+            }
+            $user = get_current_user_id();
+        }
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM user_connections WHERE status = 'verified' AND user_id = %s",
+            [$user]
+        ));
+        if (empty($r)){
+            return false;
+        }
+        return $r[0]->connection_user;
+    }
 }

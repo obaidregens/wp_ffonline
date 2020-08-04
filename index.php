@@ -272,6 +272,9 @@ $app->listen('/@:user/collections/:collection',function($self){
 function author_template_load($template){
     global $app;
     $user = get_user_by( 'login', $app->params['user'] );
+    if ($template === 'settings' && intval($user->ID) !== intval(get_current_user_id()) ){
+        $app->_404();
+    }
     if ($user === false){
         $app->_404();
     }
@@ -314,11 +317,19 @@ $app->listen('/@:user/updates',function($self){
 $app->listen('/@:user/collections',function($self){
     author_template_load('collections');
 });
+$app->listen('/@:user/settings',function($self){
+    author_template_load('settings');
+});
 $app->listen('/@:user',function($self){
     author_template_load('about');
 });
 function ffn_author_template_load($template){
     global $app;
+    $self_user = c_user::get($app->params['ffn_author']);
+    if ($self_user !== false){
+        $user = get_user_by( 'ID', $self_user );
+        $app->_301('/@' . $user->user_login);
+    }
     $author_books = new book_query([
         'included'      => [
             'ffn_author'    => [$app->params['ffn_author']]
@@ -383,14 +394,23 @@ $app->listen('/write',function($self){
     exit();
 });
 // Verify Account
-// $app->listen('/verify',function($self){
-//     $self->type = 'verify';
-//     $self->type_id = 0;
-//     $self->header();
-//     $self->template('/views/verify');
-//     $self->footer();
-//     exit();
-// });
+$app->listen('/verify',function($self){
+    $self->type = 'verify';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/verify');
+    $self->footer();
+    exit();
+});
+// Verify Account
+$app->listen('/contact',function($self){
+    $self->type = 'contact';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/contact');
+    $self->footer();
+    exit();
+});
 // Robots
 $app->listen('/robots.txt',function(){
 ?>

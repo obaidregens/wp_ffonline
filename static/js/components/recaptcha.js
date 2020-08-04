@@ -18,4 +18,3 @@ function init_reCAPTCHA(){
         }
     }
 }
-init_reCAPTCHA();

@@ -43,7 +43,7 @@ $is_user_logged_in = is_user_logged_in(  );
     <label>Chapter Index</label>
     <collapsible>
         <index>
-            <li>
+            <li head>
                 <cell>#</cell>
                 <cell>Chapter</cell>
                 <cell>Words</cell>

@@ -87,6 +87,9 @@ popup[update_collection] > a.back::before{
     white-space: nowrap;
 }
 /* Share Popup */
+popup.share {
+    max-width: 600px;
+}
 popup.share > h1 {
     margin-top: 0;
 }

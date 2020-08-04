@@ -2,8 +2,13 @@
 $author_page = $app->type === 'ffn_author' ? 'about' : substr($app->type,11);
 $app->bundle = global_bundle('ffn_author-' . $author_page);
 $app->bundle->css('css/views/author-header');
+$app->bundle->css('css/components/tooltips');
 $href = home_url( '/ffn@' . $app->author_id  . '/');
+$connection = c_user::current();
 ?>
+<?php if ($connection === false) { ?>
+<prompt>Is this your account? <a href="/verify">Verify</a></prompt>
+<?php } ?>
 <author-name>
 	<?= $app->author_name; ?>
 </author-name>

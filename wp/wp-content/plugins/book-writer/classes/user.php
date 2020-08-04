@@ -250,8 +250,8 @@ class v_user extends user {
         if ($value === ''){
             return $error;
         }
-        if (strlen($value) < 9){
-            $error->add('password','Lesser than 9 characters.');
+        if (strlen($value) < 6){
+            $error->add('password','Lesser than 6 characters.');
         }
         if (strlen($value) > 30){
             $error->add('password','Greater than 30 characters.');
