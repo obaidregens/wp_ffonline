@@ -272,6 +272,9 @@ $app->listen('/@:user/collections/:collection',function($self){
 function author_template_load($template){
     global $app;
     $user = get_user_by( 'login', $app->params['user'] );
+    if ($app->params['user'] === 'me'){
+        $user = get_user_by( 'ID', get_current_user_id() );
+    }
     if ($template === 'settings' && intval($user->ID) !== intval(get_current_user_id()) ){
         $app->_404();
     }

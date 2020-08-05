@@ -239,7 +239,7 @@ function prompt_email_code(existing_data) {
 			label: 'Verify'
 		},
 		listeners: {
-			click: (event) => {
+			click: function(event) {
 				event.preventDefault();
 				existing_data.code = code_input.querySelector('input').value;
 				const widgetID = reCAPTCHA_elem.getAttribute('widget-id');
@@ -248,7 +248,7 @@ function prompt_email_code(existing_data) {
 					reCAPTCHA: grecaptcha.getResponse(widgetID),
 					data: existing_data,
 					dataType: 'JSON',
-					callback: function(response){
+					callback: (response) => {
 						this.removeAttribute('disabled');
 						grecaptcha.reset(widgetID);
 						if (response.code === 1){

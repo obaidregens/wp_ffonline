@@ -30,7 +30,6 @@ class user {
         );
         $user_id = $wpdb->insert_id;
         mail_user::signup_mail($user_id,$code->code);
-        self::internal_login($user_id);
         return $code->ID;
     }
     public static function verify($code, $token, $email, $username){
@@ -73,7 +72,7 @@ class user {
             )
         );
         collection::create_default(intval($results[0]->ID));
-        user::login($results[0]->user_login,$results[0]->user_pass);
+        self::internal_login($results[0]->ID);
         return true;
     }
     public static function login($username, $password){
