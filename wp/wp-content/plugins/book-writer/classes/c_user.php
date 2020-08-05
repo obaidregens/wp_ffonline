@@ -15,6 +15,16 @@ class c_user {
         }
         $args['status'] = 'unverified';
         global $wpdb;
+        $connected = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table
+                WHERE connection_user = %s
+                AND connection_from = %s
+                AND status = %s",
+            array($args['connection_user'],$args['connection_from'],'verified')
+        ));
+        if (! empty($connected)){
+            return;
+        }
         $existing = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM $table
                 WHERE connection_user = %s
