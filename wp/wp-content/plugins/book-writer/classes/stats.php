@@ -463,10 +463,10 @@ class _action extends stats {
 class reports extends stats {
     public static $dir = null;
     public static function init_dir(){
-        self::$dir = explode('wp-content',__FILE__)[0] . 'reports/';
+        $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
+        self::$dir = $maindir . 'reports/';
         if (! file_exists(self::$dir)){
             mkdir(self::$dir);
-            file_put_contents(self::$dir . '.htaccess','Deny from all');
         }
     }
     public static function average_time_by_referrer(){

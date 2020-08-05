@@ -117,6 +117,13 @@ class Router {
         <?php
         exit();
     }
+    function admin() {
+        if (current_user_can( 'administrator' )){
+            return;
+        }
+        $this->_404();
+        exit();
+    }
 }
 global $app;
 $app = new Router();
@@ -130,6 +137,15 @@ $app->listen('/',function($self){
 });
 $app->listen('/api',function($self){
     include('scripts/api.php');
+    exit();
+});
+$app->listen('/manage',function($self){
+    $self->admin();
+    $self->type = 'manage';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/manage');
+    $self->footer();
     exit();
 });
 $app->listen("/book/:book/", function($self){

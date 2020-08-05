@@ -133,6 +133,21 @@ class user {
         wp_set_auth_cookie  ( $user_id,true );
     }
 }
+class user_settings extends user {
+    public static function get ($setting, $user = null) {
+        if ($user === null){
+            $user = get_current_user_id();
+        }
+        $meta = get_user_meta( $user, 'usetting_' . $setting, true );
+        return $meta === '' ? null : $meta;
+    }
+    public static function set ($setting, $value, $user = null) {
+        if ($user === null){
+            $user = get_current_user_id();
+        }
+        update_user_meta( $user, 'usetting_' . $setting, $value );
+    }
+}
 class mail_user extends user {
     public static function change_email($new_email){
         $current_user = (get_user_by('ID', get_current_user_id() ))->data;
