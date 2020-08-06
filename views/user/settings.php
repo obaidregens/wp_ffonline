@@ -24,10 +24,23 @@ $books = (new WP_Query([
 </collapsible>
 <?php if ($ffn_user !== false) { ?>
 <h2 label="Books"></h2>
+
+<!-- Hide Books -->
 <input class="collapsible" name="settings" type="radio">
 <label>Hide</label>
 <collapsible>
 <?php foreach($books as $book) { $status = $book->post_status === 'publish' ? '' : 'checked'; ?>
+    <switch <?= $status; ?> book_id="<?= $book->ID; ?>" label="<?= $book->post_title; ?>"></switch>
+<?php } if (empty($books)) { ?>
+    No Books
+<?php } ?>
+</collapsible>
+
+<!-- Reviews -->
+<input class="collapsible" name="settings" type="radio">
+<label>Enable Reviews</label>
+<collapsible>
+<?php foreach($books as $book) { $status = $book->comment_status === 'open' ? 'checked' : ''; ?>
     <switch <?= $status; ?> book_id="<?= $book->ID; ?>" label="<?= $book->post_title; ?>"></switch>
 <?php } if (empty($books)) { ?>
     No Books
