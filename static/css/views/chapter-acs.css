@@ -1,4 +1,4 @@
-chapter > content {
+.acs-elem {
     --fontSize: 8;
 	--width: 10;
 	--lineHeight: 3;
@@ -7,7 +7,7 @@ chapter > content {
     width: calc(10% * var(--width));
 	line-height: calc( var(--lineHeight) * 0.5em);
 }
-chapter > content > p {
+.acs-elem > p {
     margin-block-end: calc( var(--paragraphHeight) * 0.5em);
 	margin-block-start: calc( var(--paragraphHeight) * 0.5em);
 }

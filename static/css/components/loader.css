@@ -2,8 +2,8 @@ loader {
   --loader-size: 20px;
   position: relative;
   display: inline-block;
-  min-width: 20px;
-  min-height: 20px;
+  min-width: 15px;
+  min-height: 15px;
   width: var(--loader-size);
   height: var(--loader-size);
   text-align: center;

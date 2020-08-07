@@ -404,11 +404,45 @@ $app->listen('/inbox/@:username',function($self){
 });
 // Write
 $app->listen('/write',function($self){
-    $self->type = 'write';
+    $self->_301('/drafts');
+});
+$app->listen('/drafts',function($self){
+    $self->type = 'drafts-index';
     $self->type_id = 0;
     $self->login();
     $self->header();
-    echo 'Coming Soon!';
+    $self->template('/views/drafts/index');
+    $self->footer();
+    exit();
+});
+$app->listen('/drafts/edit',function($self){
+    $self->_301('/drafts/edit/new');
+});
+$app->listen('/drafts/edit/:draft_id',function($self){
+    $draft = drafts::get_by('ID',$self->params['draft_id']);
+    if ($draft === false && $self->params['draft_id'] !== 'new') {
+        return;
+    }
+    $self->type = 'drafts-edit';
+    $self->type_id = $self->params['draft_id'] === 'new' ? 0 : intval($draft->ID);
+    $self->draft = $draft;
+    $self->login();
+    $self->header();
+    $self->template('/views/drafts/edit');
+    $self->footer();
+    exit();
+});
+$app->listen('/drafts/:draft_share',function($self){
+    $draft = drafts::get_by('share',$self->params['draft_share']);
+    if ($draft === false) {
+        return;
+    }
+    $self->type = 'drafts-preview';
+    $self->type_id = intval($draft->ID);
+    $self->draft = $draft;
+    $self->login();
+    $self->header();
+    $self->template('/views/drafts/preview');
     $self->footer();
     exit();
 });

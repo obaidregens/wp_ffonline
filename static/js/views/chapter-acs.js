@@ -1,3 +1,104 @@
+document.documentElement.appendChild(DOM.create('link',{
+    attributes: {
+        href: "https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&family=Pangolin&family=Raleway&family=Roboto&display=swap",
+        rel: "stylesheet"
+    }
+}));
+const acs_button = DOM.create('button',{
+    classes: ['acs-button','popup']
+});
+document.documentElement.appendChild(acs_button);
+const acs_popup = DOM.create('popup',{
+   children: [
+       DOM.create('change-options',{
+           attributes: {
+               action: 'font'
+           },
+           children: [
+               DOM.create('button',{
+                   classes: ['dropdown'],
+                   attributes: {
+                       theme: ''
+                   },
+                   children: [
+                       document.createTextNode('Font'),
+                       DOM.create('dropdown',{
+                           classes: ['right'],
+                           children: [
+                               document.createElement('li'),
+                               document.createElement('li'),
+                               document.createElement('li'),
+                               document.createElement('li'),
+                               document.createElement('li'),
+                               document.createElement('li')
+                           ]
+                       })
+                   ]
+               })
+           ]
+       }),
+       DOM.create('change-options',{
+            attributes: {
+                action: 'fontSize'
+            },
+            children: [
+                document.createElement('button'),
+                document.createElement('button')
+            ]
+        }),
+        DOM.create('change-options',{
+            attributes: {
+                action: 'lineHeight'
+            },
+            children: [
+                document.createElement('button'),
+                document.createElement('button')
+            ]
+        }),
+        DOM.create('change-options',{
+            attributes: {
+                action: 'paragraphHeight'
+            },
+            children: [
+                document.createElement('button'),
+                document.createElement('button')
+            ]
+        }),
+        DOM.create('change-options',{
+            attributes: {
+                action: 'width'
+            },
+            children: [
+                document.createElement('button'),
+                document.createElement('button')
+            ]
+        }),
+        DOM.create('change-options',{
+            attributes: {
+                action: 'theme'
+            },
+            children: [
+                DOM.create('div',{
+                    attributes: {
+                        color: 'light'
+                    }
+                }),
+                DOM.create('div',{
+                    attributes: {
+                        color: 'dark'
+                    }
+                }),
+                DOM.create('div',{
+                    attributes: {
+                        color: 'peach'
+                    }
+                }),
+            ]
+        })
+   ] 
+});
+popup.create(acs_popup);
+
 const min_max_acs = {
     fontSize: {
         min: 5,
@@ -18,7 +119,7 @@ const min_max_acs = {
 };
 const acs_entries = Object.entries(acs.all);
 for (let i = 0; i < acs_entries.length; i++) {
-    const chapter_content = document.querySelector('chapter > content');
+    const chapter_content = document.querySelector('.acs-elem');
     const acs_ = {
         key: acs_entries[i][0],
         value: acs_entries[i][1]
@@ -36,15 +137,17 @@ for (let i = 0; i < acs_entries.length; i++) {
         chapter_content.style.setProperty('--' + acs_.key,new_style);
     }
 }
-
 document.querySelector('.acs-button + popup').addEventListener('click',function(){
     const closest_change_options = event.target.closest('change-options');
     if (! closest_change_options) {
         return;
     }
     const action = closest_change_options.getAttribute('action');
-    const chapter_content = document.querySelector('chapter > content');
-    if (['fontSize','lineHeight','paragraphHeight','width'].includes(action) && event.target.tagName.toLowerCase() === 'button'){
+    const chapter_content = document.querySelector('.acs-elem');
+    if (
+        ['fontSize','lineHeight','paragraphHeight','width'].includes(action) &&
+        event.target.tagName.toLowerCase() === 'button'
+    ){
         const arithmetic = event.target.nextElementSibling ? 1 : -1;
         const current_style = parseInt(getComputedStyle(chapter_content).getPropertyValue('--' + action));
         const new_style = current_style + arithmetic;
@@ -71,5 +174,4 @@ document.querySelector('.acs-button + popup').addEventListener('click',function(
         chapter_content.style.setProperty('font-family',fontName);
         acs.set('font',fontName);
     }
-    
 });

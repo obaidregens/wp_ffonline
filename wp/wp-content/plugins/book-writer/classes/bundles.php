@@ -343,6 +343,16 @@ class bundle {
             'js'    => array(
                 '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide'
             )
+        ),
+        'react_slate'   => array(
+            'js'   => array(
+                'external/react_slate/react.production.min',
+                'external/react_slate/react-dom.production.min',
+                'external/react_slate/slate',
+                'external/react_slate/slate-react',
+                'external/react_slate/slate-history',
+            ),
+            'css'   => []
         )
     ];
 }

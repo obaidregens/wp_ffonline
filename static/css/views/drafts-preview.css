@@ -1,0 +1,23 @@
+draft {
+    word-break: break-word;
+}
+draft-title {
+    font-size: 2rem;
+}
+button.edit-draft {
+    border-color: transparent;
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 100px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+button.edit-draft::before {
+    content: '\e909';
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.4) translateX(0.5px) rotate(-6deg);
+}

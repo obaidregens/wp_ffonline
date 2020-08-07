@@ -40,7 +40,8 @@ $import = [
     'reviews',
     'search-main',
     'verify',
-    'contact'
+    'contact',
+    'drafts'
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
