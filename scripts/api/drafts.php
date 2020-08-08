@@ -32,14 +32,14 @@ function api_save_draft() {
         }
     }
     $valid = drafts::update($insert);
-    if (err::is($valid)){
+    if (err::is($valid)) {
         return_code(11);
     }
     return_code(1,$valid);
 }
 function api_share_draft() {
     required_login();
-    required_params('draft_id');
+    required_params('draft_id','share');
     function return_code($code, $link = null) {
         $rr = [
             'code'  => $code
@@ -58,12 +58,15 @@ function api_share_draft() {
     if (intval($draft->user_id) !== intval(get_current_user_id())){
         return_code(10);
     }
-    $share = bin2hex(random_bytes(11));
+    $share = $d['share'] === 'true' ? bin2hex(random_bytes(11)) : null;
     $valid = drafts::update([
         'ID'    => $draft->ID,
         'share' => $share
     ]);
-    return_code(1,home_url( '/drafts/' . $share ));
+    if ($d['share'] === 'true'){
+        return_code(1,home_url( '/drafts/' . $share ));
+    }
+    return_code(2);
 }
 function api_edit_and_save_draft() {
     required_login();
@@ -95,4 +98,21 @@ function api_edit_and_save_draft() {
     }
     return_code(1,$valid);
 
+}
+function api_delete_draft() {
+    required_login();
+    required_params('draft_id');
+    function return_code($code) {
+        $rr = [
+            'code'  => $code
+        ];
+        echo json_encode($rr);
+        exit();
+    }
+    $draft = drafts::get_by('ID',$_POST['data']['draft_id']);
+    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+        return_code(9);
+    }
+    drafts::delete($draft->ID);
+    return_code(1);
 }

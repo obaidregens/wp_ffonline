@@ -1,0 +1,13 @@
+popup[confirmation] {
+    max-width: 450px;
+}
+popup[confirmation] > p {
+    margin-top: 0;
+}
+popup[confirmation] > button[label="Cancel"]:hover {
+    background-color: var(--red);
+}
+popup[confirmation] > button {
+    margin-right: 0;
+    float: right;
+}

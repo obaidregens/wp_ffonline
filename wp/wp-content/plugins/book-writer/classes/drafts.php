@@ -86,6 +86,12 @@ class drafts {
         $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s",[$user]));
         return $results;
     }
+    public static function delete($draft_id) {
+        global $wpdb;
+        $wpdb->delete(self::$table,[
+            'ID'    => $draft_id
+        ]);
+    }
 }
 class drafts_json extends drafts {
     public static function read($json) {

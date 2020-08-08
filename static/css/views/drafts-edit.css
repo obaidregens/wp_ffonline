@@ -72,6 +72,7 @@ toolbar > button[action="fullscreen"]::before {
 toolbar + div {
     border: 1px solid var(--grey);
     padding: 0 10px;
+    overflow-x: hidden;
 }
 /* Save buttons */
 toolbar > button[label="Save"] {
@@ -85,29 +86,27 @@ button[label="Save"] > dropdown > li::before {
     font-size: 1.25rem;
 }
 /* Share Button */
-toolbar > button[action="share"] {
-    margin-left: auto;
-}
 toolbar > button[action="share"]::before {
     content: '\e908';
     display: inline-block;
     transform: translateY(-1px) translateX(2px);
 }
-/* Save Confirmation */
-popup[save_confirmation],popup[share_draft] {
-    max-width: 450px;
+/* Delete Button */
+toolbar > button[action="delete"] {
+    margin-left: auto;
 }
-popup[save_confirmation] > p,popup[share_draft] > p {
-    margin-top: 0;
-}
-popup[save_confirmation] > button[label="Cancel"]:hover {
-    background-color: var(--red);
-}
-popup[save_confirmation] > button {
-    margin-right: 0;
-    float: right;
+toolbar > button[action="delete"]::before {
+    display: inline-block;
+    transform: scale(0.9);
+    content: '\e921';
 }
 /* Share Draft */
+popup[share_draft] {
+    max-width: 450px;
+}
+popup[share_draft] > p {
+    margin-top: 0;
+}
 popup[share_draft] > button[label="Create Link"] {
     margin: 0;
     float: right;
@@ -130,6 +129,7 @@ share-link {
     align-items: center;
     padding: 15px;
     margin-top: 20px;
+    margin-bottom: 10px;
 }
 share-link > * {
     display: block;
@@ -141,7 +141,7 @@ a.share-link {
 a.share-link::before {
     content: attr(href);
 }
-share-link > {
+share-link > button{
     border-color: transparent;
     margin-right: 0;
     padding: 0 6px;
@@ -150,6 +150,9 @@ share-link > {
 popup[share_draft] > share-link:not(.copy) {
     display: none;
 }
-popup[share_draft] > share-link.copy ~ button[label="Create Link"] {
-    display: none;
+popup[share_draft] > share-link.copy ~ button[label="Create Link"]:hover {
+    background-color: var(--red);
+}
+popup[share_draft] > share-link.copy ~ button[label="Create Link"]::before {
+    content: 'Disable Sharing';
 }

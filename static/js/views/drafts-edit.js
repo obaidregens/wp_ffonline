@@ -20,6 +20,39 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
 }));
 document.querySelector('toolbar').appendChild(DOM.create('button',{
     attributes: {
+        action: 'delete'
+    },
+    listeners: {
+        click: () => {
+            const draft_id = document.querySelector('editor').getAttribute('draft_id');
+            if (draft_id === 'new') {
+                new toast('This draft hasn\'t been saved.')
+                return;
+            }
+            confirmation('Are you sure you want to delete this draft?').then((v) => {
+                if (!v) {
+                    return;
+                }
+                api('delete_draft',{
+                    dataType: 'JSON',
+                    data: {
+                        draft_id
+                    },
+                    callback: response => {
+                        if (response.code > 5) {
+                            new toast('An error occured.');
+                            return;
+                        }
+                        new toast('Draft Deleted');
+                        window.location.href = '/drafts';
+                    }
+                });
+            });
+        }
+    }
+}));
+document.querySelector('toolbar').appendChild(DOM.create('button',{
+    attributes: {
         action: 'share'
     },
     listeners: {
@@ -29,15 +62,18 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                 popup.open(_p);
                 return;
             }
+            const share_is = document.querySelector('share-is').innerText;
             const children = [
                 DOM.create('p',{
                     innerText: 'Let anyone with the link see this draft and propose edits.'
                 }),
                 DOM.create('share-link',{
+                    classes: share_is === '' ? [] : ['copy'],
                     children: [
                         DOM.create('a',{
                             classes: ['share-link'],
                             attributes: {
+                                href: share_is,
                                 target: '_blank'
                             }
                         }),
@@ -52,7 +88,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                             attributes: {
                                 label: 'Copy'
                             }
-                        }),        
+                        })
                     ]
                 }),
                 DOM.create('button',{
@@ -62,17 +98,29 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     listeners: {
                         click: function() {
                             this.setAttribute('disabled','');
-                            const draftShareRequest = draft_id => {
+                            const draftShareRequest = (draft_id) => {
+                                const share_el = this.parentElement.querySelector('share-link');
+                                const a_el = share_el.querySelector('a.share-link');
+                                const share = ! share_el.classList.contains('copy');
                                 api('share_draft',{
                                     dataType: 'JSON',
                                     data: {
-                                        draft_id
+                                        draft_id,
+                                        share
                                     },
                                     callback: (response) => {
                                         this.removeAttribute('disabled');
-                                        const share_el = this.parentElement.querySelector('share-link');
+                                        if (response.code > 5) {
+                                            new toast('An error occured');
+                                            return;
+                                        }
+                                        if (response.code === 2 ) {
+                                            share_el.classList.remove('copy');
+                                            a_el.setAttribute('href','');
+                                            new toast('Disabled Sharing.');
+                                            return;
+                                        }
                                         share_el.classList.add('copy');
-                                        const a_el = share_el.querySelector('a.share-link');
                                         a_el.setAttribute('href',response.link);
                                     }
                                 });
@@ -82,9 +130,12 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                                 draftSaveRequest('new')
                                 .then(
                                     v => {
-                                    draftShareRequest(v);
+                                        draftShareRequest(v);
                                     },
-                                    v => popup.close()
+                                    v => {
+                                        popup.close();
+                                        this.removeAttribute('disabled');
+                                    }
                                 );
                                 return;
                             }
@@ -126,40 +177,19 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     },
                     listeners: {
                         click: function() {
-                            let _p = document.querySelector('popup[save_confirmation]');
-                            if (_p) {
-                                popup.open(_p);
+                            if (document.querySelector('editor').getAttribute('draft_id') === 'new') {
+                                draftSaveRequest('new');
                                 return;
                             }
-                            _p = DOM.create('popup',{
-                                attributes: {
-                                    save_confirmation: ''
-                                },
-                                children: [
-                                    DOM.create('p',{
-                                        innerText: 'Your previous draft will be overwritten. Is that OK?'
-                                    }),
-                                    DOM.create('button',{
-                                        classes: ['popup_close'],
-                                        attributes: {
-                                            label: 'OK'
-                                        },
-                                        listeners: {
-                                            click: () => {
-                                                draftSaveRequest(document.querySelector('editor').getAttribute('draft_id'));
-                                            }
-                                        }
-                                    }),
-                                    DOM.create('button',{
-                                        classes: ['popup_close'],
-                                        attributes: {
-                                            label: 'Cancel'
-                                        }
-                                    })
-                                ]
-                            });
-                            popup.create(_p);
-                            popup.open(_p);                        
+                            confirmation("Your previous draft will be overwritten. Is that OK?")
+                            .then(
+                                (res) => {
+                                    if (res === false) {
+                                        return;
+                                    }
+                                    draftSaveRequest(document.querySelector('editor').getAttribute('draft_id'));
+                                }
+                            );
                         }
                     }
                 }),

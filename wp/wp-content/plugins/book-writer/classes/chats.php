@@ -18,7 +18,7 @@ class chats {
         if (strlen($message) > $max_chars){
             $this->error->add('Message','Message cannot be of more than ' . $max_chars . ' characters.');
         }
-        if (chats::is_chat_blocked(array($current_user_id,$to))) {
+        if (chats_blocking::is_chat_blocked(array($current_user_id,$to))) {
             $this->error->add('to','Chat is blocked.');
         }
         if ( $this->error->has() ) {
