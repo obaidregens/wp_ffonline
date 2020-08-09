@@ -79,32 +79,6 @@ function api_update_bio() {
     update_user_meta( $user, 'description', htmlspecialchars($bio));
     return_code(1);
 }
-function api_hide_book() {
-    required_login();
-    required_params('book_id','hide');
-    function return_code($code) {
-        echo json_encode([
-            'code'      => $code
-        ]);
-        exit();
-    }
-    $d = &$_POST['data'];
-    $book = get_post($d['book_id']);
-    if ($book === null){
-        return_code(7);
-    }
-    if ( intval($book->post_author) !== intval(get_current_user_id()) ){
-        return_code(8);
-    }
-    $status = $d['hide'] === "true" ? 'draft' : 'publish' ;
-    global $wpdb;
-    $wpdb->update('wp_posts',[
-        'post_status'   => $status
-    ],[
-        'ID'        => $book->ID
-    ]);
-    return_code(1);
-}
 function api_change_password () {
     required_login();
     required_params('pass','confirm_pass');
@@ -129,31 +103,5 @@ function api_change_password () {
     }
     wp_set_password( $pass, $user->ID );
     user::login($user->user_login,$pass);
-    return_code(1);
-}
-function api_review_status () {
-    required_login();
-    required_params('book_id','status');
-    function return_code($code) {
-        echo json_encode([
-            'code'      => $code
-        ]);
-        exit();
-    }
-    $d = &$_POST['data'];
-    $book = get_post($d['book_id']);
-    if ($book === null){
-        return_code(7);
-    }
-    if ( intval($book->post_author) !== intval(get_current_user_id()) ){
-        return_code(8);
-    }
-    $status = $d['status'] === "true" ? 'open' : 'closed' ;
-    global $wpdb;
-    $wpdb->update('wp_posts',[
-        'post_status'   => $status
-    ],[
-        'post_parent'   => $book->ID
-    ]);
     return_code(1);
 }

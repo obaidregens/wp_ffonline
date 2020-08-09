@@ -41,7 +41,8 @@ $import = [
     'search-main',
     'verify',
     'contact',
-    'drafts'
+    'drafts',
+    'write'
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

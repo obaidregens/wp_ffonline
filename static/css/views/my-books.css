@@ -1,0 +1,50 @@
+.button[label="Drafts"]::after {
+    font-family: 'icons';
+    content: '\e909';
+    position: absolute;
+    left: 8px;
+    display: inline-block;
+    transform: rotate(-14deg) scale(0.9);
+}
+.button[label="Drafts"] {
+    display: flex;
+    margin-bottom: 20px;
+    margin-left: auto;
+    padding-left: 26px;
+}
+a.book {
+    width: 100%;
+    display: block;
+    color: var(--text-color);
+    padding: 10px;
+    transition: background-color .2s;
+}
+a.book:hover {
+    background-color: var(--hover);
+}
+book-title {
+    font-size: 1.2rem;
+}
+book-status {
+    font-size: 0.85rem;
+    float: right;
+    color: grey;
+}
+book-views {
+    display: flex;
+    justify-content: space-around;
+}
+book-views > stat {
+    display: block;
+    text-align: center;
+    padding: 15px;
+    font-size: 2.5rem;
+    position: relative;
+}
+book-views > stat::after {
+    margin-top: -8px;
+    display: block;
+    content: attr(timespan);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}

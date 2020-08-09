@@ -403,8 +403,33 @@ $app->listen('/inbox/@:username',function($self){
     exit();
 });
 // Write
+$app->listen('/my-books',function($self){
+    $self->type = 'my-books';
+    $self->type_id = 0;
+    $self->login();
+    $self->header();
+    $self->template('/views/books/my-books');
+    $self->footer();
+    exit();
+});
+$app->listen('/my-books/:id',function($self){
+    $book = get_post( $self->params['id'] );
+    if ($book === false
+        || intval($book->post_author) !== intval(get_current_user_id())
+    ) {
+        return;
+    }
+    $self->type = 'edit-book';
+    $self->type_id = intval($book->ID);
+    $self->book = $book;
+    $self->login();
+    $self->header();
+    $self->template('/views/books/edit');
+    $self->footer();
+    exit();
+});
 $app->listen('/write',function($self){
-    $self->_301('/drafts');
+    $self->_301('/my-books');
 });
 $app->listen('/drafts',function($self){
     $self->type = 'drafts-index';

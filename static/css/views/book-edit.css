@@ -1,0 +1,12 @@
+main {
+    max-width: 500px;
+}
+a.book-title {
+    color: var(--text-color);
+    display: block;
+    font-size: 2rem;
+}
+label.switch {
+    display: block;
+    margin: 20px 0;
+}

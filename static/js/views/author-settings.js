@@ -1,29 +1,4 @@
-document.querySelector('main').addEventListener('change',(event) => {
-    const parent = event.target.parentElement;
-    if (! ( parent.classList.contains('switch') && parent.tagName.toLowerCase() === 'label') ){
-        return;
-    }
-    const switch_type = parent.parentElement.previousElementSibling.innerText;
-    const book_id = event.target.getAttribute('book_id');
-    if (switch_type === 'Hide') {
-        api('hide_book',{
-            dataType: 'JSON',
-            data: {
-                book_id,
-                hide: event.target.checked
-            }
-        });    
-    }
-    else if (switch_type === 'Enable Reviews') {
-        api('review_status',{
-            dataType: 'JSON',
-            data: {
-                book_id,
-                status: event.target.checked
-            }
-        });    
-    }
-});
+
 document.querySelector('h2[label="Account"] + input + label + collapsible > button').addEventListener('click',function(){
     const pass = this.previousElementSibling.previousElementSibling.querySelector('input').value;
     const confirm_pass = this.previousElementSibling.querySelector('input').value;
