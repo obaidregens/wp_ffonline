@@ -2,6 +2,7 @@
 function construct_page_title(... $parts) {
     return 'Fanfiction Online - ' . implode(" - ",$parts);
 }
+define('MAIN_DIR',dirname(__DIR__) . '/');
 require_once(__DIR__ . '/helpers.php');
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
@@ -390,13 +391,13 @@ $app->listen('/inbox',function($self){
     exit();
 });
 $app->listen('/inbox/@:username',function($self){
+    $self->login();
     $user = get_user_by( 'login', $self->params['username'] );
     if ($user === false || intval($user->ID) === intval(get_current_user_id()) ){
         $self->_404();
     }
     $self->type = 'inbox';
     $self->type_id = intval($user->ID);
-    $self->login();
     $self->header();
     $self->template('/views/inbox');
     $self->footer();
@@ -404,15 +405,16 @@ $app->listen('/inbox/@:username',function($self){
 });
 // Write
 $app->listen('/my-books',function($self){
+    $self->login();
     $self->type = 'my-books';
     $self->type_id = 0;
-    $self->login();
     $self->header();
     $self->template('/views/books/my-books');
     $self->footer();
     exit();
 });
 $app->listen('/my-books/:id',function($self){
+    $self->login();
     $book = get_post( $self->params['id'] );
     if ($book === false
         || intval($book->post_author) !== intval(get_current_user_id())
@@ -422,7 +424,6 @@ $app->listen('/my-books/:id',function($self){
     $self->type = 'edit-book';
     $self->type_id = intval($book->ID);
     $self->book = $book;
-    $self->login();
     $self->header();
     $self->template('/views/books/edit');
     $self->footer();
@@ -444,6 +445,7 @@ $app->listen('/drafts/edit',function($self){
     $self->_301('/drafts/edit/new');
 });
 $app->listen('/drafts/edit/:draft_id',function($self){
+    $self->login();
     $draft = drafts::get_by('ID',$self->params['draft_id']);
     if ($draft === false && $self->params['draft_id'] !== 'new') {
         return;
@@ -451,9 +453,39 @@ $app->listen('/drafts/edit/:draft_id',function($self){
     $self->type = 'drafts-edit';
     $self->type_id = $self->params['draft_id'] === 'new' ? 0 : intval($draft->ID);
     $self->draft = $draft;
-    $self->login();
     $self->header();
     $self->template('/views/drafts/edit');
+    $self->footer();
+    exit();
+});
+$app->listen('/drafts/export/:draft_id/ffn/download',function($self){
+    $draft = drafts::get_by('ID', $self->params['draft_id'] );
+    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+        return;
+    }
+    $self->type = 'drafts-download-ffn';
+    $self->type_id = intval($draft->ID);
+    $file = MAIN_DIR . '/download/draft-' . $draft->ID . '.odt';
+    drafts_json::output_odt($draft->content,$file);
+    header("Content-Description: File Transfer");
+    header("Content-Type: application/vnd.oasis.opendocument.text"); 
+    header('Content-Disposition: attachment; filename="draft.odt"');
+    header('Content-Length: ' . filesize($file) );
+    header( 'Cache-Control: no-store' );
+    readfile($file);
+    exit();
+});
+$app->listen('/drafts/export/:draft_id/ffn',function($self){
+    $self->login();
+    $draft = drafts::get_by('ID',$self->params['draft_id']);
+    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+        return;
+    }
+    $self->type = 'drafts-export-ffn';
+    $self->type_id = intval($draft->ID);
+    $self->draft = $draft;
+    $self->header();
+    $self->template('/views/drafts/export-ffn');
     $self->footer();
     exit();
 });

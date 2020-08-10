@@ -57,6 +57,10 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     },
     listeners: {
         click: function(event) {
+            if (document.querySelector('editor').getAttribute('draft_id') === 'new') {
+                new toast("This draft hasn't been saved.");             
+                return;
+            }
             let _p = document.querySelector('popup[share_draft]');
             if (_p) {
                 popup.open(_p);
@@ -97,7 +101,11 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     },
                     listeners: {
                         click: function() {
-                            this.setAttribute('disabled','');
+                            const _id = document.querySelector('editor').getAttribute('draft_id');
+                            if (_id === 'new') {
+                                new toast("This draft hasn't been saved.");                               
+                                return;
+                            }
                             const draftShareRequest = (draft_id) => {
                                 const share_el = this.parentElement.querySelector('share-link');
                                 const a_el = share_el.querySelector('a.share-link');
@@ -125,20 +133,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                                     }
                                 });
                             }
-                            const _id = document.querySelector('editor').getAttribute('draft_id');
-                            if (_id === 'new') {
-                                draftSaveRequest('new')
-                                .then(
-                                    v => {
-                                        draftShareRequest(v);
-                                    },
-                                    v => {
-                                        popup.close();
-                                        this.removeAttribute('disabled');
-                                    }
-                                );
-                                return;
-                            }
+                            this.setAttribute('disabled','');
                             draftShareRequest(_id);
                         }
                     },

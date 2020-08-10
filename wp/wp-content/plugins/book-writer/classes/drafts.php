@@ -98,7 +98,7 @@ class drafts_json extends drafts {
         function create_span_draft($leaf) {
             $leaf_attr = [
                 'bold'      => 'font-weight: bold;',
-                'italic'    => 'font-style: italic'
+                'italic'    => 'font-style: italic;'
             ];
             $span_style = "";
             foreach ($leaf_attr as $attr => $attr_style) {
@@ -127,6 +127,52 @@ class drafts_json extends drafts {
             }
             $html .= '</p>'; 
         }
+        return $html;
+    }
+    public static function output_odt($json,$dump) {
+        function create_span_draft($leaf) {
+            $leaf_attr = [
+                'bold'      => 'B',
+                'italic'    => 'I'
+            ];
+            $span_style = "";
+            foreach ($leaf_attr as $attr => $attr_style) {
+                if (! isset($leaf[$attr])){
+                    continue;
+                }
+                $span_style .= $leaf_attr[$attr];
+            }
+            $span = "<text:span text:style-name=\"T$span_style\">" . $leaf['text'];
+            $span .= "</text:span>";
+            return $span;
+        }
+        $html = '';
+        $array = json_decode($json,true);
+        foreach ($array as $k => $para) {
+            $para_style = '';
+            if (isset($para['type']) && $para['type'] === 'center'){
+                $para_style = 'C';
+            }
+            $html .= "<text:p text:style-name=\"P$para_style\">";
+            foreach ($para['children'] as $kk => $leaf) {
+                $html .= create_span_draft($leaf);
+            }
+            $html .= '</text:p>'; 
+        }
+        $dir = dirname ( $dump );
+        if (! is_dir($dir)) {
+            mkdir($dir,0777,true);
+        }
+        $zip = new ZipArchive;
+        $zip->open($dump,ZipArchive::CREATE);
+        $pre_xml = '<?xml version="1.0" encoding="UTF-8"?><office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:smil="urn:oasis:names:tc:opendocument:xmlns:smil-compatible:1.0"><office:automatic-styles><style:style style:name="T" style:family="text"><style:text-properties fo:font-weight="normal" /></style:style><style:style style:name="TB" style:family="text"><style:text-properties fo:font-weight="bold" /></style:style><style:style style:name="TI" style:family="text">    <style:text-properties fo:font-weight="normal" fo:font-style="italic" /></style:style><style:style style:name="TBI" style:family="text"><style:text-properties fo:font-weight="bold" fo:font-style="italic" /></style:style><style:style style:name="P" style:family="paragraph"><style:paragraph-properties fo:text-align="left" /></style:style><style:style style:name="PC" style:family="paragraph"><style:paragraph-properties fo:text-align="center" /></style:style></office:automatic-styles><office:body><office:text>';
+        $post_xml = '</office:text></office:body></office:document-content>';
+        $zip->addFromString('content.xml',$pre_xml . $html . $post_xml);
+        $zip->addFromString(
+            'META-INF/manifest.xml',
+            '<?xml version="1.0" encoding="UTF-8"?><manifest:manifest xmlns:manifest="urn:oasis:names:tc:opendocument:xmlns:manifest:1.0"><manifest:file-entry manifest:full-path="/" manifest:media-type="application/vnd.oasis.opendocument.text" /><manifest:file-entry manifest:full-path="META-INF/manifest.xml" manifest:media-type="text/xml" /><manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml" /></manifest:manifest>'
+        );
+        $zip->close();
         return $html;
     }
 }

@@ -11,12 +11,13 @@ $books = (new WP_Query([
 ?>
 <a label="Drafts" href="/drafts" class="button"></a>
 <?php foreach ($books as $book) { ?>
+<?php $stat = new book_stats($book->ID); ?>
 <a href="/my-books/<?= $book->ID; ?>" class="book">
 <book-title><?= $book->post_title; ?></book-title>
 <book-status><?= $book->post_status === 'publish' ? 'Published' : 'Saved'; ?></book-status>
 <book-views>
-    <stat timespan="Last Week">16</stat>
-    <stat timespan="All Time">87</stat>
+    <stat timespan="Last Week"><?= $stat->view_count(new DateTime('last week')); ?></stat>
+    <stat timespan="All Time"><?= $stat->view_count(); ?></stat>
 </book-views>
 </a>
 <?php } ?>

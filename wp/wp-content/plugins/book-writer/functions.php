@@ -186,7 +186,8 @@ $includes = array(
 	'classes/user',
 	'classes/v_code',
 	'classes/c_user',
-	'classes/drafts'
+	'classes/drafts',
+	'classes/book_stats'
 );
 foreach($includes as $include){
 	require ($include . '.php');
