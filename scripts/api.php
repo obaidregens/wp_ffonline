@@ -42,7 +42,7 @@ $import = [
     'verify',
     'contact',
     'drafts',
-    'write'
+    'edit-book'
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

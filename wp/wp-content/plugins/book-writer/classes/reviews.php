@@ -9,7 +9,7 @@ class reviews {
             return false;
         }
         $chapter = get_post( $args['chapter_id'] );
-        if (! $chapter || $chapter->post_type !== 'chapter' || self::status($args['chapter_id']) === false){
+        if (! $chapter || $chapter->post_type !== 'chapter' || self::can_review($args['chapter_id']) === false){
             return false;
         }
         if (isset($args['reply_to'])) {
@@ -44,11 +44,24 @@ class reviews {
         }
         wp_delete_comment($comment->comment_ID);
     }
-    static function status($chapter_id){
-        $chapter = get_post($chapter_id);
-        return $chapter &&
-        $chapter->post_type === 'chapter' &&
-        comments_open( $chapter_id ) &&
-        (get_post_meta($chapter->post_parent, 'anon_review', true) === 'true' || is_user_logged_in() );
+    static function can_review($chapter_id_or_book_id,$logged_in = null){
+        if ($logged_in === null) {
+            $logged_in = is_user_logged_in();
+        }
+        $chapter_or_book = get_post($chapter_id_or_book_id);
+        if (! $chapter_or_book) {
+            return false;
+        }
+        if (! in_array($chapter_or_book->post_type,['chapter','book'])){
+            return false;
+        }
+        if ($chapter_or_book->post_type === 'book') {
+            return
+                comments_open( $chapter_or_book->ID ) &&
+                (get_post_meta($chapter_or_book->ID, 'anon_review', true) === 'true' || $logged_in );
+        }
+        return
+            comments_open( $chapter_or_book->post_parent ) &&
+            (get_post_meta($chapter_or_book->post_parent, 'anon_review', true) === 'true' || $logged_in );
     }
 }

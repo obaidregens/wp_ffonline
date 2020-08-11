@@ -1,12 +1,162 @@
-main {
-    max-width: 500px;
-}
-a.book-title {
-    color: var(--text-color);
-    display: block;
-    font-size: 2rem;
-}
-label.switch {
-    display: block;
+.select {
+    overflow: unset;
+    --selectLight: var(--grey);
     margin: 20px 0;
+}
+.select:focus,.select:focus * {
+    outline: none;
+}
+.select [class$="-control"] {
+    background-color: var(--background-color);
+    border-color: var(--selectLight);
+    box-shadow: none;
+    border-radius: 0px;
+}
+.select [class$="-indicatorSeparator"] {
+    background-color: var(--selectLight);
+}
+.select [class$="-indicatorContainer"] {
+    color: var(--selectLight);
+    cursor: pointer;
+}
+.select [class$="-indicatorContainer"]:not(:last-of-type):hover {
+    color: var(--red);
+}
+.select [class$="-indicatorContainer"]:last-of-type:hover {
+    color: var(--theme-color);
+}
+.select [class$="-multiValue"] {
+    background-color: var(--background-accent);
+    border-radius: 60px;
+}
+.select [class$="-multiValue"] > div:first-child {
+    color: var(--text-color);
+    padding: 5px 10px;
+}
+.select [class$="-multiValue"] > div:nth-child(2) {
+    cursor: pointer;
+}
+.select [class$="-multiValue"] > div:nth-child(2):hover {
+    background-color: var(--red);
+    color: var(--white);
+}
+.select [class$="-singleValue"] {
+    color: var(--text-color);
+}
+/* Dropdown */
+.select [class$="-menu"] {
+    top: 82.1%;
+    border-radius: 0px;
+    box-shadow: none;
+    border: 1px solid var(--selectLight);
+    background-color: var(--background-color);
+}
+.select [class$="-menu"] > div:first-child {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.select [class$="-option"] {
+    background-color: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+}
+.select [class$="-option"]:hover {
+    background-color: var(--hover);
+}
+.select [class$="-option"].css-9gakcf-option {
+    cursor: default;
+    background-color: var(--theme-color);
+    color: var(--white);
+}
+/* Group */
+.select [class$="-group"] {
+    color: var(--theme-color);
+    font-weight: bold;
+}
+/* Labels */
+text-input::before,.select::before,pairing-wrapper::before {
+    color: var(--theme-color);
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+text-input > input,text-input > textarea {
+    margin-top: -8px;
+}
+text-input:first-child::before {
+    content: 'Book Title';
+}
+text-input:nth-child(2)::before {
+    content: 'Book Summary';
+}
+.select.fandom::before {
+    content: 'Fandom';
+}
+.select.rating::before {
+    content: 'Rating';
+}
+.select.language::before {
+    content: 'Language';
+}
+.select.status::before {
+    content: 'Status';
+}
+.select.genre::before {
+    content: 'Genre';
+}
+.select.character::before {
+    content: 'Character';
+}
+.select.tag::before {
+    content: 'Tag';
+}
+pairing-wrapper::before {
+    content: 'Pairing';
+}
+/* Pairing */
+pairing-wrapper {
+    display: block;
+}
+pairing-wrapper > * {
+    margin: 10px 0;
+}
+single-pairing {
+    display: flex;
+    margin: 20px 0;
+    align-items: center;
+}
+single-pairing > .select.pairing {
+    width: 100%;
+    margin: 0;
+}
+single-pairing > button.remove-pairing {
+    border-color: transparent;
+    padding: 0 8px;
+    margin-right: 0;
+}
+single-pairing > button.remove-pairing:hover {
+    background-color: var(--red);
+}
+single-pairing > button.remove-pairing::before {
+    font-family: 'icons';
+    content: '\e917';
+}
+button.add-pairing {
+    border-color: transparent;
+    display: block;
+}
+button.add-pairing::after {
+    content: 'Add New Pairing';
+}
+button.add-pairing::before {
+    font-family: 'icons';
+    content: '\e916';
+    margin-right: 6px;
+    display: inline-block;
+    transform: scale(1.3);
+}
+/* Switches */
+label.switch {
+    margin: 15px 10px;
+    display: flex;
 }

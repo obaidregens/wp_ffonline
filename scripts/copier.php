@@ -96,7 +96,11 @@ foreach ($files as $file ) {
             }
         }
         if (isset($book['Tags']['All Characters'])){
-            wp_set_object_terms($book_id,$book['Tags']['All Characters'], 'character');
+            $char_tags = [];
+            foreach ($book['Tags']['All Characters'] as $key => $char) {
+                $char_tags[] = intval(term_replace('character',$char,$fandoms[$book['Tags']['Fandom'][0]]));
+            }
+            wp_set_object_terms($book_id,$char_tags, 'character');
         }
         update_post_meta($book_id,'ffn_book_id',$book['_id']);
         update_post_meta($book_id,'ffn_author_id',$book['Author ID']);

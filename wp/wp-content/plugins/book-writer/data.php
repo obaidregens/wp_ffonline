@@ -57,12 +57,6 @@ function get_data($book_id = 'new'){
 	//Rating, Language, Status, Genre
 	$taxonomies = array('rating','language','status','genre','tag');
 	foreach($taxonomies as $taxonomy){
-		$book_tax = array();
-		if ($book_id != 'new'){
-			$book_tax = wp_get_object_terms($book->ID,$taxonomy,array(
-				'fields'	=> 'id=>name'
-			));
-		}
 		$all_terms = get_terms(array(
 			'taxonomy'		=> $taxonomy,
 			'hide_empty'	=> false
@@ -72,92 +66,110 @@ function get_data($book_id = 'new'){
 				'name'		=> $term->name,
 			);
 		}
-		$data['selected'][$taxonomy] = $book_tax;
+		// Selected
+		if ($book_id != 'new'){
+			$book_tax = wp_get_object_terms($book->ID,$taxonomy,array(
+				'fields'	=> 'id=>name'
+			));
+		}
+		$data['selected'][$taxonomy] = [];
+		foreach (($book_tax ?? []) as $term_id => $term_name) {
+			$data['selected'][$taxonomy][] = [
+				'label'	=> $term_name,
+				'value'	=> strval($term_id)
+			];
+		}
 	}
 	//Selected
 	//Categories
-	$data['selected']['category'] = array();
 	$data['selected']['fandom'] = array();
-	$data['selected']['character'] = array();
+	$data['selected']['characters'] = array();
 	$data['selected']['pairing'] = array();
 
 	$data['selected']['title'] 				  = '';
 	$data['selected']['description'] 		  = '';
-	$data['selected']['detailed_description'] = '';
-	$data['selected']['anononymous_reviews']  = false;
+	$data['selected']['reviews']  			  = false;
+	$data['selected']['anonymous_reviews']  = false;
 	$data['selected']['publish'] 			  = false;
 	$data['selected']['book_id']			  = $book_id;
 	if ($book_id != 'new'){
 		$data['selected']['book_id']		  = (int) $book_id;
 	}
 	if ($book_id != 'new' ){
+		$s = &$data['selected'];
 		//This also includes categories
-		$data['selected']['fandom'] = wp_get_post_terms($book->ID,'category');
+		$book_categories = wp_get_post_terms($book->ID,'category',[
+			'fields'	=> 'id=>parent'
+		]);
 		//Will include a value of 0, no harm in keeping it.
 		//array_unique is unnecessary as well, unless in_array() performs faster on smaller arrays.
-		$book_category_ids = array_unique(array_column($data['selected']['fandom'],'parent'));
-		if (! empty($book_category_ids)){
-			$data['selected']['category'] = get_terms(array(
-				'include'	=> $book_category_ids,
-				'fields'	=> 'id=>name'
-			));
-		}
+		// array_values gets an array of parents
+		$book_category_ids = array_unique(array_values($book_categories));
 		
 		//Now does not include categories
-		$book_fandom_ids = array_diff(array_column($data['selected']['fandom'],'term_id'),$book_category_ids);
+		// array_keys gets an array of ids
+		$book_fandom_ids = array_diff(array_keys($book_categories),$book_category_ids);
+
 		if (! empty($book_fandom_ids)){
-			$data['selected']['fandom'] = get_terms(array(
-				'include'	=> $book_fandom_ids,
-				'fields'	=> 'id=>name'
+			$book_fandoms = get_terms(array(
+				'include'	=> $book_fandom_ids
 			));
 		}
-
-		$data['selected']['character'] = wp_get_post_terms($book->ID,'character',array(
-			'fields'	=> 'id=>name'
-		));
-
-		$data['selected']['pairing'] = wp_get_post_terms($book->ID,'pairing',array(
-			'fields'	=> 'id=>name'
-		));
-		foreach($data['selected']['pairing'] as $key => $book_pairing){
-			$data['selected']['pairing'][$key] = explode('/',$book_pairing);
+		foreach (($book_fandoms ?? []) as $key => $fandom) {
+			$s['fandom'][] = [
+				'category' 	=> $fandom->parent,
+				'value'		=> $fandom->term_id,
+				'label'		=> $fandom->name
+			];
+		}
+		$book_characters = wp_get_post_terms($book->ID,'character');
+		$character_name_hash = [];
+		foreach ($book_characters as $character ) {
+			if (intval($character->parent) === 0) {
+				continue;
+			}
+			$character_name_hash[$character->name] = [
+				'value'		=> strval($character->term_id),
+				'label'		=> $character->name,
+				'fandom'	=> strval($character->parent),
+				'category'	=> strval($book_categories[$character->parent])
+			];
+			$s['characters'][] = $character_name_hash[$character->name];
 		}
 
-		$data['selected']['title'] = $book->post_title;
-		$data['selected']['description'] = $book->post_excerpt;
-		$data['selected']['detailed_description'] = $book->post_content;
-		if ($book->post_status == 'publish'){
-			$data['selected']['publish'] = true;
+		$book_pairings = wp_get_post_terms($book->ID,'pairing');
+		foreach($book_pairings as $k => $pairing){
+			$s['pairing'][$k] = [];
+			$pairing_chars = explode('/',$pairing->name);
+			foreach ($pairing_chars as $char_name) {
+				if (!isset($character_name_hash[$char_name])) {
+					continue;
+				}
+				$s['pairing'][$k][] = $character_name_hash[$char_name];
+			}
 		}
-		if (get_post_meta( $book_id,'anon_review',true) == 'true'){
-			$data['selected']['anononymous_reviews'] = true;
-		}
+
+		$s['title'] = $book->post_title;
+		$s['description'] = $book->post_excerpt;
+		$s['publish'] = $book->post_status === 'publish';
+		$s['reviews'] = $book->comment_status === 'open';
+		$s['anonymous_reviews'] = get_post_meta( $book_id,'anon_review',true) === 'true';
 	}
 
 	//Chapters
-	$data['selected']['chapters'] = array();
-	$data['selected']['chapters']['published'] = array();
-	$data['selected']['chapters']['draft'] = array();
-	
-	if ($book_id != 'new'){
-		$all_chapters = all_chapters($book -> ID);
-		foreach($all_chapters as $chapter){
-			$chapter_arr = array(
-				'ID'				=> $chapter->ID,
-				'title'				=> $chapter->post_title,
-				'publish_allowed'	=> false,
-			);
-			if (can_publish_saved_chapter($chapter->ID)){
-				$chapter_arr['publish_allowed'] = true;
-			}
-			if (in_array($chapter->post_status,array('draft','future'))){
-				$data['selected']['chapters']['draft'][] = $chapter_arr;
-			}
-			else if (in_array($chapter->post_status,array('publish'))){
-				$data['selected']['chapters']['published'][] = $chapter_arr;
-			}
-		}
-	}
+	// $s['chapters'] = array();
+	// if ($book_id !== 'new'){
+	// 	$all_chapters = published_chapters($book->ID);
+	// 	foreach($all_chapters as $k => $chapter){
+	// 		$chapter_arr = array(
+	// 			'ID'				=> $chapter->ID,
+	// 			'title'				=> $chapter->post_title,
+	// 			'num'				=> $k+1
+	// 		);
+	// 		$s['chapters'][] = $chapter_arr;
+	// 	}
+	// }
+
     return $data;
 }
 function get_autosaves($book_id,$chapter_id){

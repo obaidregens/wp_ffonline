@@ -77,19 +77,13 @@ class bundle {
         }
         $this->bundle['css'][] = $file;
     }
-    function js($file){
+    function js($file,$type = null){
         if (in_array($file,$this->bundle['js'])){
             return;
         }
         $this->bundle['js'][] = $file;
     }
     function mix($mix){
-        if (in_array( $mix, $this->bundle['mix'] )){
-            return;
-        }
-        $this->bundle['mix'][] = $mix;
-    }
-    function link($mix){
         if (in_array( $mix, $this->bundle['mix'] )){
             return;
         }
@@ -162,11 +156,12 @@ class bundle {
         ];
     }
     function print(){
+        $type = isset($this->script_type) ? 'type="' . $this->script_type . '"' : "";
         foreach ($this->enqueued_css ?? [] as $name => $url) {
             ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $url; ?>"><?php
         }
         foreach ($this->enqueued_js ?? [] as $name => $url) {
-            ?><script name="<?= $name; ?>" src="<?= $url; ?>"></script><?php
+            ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $url; ?>"></script><?php
         }
     }
     protected function get_bundle(){
@@ -344,15 +339,26 @@ class bundle {
                 '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide'
             )
         ),
-        'react_slate'   => array(
+        'react'   => array(
             'js'   => array(
-                'external/react_slate/react.production.min',
-                'external/react_slate/react-dom.production.min',
-                'external/react_slate/slate',
-                'external/react_slate/slate-react',
-                'external/react_slate/slate-history',
+                'external/react/react.production.min',
+                'external/react/react-dom.production.min'
             ),
             'css'   => []
-        )
+        ),
+        'react_dev' => [
+            'js'    => array(
+                'external/react_dev/babel.min'
+            ),
+            'css' => []
+        ],
+        'slate'    => [
+            'js'    => [
+                'external/slate/slate',
+                'external/slate/slate-react',
+                'external/slate/slate-history',
+            ],
+            'css'   => []
+        ]
     ];
 }

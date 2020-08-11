@@ -416,7 +416,7 @@ $app->listen('/my-books',function($self){
 $app->listen('/my-books/:id',function($self){
     $self->login();
     $book = get_post( $self->params['id'] );
-    if ($book === false
+    if (! $book
         || intval($book->post_author) !== intval(get_current_user_id())
     ) {
         return;

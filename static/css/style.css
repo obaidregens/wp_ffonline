@@ -14,8 +14,10 @@
 :root {
     --red: #a02121;
     --grey: rgb(146 146 146 / 22%);
+    --darkgrey: #999;
     --lightred: #ff4f4f;
     --white: #fdfdfd;
+    --black: #262828;
 }
 html {
     background-color: var(--background-color);

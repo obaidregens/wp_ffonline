@@ -1,6 +1,7 @@
 <?php
 $app->bundle = global_bundle('drafts-edit');
-$app->bundle->mix('react_slate');
+$app->bundle->mix('react');
+$app->bundle->mix('slate');
 $app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/js-components/confirmation');
