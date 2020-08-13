@@ -26,7 +26,7 @@ function init_text_input(){
     }
 }
 init_text_input();
-function create_text_input({type = 'input',input_type = 'text',label,value = ''}){
+function create_text_input({type = 'input',input_type = 'text',label,value = '',attributes = {}}){
     const listeners = {
         change: function(){
             if (this.value === ''){
@@ -51,9 +51,9 @@ function create_text_input({type = 'input',input_type = 'text',label,value = ''}
         children: [
             DOM.create(type,{
                 value,
-                attributes: {
+                attributes: Object.assign(attributes,{
                     type: input_type,
-                },
+                }),
                 listeners
             }),
             DOM.create('label',{

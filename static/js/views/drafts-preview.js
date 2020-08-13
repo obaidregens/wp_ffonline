@@ -10,7 +10,7 @@ document.querySelector('.edit-draft').addEventListener('click',function(event){
                 new toast('An error occured.');
                 return;
             }
-            window.location.href = '/drafts/edit/' + response.draft_id;
+            window.location.href = '/drafts/' + response.draft_id + '/edit';
         }
     });
 });

@@ -121,9 +121,10 @@ function run_at_activation(){
 		`share` VARCHAR(25) NULL ,
 		`title` VARCHAR(100) NOT NULL ,
 		`content` LONGTEXT NOT NULL ,
-		`chapter_id` BIGINT NOT NULL ,
+		`chapter_id` BIGINT NULL ,
 		`updated` BIGINT NOT NULL ,
 		`hash` VARCHAR(40) NOT NULL ,
+		UNIQUE (chapter_id) ,
 		PRIMARY KEY (ID)
 	) $charset_collate;";
 

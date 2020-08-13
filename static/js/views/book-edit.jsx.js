@@ -1,6 +1,7 @@
 // Import Before
 
 const tags = (JSON.parse(document.querySelector('tags_data').innerText));
+window.tags = tags;
 window.selected = tags.selected;
 class TextInput extends React.Component {
     constructor(props) {
@@ -50,20 +51,22 @@ function Switch(props) {
             onChange={event => {
                 if (props.onChange) {
                     props.onChange(event.target.checked);
+                    reRender();
                 }
             }}
-            defaultChecked={props.checked}
+            checked={props.checked}
             type="checkbox" />
             <text>{props.label}</text>
         </label>
     );
 }
-function reRender() {
+const reRender = () => {
     ReactDOM.render(
         <App/>,
         document.querySelector('book')
     );
 }
+window.reRender = reRender;
 function Pairing() {
     const byFandom = {}; 
     (selected.characters || []).forEach(char_obj => {

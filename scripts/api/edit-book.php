@@ -7,47 +7,90 @@ function api_edit_book() {
         }
         return wp_insert_term($term,$taxonomy,array(
             'parent'      => $parent,
-            )
+        )
         );
     }
     required_login();
     required_params(
-        'title','status','reviews','rating','publish','language',
-        'fandom','description','book_id','anonymous_reviews'
+        'book_id','title','description','reviews','publish','anonymous_reviews'
     );
-    $d = &$_POST['data'];
-    $book = get_post($d['book_id']);
-    if (!$book || $book->post_type !== 'book' || intval($book->post_author) !== intval(get_current_user_id())){
-        return_code(9);
-    }
-    function return_code($code) {
+    function return_code($code,$selected = null) {
         $d = &$_POST['data'];
-        echo json_encode([
-            'code'      => $code,
-            'book_id'   => $d['book_id']
-        ]);
+        $_r = [
+            'code'      => $code
+        ];
+        if ($selected !== null) {
+            $_r['selected'] = $selected;
+        }
+        echo json_encode($_r);
         exit();
     }
+    $d = &$_POST['data'];
     $publish = $d['publish'] === "true";
     $reviews = $d['reviews'] === "true";
     $anon_review = $d['anonymous_reviews'] === "true";    
 
+    if (trim($d['title']) === '') {
+        return_code(14);
+    }
+    if ($d['book_id'] === 'new'){
+        $d['book_id'] = wp_insert_post([
+            'post_type'         => 'book',
+            'post_status'       => 'draft',
+            'post_title'        => 'Autosave'
+        ]);
+    }
+    $book = get_post($d['book_id']);
+    if (
+        !$book || $book->post_type !== 'book'
+        || intval($book->post_author) !== intval(get_current_user_id())
+    ){
+        return_code(9);
+    }
+    if (trim($d['description']) === '') {
+        $publish = false;
+    }
+
+    // Chapter
+    $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
+    $old_chapter_ids =  array_map('strval',published_chapters($book->ID,-1,'ids'));
+    $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
+    $old_chapters_lookup = array_flip($old_chapter_ids);
+    $chapter_ids_order = [];
+    foreach (($d['chapters'] ?? []) as $chapter ) {
+        if ($chapter['draft_id']) {
+            $chapter_id = drafts_chapter::save($chapter['draft_id'],$book->ID,$chapter['title']);
+            if ($chapter_id !== false) {
+                $chapter_ids_order[] = $chapter_id;
+            }
+            continue;
+        }
+        if (! isset($old_chapters_lookup[$chapter['ID']])) {
+            continue;
+        }
+        $chapter_ids_order[] = $chapter['ID'];
+    }
+    if (empty($chapter_ids_order)) {
+        $success = 2;
+        $publish = false;
+    }
     global $wpdb;
-    $wpdb->update(
-        'wp_posts',
-        [
-            'post_title'        => substr($d['title'],0,80),
-            'post_excerpt'      => substr($d['description'],0,400),
-            'comment_status'    => $reviews ? 'open' : 'closed',
-            'post_status'       => $publish ? 'publish' : 'draft' 
-        ],
-        [
-            'ID'                =>  $d['book_id']
-        ]
-    );
-    // Anonymous Reviews
-    update_post_meta( $d['book_id'], 'anon_review', $anon_review ? 'true' : 'false' );
-    
+    foreach ($to_remove as $chapter_id ) {
+        delete_post_meta( $chapter_id, 'chapter_order' );
+        $wpdb->update(
+            'wp_posts',
+            [
+                'post_status'   => 'trash'
+            ],
+            [
+                'ID'            => $chapter_id
+            ]
+        );
+    }
+    foreach ($chapter_ids_order as $k => $chapter_id) {
+        update_post_meta( $chapter_id, 'chapter_order', $k+1 );
+    }
+
     // Tags
     // Simple Tags
     $simple_tags = [
@@ -59,6 +102,7 @@ function api_edit_book() {
     ];
     foreach ($simple_tags as $tagName => $required) {
         if ( empty($d[$tagName]) && $required) {
+            $publish = false;
             continue;
         }
         $tagIds = [];
@@ -99,5 +143,23 @@ function api_edit_book() {
         $tag[] = $tag_id;
     }
     wp_set_post_terms( $d['book_id'], $tag, 'tag' );
-    return_code(1);
+
+    // Update Book
+
+    $wpdb->update(
+        'wp_posts',
+        [
+            'post_title'        => substr($d['title'],0,80),
+            'post_excerpt'      => substr($d['description'],0,400),
+            'comment_status'    => $reviews ? 'open' : 'closed',
+            'post_status'       => $publish ? 'publish' : 'draft' 
+        ],
+        [
+            'ID'                =>  $d['book_id']
+        ]
+    );
+    // Anonymous Reviews
+    update_post_meta( $d['book_id'], 'anon_review', $anon_review ? 'true' : 'false' );
+
+    return_code($success ?? 1,get_data($d['book_id'])['selected'] );
 }

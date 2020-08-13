@@ -2,10 +2,12 @@ import Select from 'https://cdn.pika.dev/react-select';
 // window.Select = Select;
 import CreatableSelect from 'https://cdn.pika.dev/react-select/creatable';
 // window.CreatableSelect = CreatableSelect;
+
 "use strict";
 
 // Import Before
 const tags = JSON.parse(document.querySelector('tags_data').innerText);
+window.tags = tags;
 window.selected = tags.selected;
 
 class TextInput extends React.Component {
@@ -62,16 +64,19 @@ function Switch(props) {
     onChange: event => {
       if (props.onChange) {
         props.onChange(event.target.checked);
+        reRender();
       }
     },
-    defaultChecked: props.checked,
+    checked: props.checked,
     type: "checkbox"
   }), /*#__PURE__*/React.createElement("text", null, props.label));
 }
 
-function reRender() {
+const reRender = () => {
   ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('book'));
-}
+};
+
+window.reRender = reRender;
 
 function Pairing() {
   const byFandom = {};

@@ -1,4 +1,4 @@
-<iframe style="border:none;" width="0" height="0" src="/drafts/export/<?= $app->draft->ID; ?>/ffn/download"></iframe>
+<iframe style="border:none;" width="0" height="0" src="/drafts/<?= $app->draft->ID; ?>/export/ffn/download"></iframe>
 <h3>Upload file to FFN</h3>
 <ol >
 <li>Go to Publish -> Doc Manager</li>

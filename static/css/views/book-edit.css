@@ -74,19 +74,19 @@
     font-weight: bold;
 }
 /* Labels */
-text-input::before,.select::before,pairing-wrapper::before {
+app > text-input::before,.select::before,pairing-wrapper::before {
     color: var(--theme-color);
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.8rem;
 }
-text-input > input,text-input > textarea {
+app > text-input > input,app > text-input > textarea {
     margin-top: -8px;
 }
-text-input:first-child::before {
+app > text-input:first-child::before {
     content: 'Book Title';
 }
-text-input:nth-child(2)::before {
+app > text-input:nth-child(2)::before {
     content: 'Book Summary';
 }
 .select.fandom::before {

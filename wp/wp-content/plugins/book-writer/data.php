@@ -80,6 +80,25 @@ function get_data($book_id = 'new'){
 			];
 		}
 	}
+	// Drafts
+	$data['all']['drafts'] = [];
+	$drafts = &$data['all']['drafts'];
+	$drafts_by_users = drafts::by_users();
+	foreach($drafts_by_users as $draft) {
+		$full_decode = json_decode($draft->content);
+		$content = $full_decode[0]->children[0]->text;
+		$substr = substr($content,0,200);
+		if (strlen($content) > 200 || count($full_decode) > 1 || count($full_decode[0]->children) > 1 ){
+			$substr .= '...';
+		}
+		$drafts[] = [
+			'ID'		=> $draft->ID,
+			'title'		=> $draft->title,
+			'excerpt'	=> $substr,
+			'updated'	=> human_time_diff( intval($draft->updated) )
+		];
+	}
+
 	//Selected
 	//Categories
 	$data['selected']['fandom'] = array();
@@ -157,19 +176,18 @@ function get_data($book_id = 'new'){
 	}
 
 	//Chapters
-	// $s['chapters'] = array();
-	// if ($book_id !== 'new'){
-	// 	$all_chapters = published_chapters($book->ID);
-	// 	foreach($all_chapters as $k => $chapter){
-	// 		$chapter_arr = array(
-	// 			'ID'				=> $chapter->ID,
-	// 			'title'				=> $chapter->post_title,
-	// 			'num'				=> $k+1
-	// 		);
-	// 		$s['chapters'][] = $chapter_arr;
-	// 	}
-	// }
-
+	$s['chapters'] = array();
+	if ($book_id !== 'new'){
+		$all_chapters = published_chapters($book->ID);
+		foreach($all_chapters as $k => $chapter){
+			$chapter_arr = array(
+				'ID'				=> $chapter->ID,
+				'title'				=> $chapter->post_title,
+				'num'				=> $k+1
+			);
+			$s['chapters'][] = $chapter_arr;
+		}
+	}
     return $data;
 }
 function get_autosaves($book_id,$chapter_id){

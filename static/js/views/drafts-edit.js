@@ -223,7 +223,7 @@ function draftSaveRequest(draft_id) {
                 }
                 document.querySelector('editor').setAttribute('draft_id',response.draft_id);
                 if (draft_id === 'new') {
-                    window.history.pushState("object or string", document.querySelector("title").innerText,'/drafts/edit/' + response.draft_id);
+                    window.history.pushState("object or string", document.querySelector("title").innerText,'/drafts/' + response.draft_id + '/edit');
                 }
                 new toast('Saved');
                 resolve(response.draft_id);

@@ -1,7 +1,7 @@
 <?php
 class drafts {
     private static $table = 'drafts';
-    private static function hash($content) {
+    private static function hash ($content) {
         return sha1($content);
     }
     public static function update ($args) {
@@ -34,12 +34,12 @@ class drafts {
             return intval($args['ID']);
         }
         $args = array_replace([
-            'content'   => '',
-            'title'     => '',
-            'user_id'   => get_current_user_id(),
-            'share'     => null,
-            'chapter_id'=> 0,
-            'updated'   => time()
+            'content'       => '',
+            'title'         => '',
+            'user_id'       => get_current_user_id(),
+            'share'         => null,
+            'chapter_id'    => null,
+            'updated'       => time()
         ],$args);
         if ( trim($args['content']) === '' || trim($args['title']) === ''){
             $e->add('content/title','Content and title are required.');
@@ -51,7 +51,6 @@ class drafts {
             $args
         );
         return intval($wpdb->insert_id);
-        
     }
     public static function get_by ($field, $value) {
         $table = self::$table;
@@ -66,6 +65,23 @@ class drafts {
         }
         return $results[0];
     }
+    public static function by_users ($user = null){
+        if ($user === null ) {
+            $user = get_current_user_id();
+        }
+        $table = self::$table;
+        global $wpdb;
+        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s",[$user]));
+        return $results;
+    }
+    public static function delete ($draft_id) {
+        global $wpdb;
+        $wpdb->delete(self::$table,[
+            'ID'    => $draft_id
+        ]);
+    }
+}
+class drafts_json extends drafts {
     public static function exists($content, $user_id = null) {
         if ($user_id === null) {
             $user_id = get_current_user_id();
@@ -77,23 +93,6 @@ class drafts {
         ));
         return empty($r) ? false : $r[0]->ID;
     }
-    public static function by_users($user = null){
-        if ($user === null ) {
-            $user = get_current_user_id();
-        }
-        $table = self::$table;
-        global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s",[$user]));
-        return $results;
-    }
-    public static function delete($draft_id) {
-        global $wpdb;
-        $wpdb->delete(self::$table,[
-            'ID'    => $draft_id
-        ]);
-    }
-}
-class drafts_json extends drafts {
     public static function read($json) {
         function create_span_draft($leaf) {
             $leaf_attr = [
@@ -174,5 +173,77 @@ class drafts_json extends drafts {
         );
         $zip->close();
         return $html;
+    }
+    public static function get($xml) {
+        $d = new DOMDocument();
+        $r = $d->loadXML('<content>' . $xml . '</content>');
+        if (! $r) {
+            return;
+        }
+        $json = [];
+        function parseHTMLStyle($style) {
+            $style_arrs = explode(';',$style);
+            $TheNew = [];
+            foreach ($style_arrs as $s ) {
+                if ($s === '') {
+                    continue;
+                }
+                $split = explode(':',$s);
+                $TheNew[trim($split[0])] = trim($split[1]);
+            }
+            return $TheNew;
+        }
+        function BuildLeafsRecursive($lnode,$leaf,&$block) {
+            if ($lnode instanceof DOMText) {
+                $leaf['text'] = $lnode->wholeText;
+                $block['children'][] = $leaf;
+                return;
+            }
+            $style = parseHTMLStyle($lnode->getAttribute('style'));
+            if (in_array($lnode->tagName,['b','strong']) || ($style['font-weight'] ?? '') === 'bold' ) {
+                $leaf['bold'] = true;
+            }
+            if (in_array($lnode->tagName,['i','em']) || ($style['font-style'] ?? '') === 'italic' ) {
+                $leaf['italic'] = true;
+            }
+            foreach ($lnode->childNodes as $tnode ) {
+                BuildLeafsRecursive($tnode,$leaf,$block);
+            }
+        }
+        foreach ($d->firstChild->childNodes as $node) {
+            if (!$node instanceof DOMElement || $node->tagName !== 'p') {continue;}
+            $block = [
+                'children' => []
+            ];
+            $style = parseHTMLStyle($node->getAttribute('style'));
+            if ( ($style['text-align'] ?? '') === 'center' ) {
+                $block['type'] = 'center';
+            }
+            // Build Styles
+            foreach ($node->childNodes as $leaf_el) {
+                BuildLeafsRecursive($leaf_el,[],$block);
+            }
+            $json[] = $block;
+        }
+        echo (self::read(json_encode($json)));
+    }
+}
+class drafts_chapter extends drafts {
+    public static function save($draft_id_or_draft,$book_id,$title) {
+        $draft = $draft_id_or_draft;
+        if (is_numeric($draft_id_or_draft)) {
+            $draft = self::get_by('ID', $draft_id_or_draft);
+        }
+        if ($draft === false){
+            return false;
+        }
+        $chapter_id = wp_insert_post([
+            'post_title'    => $title,
+            'post_content'  => drafts_json::read($draft->content),
+            'post_type'     => 'chapter',
+            'post_status'   => 'publish',
+            'post_parent'   => $book_id
+        ]);
+        return $chapter_id;
     }
 }

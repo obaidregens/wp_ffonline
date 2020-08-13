@@ -14,6 +14,8 @@ $draft_read = (drafts_json::read($draft->content));
 <button draft_id="<?= $draft->ID; ?>" class="edit-draft"></button>
 
 <!-- Draft -->
-<draft-meta>Shared by <a href="<?= get_author_posts_url( $user->ID ); ?>">@<?= $user->user_login ?></a></draft-meta>
+<?php if ($app->type === 'drafts-share') { ?>
+    <draft-meta>Shared by <a href="<?= get_author_posts_url( $user->ID ); ?>">@<?= $user->user_login ?></a></draft-meta>
+<?php } ?>
 <draft-title><?= $draft->title; ?></draft-title>
 <draft class="acs-elem"><?= $draft_read; ?></draft>

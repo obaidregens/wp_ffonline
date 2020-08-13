@@ -12,7 +12,7 @@ function term_replace($taxonomy, $term, $parent){
         return $exists['term_id'];
     }
     return wp_insert_term($term,$taxonomy,array(
-        'parent'      => $parent,
+            'parent'      => $parent,
         )
     );
 }
@@ -55,7 +55,7 @@ foreach ($files as $file ) {
                     echo 'No Books Term';
                     exit();
                 }
-                $fandoms[$fandom_name] = term_replace($fandom_name,'category',$books_term->term_id);
+                $fandoms[$fandom_name] = term_replace('category',$fandom_name,$books_term->term_id);
             }
         }
         $connection = c_user::get($book['Author ID']);

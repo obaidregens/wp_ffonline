@@ -1,5 +1,43 @@
+popup[existing_chapters],popup[new_chapter] {
+    max-width: 800px;
+}
 submit {
     margin-top: 50px;
     display: flex;
     justify-content: flex-end;
+}
+popup[existing_chapters] *:focus{
+    outline: none;
+}
+popup[existing_chapters] > index > li:not([head]) {
+    user-select: none;
+    cursor: grab;
+}
+popup[existing_chapters] > .new-chapter::before {
+    font-family: 'icons';
+    content: '\e916';
+    display: inline-block;
+    transform: scale(1.4);
+    margin-right: 8px;
+}
+popup[existing_chapters] > .new-chapter {
+    display: block;
+    margin-top: 20px;
+    margin-left: 0;
+    border-color: transparent;
+}
+/* New Chapter */ 
+popup[new_chapter] > button {
+    margin-left: auto;
+    display: block;
+    margin-top: 20px;
+}
+popup[new_chapter] > button[label="Cancel"]:hover {
+    background-color: var(--red);
+}
+popup[new_chapter] > drafts > a.draft > a.preview {
+    font-size: 0.8rem;
+    position: absolute;
+    right: 5px;
+    bottom: 3px;
 }

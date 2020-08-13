@@ -14,7 +14,7 @@ $books = (new WP_Query([
 <?php $stat = new book_stats($book->ID); ?>
 <a href="/my-books/<?= $book->ID; ?>" class="book">
 <book-title><?= $book->post_title; ?></book-title>
-<book-status><?= $book->post_status === 'publish' ? 'Published' : 'Saved'; ?></book-status>
+<book-status><?= $book->post_status === 'publish' ? 'Published' : 'Unpublished'; ?></book-status>
 <book-views>
     <stat timespan="Last Week"><?= $stat->view_count(new DateTime('last week')); ?></stat>
     <stat timespan="All Time"><?= $stat->view_count(); ?></stat>

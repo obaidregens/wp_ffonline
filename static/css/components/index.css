@@ -2,6 +2,7 @@ index {
     display: table;
     width: 100%;
     vertical-align: middle;
+    counter-reset: index-counter;
 }
 index > * {
     vertical-align: inherit;
@@ -19,6 +20,10 @@ index > * > cell {
     vertical-align: inherit;
     display: table-cell;
 }
+index > * > cell.counter::before {
+    counter-increment: index-counter;
+    content: counter(index-counter);
+}
 @media screen and (max-width: 600px) {
     index > * > cell {
         font-size: 0.9rem;
@@ -33,6 +38,9 @@ index > * > cell {
     index > * > cell {
         font-size: 0.7rem;
     }
+}
+index > *[head] {
+    font-weight: bold;
 }
 index > *:not([head]):hover {
     background-color: var(--hover);

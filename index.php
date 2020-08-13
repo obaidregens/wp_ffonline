@@ -416,14 +416,18 @@ $app->listen('/my-books',function($self){
 $app->listen('/my-books/:id',function($self){
     $self->login();
     $book = get_post( $self->params['id'] );
-    if (! $book
-        || intval($book->post_author) !== intval(get_current_user_id())
+    if (
+        $self->params['id'] !== 'new' &&
+        (
+            ! $book
+            || intval($book->post_author) !== intval(get_current_user_id())
+        )
     ) {
         return;
     }
     $self->type = 'edit-book';
-    $self->type_id = intval($book->ID);
-    $self->book = $book;
+    $self->type_id = $self->params['id'] === 'new' ? 'new' : intval($book->ID);
+    $self->book = $self->params['id'] === 'new' ? 'new' : $book;
     $self->header();
     $self->template('/views/books/edit');
     $self->footer();
@@ -433,21 +437,38 @@ $app->listen('/write',function($self){
     $self->_301('/my-books');
 });
 $app->listen('/drafts',function($self){
+    $self->login();
     $self->type = 'drafts-index';
     $self->type_id = 0;
-    $self->login();
     $self->header();
     $self->template('/views/drafts/index');
     $self->footer();
     exit();
 });
 $app->listen('/drafts/edit',function($self){
-    $self->_301('/drafts/edit/new');
+    $self->_301('/drafts/new/edit');
 });
-$app->listen('/drafts/edit/:draft_id',function($self){
+$app->listen('/drafts/:draft_id/preview',function($self){
+    $self->login();
+    $draft = drafts::get_by('ID',$self->params['draft_id']);
+    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+        return;
+    }
+    $self->type = 'drafts-preview';
+    $self->type_id = intval($draft->ID);
+    $self->draft = $draft;
+    $self->header();
+    $self->template('/views/drafts/preview');
+    $self->footer();
+    exit();
+});
+$app->listen('/drafts/:draft_id/edit',function($self){
     $self->login();
     $draft = drafts::get_by('ID',$self->params['draft_id']);
     if ($draft === false && $self->params['draft_id'] !== 'new') {
+        return;
+    }
+    if ($draft && intval($draft->user_id) !== intval(get_current_user_id())) {
         return;
     }
     $self->type = 'drafts-edit';
@@ -458,7 +479,8 @@ $app->listen('/drafts/edit/:draft_id',function($self){
     $self->footer();
     exit();
 });
-$app->listen('/drafts/export/:draft_id/ffn/download',function($self){
+$app->listen('/drafts/:draft_id/export/ffn/download',function($self){
+    $self->login();
     $draft = drafts::get_by('ID', $self->params['draft_id'] );
     if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
         return;
@@ -475,7 +497,7 @@ $app->listen('/drafts/export/:draft_id/ffn/download',function($self){
     readfile($file);
     exit();
 });
-$app->listen('/drafts/export/:draft_id/ffn',function($self){
+$app->listen('/drafts/:draft_id/export/ffn',function($self){
     $self->login();
     $draft = drafts::get_by('ID',$self->params['draft_id']);
     if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
@@ -490,14 +512,14 @@ $app->listen('/drafts/export/:draft_id/ffn',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_share',function($self){
+    $self->login();
     $draft = drafts::get_by('share',$self->params['draft_share']);
     if ($draft === false) {
         return;
     }
-    $self->type = 'drafts-preview';
+    $self->type = 'drafts-share';
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
-    $self->login();
     $self->header();
     $self->template('/views/drafts/preview');
     $self->footer();
