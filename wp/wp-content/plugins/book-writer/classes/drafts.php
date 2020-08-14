@@ -93,6 +93,59 @@ class drafts_json extends drafts {
         ));
         return empty($r) ? false : $r[0]->ID;
     }
+    public static function get($xml) {
+        $d = new DOMDocument();
+        $r = $d->loadXML('<content>' . $xml . '</content>');
+        if (! $r) {
+            return;
+        }
+        $json = [];
+        function parseHTMLStyle($style) {
+            $style_arrs = explode(';',$style);
+            $TheNew = [];
+            foreach ($style_arrs as $s ) {
+                if ($s === '') {
+                    continue;
+                }
+                $split = explode(':',$s);
+                $TheNew[trim($split[0])] = trim($split[1]);
+            }
+            return $TheNew;
+        }
+        function BuildLeafsRecursive($lnode,$leaf,&$block) {
+            if ($lnode instanceof DOMText) {
+                $leaf['text'] = $lnode->wholeText;
+                $block['children'][] = $leaf;
+                return;
+            }
+            $style = parseHTMLStyle($lnode->getAttribute('style'));
+            if (in_array($lnode->tagName,['b','strong']) || ($style['font-weight'] ?? '') === 'bold' ) {
+                $leaf['bold'] = true;
+            }
+            if (in_array($lnode->tagName,['i','em']) || ($style['font-style'] ?? '') === 'italic' ) {
+                $leaf['italic'] = true;
+            }
+            foreach ($lnode->childNodes as $tnode ) {
+                BuildLeafsRecursive($tnode,$leaf,$block);
+            }
+        }
+        foreach ($d->firstChild->childNodes as $node) {
+            if (!$node instanceof DOMElement || $node->tagName !== 'p') {continue;}
+            $block = [
+                'children' => []
+            ];
+            $style = parseHTMLStyle($node->getAttribute('style'));
+            if ( ($style['text-align'] ?? '') === 'center' ) {
+                $block['type'] = 'center';
+            }
+            // Build Styles
+            foreach ($node->childNodes as $leaf_el) {
+                BuildLeafsRecursive($leaf_el,[],$block);
+            }
+            $json[] = $block;
+        }
+        echo (self::read(json_encode($json)));
+    }
     public static function read($json) {
         function create_span_draft($leaf) {
             $leaf_attr = [
@@ -174,58 +227,35 @@ class drafts_json extends drafts {
         $zip->close();
         return $html;
     }
-    public static function get($xml) {
-        $d = new DOMDocument();
-        $r = $d->loadXML('<content>' . $xml . '</content>');
-        if (! $r) {
-            return;
-        }
-        $json = [];
-        function parseHTMLStyle($style) {
-            $style_arrs = explode(';',$style);
-            $TheNew = [];
-            foreach ($style_arrs as $s ) {
-                if ($s === '') {
+    public static function output_html($json) {
+        function create_span_draft($leaf) {
+            $leaf_tagNames = [
+                'bold'      => 'strong',
+                'italic'    => 'em'
+            ];
+            $span_text = $leaf['text'];
+            foreach ($leaf_tagNames as $attr => $attr_tag) {
+                if (! isset($leaf[$attr])){
                     continue;
                 }
-                $split = explode(':',$s);
-                $TheNew[trim($split[0])] = trim($split[1]);
+                $span_text = "<$attr_tag>" . $span_text . "</$attr_tag>";
             }
-            return $TheNew;
+            return $span_text;
         }
-        function BuildLeafsRecursive($lnode,$leaf,&$block) {
-            if ($lnode instanceof DOMText) {
-                $leaf['text'] = $lnode->wholeText;
-                $block['children'][] = $leaf;
-                return;
+        $html = '';
+        $array = json_decode($json,true);
+        foreach ($array as $k => $para) {
+            $para_style = '';
+            if (isset($para['type']) && $para['type'] === 'center'){
+                $para_style = 'align="center"';
             }
-            $style = parseHTMLStyle($lnode->getAttribute('style'));
-            if (in_array($lnode->tagName,['b','strong']) || ($style['font-weight'] ?? '') === 'bold' ) {
-                $leaf['bold'] = true;
+            $html .= "<p$para_style>";
+            foreach ($para['children'] as $kk => $leaf) {
+                $html .= create_span_draft($leaf);
             }
-            if (in_array($lnode->tagName,['i','em']) || ($style['font-style'] ?? '') === 'italic' ) {
-                $leaf['italic'] = true;
-            }
-            foreach ($lnode->childNodes as $tnode ) {
-                BuildLeafsRecursive($tnode,$leaf,$block);
-            }
+            $html .= '</p>'; 
         }
-        foreach ($d->firstChild->childNodes as $node) {
-            if (!$node instanceof DOMElement || $node->tagName !== 'p') {continue;}
-            $block = [
-                'children' => []
-            ];
-            $style = parseHTMLStyle($node->getAttribute('style'));
-            if ( ($style['text-align'] ?? '') === 'center' ) {
-                $block['type'] = 'center';
-            }
-            // Build Styles
-            foreach ($node->childNodes as $leaf_el) {
-                BuildLeafsRecursive($leaf_el,[],$block);
-            }
-            $json[] = $block;
-        }
-        echo (self::read(json_encode($json)));
+        return $html;
     }
 }
 class drafts_chapter extends drafts {

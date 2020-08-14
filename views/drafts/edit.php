@@ -18,7 +18,8 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 ?>
 <button class="dropdown" label="Export">
 <dropdown class="right">
-<a target="_blank" href="/drafts/<?= $draft_id; ?>/export/ffn">FFN</a>
+<a>FFN</a>
+<a>AO3</a>
 </dropdown>
 </button>
 <share-is hidden><?=  $share_link ?></share-is>

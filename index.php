@@ -511,6 +511,20 @@ $app->listen('/drafts/:draft_id/export/ffn',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/drafts/:draft_id/export/ao3',function($self){
+    $self->login();
+    $draft = drafts::get_by('ID',$self->params['draft_id']);
+    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+        return;
+    }
+    $self->type = 'drafts-export-ao3';
+    $self->type_id = intval($draft->ID);
+    $self->draft = $draft;
+    $self->header();
+    $self->template('/views/drafts/export-ao3');
+    $self->footer();
+    exit();
+});
 $app->listen('/drafts/:draft_share',function($self){
     $self->login();
     $draft = drafts::get_by('share',$self->params['draft_share']);

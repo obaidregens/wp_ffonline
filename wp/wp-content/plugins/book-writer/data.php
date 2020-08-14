@@ -57,6 +57,7 @@ function get_data($book_id = 'new'){
 	//Rating, Language, Status, Genre
 	$taxonomies = array('rating','language','status','genre','tag');
 	foreach($taxonomies as $taxonomy){
+		$data['all'][$taxonomy] = [];
 		$all_terms = get_terms(array(
 			'taxonomy'		=> $taxonomy,
 			'hide_empty'	=> false
