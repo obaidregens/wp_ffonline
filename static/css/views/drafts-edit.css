@@ -5,10 +5,9 @@ main {
     padding-top: 0;
 }
 /* Export */
-button[label="Export"] {
-    display: block;
+button[label="Export"],button[label="Preview"] {
     margin-top: 20px;
-    margin-left: auto;
+    float: right;
 }
 /* Title */
 input[placeholder="Title"] {

@@ -16,6 +16,7 @@ $title = $draft === false ? '' : $draft->title;
 $draft_id = $draft === false ? 'new' : $draft->ID;
 $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '/drafts/' . $draft->share));
 ?>
+<button label="Preview"></button>
 <button class="dropdown" label="Export">
 <dropdown class="right">
 <a>FFN</a>

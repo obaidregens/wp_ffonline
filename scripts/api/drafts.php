@@ -83,11 +83,14 @@ function api_edit_and_save_draft() {
     }
     $old_draft = drafts::get_by('ID',$_POST['data']['draft_id']);
     $share = $_POST['data']['share'];
-    if ($old_draft === false || $old_draft->share !== $share) {
-        return_code(9);
+    if ($old_draft === false ) {
+        return_code(11);
     }
     if ( intval($old_draft->user_id) === intval(get_current_user_id()) ){
         return_code(1,$old_draft->ID);
+    }
+    if ($old_draft->share !== $share) {
+        return_code(9);
     }
     $valid = drafts::update([
         'title'     => $old_draft->title,

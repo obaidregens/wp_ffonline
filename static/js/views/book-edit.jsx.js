@@ -68,7 +68,7 @@ const reRender = () => {
 }
 window.reRender = reRender;
 function Pairing() {
-    const byFandom = {}; 
+    const byFandom = {};
     (selected.characters || []).forEach(char_obj => {
         if (! byFandom[char_obj.fandom]) {
             byFandom[char_obj.fandom] = {
@@ -78,7 +78,7 @@ function Pairing() {
         }
         byFandom[char_obj.fandom].characters.push(char_obj);
     });
-    const pairing_options = Object.entries(byFandom).map(([fandom_id,fandom]) => {
+    let pairing_options = Object.entries(byFandom).map(([fandom_id,fandom]) => {
         return {
             label: fandom.fandomName,
             options: fandom.characters
@@ -93,11 +93,12 @@ function Pairing() {
                 selected.pairing[i] = newValue;
                 reRender();
             }}
+            noOptionsMessage={() => selected.pairing[i].length >= 4 ?  "Max characters selected" : 'No options' }
             className={"select pairing"}
             isSearchable
             isMulti
             value={selected.pairing[i]}
-            options={pairing_options}
+            options={ selected.pairing[i].length >= 4 ?  [] : pairing_options }
             />
             <button
             onClick={(event) => {
@@ -114,14 +115,27 @@ function Pairing() {
             <button
             onClick={(event) => {
                 selected.pairing = selected.pairing || [];
-                (selected.pairing).push([]);
-                reRender();
+                if (selected.pairing.length < 3) {
+                    (selected.pairing).push([]);
+                    reRender();    
+                }
+                else {
+                    new toast('Only 3 pairings allowed.');
+                }
             }}
             class="add-pairing"/>
         </pairing-wrapper>
     )
 }
 const App = () => {
+    const charChange = (newValue) => {
+        selected.characters = newValue;
+        const character_ids = (newValue || []).map(({value}) => value);
+        (selected.pairing || []).forEach((pairing,i) => {
+            selected.pairing[i] = pairing.filter((pairing_char) => character_ids.includes(pairing_char.value))
+        });
+        reRender();
+    };
     const selects = [["rating", false],["language", false],["status", false],["genre", true]].map(([tagName,isMultiple=false]) => {
         return (
             <Select
@@ -167,6 +181,7 @@ const App = () => {
             selected.fandom = newValue
             const fandom_ids = (newValue || []).map(({value}) => value)
             selected.characters = (selected.characters || []).filter(({fandom}) => fandom_ids.includes(fandom) );
+            charChange(selected.characters || []);
             reRender()
         }}
         value={selected.fandom}
@@ -189,17 +204,10 @@ const App = () => {
         {selects}
         <CreatableSelect
         placeholder="Select Characters"
-        onChange={(newValue) => {
-            selected.characters = newValue;
-            const character_ids = (newValue || []).map(({value}) => value);
-            (selected.pairing || []).forEach((pairing,i) => {
-                selected.pairing[i] = pairing.filter((pairing_char) => character_ids.includes(pairing_char.value))
-            });
-            reRender();
-        }}
+        onChange={charChange}
         onCreateOption={(newCharacter) => {
             if ((selected.fandom || []).length < 1) {
-                new toast('Select a fandom first.')
+                new toast('Select a fandom first.');
                 return;
             }
             ask(`Which fandom is ${newCharacter} from?`,selected.fandom.map((fandom) => {

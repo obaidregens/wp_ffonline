@@ -445,8 +445,8 @@ $app->listen('/drafts',function($self){
     $self->footer();
     exit();
 });
-$app->listen('/drafts/edit',function($self){
-    $self->_301('/drafts/new/edit');
+$app->listen('/drafts/:draft_id',function($self){
+    $self->_301( '/drafts/' . $self->params['draft_id'] . '/edit' );
 });
 $app->listen('/drafts/:draft_id/preview',function($self){
     $self->login();

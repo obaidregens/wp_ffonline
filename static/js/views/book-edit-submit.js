@@ -187,6 +187,13 @@ document.querySelector('submit > [label="Chapters"]').addEventListener('click',(
     existing_chapters_open();
 });
 document.querySelector('submit > [label="Save"]').addEventListener('click',({target}) => {
+    for (let i = 0; i < selected.pairing.length; i++) {
+        const pairing = selected.pairing[i];
+        if (pairing.length < 2) {
+            new toast('Pairing must have at least two characters.')
+            return;
+        }
+    }
     target.setAttribute('disabled','');
     if (document.querySelector('popup[existing_chapters]')){
         const chapters = [];
@@ -206,20 +213,7 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
         dataType: 'JSON',
         data: selected,
         callback: response => {
-            console.log(response);
             target.removeAttribute('disabled');
-            if (selected.status.length === 0) {
-                new toast('Status is required');
-            }
-            if (selected.fandom.length === 0) {
-                new toast('Fandom is required');
-            }
-            if (selected.language.length === 0) {
-                new toast('Language is required');
-            }
-            if (selected.rating.length === 0) {
-                new toast('Rating is required');
-            }
             if (response.code === 14) {
                 new toast('Title is required');
                 return;
@@ -237,14 +231,15 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
             }
             reRender();
             window.history.pushState("object or string", document.querySelector("title").innerText,'/my-books/' + selected.book_id);
-            if (response.code === 1) {
-                new toast('Book Updated');
-            }
+            if (response.code === 1) {}
             else if (response.code === 2) {
                 existing_chapters_open();
                 new toast('Select a chapter to publish.');
-                new toast('Book Updated');
             }
+            else if (response.code === 3) {
+                new toast('Book Title, Book Summary, Rating, Language and Status are required to publish book.')
+            }
+            new toast('Book Updated');
         }
     })
 });

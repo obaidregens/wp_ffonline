@@ -37,7 +37,7 @@ function api_edit_book() {
         $d['book_id'] = wp_insert_post([
             'post_type'         => 'book',
             'post_status'       => 'draft',
-            'post_title'        => 'Autosave'
+            'post_title'        => $d['title']
         ]);
     }
     $book = get_post($d['book_id']);
@@ -126,7 +126,8 @@ function api_edit_book() {
 
     // Pairing
     $pairings = [];
-    foreach ((empty($d['pairing']) ? [] : $d['pairing']) as $k => $pairing_chars) {
+    $d['pairing'] = (empty($d['pairing']) ? [] : array_slice($d['pairing'],0,3) );
+    foreach ($d['pairing'] as $k => $pairing_chars) {
         $pairing_charNames = array_column($pairing_chars,'label');
         $error = ! empty(array_diff($pairing_charNames,$charNames)) || count($pairing_charNames) < 2 || count($pairing_charNames) > 4;
         if ($error) {
@@ -161,5 +162,8 @@ function api_edit_book() {
     // Anonymous Reviews
     update_post_meta( $d['book_id'], 'anon_review', $anon_review ? 'true' : 'false' );
 
+    if ($d['publish'] === "true" && $publish === false) {
+        $success = $success ?? 3;
+    }
     return_code($success ?? 1,get_data($d['book_id'])['selected'] );
 }

@@ -3,8 +3,6 @@ import Select from 'https://cdn.pika.dev/react-select';
 import CreatableSelect from 'https://cdn.pika.dev/react-select/creatable';
 // window.CreatableSelect = CreatableSelect;
 
-"use strict";
-
 // Import Before
 const tags = JSON.parse(document.querySelector('tags_data').innerText);
 window.tags = tags;
@@ -90,7 +88,7 @@ function Pairing() {
 
     byFandom[char_obj.fandom].characters.push(char_obj);
   });
-  const pairing_options = Object.entries(byFandom).map(([fandom_id, fandom]) => {
+  let pairing_options = Object.entries(byFandom).map(([fandom_id, fandom]) => {
     return {
       label: fandom.fandomName,
       options: fandom.characters
@@ -103,11 +101,12 @@ function Pairing() {
         selected.pairing[i] = newValue;
         reRender();
       },
+      noOptionsMessage: () => selected.pairing[i].length >= 4 ? "Max characters selected" : 'No options',
       className: "select pairing",
       isSearchable: true,
       isMulti: true,
       value: selected.pairing[i],
-      options: pairing_options
+      options: selected.pairing[i].length >= 4 ? [] : pairing_options
     }), /*#__PURE__*/React.createElement("button", {
       onClick: event => {
         selected.pairing.splice(i, 1);
@@ -119,14 +118,30 @@ function Pairing() {
   return /*#__PURE__*/React.createElement("pairing-wrapper", null, pairing_selects, /*#__PURE__*/React.createElement("button", {
     onClick: event => {
       selected.pairing = selected.pairing || [];
-      selected.pairing.push([]);
-      reRender();
+
+      if (selected.pairing.length < 3) {
+        selected.pairing.push([]);
+        reRender();
+      } else {
+        new toast('Only 3 pairings allowed.');
+      }
     },
     class: "add-pairing"
   }));
 }
 
 const App = () => {
+  const charChange = newValue => {
+    selected.characters = newValue;
+    const character_ids = (newValue || []).map(({
+      value
+    }) => value);
+    (selected.pairing || []).forEach((pairing, i) => {
+      selected.pairing[i] = pairing.filter(pairing_char => character_ids.includes(pairing_char.value));
+    });
+    reRender();
+  };
+
   const selects = [["rating", false], ["language", false], ["status", false], ["genre", true]].map(([tagName, isMultiple = false]) => {
     return /*#__PURE__*/React.createElement(Select, {
       placeholder: "Select " + _.ucfirst(tagName),
@@ -171,6 +186,7 @@ const App = () => {
       selected.characters = (selected.characters || []).filter(({
         fandom
       }) => fandom_ids.includes(fandom));
+      charChange(selected.characters || []);
       reRender();
     },
     value: selected.fandom,
@@ -191,16 +207,7 @@ const App = () => {
     })
   }), selects, /*#__PURE__*/React.createElement(CreatableSelect, {
     placeholder: "Select Characters",
-    onChange: newValue => {
-      selected.characters = newValue;
-      const character_ids = (newValue || []).map(({
-        value
-      }) => value);
-      (selected.pairing || []).forEach((pairing, i) => {
-        selected.pairing[i] = pairing.filter(pairing_char => character_ids.includes(pairing_char.value));
-      });
-      reRender();
-    },
+    onChange: charChange,
     onCreateOption: newCharacter => {
       if ((selected.fandom || []).length < 1) {
         new toast('Select a fandom first.');
