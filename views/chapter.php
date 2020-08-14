@@ -3,6 +3,7 @@
 $app->bundle = new bundle('chapters');
 $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
+$app->bundle->mix('intro');
 $app->bundle->css('css/components/more');
 $app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/components/loader');

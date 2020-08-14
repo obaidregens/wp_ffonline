@@ -3,6 +3,7 @@ function global_bundle($name){
     $_bundle = new bundle($name);
     $_bundle->mix('jquery');
     $_bundle->mix('global_new');
+    $_bundle->mix('intro');
     return $_bundle;
 }
 function curl_minify($post,$url){
@@ -359,6 +360,16 @@ class bundle {
                 'external/slate/slate-history',
             ],
             'css'   => []
+        ],
+        'intro'    => [
+            'js'    => [
+                'external/intro-js/intro.min',
+                'js/views/global-intro'
+            ],
+            'css'   => [
+                'external/intro-js/introjs.min',
+                'css/views/global-intro'
+            ]
         ]
     ];
 }

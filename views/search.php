@@ -1,4 +1,5 @@
 <?php
+
 // Find Args from Url
 $query = new book_query;
 $query->args_from_url();
@@ -71,6 +72,7 @@ if (! isset($app->bundle)){
 }
 $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
+$app->bundle->mix('intro');
 $app->bundle->mix('glide_js');
 $app->bundle->mix('create_search_new');
 $app->bundle->enqueue();

@@ -1,0 +1,75 @@
+[class^="introjs"], [class^="introjs"] * {
+    overflow: unset;
+}
+header.introjs-fixParent {
+    position: relative;
+}
+.introjs-tooltiptext {
+    font-size: 0.95rem;
+}
+.introjs-tooltip {
+    background-color: var(--background-accent);
+    color: var(--text-color);
+}
+/* Nav */
+.introjs-button,
+.introjs-button:hover, .introjs-button:focus, .introjs-button:active,
+.introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
+    outline: none;
+    background-image: none;
+    background-color: transparent;
+    color: var(--text-color);
+    border-color: transparent;
+    box-shadow: none;
+    border-shadow: none;
+    text-shadow: none;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 5px;
+    transition: .2s background-color;
+}
+.introjs-button:hover, .introjs-button:focus, .introjs-button:active {
+    color: var(--white);
+    background-color: var(--theme-color);
+}
+.introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
+    pointer-events: none;
+    color: var(--darkgrey);
+}
+.introjs-arrow {
+    display: none;
+}
+.introjs-nextbutton,.introjs-prevbutton {
+    padding: 5px 10px !important;
+}
+.introjs-nextbutton::before,.introjs-prevbutton::before {
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.3);
+}
+.introjs-nextbutton::before {
+    content: '\e903';
+}
+.introjs-prevbutton::before {
+    content: '\e902';
+}
+/* Number */
+.introjs-helperNumberLayer {
+    border: none;
+    background-color: var(--theme-color);
+    background-image: none;
+    user-select: none;
+    opacity: 1;
+}
+/* Layer */
+.introjs-helperLayer {
+    background-color: var(--white);
+    opacity: 0.5;
+}
+/* progress */
+.introjs-bullets {
+    user-select: none;
+}
+.introjs-bullets * {
+    outline: none !important;
+}

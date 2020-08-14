@@ -107,6 +107,7 @@ popup.share > book-author {
     margin-bottom: 1rem;
 }
 popup.share > book-description {
+    word-break: break-word;
     display: block;
     font-size: 1rem;
     margin-bottom: 1rem;

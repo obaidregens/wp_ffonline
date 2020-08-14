@@ -27,6 +27,7 @@ html {
     line-height: 1.6;
     margin: auto;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
 }
 /* Scrollbar */
 *::-webkit-scrollbar-thumb {
@@ -104,6 +105,18 @@ header > nav > a:hover {
 }
 footer {
     margin-bottom: 20px;
+    padding: 10px 30px;
+}
+footer > nav > a {
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+footer > nav > a:not(:last-child)::after {
+    color: var(--text-color);
+    content: '/';
+    pointer-events: default;
+    padding: 0 6px;
+    margin-right: -4px;
 }
 /* Main */
 main {
