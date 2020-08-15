@@ -88,6 +88,7 @@ const DOM = class {
     static update(the_elem,{
         classes = [],
         innerText = null,
+        innerHTML = null,
         href = null,
         value = '',
         attributes = {},
@@ -99,6 +100,9 @@ const DOM = class {
         }
         if (innerText !== null){
             the_elem.innerText = innerText;
+        }
+        if (innerHTML !== null){
+            the_elem.innerHTML = innerHTML;
         }
         if (href !== null){
             the_elem.href = href;

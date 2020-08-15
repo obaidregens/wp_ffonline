@@ -18,7 +18,7 @@ function api_save_draft() {
     required_params('title','draft_id','content');
     // Valid
     $insert = [
-        'title'     => $d['title'],
+        'title'     => stripslashes($d['title']),
         'content'   => stripslashes($d['content']),
     ];
     if ($d['draft_id'] !== 'new') {
@@ -100,6 +100,36 @@ function api_edit_and_save_draft() {
         return_code(10);
     }
     return_code(1,$valid);
+
+}
+function api_compare_draft() {
+    required_login();
+    required_params('draft_id','share','compare');
+    function return_code($code,$compare_view = null) {
+        $rr = [
+            'code'  => $code
+        ];
+        if ($compare_view !== null) {
+            $rr['compare_view'] = $compare_view;
+        }
+        echo json_encode($rr);
+        exit();
+    }
+    $current_user_id = intval(get_current_user_id());
+    $old_draft = drafts::get_by('ID',$_POST['data']['compare']);
+    $new_draft = drafts::get_by('ID',$_POST['data']['draft_id']);
+    $share = $_POST['data']['share'];
+    if ($old_draft === false || $new_draft === false ) {
+        return_code(11);
+    }
+    if ( intval($old_draft->user_id) !== $current_user_id ){
+        return_code(12);
+    }
+    if (intval($new_draft->user_id) !== $current_user_id && $new_draft->share !== $share){
+        return_code(9);
+    }
+    $x = drafts_json::compare($old_draft->content,$new_draft->content);
+    return_code(1,$x);
 
 }
 function api_delete_draft() {

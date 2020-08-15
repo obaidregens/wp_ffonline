@@ -30,3 +30,12 @@ button.edit-draft::before {
     display: inline-block;
     transform: scale(1.4) translateX(0.5px) rotate(-6deg);
 }
+button[label="Compare"] {
+    margin-left: auto;
+    display: block;
+    margin-bottom: 10px;
+}
+/* Select Draft Popup */
+popup[select-draft] > h3 {
+    margin-top: 0;
+}

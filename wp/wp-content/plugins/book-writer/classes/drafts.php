@@ -207,7 +207,7 @@ class drafts_json extends drafts {
         del {
             color: red;
             background: #fdd;
-            text-decoration: none;
+            text-decoration: line-through;
         }
         </style>
         ";

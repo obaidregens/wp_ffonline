@@ -7,7 +7,11 @@ if (strlen($content) > 200 || count($full_decode) > 1 || count($full_decode[0]->
     $substr .= '...';
 }
 ?>
-<a href="/drafts/<?= $draft->ID; ?>/edit" class="draft grid-item">
+<a draft_id="<?= $draft->ID ?>"
+    <?php if ($app->link_draft ?? true) { ?>
+        href="/drafts/<?= $draft->ID; ?>/edit"
+    <?php } ?>
+class="draft grid-item">
     <updated><?= human_time_diff( intval($draft->updated) ); ?></updated>
     <draft-title><?= $draft->title; ?></draft-title>
     <excerpt><?= $substr; ?></excerpt>

@@ -15,7 +15,7 @@ popup-overlay.show {
     opacity: 0.5;
 }
 .popup {
-    z-index: 55;
+    z-index: 54;
 }
 popup {
     display: block;

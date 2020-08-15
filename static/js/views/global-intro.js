@@ -79,6 +79,10 @@ const introSteps = {
     ],
     4: [
         {
+            element: 'button[label="Compare"]',
+            intro: 'Compare draft to highlight changes made.'
+        },
+        {
             element: 'button.edit-draft',
             intro: "Add your changes to draft."
         },
@@ -138,6 +142,7 @@ function startIntro(){
     intro.setOptions({
         nextLabel: '',
         prevLabel: '',
+        exitOnOverlayClick: false,
         steps
     });
     intro.start();

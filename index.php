@@ -71,6 +71,14 @@ class Router {
         $app = $this;
         require $tp;
     }
+    function static($file) {
+        $loc = MAIN_DIR . ltrim($file,'/');
+        $ext = pathinfo($loc)['extension'];
+        $mime = json_decode(file_get_contents(__DIR__ . '/mime-type.json'),true)['.' . $ext];
+        header("Content-Type: $mime");
+        readfile($loc);
+        exit();
+    }
     function header($options = []){
         if (in_array('header',$this->called)){
             return;

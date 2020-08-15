@@ -1,33 +1,57 @@
-function init_next_screen(){
-    const all_next_screens = document.querySelectorAll('next-screen');
-    for (let i = 0; i < all_next_screens.length; i++) {
-        const elem = all_next_screens[i];
-        const cross_button = document.createElement('cross-button');
-        cross_button.addEventListener('click',function(){
-            elem.classList.remove('show');
-            if (document.querySelectorAll('next-screen.show, popup.show').length === 0){
-                document.documentElement.style.overflow = 'auto';
-            }
-        });
-        elem.appendChild(cross_button);
+const next_screen = class {
+    static create(_next,{onClose,onOpen} = {}) {
+        if (onClose){
+            _next.addEventListener('onClose',onClose);
+        }
+        if (onOpen){
+            _next.addEventListener('onOpen',onOpen);
+        }
+        if (! _next.parentNode){
+            document.documentElement.appendChild(_next);
+            _next.addEventListener('click',({target}) => {
+                if (target.classList.contains('close_next-screen')) {
+                    next_screen.close();
+                }
+            });
+            _next.appendChild(DOM.create('cross-button',{
+                classes: ['close_next-screen']
+            }));
+        }
     }
-    document.documentElement.addEventListener('click', function(event) {
-        if (event.target.classList.contains('close_next-screen')){
-            document.querySelector('next-screen.show').classList.remove('show');
-            if (document.querySelectorAll('next-screen.show, popup.show').length === 0){
-                document.documentElement.style.overflow = 'auto';
+    static init () {
+        const all_next_screens = document.querySelectorAll('next-screen');
+        for (let i = 0; i < all_next_screens.length; i++) {
+            const trig = all_next_screens[i].previousElementSibling;
+            if (trig.classList.contains('next-screen')){
+                trig.addEventListener('click',next_screen.open.bind(null,all_next_screens[i]));
             }
+            all_next_screens[i].addEventListener('click',({target}) => {
+                if (target.classList.contains('close_next-screen')) {
+                    next_screen.close();
+                }
+            });
+            all_next_screens[i].appendChild(DOM.create('cross-button',{
+                classes: ['close_next-screen']
+            }));
+        }    
+    }
+    static open (_next) {
+        popup.close();
+        next_screen.close();
+        _next.classList.add('show');
+        document.documentElement.style.overflow = 'hidden';    
+        _next.dispatchEvent(new Event('onOpen'));
+    }
+    static close () {
+        const _next = document.querySelector('next-screen.show');
+        if ( ! _next ){
             return;
         }
-        if (! event.target.classList.contains('next-screen')) {
-            return;
+        _next.dispatchEvent(new Event('onClose'));
+        _next.classList.remove('show');
+        if (document.querySelectorAll('popup.show, next-screen.show').length === 0){
+            document.documentElement.style.overflow = 'auto';
         }
-        const next_screen = event.target.nextElementSibling;
-        if (next_screen.tagName.toLowerCase() !== 'next-screen'){
-            return;
-        }
-        next_screen.classList.add('show');
-        document.documentElement.style.overflow = 'hidden';
-    });    
+    }
 }
-init_next_screen();
+next_screen.init();
