@@ -35,7 +35,7 @@ $is_user_logged_in = is_user_logged_in();
 			<nav>
 				<a href="/">Read</a>
 				<a href="/collections">Collections</a>
-				<a href="/write"><?= $is_user_logged_in ? 'Write' : 'Login'; ?></a>
+				<a href="/write">Write</a>
 			</nav>
 		</header>
 		<main>

@@ -181,6 +181,38 @@ class drafts_json extends drafts {
         }
         return $html;
     }
+    public static function simpleText($json) {
+        $array = json_decode($json,true);
+        $text = '';
+        foreach ($array as $k => $para) {
+            foreach ($para['children'] as $kk => $leaf) {
+                $text .= $leaf['text'];
+            }
+            $text .= "\n";
+        }
+        return $text;
+    }
+    public static function compare($old,$new) {
+        require(MAIN_DIR . 'content/finediff.php');
+        $old_text = self::simpleText($old);
+        $opcodes = FineDiff::getDiffOpcodes($old_text, self::simpleText($new) );
+        $style =
+        "
+        <style>
+        ins {
+            color: green;
+            background: #dfd;
+            text-decoration: none;
+        }
+        del {
+            color: red;
+            background: #fdd;
+            text-decoration: none;
+        }
+        </style>
+        ";
+        return $style . nl2br(FineDiff::renderDiffToHTMLFromOpcodes($old_text, $opcodes));
+    }
     public static function output_odt($json,$dump) {
         function create_span_draft($leaf) {
             $leaf_attr = [

@@ -15,6 +15,7 @@ header.introjs-fixParent {
 .introjs-button,
 .introjs-button:hover, .introjs-button:focus, .introjs-button:active,
 .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
+    font-family: var(--font);
     outline: none;
     background-image: none;
     background-color: transparent;

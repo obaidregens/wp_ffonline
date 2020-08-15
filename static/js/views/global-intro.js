@@ -37,8 +37,16 @@ const introSteps = {
             intro: "Hi! We'll help you get started so you can quickly get to reading fanfiction.",
         },
         {
+            element: 'dark-mode',
+            intro: 'Easily switch to dark mode anytime.'
+        },
+        {
+            element: 'header >  nav > [href="/write"]',
+            intro: 'To start writing and collaborating on books, click here.'
+        },
+        {
             element: 'filter-books > button',
-            intro: 'You can filter fanfictions you want to read from here.',
+            intro: 'You can extensively filter fanfictions you want to read from here.',
         },
         {
             element: 'book > .dropdown',
@@ -52,7 +60,7 @@ const introSteps = {
     2: [
         {
             element: 'main > a.button[label="Drafts"]',
-            intro: "Create a draft to get started."
+            intro: "Create a draft to start writing."
         }
     ],
     3: [

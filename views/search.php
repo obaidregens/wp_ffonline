@@ -1,5 +1,4 @@
 <?php
-
 // Find Args from Url
 $query = new book_query;
 $query->args_from_url();

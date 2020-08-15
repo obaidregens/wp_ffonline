@@ -12,6 +12,7 @@ $draft_read = (drafts_json::read($draft->content));
 ?>
 <share-link hidden><?= $draft->share; ?></share-link>
 <button draft_id="<?= $draft->ID; ?>" class="edit-draft"></button>
+<button style="display:block;margin-left:auto;">Compare</button>
 
 <!-- Draft -->
 <?php if ($app->type === 'drafts-share') { ?>

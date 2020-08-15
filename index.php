@@ -106,6 +106,8 @@ class Router {
         if (is_user_logged_in(  )){
             return;
         }
+        $this->type = $this->type ?? 'login';
+        $this->type_id = $this->type_id ?? 0;
         $this->header();
         $this->footer();
         ?>
