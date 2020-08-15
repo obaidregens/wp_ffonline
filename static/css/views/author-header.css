@@ -42,7 +42,11 @@ a.author-settings::before {
     font-family: 'icons';
     content: '\e932';
 }
-a.author-settings {
+a.author-message::before {
+    font-family: 'icons';
+    content: '\e937';
+}
+a.author-settings,a.author-message {
     z-index: 50;
     transform: scale(2);
     display: block;
@@ -55,7 +59,7 @@ a.author-settings {
     text-align: center;
     transition: .2s background-color;
 }
-a.author-settings:hover {
+a.author-settings:hover,a.author-message:hover {
     color: var(--theme-color);
     background-color: var(--hover);
 }

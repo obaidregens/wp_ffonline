@@ -172,19 +172,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     },
                     listeners: {
                         click: function() {
-                            if (document.querySelector('editor').getAttribute('draft_id') === 'new') {
-                                draftSaveRequest('new');
-                                return;
-                            }
-                            confirmation("Your previous draft will be overwritten. Is that OK?")
-                            .then(
-                                (res) => {
-                                    if (res === false) {
-                                        return;
-                                    }
-                                    draftSaveRequest(document.querySelector('editor').getAttribute('draft_id'));
-                                }
-                            );
+                            draftSaveRequest(document.querySelector('editor').getAttribute('draft_id'));
                         }
                     }
                 }),
@@ -223,9 +211,12 @@ function draftSaveRequest(draft_id) {
                 }
                 document.querySelector('editor').setAttribute('draft_id',response.draft_id);
                 if (draft_id === 'new') {
+                    new toast('Saved as new draft')
                     window.history.pushState("object or string", document.querySelector("title").innerText,'/drafts/' + response.draft_id + '/edit');
                 }
-                new toast('Saved');
+                else {
+                    new toast('Saved');
+                }
                 resolve(response.draft_id);
             },
         });
@@ -250,4 +241,11 @@ document.querySelector('button[label="Preview"]').addEventListener('click', ({ta
         return;
     }
     window.open('/drafts/' + draft_id + '/preview', '_blank');
+});
+window.addEventListener('keydown',(event) => {
+    if (! event.ctrlKey || event.key.toLowerCase() !== 's') {
+        return;
+    }
+    event.preventDefault();
+    document.querySelector('toolbar > button[label="Save"] > dropdown > [label="Save"]').dispatchEvent( new Event('click') );
 });

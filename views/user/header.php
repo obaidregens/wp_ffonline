@@ -11,6 +11,9 @@ $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 <?php if ($is_current_author) { ?>
 <a class="author-settings" href="<?= $href . 'settings'; ?>"></a>
 <?php } ?>
+<?php if (! $is_current_author) { ?>
+<a class="author-message" href="/inbox/@<?= $user->user_login; ?>"></a>
+<?php } ?>
 <author-name>
 	@<?= $user->user_login; ?>
 </author-name>

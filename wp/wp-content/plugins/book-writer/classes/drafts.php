@@ -162,7 +162,7 @@ class drafts_json extends drafts {
             if ($span_style !== '') {
                 $span_style = 'style="' . $span_style . '"';
             }
-            $span = "<span $span_style>" . $leaf['text'];
+            $span = "<span $span_style>" . htmlspecialchars($leaf['text']);
             $span .= "</span>";
             return $span;
         }
