@@ -26,7 +26,6 @@ $book_query = $query;
             <select>
                 <option value="updated/DESC">Last Updated</option>
                 <option value="date/DESC">Book Published</option>
-                <option value="favorites/DESC">Favorites</option>
                 <option value="words/DESC">Words</option>
             </select>
             <label label="Sort"></label>

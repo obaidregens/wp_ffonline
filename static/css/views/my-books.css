@@ -7,10 +7,22 @@
     transform: rotate(-14deg) scale(0.9);
 }
 .button[label="Drafts"] {
-    display: flex;
+    display: inline-flex;
     margin-bottom: 20px;
     margin-left: auto;
     padding-left: 26px;
+}
+actions {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: right;
+}
+a.new-book::before {
+    font-family: 'icons';
+    display: inline-block;
+    content: '\e916';
+    transform: scale(1.4) translateX(-1px);
+    margin-right: 5px;
 }
 a.book {
     width: 100%;

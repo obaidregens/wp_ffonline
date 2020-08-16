@@ -1,7 +1,7 @@
 </main>
 <footer>
 	<nav>
-		<a href="/contact">Contact</a>
+		<a href="/contact">Contact us</a>
 	</nav>
 </footer>
 <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=init_reCAPTCHA"></script>

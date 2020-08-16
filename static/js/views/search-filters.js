@@ -417,7 +417,7 @@ document.querySelector('filter-books > next-screen > div > button[label="Reset"]
 });
 // Search
 function trigger_search(page = false){
-    document.querySelector('filter-books > next-screen > cross-button').dispatchEvent(new Event('click'));
+    next_screen.close();
     let search_progress_interval = 0;
     const loader = document.querySelector('loader');
     function progress_spinner(){
@@ -458,7 +458,7 @@ function trigger_search(page = false){
             prev: prev_ss.innerText
         },
         dataType: 'JSON',
-        callback: function(response){  
+        callback: function(response){
             // New Data
             prev_ss.innerText = response.prev;
             document.querySelector('tags_data').innerText = JSON.stringify( response.tags_data );
@@ -469,6 +469,18 @@ function trigger_search(page = false){
             // Styling
             clearInterval(search_progress_interval);
             loader.classList.remove('show');
+
+            // Re add tags count
+            for (let j = 0; j < select_tags.length; j++) {
+                const raw_selected = select_tags[j].getAttribute('selected');
+                if (! raw_selected){
+                    continue;
+                }
+                if (raw_selected === '{"included":[],"excluded":[]}'){
+                    continue;
+                }
+                setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
+            }
         }
     });
 

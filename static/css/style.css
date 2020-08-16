@@ -94,10 +94,10 @@ header > nav > a {
     width: fit-content;
     width: -moz-fit-content;
 }
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 300px) {
     header > nav > a {
-        padding: 0 3px;
-        font-size: 0.75rem;
+        padding: 0 7px;
+        font-size: 0.85rem;
     }
 }
 header > nav > a:hover {

@@ -33,7 +33,6 @@ $is_user_logged_in = is_user_logged_in();
 				<?php include('static/images/logo.svg'); ?>
     		</a>
 			<nav>
-				<a href="/">Read</a>
 				<a href="/collections">Collections</a>
 				<a href="/write">Write</a>
 			</nav>

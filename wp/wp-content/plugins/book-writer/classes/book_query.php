@@ -144,7 +144,7 @@ class book_query{
         }
         
         // Sort
-        $included = array_intersect($included,$results_['sort=' . $args['orderby'] . '/' . $args['order'] ]);
+        $included = a_intersect($results_['sort=' . $args['orderby'] . '/' . $args['order'] ],$included);
         // Custom Ids
         if (isset($args['include_ids'])){
             $included = a_intersect($included,$args['include_ids']);
@@ -289,23 +289,58 @@ class book_query_cache extends book_query {
     function sort(){
         $orders = array('DESC','ASC');
         foreach ($orders as $order) {
+            // Updated
             $term_key = 'sort' . self::$midfix . 'updated/' . $order;
-            if ( isset($this->existing[$term_key]) ){
-                continue;
+            if (! isset($this->existing[$term_key]) ){
+                $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                    'posts_per_page'    => -1,
+                    'fields'            => 'ids',
+                    'orderby'           => 'modified',
+                    'order'             => $order
+                ))))->posts;
+                self::put(array(
+                    array(
+                        '_key'      => 'sort',
+                        '_value'    => 'updated/' . $order,
+                        'ids'       => $sort_ids
+                    )
+                ));    
             }
-            $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
-                'posts_per_page'    => -1,
-                'fields'            => 'ids',
-                'orderby'           => 'modified',
-                'order'             => $order
-            ))))->posts;
-            self::put(array(
-                array(
-                    '_key'      => 'sort',
-                    '_value'    => 'updated/' . $order,
-                    'ids'       => $sort_ids
-                )
-            ));
+            // Created
+            $term_key = 'sort' . self::$midfix . 'date/' . $order;
+            if ( ! isset($this->existing[$term_key]) ){
+                $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                    'posts_per_page'    => -1,
+                    'fields'            => 'ids',
+                    'orderby'           => 'date',
+                    'order'             => $order
+                ))))->posts;
+                self::put(array(
+                    array(
+                        '_key'      => 'sort',
+                        '_value'    => 'date/' . $order,
+                        'ids'       => $sort_ids
+                    )
+                ));    
+            }
+            // Words
+            $term_key = 'sort' . self::$midfix . 'words/' . $order;
+            if ( ! isset($this->existing[$term_key]) ){
+                $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                    'posts_per_page'    => -1,
+                    'fields'            => 'ids',
+                    'meta_key'          => 'word-count',
+                    'orderby'           => 'meta_value_num',
+                    'order'             => $order
+                ))))->posts;
+                self::put(array(
+                    array(
+                        '_key'      => 'sort',
+                        '_value'    => 'words/' . $order,
+                        'ids'       => $sort_ids
+                    )
+                ));    
+            }
         }
     }
     function tax(){

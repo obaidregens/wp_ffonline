@@ -9,7 +9,10 @@ $books = (new WP_Query([
     'author__in'             => [get_current_user_id()]
 ]))->posts;
 ?>
-<a label="Drafts" href="/drafts" class="button"></a>
+<actions>
+    <a label="Drafts" href="/drafts" class="button"></a>
+    <a href="/my-books/new" class="button new-book">New Book</a>
+</actions>
 <?php foreach ($books as $book) { ?>
 <?php $stat = new book_stats($book->ID); ?>
 <a href="/my-books/<?= $book->ID; ?>" class="book">
