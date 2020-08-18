@@ -61,7 +61,7 @@ class drafts {
             $e->add('$field','Should be either "share" or "ID"');
         }
         global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND branch = NULL AND branch_type = NULL",[$value]));
+        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND branch IS NULL AND branch_type IS NULL",[$value]));
         if (empty($results)) {
             return false;
         }
@@ -73,7 +73,8 @@ class drafts {
         }
         $table = self::$table;
         global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND branch_type = NULL AND branch = NULL",[$user]));
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND branch_type IS NULL AND branch IS NULL",[$user]);
+        $results = $wpdb->get_results($sql);
         return $results;
     }
     public static function delete ($draft_id) {
@@ -321,12 +322,22 @@ class draft_autosaves extends drafts {
     }
     public static function for_draft ( $draft_id ) {
         $table = self::$table;
+        $draft = drafts::get_by('ID',$draft_id);
+        if ($draft_id !== 'new' && ($draft === false || ! is_current_user($draft->user_id)) ) {
+            return false;
+        }
         global $wpdb;
         $sql = $wpdb->prepare(
             "SELECT title,content,updated FROM $table WHERE branch_type = 'autosave' AND branch = %s AND user_id = %s ORDER BY ID DESC",
             [$draft_id,get_current_user_id()]
         );
         $r = $wpdb->get_results($sql);
-        return empty($r) ? false : $r[0];
+        if (empty($r)) {
+            return false;
+        }
+        if (intval($r[0]->updated) <= intval($draft->updated ?? 0)){
+            return false;
+        }
+        return $r[0];
     }
 }

@@ -69,7 +69,7 @@ function required_login(){
     }
 }
 $reCAPTCHA_apis = ['login','login_with_code','signup','verify_code','contact'];
-if ( in_array($_POST['action'],$reCAPTCHA_apis) ){
+if ( in_array($_POST['action'] ?? [],$reCAPTCHA_apis) ){
     if (! isset($_POST['reCAPTCHA']) || verify_reCAPTCHA($_POST['reCAPTCHA'])['success'] != true){
         echo json_encode(array(
             'code'      => 997

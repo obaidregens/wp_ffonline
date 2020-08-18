@@ -566,6 +566,14 @@ $app->listen('/verify',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/verify/:author_id',function($self){
+    $self->type = 'verify';
+    $self->type_id = $self->params['author_id'];
+    $self->header();
+    $self->template('/views/verify');
+    $self->footer();
+    exit();
+});
 // Verify Account
 $app->listen('/contact',function($self){
     $self->type = 'contact';

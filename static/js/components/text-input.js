@@ -10,11 +10,12 @@ function init_text_input(){
         if (! ['email','password'].includes(input_type)){
             input_type = 'text';
         }
+        const Val = elem.innerText;
         const text_input = create_text_input({
             type,
             label: elem.getAttribute('label'),
             input_type,
-            value: elem.innerText
+            value: Val
         });
         const input_e = text_input.querySelector('input');
 
@@ -23,6 +24,8 @@ function init_text_input(){
     
         _.moveAttr(elem,input_e);
         elem.replaceWith(text_input);
+        input_e.dispatchEvent(new Event('change'));
+        input_e.dispatchEvent(new Event('input'));
     }
 }
 init_text_input();

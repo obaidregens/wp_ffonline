@@ -3,15 +3,15 @@ verification-code:not(:empty) ~ text-input,
 verification-code:not(:empty) ~ button {
     display: none;
 }
-select {
+verification-code ~ select {
     display: inline-block;
     width: 70px;
 }
-text-input {
+verification-code ~ text-input {
     display: inline-block;
     width: calc(100% - 75px);
 }
-button {
+verification-code ~ button {
     float: right;
 }
 verification-account {

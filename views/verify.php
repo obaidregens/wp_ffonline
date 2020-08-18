@@ -15,7 +15,7 @@ $connected = c_user::current();
 <h1>Verify access to account.</h1>
 <ol>
 <?php if (! $logged_in) { ?>
-<li>Create an account on Fanfiction Online. Or if you already have one, login.</li>
+<li>Create an account on Fanfiction Online. Or if you already have one, <a onclick="prompt_login()">login</a>.</li>
 <li>Visit this <a href="/verify">page</a>.</li>
 <?php } ?>
 <li>Enter your FFN User ID & Submit.</li>
@@ -31,7 +31,7 @@ If your account doesn't get connected within half an hour of sending the message
 <select>
 <option>FFN</option>
 </select>
-<text-input maxlength="10" label="User ID"></text-input>
+<text-input maxlength="10" label="User ID"><?= $app->params['author_id'] ?? ''; ?></text-input>
 <button label="Submit"></button>
 <?php } ?>
 <?php } ?>

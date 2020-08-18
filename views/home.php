@@ -65,7 +65,7 @@ Scroll down to see more
 <section>
     <section-description>Why?</section-description>
     <mini-description>
-        In spite of the amazing writers the fanfiction community has, there isn't any site that caters to their needs. I wanted to provide a platform that helps writers promote their work and encourage readership by making their books more accessible & reading them comfortable.
+    Fanfiction Online was created to cater to the needs of fanfiction writers & readers. I wanted to provide a platform that helps writers promote their work and encourage readership by making their stories more accessible & reading them easier.
     </mini-description>
 </section>
 <section>
