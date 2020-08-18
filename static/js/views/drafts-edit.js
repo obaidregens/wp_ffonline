@@ -278,7 +278,10 @@ window.autosaveDraft = val => {
             content
         },
         callback: response => {
-            if (! Number.isInteger(response.time)) {
+            if (response.code > 5) {
+                return;
+            }
+            if (!response.time || ! Number.isInteger(response.time)) {
                 return;
             }
             const d = new Date(response.time * 1000);

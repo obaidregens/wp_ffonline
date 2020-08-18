@@ -1,10 +1,10 @@
 <?php
 class drafts {
-    private static $table = 'drafts';
+    protected static $table = 'drafts';
     protected static function hash ($content) {
         return sha1($content);
     }
-    public static function update ($args) {
+    public static function update ($args,$override_title = false) {
         if (isset($args['title'])) {
             $args['title'] = substr($args['title'],0,70);
         }
@@ -31,7 +31,6 @@ class drafts {
                     'ID'    => $args['ID']
                 ]
             );
-            draft_versions::delete_all($args['ID']);
             return intval($args['ID']);
         }
         $args = array_replace([
@@ -40,9 +39,11 @@ class drafts {
             'user_id'       => get_current_user_id(),
             'share'         => null,
             'chapter_id'    => null,
-            'updated'       => time()
+            'updated'       => time(),
+            'branch_type'   => null,
+            'branch'        => null
         ],$args);
-        if ( trim($args['content']) === '' || trim($args['title']) === ''){
+        if ( trim($args['content']) === '' || (trim($args['title']) === '' && ! $override_title) ){
             $e->add('content/title','Content and title are required.');
             return $e;
         }
@@ -51,7 +52,6 @@ class drafts {
             self::$table,
             $args
         );
-        draft_versions::delete_all( 0 );
         return intval($wpdb->insert_id);
     }
     public static function get_by ($field, $value) {
@@ -61,7 +61,7 @@ class drafts {
             $e->add('$field','Should be either "share" or "ID"');
         }
         global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s",[$value]));
+        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND branch = NULL AND branch_type = NULL",[$value]));
         if (empty($results)) {
             return false;
         }
@@ -73,7 +73,7 @@ class drafts {
         }
         $table = self::$table;
         global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s",[$user]));
+        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND branch_type = NULL AND branch = NULL",[$user]));
         return $results;
     }
     public static function delete ($draft_id) {
@@ -311,57 +311,22 @@ class drafts_chapter extends drafts {
         return $chapter_id;
     }
 }
-class draft_versions extends drafts {
-    protected static $table = 'draft_versions';
-    public static function autosave($draft_id,$title,$content) {
-        $draft = drafts::get_by('ID',$draft_id);
-        if ( ($draft_id !== 'new' && $draft === false) || ($draft->content === $content && $draft->title === $title) ) {
-            return false;
-        }
-        $draft_id = $draft_id === 'new' ? 0 : $draft_id;
+class draft_autosaves extends drafts {
+    public static function get ($autosave_ID) {
         $table = self::$table;
-        $hash = self::hash($content);
-        $t = time();
-
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE draft_id = %s AND type ='autosave' ORDER BY created DESC LIMIT 1",[$draft_id]);
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE ID = %s",[$autosave_ID]);
         $r = $wpdb->get_results($sql);
-        $last_time = !empty($r) ? intval($r[0]->created) : 0;
-        if ( $t - $last_time < 60) {
-            return intval($r[0]->created);
-        }
-        $wpdb->insert(
-            $table,
-            [
-                'draft_id'      => $draft_id,
-                'title'         => $title,
-                'content'       => $content,
-                'created'       => $t,
-                'hash'          => $hash,
-                'type'          => 'autosave'
-            ]
-        );
-        return $t;
+        return empty($r) ? false : $r[0];
     }
-    public static function load_autosave($draft_id) {
-        $draft_id = $draft_id === 'new' ? 0 : $draft_id;
+    public static function for_draft ( $draft_id ) {
         $table = self::$table;
         global $wpdb;
-        $r = $wpdb->get_results($wpdb->prepare("SELECT title,content,created FROM $table WHERE draft_id = %s ORDER BY ID DESC",[$draft_id]));
-        if (empty($r)) {
-            return false;
-        }
-        $r[0]->timestamp = $r[0]->created;
-        unset($r[0]->created);
-        return $r[0];
-    }
-    public static function delete_all($draft_id) {
-        global $wpdb;
-        $wpdb->delete(
-            self::$table,
-            [
-                'draft_id'  => $draft_id
-            ]
+        $sql = $wpdb->prepare(
+            "SELECT title,content,updated FROM $table WHERE branch_type = 'autosave' AND branch = %s AND user_id = %s ORDER BY ID DESC",
+            [$draft_id,get_current_user_id()]
         );
+        $r = $wpdb->get_results($sql);
+        return empty($r) ? false : $r[0];
     }
 }

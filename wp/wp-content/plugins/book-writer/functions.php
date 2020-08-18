@@ -1,4 +1,7 @@
 <?php
+function is_current_user($user_id) {
+	return intval($user_id) === intval(get_current_user_id());
+}
 /**
  * Plugin Name: 1-Book Writer
  * Description: A plugin by Fanfiction Online, for Fanfiction Online.
@@ -125,16 +128,8 @@ function run_at_activation(){
 		`chapter_id` BIGINT NULL ,
 		`updated` BIGINT NOT NULL ,
 		`hash` VARCHAR(40) NOT NULL ,
-		PRIMARY KEY (ID)
-	) $charset_collate;";
-	$draft_versions_table = "CREATE TABLE draft_versions (
-		`ID` BIGINT NOT NULL AUTO_INCREMENT,
-		`draft_id` BIGINT NOT NULL,
-		`type` VARCHAR(10) NOT NULL ,
-		`title` VARCHAR(100) NOT NULL ,
-		`content` LONGTEXT NOT NULL ,
-		`created` BIGINT NOT NULL ,
-		`hash` VARCHAR(40) NOT NULL ,
+		`branch_type` VARCHAR(20) NULL ,
+		`branch` BIGINT NULL ,
 		PRIMARY KEY (ID)
 	) $charset_collate;";
 
@@ -160,7 +155,6 @@ function run_at_activation(){
 	dbDelta( $user_connections_table );
 	// Drafts
 	dbDelta( $drafts_table );
-	dbDelta( $draft_versions_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

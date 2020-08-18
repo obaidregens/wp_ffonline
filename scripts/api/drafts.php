@@ -163,17 +163,35 @@ function api_autosave_draft () {
     required_login();
     required_params('title','draft_id','content');
     $d = &$_POST['data'];
-    $valid = draft_versions::autosave( $d['draft_id'], stripslashes($d['title']), stripslashes($d['content']) );
-    if (! $valid) {
+
+    $draft = drafts::get_by('ID',$d['draft_id']);
+    if ($d['draft_id'] !== 'new') {
+        if ($draft === false) {
+            return_code(9);
+        }
+        if (! is_current_user($draft->user_id)){
+            return_code(10);
+        }    
+    }
+
+    $insert = [
+        'title'         => stripslashes($d['title']),
+        'content'       => stripslashes($d['content']),
+        'branch_type'   => 'autosave',
+        'branch'        => $d['draft_id'] === 'new' ? 0 : $draft->ID
+    ];
+    $valid = drafts::update($insert,true);
+    if ( err::is($valid) ) {
         return_code(11);
     }
-    return_code(1,$valid);
+    $draft = draft_autosaves::get($valid);
+    return_code(1,intval($draft->updated));
 }
 function api_load_autosave() {
     required_login();
     required_params('draft_id');
     echo json_encode([
-        'autosave'    => draft_versions::load_autosave($_POST['data']['draft_id'])
+        'autosave'    => draft_autosaves::for_draft($_POST['data']['draft_id'])
     ]);
     exit();
 }
