@@ -344,6 +344,7 @@ class draft_versions extends drafts {
         return $t;
     }
     public static function load_autosave($draft_id) {
+        $draft_id = $draft_id === 'new' ? 0 : $draft_id;
         $table = self::$table;
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare("SELECT title,content,created FROM $table WHERE draft_id = %s ORDER BY ID DESC",[$draft_id]));
