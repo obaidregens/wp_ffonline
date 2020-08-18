@@ -27,14 +27,15 @@ $is_user_logged_in = is_user_logged_in();
         <nonce hidden><?= $nonce; ?></nonce>
 	    <placeholder_data hidden><?= $landing_key; ?></placeholder_data>
 	    <logged_in hidden value="<?= $is_user_logged_in ? 'true' : 'false'; ?>"></logged_in>
-        <dark-mode onclick="themes.switch();"></dark-mode>
+		<dark-mode onclick="themes.switch();"></dark-mode>
         <header>
 			<a class="logo" href="/">
 				<?php include('static/images/logo.svg'); ?>
     		</a>
 			<nav>
-				<a href="/collections">Collections</a>
+				<a href="/read">Read</a>
 				<a href="/write">Write</a>
+				<a href="/collections">Collections</a>
 			</nav>
 		</header>
 		<main>

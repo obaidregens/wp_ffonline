@@ -91,6 +91,12 @@ const _a = class {
     }
 }
 class _t {
+    static isToday ( someDate ) {
+        const today = new Date()
+        return someDate.getDate() == today.getDate() &&
+            someDate.getMonth() == today.getMonth() &&
+            someDate.getFullYear() == today.getFullYear()
+    }
     static stamp_duration(timestamp){
         var hours = Math.floor(timestamp / 60 / 60);
         var minutes = Math.floor(timestamp / 60) - (hours * 60);  

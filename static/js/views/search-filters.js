@@ -13,6 +13,9 @@ function setSelectedTags(tag_name,selected){
     const url_mixed = selected.included.concat(selected.excluded);
     for (let yb = 0; yb < url_mixed.length; yb++) {
         const _tag = tags_data[url_mixed[yb]];
+        if (! _tag) {
+            continue;
+        }
         const selected_tag_elem = document.createElement('tag');
         selected_tag_elem.innerText = _tag.name + ' (' + _tag.count + ')';
         if (selected.excluded.includes(url_mixed[yb])){

@@ -149,3 +149,31 @@ function api_delete_draft() {
     drafts::delete($draft->ID);
     return_code(1);
 }
+function api_autosave_draft () {
+    function return_code($code, $time = null) {
+        $rr = [
+            'code'  => $code
+        ];
+        if ($time !== null) {
+            $rr['time'] = $time;
+        }
+        echo json_encode($rr);
+        exit();
+    }
+    required_login();
+    required_params('title','draft_id','content');
+    $d = &$_POST['data'];
+    $valid = draft_versions::autosave( $d['draft_id'], stripslashes($d['title']), stripslashes($d['content']) );
+    if (! $valid) {
+        return_code(11);
+    }
+    return_code(1,$valid);
+}
+function api_load_autosave() {
+    required_login();
+    required_params('draft_id');
+    echo json_encode([
+        'autosave'    => draft_versions::load_autosave($_POST['data']['draft_id'])
+    ]);
+    exit();
+}

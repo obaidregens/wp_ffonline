@@ -83,20 +83,44 @@ const EditorTools = {
 
   }
 };
-
+let autoSaveOpt = 0;
+const shouldAutosave = (editor) => {
+  const opr = editor.operations;
+  const actAt = 40;
+  if (opr.length === 1 && opr[0].type === 'set_selection') {
+    return false;
+  }
+  if (autoSaveOpt >= actAt) {
+    autoSaveOpt = 0;
+    return true;
+  }
+  let largestLength = 0;
+  for (let j = 0; j < opr.length; j++) {
+    const singleOpr = opr[j];
+    const thisLength = singleOpr.text ? singleOpr.text.length : ( (singleOpr.node && singleOpr.node.text) ? singleOpr.node.text.length : 0);
+    largestLength = thisLength > largestLength ? thisLength : largestLength;
+    if ((autoSaveOpt + thisLength) >= actAt) {
+      autoSaveOpt = 0;
+      return true;
+    }
+  }
+  autoSaveOpt += largestLength;
+  return false;
+}  
 const App = () => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []); // Add the initial value when setting up our state.
 
-
-  const loadFrom = document.querySelector('load_from').innerText || localStorage.getItem('ChapterContent');
-  const [value, setValue] = useState(JSON.parse(loadFrom) || [
+  const [value, setValue] = useState([
     {
       type: 'paragraph',
       children: [{ text: '' }],
     },
   ]); // Define a rendering function based on the element passed to `props`. We use
   // `useCallback` here to memoize the function for subsequent renders.
-
+  window.draftContent = {}
+  window.draftContent.value = value;
+  window.draftContent.set = setValue;
+  
   const renderElement = useCallback(props => {
     switch (props.element.type) {
       case 'center':
@@ -113,10 +137,10 @@ const App = () => {
     editor: editor,
     value: value,
     onChange: value => {
-      setValue(value); // Save the value to Local Storage.
-
-      const content = JSON.stringify(value);
-      localStorage.setItem('ChapterContent', content);
+      if (shouldAutosave(editor)) {
+        window.autosaveDraft(value);
+      }
+      setValue(value);
     }
   }, /*#__PURE__*/React.createElement("toolbar", null, /*#__PURE__*/React.createElement("button", {
     onClick: EditorTools.bold.toggle.bind(null, editor),

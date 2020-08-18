@@ -12,7 +12,7 @@
     }
 </style>
 <h1>Oops! Nothing found.</h1>
-<form action="/">
+<form action="/read">
     Were you looking for a book? Perhaps searching for it might help.
     <text-input name="search" label="Search"></text-input>
     <button type="submit"></button>

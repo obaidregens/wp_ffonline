@@ -142,6 +142,14 @@ $app->listen('/',function($self){
     $self->type = 'home';
     $self->type_id = 0;
     $self->header();
+    $self->template('/views/home');
+    $self->footer();
+    exit();
+});
+$app->listen('/read',function($self){
+    $self->type = 'read';
+    $self->type_id = 0;
+    $self->header();
     $self->template('/views/search');
     $self->footer();
     exit();

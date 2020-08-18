@@ -1,0 +1,149 @@
+header {
+    background: transparent;
+    border-bottom: none;
+    position: fixed;
+}
+header > .logo {
+    pointer-events: none;
+}
+header > nav > a {
+    font-weight: normal;
+    color: var(--text-color);
+}
+header > nav > a:hover {
+    background-color: transparent;
+}
+footer {
+    display: none;
+}
+main {
+    max-width: unset;
+}
+dark-mode {
+    top: -15px;
+}
+.onepage-pagination li a::before {
+    width: 6px;
+    height: 6px;
+    background: var(--theme-color);
+}
+.onepage-pagination li a.active:before {
+    background-color: var(--theme-color);
+    border: none;
+}
+main.onepage-wrapper {
+    --small-part: 30%;
+    --large-part: 70%;
+    user-select: none;
+}
+section.ops-section {
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: var(--background-color) !important;
+}
+section.ops-section {
+    cursor: default;
+}
+/* Content */
+section.ops-section section-header {
+    font-size: 20vw;
+    display: block;
+    line-height: 1;
+}
+section.ops-section section-description {
+    font-size: 2.6vw;
+    display: block;
+    text-align: center;
+}
+section.ops-section mini-description {
+    margin-top: 1vw;
+    font-size: 1.3vw;
+    text-align: center;
+    max-width: 500px;
+}
+@media only screen and (max-width: 1000px) {
+    section.ops-section section-description {
+        font-size: 2.3vw;
+    }
+    section.ops-section mini-description {
+        font-size: 1.6vw;
+    }
+}
+@media only screen and (max-width: 800px) {
+    section.ops-section section-description {
+        font-size: 3vw;
+    }
+    section.ops-section mini-description {
+        font-size: 2.1vw;
+    }
+}
+@media only screen and (max-width: 600px) {
+    section.ops-section section-description {
+        font-size: 4.5vw;
+    }
+    section.ops-section mini-description {
+        max-width: 80vw;
+        font-size: 2.8vw;
+    }
+}
+@media only screen and (max-width: 400px) {
+    section.ops-section section-header {
+        font-size: 40vw;
+    }
+    section.ops-section section-description {
+        font-size: 6vw;
+    }
+    section.ops-section mini-description {
+        font-size: 3.5vw;
+    }
+}
+@media only screen and (max-width: 320px) {
+    section.ops-section section-description {
+        font-size: 6.5vw;
+    }
+    section.ops-section mini-description {
+        font-size: 4vw;
+    }
+}
+/* Slider */
+.glide {
+    overflow: hidden;
+}
+[data-glide-el="controls"] {
+    position: absolute;
+    width: 100vw;
+    top: 40vh;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+}
+.glide__slides {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+.glide__slide {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+[data-glide-dir] {
+    border-color: transparent;
+    height: 40px;
+    width: 40px;
+}
+[data-glide-dir]::before {
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.8);
+}
+[data-glide-dir=">"]::before {
+    content: '\e903';
+}
+[data-glide-dir="<"]::before {
+    content: '\e902';
+}

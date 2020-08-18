@@ -1,7 +1,7 @@
 <?php
 class drafts {
     private static $table = 'drafts';
-    private static function hash ($content) {
+    protected static function hash ($content) {
         return sha1($content);
     }
     public static function update ($args) {
@@ -31,6 +31,7 @@ class drafts {
                     'ID'    => $args['ID']
                 ]
             );
+            draft_versions::delete_all($args['ID']);
             return intval($args['ID']);
         }
         $args = array_replace([
@@ -50,6 +51,7 @@ class drafts {
             self::$table,
             $args
         );
+        draft_versions::delete_all( 0 );
         return intval($wpdb->insert_id);
     }
     public static function get_by ($field, $value) {
@@ -307,5 +309,58 @@ class drafts_chapter extends drafts {
             'post_parent'   => $book_id
         ]);
         return $chapter_id;
+    }
+}
+class draft_versions extends drafts {
+    protected static $table = 'draft_versions';
+    public static function autosave($draft_id,$title,$content) {
+        $draft = drafts::get_by('ID',$draft_id);
+        if ( ($draft_id !== 'new' && $draft === false) || ($draft->content === $content && $draft->title === $title) ) {
+            return false;
+        }
+        $draft_id = $draft_id === 'new' ? 0 : $draft_id;
+        $table = self::$table;
+        $hash = self::hash($content);
+        $t = time();
+
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE draft_id = %s AND type ='autosave' ORDER BY created DESC LIMIT 1",[$draft_id]);
+        $r = $wpdb->get_results($sql);
+        $last_time = !empty($r) ? intval($r[0]->created) : 0;
+        if ( $t - $last_time < 60) {
+            return intval($r[0]->created);
+        }
+        $wpdb->insert(
+            $table,
+            [
+                'draft_id'      => $draft_id,
+                'title'         => $title,
+                'content'       => $content,
+                'created'       => $t,
+                'hash'          => $hash,
+                'type'          => 'autosave'
+            ]
+        );
+        return $t;
+    }
+    public static function load_autosave($draft_id) {
+        $table = self::$table;
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare("SELECT title,content,created FROM $table WHERE draft_id = %s ORDER BY ID DESC",[$draft_id]));
+        if (empty($r)) {
+            return false;
+        }
+        $r[0]->timestamp = $r[0]->created;
+        unset($r[0]->created);
+        return $r[0];
+    }
+    public static function delete_all($draft_id) {
+        global $wpdb;
+        $wpdb->delete(
+            self::$table,
+            [
+                'draft_id'  => $draft_id
+            ]
+        );
     }
 }

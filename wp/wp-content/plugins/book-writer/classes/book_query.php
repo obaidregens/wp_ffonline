@@ -53,7 +53,7 @@ class book_query{
             $tax[$term->object_id][$term->taxonomy][] = array(
                 'ID'        => $term->term_id,
                 'name'      => $term->name,
-                'link'      => '<a href="/?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $term->name . '</a>',
+                'link'      => '<a href="/read?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $term->name . '</a>',
             );
         }
         return $tax;

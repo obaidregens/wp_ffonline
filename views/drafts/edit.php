@@ -16,6 +16,7 @@ $title = $draft === false ? '' : $draft->title;
 $draft_id = $draft === false ? 'new' : $draft->ID;
 $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '/drafts/' . $draft->share));
 ?>
+<autosave-time></autosave-time>
 <button label="Preview"></button>
 <button class="dropdown" label="Export">
 <dropdown class="right">
@@ -24,6 +25,8 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 </dropdown>
 </button>
 <share-is hidden><?=  $share_link ?></share-is>
-<load_from hidden><?= $content; ?></load_from>
-<input maxlength="70" value="<?= $title; ?>" placeholder="Title">
+<load_title hidden><?= $title; ?></load_title>
+<load_content hidden><?= $content; ?></load_content>
+
+<input maxlength="70" placeholder="Title">
 <editor draft_id="<?= $draft_id; ?>"></editor>

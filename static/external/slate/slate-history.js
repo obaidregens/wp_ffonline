@@ -219,7 +219,6 @@
         history.undos.pop();
       }
     };
-
     e.apply = function (op) {
       var operations = e.operations,
           history = e.history;
@@ -229,11 +228,9 @@
       var overwrite = shouldOverwrite(op, lastOp);
       var save = HistoryEditor.isSaving(e);
       var merge = HistoryEditor.isMerging(e);
-
       if (save == null) {
         save = shouldSave(op);
       }
-
       if (save) {
         if (merge == null) {
           if (lastBatch == null) {
@@ -244,7 +241,6 @@
             merge = shouldMerge(op, lastOp) || overwrite;
           }
         }
-
         if (lastBatch && merge) {
           if (overwrite) {
             lastBatch.pop();
@@ -286,7 +282,6 @@
     if (prev && op.type === 'remove_text' && prev.type === 'remove_text' && op.offset + op.text.length === prev.offset && slate.Path.equals(op.path, prev.path)) {
       return true;
     }
-
     return false;
   };
   /**

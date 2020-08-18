@@ -1,7 +1,7 @@
 const getViewId = () => {
     const current_view_parts = window.location.pathname.split('/').filter((v) => v !== '');
     const current_full = current_view_parts.join('/');
-    if (current_full === "") {
+    if (current_full === "read") {
         return 1;
     }
     if (current_full === 'my-books') {

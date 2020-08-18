@@ -10,7 +10,7 @@ function chapter_post_name($slug,$post_ID,$post_status,$post_type,$post_parent,$
 //Rewrite term links from front-end
 add_filter('term_link', 'term_link_filter', 10, 3);
 function term_link_filter( $url, $term, $taxonomy ) {
-	$url = get_site_url() . '/?' . $taxonomy . '_included=' . $term -> term_id;
+	$url = get_site_url() . '/read?' . $taxonomy . '_included=' . $term -> term_id;
     return $url;  
 }
 //Filter Message Link

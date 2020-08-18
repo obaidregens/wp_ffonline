@@ -264,7 +264,7 @@ function unpack_search($packed){
 }
 function type_args($args,$placeholder){
 	global $app;
-	if ($placeholder['type'] === 'home'){}
+	if ($placeholder['type'] === 'read'){}
 	else if ($placeholder['type'] === 'collection'){
 		$collection_books = array_column(collection::book_query(array($placeholder['type_id'])),'ID');
 		$args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;

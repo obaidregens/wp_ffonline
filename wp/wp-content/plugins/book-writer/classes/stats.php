@@ -231,11 +231,13 @@ class _landing extends stats {
     
     }
     private function log(){
+        global $app;
         $error = new err();
         $input_data = array(
             'type'                  => $this->type,
             'type_id'               => $this->type_id,
             'timestamp'             => current_time('timestamp',true),
+            'request'               => $app->request,
             'user_id'               => get_current_user_id(),
             'IP'                    => $this->ip,
             'vfs'                   => $this->vfs,

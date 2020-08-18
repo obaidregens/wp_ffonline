@@ -62,6 +62,7 @@ div {
 }
 /* Header */
 header {
+    width: 100%;
     font-weight: bold;
     user-select: none;
     color: var(--theme-color);
@@ -94,10 +95,10 @@ header > nav > a {
     width: fit-content;
     width: -moz-fit-content;
 }
-@media only screen and (max-width: 300px) {
+@media only screen and (max-width: 350px) {
     header > nav > a {
-        padding: 0 7px;
-        font-size: 0.85rem;
+        padding: 0 5.5px;
+        font-size: 0.80rem;
     }
 }
 header > nav > a:hover {

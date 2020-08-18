@@ -1,9 +1,19 @@
-document.querySelector('input[placeholder="Title"]').addEventListener('input',function(){
-    localStorage.setItem('ChapterTitle', this.value);
-});
-if (document.querySelector('input[placeholder="Title"]').value === '') {
-    document.querySelector('input[placeholder="Title"]').value = localStorage.getItem('ChapterTitle') || '';
-}
+window.draftTitle = {
+    value: '',
+    set: (val) => {
+        document.querySelector('input[placeholder="Title"]').value = val;
+        window.draftTitle.value = val;
+    }
+};
+document.querySelector('input[placeholder="Title"]').addEventListener('input',({target}) => window.draftTitle.set(target.value) )
+const loadDraft = () => {
+    window.draftTitle.set(document.querySelector('load_title').innerText);
+    const originalContent = document.querySelector('load_content').innerText;
+    if (originalContent !== '') {
+        window.draftContent.set(JSON.parse(originalContent));
+    }
+};
+loadDraft();
 document.querySelector('toolbar').appendChild(DOM.create('button',{
     attributes: {
         action: 'fullscreen'
@@ -190,13 +200,14 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
 }));
 function draftSaveRequest(draft_id) {
     return new Promise(function(resolve,reject){
-        const title = document.querySelector('input[placeholder="Title"]').value;
+        const title = window.draftTitle.value;
+        const content = JSON.stringify(window.draftContent.value);
         api('save_draft',{
             dataType: 'JSON',
             data: {
                 title,
                 draft_id,
-                content: localStorage.getItem('ChapterContent'),
+                content,
             },
             callback: response => {
                 if (response.code === 8) {
@@ -209,6 +220,7 @@ function draftSaveRequest(draft_id) {
                     reject('An error occured.');
                     return;
                 }
+                document.querySelector('autosave-time').innerText = '';
                 document.querySelector('editor').setAttribute('draft_id',response.draft_id);
                 if (draft_id === 'new') {
                     new toast('Saved as new draft')
@@ -220,7 +232,7 @@ function draftSaveRequest(draft_id) {
                 resolve(response.draft_id);
             },
         });
-    })
+    });
 }
 document.querySelector('button[label="Export"] > dropdown').addEventListener('click', ({target}) => {
     const inner = target.innerText;
@@ -249,3 +261,51 @@ window.addEventListener('keydown',(event) => {
     event.preventDefault();
     document.querySelector('toolbar > button[label="Save"] > dropdown > [label="Save"]').dispatchEvent( new Event('click') );
 });
+// Autosaved
+let autosaveData = {
+    title: window.draftTitle.value,
+    content: window.draftContent.value
+};
+
+window.autosaveDraft = val => {
+    const title = window.draftTitle.value;
+    const content = JSON.stringify(val);
+    api('autosave_draft',{
+        dataType: 'JSON',
+        data: {
+            draft_id: document.querySelector('editor').getAttribute('draft_id'),
+            title,
+            content
+        },
+        callback: response => {
+            if (! Number.isInteger(response.time)) {
+                return;
+            }
+            const d = new Date(response.time * 1000);
+            const display = _t.isToday(d) ? 'Today ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() : _t.local(d);
+            document.querySelector('autosave-time').innerText = display;
+        }
+    });
+}
+const loadAutosave = () => {
+    api('load_autosave',{
+        dataType: 'JSON',
+        data: {
+            draft_id: document.querySelector('editor').getAttribute('draft_id')
+        },
+        callback: ({autosave}) => {
+            if (autosave == false) {
+                return;
+            }
+            confirmation('An autosave is available. Do you want to use it?')
+            .then((res => {
+                if (! res ) {
+                    return;
+                }
+                window.draftTitle.set(autosave.title);
+                window.draftContent.set(JSON.parse(autosave.content));    
+            }));
+        }
+    });
+}
+loadAutosave();
