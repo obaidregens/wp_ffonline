@@ -1,0 +1,126 @@
+view-reviews {
+    display: block;
+}
+/* Review Header */
+reviews-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+reviews-header > button {
+    border-color: transparent;
+    margin: 0 2px;
+}
+reviews-header > button::before {
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.5) scaleX(0.9);
+}
+/* Sort Drop */
+reviews-header > button:nth-child(1)::before {
+    content: '\e938';
+}
+/* User Drop */
+reviews-header > button:nth-child(2)::before {
+    content: '\e939';
+}
+reviews-header > button:nth-child(2) label.checkbox {
+    margin: 0;
+}
+reviews-header > button:nth-child(2) input::after,reviews-header > button:nth-child(2) input::before {
+    transform: translateY(-3px);
+}
+/* Reviews Pagination */
+reviews-pagination {
+    display: flex;
+    justify-content: center;
+}
+reviews-pagination button {
+    border-color: transparent;
+    padding: 0 8px;
+}
+reviews-pagination button:first-child::before {
+    font-family: 'icons';
+    content: '\e902';
+}
+reviews-pagination button:last-child::before {
+    font-family: 'icons';
+    content: '\e903';
+}
+reviews-pagination button[active] {
+    background-color: var(--theme-color);
+    color: var(--white);
+    pointer-events: none;
+}
+reviews[empty]::after {
+    content: 'No reviews yet.';
+}
+/* Review */
+review > a.author, reply-to > a.author {
+	display: block;
+	font-size: 1.1rem;
+}
+review > a.author.book-author::after, reply-to > a.author.book-author::after {
+    font-family: 'icons';
+    margin-left: 6px;
+    font-size: 11px;
+    display: inline-block;
+    content: '\e909';
+    transform: rotate(-8deg);
+}
+review > review-time, reply-to > review-time {
+	display: block;
+	margin-top: -5px;
+	margin-left: 1px;
+	font-size: 0.75rem;
+	margin-bottom: 5px;
+}
+review > review-content {
+	display: block;
+	white-space: pre-wrap;
+	margin-bottom: 40px;
+}
+review > button.dropdown::before {
+	font-family: 'icons';
+	content: '\e904'
+}
+review > button.dropdown {
+	padding: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 100px;
+    top: 0;
+    right: 0;
+	background-color: transparent;
+	border: none;
+}
+review > button.dropdown:hover {
+    color: var(--text-color);
+}
+review > button.dropdown > dropdown > *::after {
+	content: attr(label);
+}
+review > button.dropdown > dropdown > *::before {
+	font-family: 'icons';
+	width: 20px;
+	margin-right: 10px;
+}
+review > button.dropdown > dropdown > [label="Delete"]::before {
+	content: '\e921';
+}
+review > button.dropdown > dropdown > [label="Pin"]::before {
+	font-size: 110%;
+	content: '\e920';
+}
+review > button.dropdown > dropdown > [label="Reply"]::before {
+	font-size: 110%;
+	content: '\e919';
+}
+review > button.dropdown:hover {
+	border: none;
+	background-color: var(--hover);
+}

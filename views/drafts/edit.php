@@ -3,6 +3,7 @@ $app->bundle = global_bundle('drafts-edit');
 $app->bundle->mix('react');
 $app->bundle->mix('slate');
 $app->bundle->css('css/components/dropdown');
+$app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
@@ -16,6 +17,9 @@ $title = $draft === false ? '' : $draft->title;
 $draft_id = $draft === false ? 'new' : $draft->ID;
 $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '/drafts/' . $draft->share));
 ?>
+<?php if (! is_user_logged_in()) { ?>
+    <important>Autosaving is disabled. <a onclick="prompt_login();">Login</a> to enable.</important>
+<?php } ?>
 <autosave-time></autosave-time>
 <button label="Preview"></button>
 <button class="dropdown" label="Export">

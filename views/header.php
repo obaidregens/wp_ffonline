@@ -22,6 +22,7 @@ $is_user_logged_in = is_user_logged_in();
 		<meta name="Description" content="<?= $app->header_options['description']; ?>">
 		<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 		<link rel="icon" href="/content/static/images/logo.svg"  type="image/svg+xml">
+		<!-- Meta -->
     </head>
     <body>
         <nonce hidden><?= $nonce; ?></nonce>

@@ -54,7 +54,6 @@ function onePageScroll(element, options) {
   	  topPos = topPos + 100;
     
   	  if(settings.pagination == true) {
-			console.log();
 			const hrefList = settings.updateURL ? "href='#" + (i + 1) + "'" : '';
   			paginationList += "<li><a data-index='" + (i + 1) + "' " + hrefList + "></a></li>";
   		}

@@ -10,6 +10,7 @@ const {
 } = React;
 const {
   Text,
+  Range,
   Editor,
   Transforms,
   createEditor
@@ -24,7 +25,6 @@ const {
 var {
   Slate
 } = SlateReact; // Define our own custom set of helpers.
-
 const EditorTools = {
   italic: {
     isActive(editor) {
@@ -106,10 +106,16 @@ const shouldAutosave = (editor) => {
   }
   autoSaveOpt += largestLength;
   return false;
-}  
+} 
+let insertEditorText;
 const App = () => {
   const editor = useMemo(() => withHistory(withReact(createEditor())), []); // Add the initial value when setting up our state.
-
+  window.DraftEditor = editor;
+  if (! insertEditorText) {
+    insertEditorText = (text) => {
+      Editor.insertText(editor,text);
+    }
+  }
   const [value, setValue] = useState([
     {
       type: 'paragraph',

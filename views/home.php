@@ -31,7 +31,7 @@ Scroll down to see more
                     <mini-description>
                     Write. Share. Collaborate. Export. All from one place.
                     <br>
-                    <a href="/drafts">Get started</a>
+                    <a href="/drafts/new">Get started</a>
                     </mini-description>
                 </li>
                 <li class="glide__slide">
@@ -39,7 +39,7 @@ Scroll down to see more
                     <mini-description>
                     As you type, your drafts will be saved automatically so you never have to worry about losing your work.
                     <br>
-                    <a href="/drafts">Get started</a>
+                    <a href="/drafts/new">Get started</a>
                     </mini-description>
                 </li>
                 <li class="glide__slide">
@@ -47,7 +47,7 @@ Scroll down to see more
                     <mini-description>
                     Collaborate with others, review thir edits, and use them in your stories.
                     <br>
-                    <a href="/drafts">Get started</a>
+                    <a href="/drafts/new">Get started</a>
                     </mini-description>
                 </li>
                 <li class="glide__slide">
@@ -55,7 +55,7 @@ Scroll down to see more
                     <mini-description>
                     Write on Fanfiction Online. Publish everywhere.
                     <br>
-                    <a href="/drafts">Get started</a>
+                    <a href="/drafts/new">Get started</a>
                     </mini-description>
                 </li>
             </ul>

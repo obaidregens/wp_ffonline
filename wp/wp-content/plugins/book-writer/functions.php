@@ -193,7 +193,8 @@ $includes = array(
 	'classes/v_code',
 	'classes/c_user',
 	'classes/drafts',
-	'classes/book_stats'
+	'classes/book_stats',
+	'classes/dict',
 );
 foreach($includes as $include){
 	require ($include . '.php');

@@ -195,3 +195,9 @@ function api_load_autosave() {
     ]);
     exit();
 }
+function api_get_synonym() {
+    required_params('word');
+    $dict = new dict($_POST['data']['word']);
+    echo json_encode($dict->synonym());
+    exit();
+}

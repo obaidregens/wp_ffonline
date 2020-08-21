@@ -1,5 +1,6 @@
 <?php
-function api_post_comment(){
+function api_publish_review(){
+    required_params('chapter_id');
     function return_code($code){
         $_return = array(
             'code'			=>	$code,
@@ -7,33 +8,69 @@ function api_post_comment(){
         echo json_encode($_return);
         exit();
     }
-    global $post;
-    $post = get_post($_POST['data']['chapter_id']);
-    if (! $post){
-        return_code(7);
+    $d = &$_POST['data'];
+    if (! reviews::can_review($d['chapter_id'])) {
+        return_code(8);
     }
-    if ($_POST['data']['action'] == 'insert'){
+    if ($d['action'] === 'insert'){
+        required_params('content');
         reviews::new(array(
-            'chapter_id'    => $_POST['data']['chapter_id'],
-            'review'        => $_POST['data']['comment']
+            'chapter_id'    => $d['chapter_id'],
+            'review'        => $d['content']
         ));
     }
-    else if ($_POST['data']['action'] == 'delete'){
-        reviews::delete($_POST['data']['id']);
-    }
-    else if ($_POST['data']['action'] == 'reply'){
+    else if ($d['action'] == 'reply'){
+        required_params('content','review_id');
         reviews::new(array(
-            'chapter_id'    => $_POST['data']['chapter_id'],
-            'reply_to'      => $_POST['data']['id'],
-            'review'        => $_POST['data']['comment']
+            'chapter_id'    => $d['chapter_id'],
+            'reply_to'      => $d['review_id'],
+            'review'        => $d['content']
         ));
     }
-    ob_start();
-    get_template_part('comments');
-    $new_comments = ob_get_contents();
-    ob_end_clean();
-    echo json_encode(array(
-        'code'      => 1,
-        'comments'  => $new_comments
-    ));
+    return_code(1);
+}
+function api_delete_review() {
+    required_params('chapter_id','review_id');
+    function return_code($code){
+        $_return = array(
+            'code'			=>	$code,
+        );
+        echo json_encode($_return);
+        exit();
+    }
+    $d = &$_POST['data'];
+    if (! reviews::can_review($d['chapter_id'])) {
+        return_code(8);
+    }
+    reviews::delete($d['review_id']);
+    return_code(1);
+}
+function api_get_reviews(){
+    required_params('sort','chapter_id');
+    $d = $_POST['data'];
+    $sort = in_array($d['sort'],['DESC','ASC']) ? $d['sort'] : 'DESC';
+    $chapter = get_post( $d['chapter_id'] );
+    if ($chapter === false || $chapter->post_status !== 'publish' || $chapter->post_type !== 'chapter') {
+        echo json_encode([
+            'code'  => 13
+        ]);
+        exit();
+    }
+    $book = get_post( $chapter->post_parent );
+    if ($book === false || $book->post_status !== 'publish' || $book->post_type !== 'book') {
+        echo json_encode([
+            'code'  => 14
+        ]);
+        exit();
+    }
+
+    $reviews = reviews::query([
+        'order'         => $sort,
+        'chapter'       => $chapter->ID,
+        'page'          => $d['page'] ?? 1,
+        'exclude_users' => $d['exclude_users'] ?? []
+    ]);
+    
+    echo json_encode($reviews);
+    exit();
 }

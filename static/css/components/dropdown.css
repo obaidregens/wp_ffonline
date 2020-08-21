@@ -6,7 +6,7 @@ button.dropdown:active {
     transform: none;
 }
 .dropdown > dropdown {
-    display: block;
+    display: table;
     z-index: 10;
     opacity: 0;
     text-transform: none;
@@ -24,14 +24,17 @@ button.dropdown:active {
     height: fit-content;
     height: -moz-fit-content;
     box-shadow: var(--shadow-strong);
+    pointer-events: none;
 }
 .dropdown:focus-within > dropdown{
     top: -1px;
     opacity: 1;
+    pointer-events: all;
 }
 .dropdown:focus > dropdown{
     top: -1px;
     opacity: 1;
+    pointer-events: all;
 }
 .dropdown > dropdown > *{
     color: var(--text-color);

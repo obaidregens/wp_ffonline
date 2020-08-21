@@ -9,15 +9,15 @@ class reviews {
             return false;
         }
         $chapter = get_post( $args['chapter_id'] );
-        if (! $chapter || $chapter->post_type !== 'chapter' || self::can_review($args['chapter_id']) === false){
+        if (! $chapter || $chapter->post_type !== 'chapter' || !self::can_review($args['chapter_id']) ){
             return false;
         }
         if (isset($args['reply_to'])) {
             $comment = get_comment( $args['reply_to'] );
             if (
                 ! $comment ||
-                intval($comment->user_id) === get_current_user_id() ||
-                intval($chapter->post_author) !== get_current_user_id()
+                ! is_current_user($chapter->post_author) ||
+                is_current_user($comment->user_id)
             ) {
                 return false;
             }
@@ -31,15 +31,94 @@ class reviews {
         ));
         return $comment_id;
     }
-    static function get($chapter_id) {
-        return (new WP_Comment_Query(array(
-            'post_id' 		=> $chapter_id,
-            'hierarchical'	=> 'threaded',
-        )))->comments;
+    static function query($args = []) {
+        function build_comment($comment,$chapter_author,$current_user_id) {
+            $comment_author = intval($comment->user_id);
+            $user = get_userdata( $comment->user_id );
+            $Suser = [
+                'ID'        => $comment_author,
+                'name'      => $comment_author === 0 ? 'Anonymous' : '@' . $user->user_login,
+                'checked'   => true
+            ];
+            $Scomment = [
+                'ID'        => intval($comment->comment_ID),
+                'content'   => $comment->comment_content,
+                'time'      => human_time_diff( strtotime( $comment->comment_date ) ),
+                'chapter'   => [
+                    'num'       => $chapter_num,
+                    'title'     => $chapter->post_title,
+                ],
+                'user'      => [
+                    'self'          => $chapter_author === $comment_author,
+                    'ID'            => $comment_author,
+                    'name'          => $comment_author === 0 ? 'Anonymous' : '@' . $user->user_login,
+                    'can_delete'    => $current_user_id === $comment_author && $current_user_id !== 0,
+                    'can_reply'     => $current_user_id === $chapter_author && $comment_author !== $current_user_id && $current_user_id !== 0
+                ]
+            ];
+            return [
+                'user'      => $Suser,
+                'comment'   => $Scomment
+            ];
+        }
+        $args = array_replace([
+            'exclude_users' => [],
+            'orderby'       => 'comment_date',
+            'order'         => 'DESC',
+            'per_page'      => 10,
+            'page'          => 1,
+            'chapter'       => 0,
+            // 'book'          => ''
+        ],$args);
+
+        $comment_query = (new WP_Comment_Query([
+            'author__not_in'    => $args['exclude_users'],
+            'number'            => $args['per_page'],
+            'paged'             => $args['page'],
+            'orderby'           => $args['orderby'],
+            'order'             => $args['order'],
+            'post_id'           => $args['chapter'],
+            'parent'            => 0,
+            // 'post_parent'       => $args['book'],
+            'hierarchical'	    => 'threaded'
+        ]))->comments;
+        $chapter = get_post($args['chapter']);
+        $chapter_author = intval($chapter->post_author);
+        $chapter_num = intval(get_post_meta( $chapter->ID, 'chapter_order', true ));
+        $comments = [];
+        $current_user_id = intval(get_current_user_id());
+        $users = [];
+        foreach ($comment_query as $k => $comment) {
+            $f = build_comment($comment,$chapter_author,$current_user_id);
+            $comment_author = intval($comment->user_id);
+            $users[$comment_author] = $f['user'];
+            $children = $comment->get_children();
+            $f['comment']['replies'] = [];
+            foreach ($children as $child) {
+                $f['comment']['replies'][] = build_comment($child,$chapter_author,$current_user_id)['comment'];
+            }
+            $comments[] = $f['comment'];
+        }
+        foreach ($args['exclude_users'] as $user_id) {
+            $user_id = intval($user_id);
+            if (isset($users[$user_id])) {
+                continue;
+            }
+            $user = get_userdata( $user_id );
+            $users[$user_id] = [
+                'ID'        => $user_id,
+                'name'      => $user_id === 0 ? 'Anonymous' : '@' . $user->user_login,
+                'checked'   => false
+            ];
+        }
+        return [
+            'reviews'   => $comments,
+            'users'     => array_values($users)
+        ];
     }
     static function delete($comment_id) {
         $comment = get_comment($comment_id);
-        if (! $comment || get_current_user_id() !== intval($comment->user_id) ){
+        if ( !is_user_logged_in() || !$comment || !is_current_user($comment->user_id) ){
             return false;
         }
         wp_delete_comment($comment->comment_ID);
@@ -55,13 +134,9 @@ class reviews {
         if (! in_array($chapter_or_book->post_type,['chapter','book'])){
             return false;
         }
-        if ($chapter_or_book->post_type === 'book') {
-            return
-                comments_open( $chapter_or_book->ID ) &&
-                (get_post_meta($chapter_or_book->ID, 'anon_review', true) === 'true' || $logged_in );
-        }
+        $book_id = $chapter_or_book->post_type === 'book' ? $chapter_id_or_book->ID : $chapter_or_book->post_parent;
         return
-            comments_open( $chapter_or_book->post_parent ) &&
-            (get_post_meta($chapter_or_book->post_parent, 'anon_review', true) === 'true' || $logged_in );
+            comments_open( $book_id ) &&
+            (get_post_meta( $book_id, 'anon_review', true) === 'true' || $logged_in );
     }
 }

@@ -481,12 +481,14 @@ $app->listen('/drafts/:draft_id/preview',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_id/edit',function($self){
-    $self->login();
+    if (! is_user_logged_in() && $self->params['draft_id'] !== 'new') {
+        $self->login();
+    }
     $draft = drafts::get_by('ID',$self->params['draft_id']);
     if ($draft === false && $self->params['draft_id'] !== 'new') {
         return;
     }
-    if ($draft && intval($draft->user_id) !== intval(get_current_user_id())) {
+    if ($draft && !is_current_user($draft->user_id) ) {
         return;
     }
     $self->type = 'drafts-edit';

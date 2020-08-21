@@ -68,7 +68,7 @@ function required_login(){
         exit();
     }
 }
-$reCAPTCHA_apis = ['login','login_with_code','signup','verify_code','contact'];
+$reCAPTCHA_apis = ['login','login_with_code','signup','verify_code','contact','publish_review'];
 if ( in_array($_POST['action'] ?? [],$reCAPTCHA_apis) ){
     if (! isset($_POST['reCAPTCHA']) || verify_reCAPTCHA($_POST['reCAPTCHA'])['success'] != true){
         echo json_encode(array(
@@ -96,5 +96,7 @@ if (! function_exists('api_' . $_POST['action'])){
     ));
     exit();
 }
-call_user_func('api_' . $_POST['action']);
+$b = call_user_func('api_' . $_POST['action']);
+echo json_encode($b);
+exit();
 exit();

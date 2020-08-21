@@ -17,7 +17,10 @@ function init_text_input(){
             input_type,
             value: Val
         });
-        const input_e = text_input.querySelector('input');
+        let input_e = text_input.querySelector('input');
+        if (! input_e) {
+            input_e = text_input.querySelector('textarea');
+        }
 
         elem.removeAttribute('label');
         elem.removeAttribute('type');
