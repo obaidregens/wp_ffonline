@@ -334,10 +334,10 @@ class bundle {
         ),
         'glide_js'      => array(
             'css'   => array(
-                '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/css/glide.core',
+                'external/glide/glide.core',
             ),
             'js'    => array(
-                '://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.4.1/glide'
+                'external/glide/glide'
             )
         ),
         'react'   => array(

@@ -74,6 +74,9 @@ const introSteps = {
         },
         {
             element: 'editor',
+            intro: "Press CTRL + D while writing to find similar words."
+        },
+        {
             intro: 'Start writing :)'
         }
     ],
