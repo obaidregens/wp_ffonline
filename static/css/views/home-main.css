@@ -12,6 +12,7 @@ header > nav > a {
 }
 header > nav > a:hover {
     background-color: transparent;
+    color: var(--darkgrey);
 }
 footer {
     display: none;
@@ -21,6 +22,7 @@ main {
 }
 dark-mode {
     top: -15px;
+    z-index: 60;
 }
 .onepage-pagination li a::before {
     width: 6px;
