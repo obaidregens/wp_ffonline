@@ -457,7 +457,7 @@ if (document.querySelector('button[label="Post"]')) {
                     new toast('An error occured.');
                     return;
                 }
-                target.setAttribute('disabled');
+                target.setAttribute('disabled','');
             }
         });
     })
