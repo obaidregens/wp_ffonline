@@ -42,7 +42,8 @@ $import = [
     'verify',
     'contact',
     'drafts',
-    'edit-book'
+    'edit-book',
+    'news'
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
@@ -64,6 +65,14 @@ function required_login(){
     if (! is_user_logged_in()){
         echo json_encode(array(
             'code'  => 995
+        ));
+        exit();
+    }
+}
+function required_admin(){
+    if (! current_user_can('administrator')){
+        echo json_encode(array(
+            'code'  => 994
         ));
         exit();
     }
@@ -97,6 +106,7 @@ if (! function_exists('api_' . $_POST['action'])){
     exit();
 }
 $b = call_user_func('api_' . $_POST['action']);
-echo json_encode($b);
-exit();
+if ($b) {
+    echo json_encode($b);
+}
 exit();

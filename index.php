@@ -146,6 +146,14 @@ $app->listen('/',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/news',function($self){
+    $self->type = 'news';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/news');
+    $self->footer();
+    exit();
+});
 $app->listen('/read',function($self){
     $self->type = 'read';
     $self->type_id = 0;
@@ -277,6 +285,9 @@ $app->listen('/collections/:collection',function($self){
     $self->template('/views/collections/single');
     $self->footer();
     exit();
+});
+$app->listen('/@ffonline/&*',function($self) {
+    $self->_404();
 });
 $app->listen('/@:user/collections/:collection',function($self){
     $user = get_user_by( 'login', $self->params['user'] );

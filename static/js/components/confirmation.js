@@ -28,9 +28,9 @@ function confirmation(string) {
             ]
         });
         popup.create(_p,{
-            onClose: () => {
+            onAfterClose: () => {
                 resolve(false);
-                _p.remove();
+                setTimeout(() => _p.remove());
             }
         });
         popup.open(_p);

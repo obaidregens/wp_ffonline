@@ -8,6 +8,7 @@ author-updates::before {
 author-updates[empty]::after {
     content: 'No updates posted.';
     display: block;
+    width: max-content;
     position: absolute;
     top: 50px;
 }

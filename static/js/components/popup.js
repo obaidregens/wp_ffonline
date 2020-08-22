@@ -35,12 +35,14 @@ const popup = class {
         popup.open(_popup);
     }
     static open (_popup) {
-        popup.close();
-        const popup_overlay = popup.overlay;
-        _popup.classList.add('show');
-        popup_overlay.classList.add('show');
-        document.documentElement.style.overflow = 'hidden';    
-        _popup.dispatchEvent(new Event('onOpen'));
+        setTimeout(() => {
+            popup.close();
+            const popup_overlay = popup.overlay;
+            _popup.classList.add('show');
+            popup_overlay.classList.add('show');
+            document.documentElement.style.overflow = 'hidden';    
+            _popup.dispatchEvent(new Event('onOpen'));    
+        });
     }
     static close () {
         const popup_overlay = popup.overlay;
@@ -56,6 +58,7 @@ const popup = class {
         if (document.querySelectorAll('popup.show').length === 0){
             popup_overlay.classList.remove('show');
         }
+        _popup.dispatchEvent(new Event('onAfterClose'));
     }
 }
 popup.init();

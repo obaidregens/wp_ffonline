@@ -1,6 +1,7 @@
 window.draftTitle = {
     value: '',
     set: (val) => {
+        window.editedAtAll = true;
         document.querySelector('input[placeholder="Title"]').value = val;
         window.draftTitle.value = val;
     }
@@ -12,6 +13,7 @@ const loadDraft = () => {
     if (originalContent !== '') {
         window.draftContent.set(JSON.parse(originalContent));
     }
+    window.editedAtAll = false;
 };
 loadDraft();
 document.querySelector('toolbar').appendChild(DOM.create('button',{
@@ -225,6 +227,7 @@ function draftSaveRequest(draft_id) {
                     reject('An error occured.');
                     return;
                 }
+                window.editedAtAll = false;
                 document.querySelector('autosave-time').innerText = '';
                 document.querySelector('editor').setAttribute('draft_id',response.draft_id);
                 if (draft_id === 'new') {
@@ -266,6 +269,7 @@ window.addEventListener('keydown',(event) => {
     event.preventDefault();
     document.querySelector('toolbar > button[label="Save"] > dropdown > [label="Save"]').dispatchEvent( new Event('click') );
 });
+
 const thesaurus = document.documentElement.appendChild(DOM.create('thesaurus',{
     children: [
         DOM.create('loader',{
@@ -383,7 +387,6 @@ let autosaveData = {
     title: window.draftTitle.value,
     content: window.draftContent.value
 };
-
 window.autosaveDraft = val => {
     const title = window.draftTitle.value;
     const content = JSON.stringify(val);
@@ -429,3 +432,33 @@ const loadAutosave = () => {
     });
 }
 loadAutosave();
+window.addEventListener('beforeunload', function (e) {
+    console.log(window.editedAtAll);
+    if (window.editedAtAll) {
+        e.preventDefault();
+        e['returnValue'] = '';    
+    }
+});
+
+if (document.querySelector('button[label="Post"]')) {
+    document.querySelector('button[label="Post"]').addEventListener('click',({target}) => {
+        const dr = document.querySelector('editor').getAttribute('draft_id');
+        if (dr === 'new') {
+            new toast('This draft hasn\'t been saved.');
+            return;
+        }
+        api('post_news',{
+            dataType: 'JSON',
+            data: {
+                draft_id: dr
+            },
+            callback: response => {
+                if (response.code > 5) {
+                    new toast('An error occured.');
+                    return;
+                }
+                target.setAttribute('disabled');
+            }
+        });
+    })
+}

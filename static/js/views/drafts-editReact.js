@@ -146,6 +146,10 @@ const App = () => {
       if (shouldAutosave(editor)) {
         window.autosaveDraft(value);
       }
+      const opr = editor.operations;
+      if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
+        window.editedAtAll = true;
+      }
       setValue(value);
     }
   }, /*#__PURE__*/React.createElement("toolbar", null, /*#__PURE__*/React.createElement("button", {

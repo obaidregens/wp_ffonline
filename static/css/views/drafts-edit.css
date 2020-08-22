@@ -21,10 +21,27 @@ autosave-time {
     font-size: 0.8rem;
     justify-content: flex-end;
 }
-/* Export */
-button[label="Export"],button[label="Preview"] {
+drafts-header {
     margin-top: 20px;
-    float: right;
+    display: flex;
+}
+/* Back */
+drafts-header > a {
+    margin-right: 7px;
+}
+drafts-header > a::before {
+    content: '\e902';
+    font-family: 'icons';
+    display: inline-block;
+    margin-right: 8px;
+    transform: scale(1.2) translateY(0.5px);
+}
+/* Export */
+drafts-header > button {
+    margin-right: 0;
+}
+drafts-header > button[label="Preview"] {
+    margin-left: auto;
 }
 /* Title */
 input[placeholder="Title"] {

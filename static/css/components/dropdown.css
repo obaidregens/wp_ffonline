@@ -8,7 +8,6 @@ button.dropdown:active {
 .dropdown > dropdown {
     display: table;
     z-index: 10;
-    opacity: 0;
     text-transform: none;
     font-weight: normal;
     width: fit-content;
@@ -17,24 +16,21 @@ button.dropdown:active {
     font-size: 1rem;
     background-color: var(--background-accent);
     position: absolute;
-    transition: opacity .3s cubic-bezier(0.22, 0.61, 0.36, 1);
-    top: -10000px;
-    will-change: opacity, top;
+    top: -1px;
     overflow: auto;
     height: fit-content;
     height: -moz-fit-content;
     box-shadow: var(--shadow-strong);
-    pointer-events: none;
+    /* Transition */
+    transform: scale(0);
+    transition: transform .2s;
+    will-change: transform;
 }
 .dropdown:focus-within > dropdown{
-    top: -1px;
-    opacity: 1;
-    pointer-events: all;
+    transform: scale(1);
 }
 .dropdown:focus > dropdown{
-    top: -1px;
-    opacity: 1;
-    pointer-events: all;
+    transform: scale(1s);
 }
 .dropdown > dropdown > *{
     color: var(--text-color);
@@ -50,13 +46,9 @@ button.dropdown:active {
 }
 .dropdown > dropdown:not(.right) {
     left: -1px;
+    transform-origin: top left;
 }
 .dropdown > dropdown.right {
     right: -1px;
-}
-.dropdown > dropdown:not(.bottom) {
-    bottom: -1px;
-}
-.dropdown > dropdown.bottom {
-    bottom: -1px;
+    transform-origin: top right;
 }
