@@ -7,31 +7,19 @@ function api_edit_book() {
         }
         return wp_insert_term($term,$taxonomy,array(
             'parent'      => $parent,
-        )
-        );
+        ));
     }
     required_login();
     required_params(
         'book_id','title','description','reviews','publish','anonymous_reviews'
     );
-    function return_code($code,$selected = null) {
-        $d = &$_POST['data'];
-        $_r = [
-            'code'      => $code
-        ];
-        if ($selected !== null) {
-            $_r['selected'] = $selected;
-        }
-        echo json_encode($_r);
-        exit();
-    }
     $d = &$_POST['data'];
     $publish = $d['publish'] === "true";
     $reviews = $d['reviews'] === "true";
     $anon_review = $d['anonymous_reviews'] === "true";    
 
     if (trim($d['title']) === '') {
-        return_code(14);
+        return ['code'=>14];
     }
     if ($d['book_id'] === 'new'){
         $d['book_id'] = wp_insert_post([
@@ -45,7 +33,7 @@ function api_edit_book() {
         !$book || $book->post_type !== 'book'
         || intval($book->post_author) !== intval(get_current_user_id())
     ){
-        return_code(9);
+        return ['code'=>9];
     }
     if (trim($d['description']) === '') {
         $publish = false;
@@ -165,5 +153,5 @@ function api_edit_book() {
     if ($d['publish'] === "true" && $publish === false) {
         $success = $success ?? 3;
     }
-    return_code($success ?? 1,get_data($d['book_id'])['selected'] );
+    return ['code'=>$success ?? 1,'selected'=>get_data($d['book_id'])['selected']];
 }

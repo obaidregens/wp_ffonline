@@ -25,14 +25,11 @@ popup {
     overflow-y: auto;
     padding: 20px;
     background-color: var(--background-accent);
-    border-radius: 5px;
     position: fixed;
-    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     margin: auto;
-    width: 80%;
     height: fit-content;
     height: -moz-fit-content;
     min-height: 10%;
@@ -40,10 +37,24 @@ popup {
     z-index: 55;
 
     /* Transition */
-    transform: scale(0);
     transition: transform 0.2s;
     will-change: transform;
 }
-popup.show {
+popup:not(.bottom) {
+    top: 0;
+    width: 80%;
+    border-radius: 5px;
+    transform: scale(0);
+}
+popup:not(.bottom).show {
     transform: scale(1);
+}
+popup.bottom {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+    transform-origin: bottom;
+    transform: scaleY(0);
+}
+popup.bottom.show {
+    transform: scaleY(1);
 }

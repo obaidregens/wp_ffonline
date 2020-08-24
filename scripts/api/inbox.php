@@ -2,22 +2,17 @@
 function api_get_chat(){
     required_login();
     required_params('username');
-    function return_err(){
-        echo json_encode(array(
-            'messages' => false,
-        ));
-        exit();
-    }
+
     $user = get_user_by( 'login', $_POST['data']['username'] );
     if ($user === false) {
-        return_err();
+        return ['messages'=>false];
     }
     $users_in_chat = array(
         intval( get_current_user_id() ),
         intval( $user->ID )
     );
     if ($users_in_chat[0] === $users_in_chat[1]){
-        return_err();
+        return ['messages'=>false];
     }
     $chats = chats::query(array(
         'users_included'  => $users_in_chat
@@ -44,24 +39,21 @@ function api_get_chat(){
             wp_set_object_terms($chat->ID,'Read', 'message_status');            
         }
     }
-    echo json_encode(array(
+    return [
         'user'          => array(
                 'name'      => $user->display_name
         ),
         'messages'      => array_reverse($chats_f),
         'blocked'       => chats_blocking::is_blocked($users_in_chat[1]),
         'chat_blocked'  => chats_blocking::is_chat_blocked($users_in_chat)
-    ));
+    ];
 }
 function api_send_message(){
     required_login();
     required_params('message','to');
     $user = get_user_by( 'login', $_POST['data']['to'] );
     if ($user === false){
-        echo json_encode(array(
-            'sent'      => false
-        ));
-        exit();
+        return ['sent'=>false];
     }
     // Add the content of the form to $post as an array
     $chat_obj = new chats($_POST['data']['message'],$user->ID);
@@ -69,9 +61,7 @@ function api_send_message(){
     if ($chat_obj->error->has()){
         $success = false;
     }
-    echo json_encode(array(
-        'sent'      => $success
-    ));
+    return ['sent'=>$success];
 }
 function api_block () {
     required_login();

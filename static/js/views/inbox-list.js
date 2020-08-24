@@ -134,7 +134,6 @@ else {
                     username
                 },
                 callback: (response) => {
-                    console.log(response);
                     const messages_wrapper = document.querySelector('messages');
                     if (messages_wrapper.getAttribute('username').substr(1) !== username){
                         reject('Changed Username');

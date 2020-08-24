@@ -1,8 +1,14 @@
-function ask(string,options = null,isRequired = true) {
+function ask(string,options = null,isRequired = true,prompt = 'Enter',maxlength = null) {
     return new Promise((resolve, reject) => {
         let input_elem ;
         if (options === null) {
-            input_elem = create_text_input({label: 'Enter'});
+            const text_attr = {label: prompt};
+            if (maxlength) {
+                text_attr.attributes = {
+                    maxlength
+                };
+            }
+            input_elem = create_text_input(text_attr);
         }
         else {
             options_el = [];
@@ -56,9 +62,9 @@ function ask(string,options = null,isRequired = true) {
             ]
         });
         popup.create(_p,{
-            onClose: () => {
+            onAfterClose: () => {
                 reject(false);
-                _p.remove();
+                setTimeout(() => _p.remove());
             }
         });
         popup.open(_p);

@@ -130,7 +130,8 @@ function run_at_activation(){
 		`hash` VARCHAR(40) NOT NULL ,
 		`branch_type` VARCHAR(20) NULL ,
 		`branch` BIGINT NULL ,
-		PRIMARY KEY (ID)
+		`path` TEXT NOT NULL ,
+		PRIMARY KEY (ID) ,
 	) $charset_collate;";
 
 

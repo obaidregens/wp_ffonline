@@ -1,46 +1,7 @@
-drafts.grid {
-    grid-template-columns: repeat( auto-fill, minmax(180px, 1fr) );
-}
-@media only screen and (min-width: 400px) {
-    drafts.grid {
-        grid-template-columns: repeat( auto-fill, minmax(220px, 1fr) );
-    }
-}
-@media only screen and (min-width: 800px) {
-    drafts.grid {
-        grid-template-columns: repeat( auto-fill, minmax(220px, 1fr) );
-    }
-}
-a.draft {
-    width: unset;
-    color: var(--text-color);
-}
-a.draft > updated {
-    font-size: 0.8rem;
-    color: grey;
-    position: absolute;
-    font-weight: bold;
-    right: 5px;
-    top: 3px;
-}
-a.draft > draft-title {
+folder-listing:empty::before {
+    content: 'No Drafts yet.';
+    margin-left: 70px;
+    margin-top: 20px;
     display: block;
-    font-size: 1.25rem;
-    margin-bottom: 10px;
-}
-a.draft > excerpt {
-    word-break: break-word;
-    font-size: 0.95rem;
-}
-/* New Draft */
-a.draft.new-draft {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-a.draft.new-draft::before {
-    content: '\e916';
-    font-family: 'icons';
-    display: inline-block;
-    transform: scale(3);
+    color: var(--lightblack);
 }

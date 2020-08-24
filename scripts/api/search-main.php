@@ -41,5 +41,5 @@ function api_search() {
 	$response['paginate'] = ob_get_contents();
     ob_end_clean();
     $response['query'] = $book_query;
-    echo json_encode($response);
+    return $response;
 }

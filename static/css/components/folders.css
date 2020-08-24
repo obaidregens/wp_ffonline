@@ -1,0 +1,49 @@
+folder-listing {
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+folder > :first-child::before,file > :first-child::before {
+    font-family: 'icons';
+    margin-right: 15px;
+    color: var(--theme-color);
+}
+folder.back > :first-child::before {
+    content: '\e919';
+}
+folder.back > :first-child::after {
+    content: 'Back';
+}
+folder > :first-child::before {
+    content: '\e940';
+}
+file > :first-child::before {
+    content: '\e941';
+}
+folder,file {
+    cursor: pointer;
+    display: table-row;
+    height: 40px;
+    border-top: 1px solid var(--grey);
+    border-bottom: 1px solid var(--grey);
+    user-select: none;
+    color: var(--lightblack);
+    transition: background-color .2s;
+}
+folder:hover,file:hover {
+    background-color: var(--hover);
+}
+folder.selected,file.selected {
+    pointer-events: none;
+    background-color: var(--theme-color);
+    color: var(--white);
+    opacity: 0.5;
+}
+folder.selected > :first-child::before,file.selected > :first-child::before {
+    color: var(--white);
+}
+folder > *,file > * {
+    padding: 10px;
+    display: table-cell;
+    vertical-align: middle;
+}

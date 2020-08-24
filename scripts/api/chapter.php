@@ -47,9 +47,8 @@ function api_search_book_contents(){
             }
         }
     }
-    echo json_encode(array(
+    return [
         'results'   => $results,
         'exceeded'  => $exceeded ?? false
-    ));
-    exit();
+    ];
 }

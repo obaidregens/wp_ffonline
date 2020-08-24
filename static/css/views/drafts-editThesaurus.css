@@ -1,0 +1,48 @@
+/* Thesaurus */
+thesaurus:not(.open) {
+    display: none;
+}
+thesaurus.empty::before {
+    font-size: .9rem;
+    padding: 10px;
+    content: 'No synonyms found';
+    display: block;
+}
+thesaurus.empty > words {
+    display: none;
+}
+thesaurus {
+    position: fixed;
+    min-width: 120px;
+    min-height: 30px;
+    background-color: var(--background-accent);
+}
+thesaurus:not(.loading) > loader {
+    display: none;
+}
+thesaurus > loader {
+    margin: 10px;
+    display: block;
+    position: relative;
+}
+thesaurus > loader::before {
+    content: 'Loading..';
+    font-size: 0.75rem;
+    position: absolute;
+    left: 27px;
+}
+thesaurus.loading > words {
+    display: none;
+}
+words > li {
+    display: block;
+    padding: 8px;
+    cursor: pointer;
+}
+words > li:focus {
+    outline: none;
+}
+words > li:hover,words > li:focus {
+    background-color: var(--theme-color);
+    color: var(--white);
+}

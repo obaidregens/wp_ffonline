@@ -1,3 +1,37 @@
+// Folder Listing
+let OPT_REMOVE_FILES_CLICK = true;
+const folder_listing_pop = DOM.create('popup',{
+    attributes: {
+        prompt_location_save: ""
+    },
+    children:[
+        DOM.create('folder-listing'),
+        DOM.create('button',{
+            attributes: {
+                label: 'Save'
+            }
+        })
+    ]
+});
+popup.create(folder_listing_pop);
+function newFileSavePopup() {
+    return new Promise((resolve, reject) => {
+        folder_listing_pop.querySelector('button[label="Save"]').replaceWith(DOM.create('button',{
+            attributes: {
+                label: 'Save'
+            },
+            listeners: {
+                click: () => {
+                    resolve(current_path);
+                    popup.close();
+                },
+                onAfterClose: () => reject(false)
+            },
+        }));
+        popup.open(folder_listing_pop);
+    });
+}
+
 window.draftTitle = {
     value: '',
     set: (val) => {
@@ -200,8 +234,8 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
         })
     ]
 }));
-function draftSaveRequest(draft_id) {
-    return new Promise(function(resolve,reject){
+function apiSendSaveRequest(draft_id,path = null) {
+    return new Promise((resolve, reject) => {
         const title = window.draftTitle.value;
         const content = JSON.stringify(window.draftContent.value);
         api('save_draft',{
@@ -210,11 +244,17 @@ function draftSaveRequest(draft_id) {
                 title,
                 draft_id,
                 content,
+                path
             },
             callback: response => {
                 if (response.code === 8) {
                     new toast('Title?');
                     reject('Title?');
+                    return;
+                }
+                if (response.code === 12) {
+                    new toast('Draft with the same title already exists in this folder');
+                    reject('Draft with the same title already exists in this folder');
                     return;
                 }
                 if (response.code === 995) {
@@ -230,6 +270,8 @@ function draftSaveRequest(draft_id) {
                 window.editedAtAll = false;
                 document.querySelector('autosave-time').innerText = '';
                 document.querySelector('editor').setAttribute('draft_id',response.draft_id);
+                all_files = response.draft_path;
+                loadFolder(current_path);
                 if (draft_id === 'new') {
                     new toast('Saved as new draft')
                     window.history.pushState("object or string", document.querySelector("title").innerText,'/drafts/' + response.draft_id + '/edit');
@@ -239,7 +281,28 @@ function draftSaveRequest(draft_id) {
                 }
                 resolve(response.draft_id);
             },
-        });
+        });    
+    });
+}
+function draftSaveRequest(draft_id) {
+    return new Promise(function(resolve,reject){
+        if (draft_id === 'new') {
+            newFileSavePopup()
+            .then((path) => {
+                apiSendSaveRequest(draft_id,path)
+                .then(
+                    (v) => resolve(v),
+                    (v) => reject(v)
+                )
+            } );
+        }
+        else {
+            apiSendSaveRequest(draft_id)
+            .then(
+                (v) => resolve(v),
+                (v) => reject(v)
+            )
+        }
     });
 }
 document.querySelector('button[label="Export"] > dropdown').addEventListener('click', ({target}) => {
@@ -270,118 +333,6 @@ window.addEventListener('keydown',(event) => {
     document.querySelector('toolbar > button[label="Save"] > dropdown > [label="Save"]').dispatchEvent( new Event('click') );
 });
 
-const thesaurus = document.documentElement.appendChild(DOM.create('thesaurus',{
-    children: [
-        DOM.create('loader',{
-            attributes: {
-                xxs: ''
-            }
-        }),
-        DOM.create('words')
-    ]
-}));
-document.documentElement.addEventListener('click',({target}) => {
-    if ( !thesaurus.contains(target) && thesaurus.classList.contains('open') ) {
-        thesaurus.classList.remove('open');
-    }
-});
-function isWordBreak(st) {
-    return [' ',',','.',':',';','?','(',')'].includes(st);
-}
-document.querySelector('editor').addEventListener('keydown',event => {
-    if (! event.ctrlKey || event.key !== 'd') {
-        return;
-    }
-    event.preventDefault();
-    const sel = window.getSelection();
-    const anchor = sel.anchorNode;
-    const text = anchor.textContent;
-    let b = sel.anchorOffset-1;
-    let c = sel.anchorOffset;
-    while ( text[b] && ! isWordBreak(text[b]) ) {
-        b--;
-    }
-    while ( text[c] && ! isWordBreak(text[c]) ) {
-        c++;
-    }
-    b++;
-    const word = text.slice(b,c);
-    const rSel = JSON.parse(JSON.stringify(DraftEditor.selection));
-
-    const cRange = document.createRange();
-    cRange.setStart(anchor,b);
-    cRange.setEnd(anchor,c);
-    rSel.anchor.offset = b;
-    rSel.focus.offset = c;
-
-    const co_ordinates = cRange.getBoundingClientRect();
-
-    const left_pos = co_ordinates.left + co_ordinates.width;
-    const top_pos = co_ordinates.top + co_ordinates.height;
-    thesaurus.classList.remove('empty');
-    thesaurus.classList.add('open');
-    thesaurus.classList.add('loading');
-    thesaurus.style.top = Math.min(top_pos,window.innerHeight-200) + 'px';
-    thesaurus.style.left = Math.min(left_pos,window.innerWidth-150) + 'px';
-    api('get_synonym',{
-        data: {
-            word
-        },
-        dataType: 'JSON',
-        callback: response => {
-            thesaurus.classList.remove('loading');
-            if (response.length === 0) {
-                thesaurus.classList.add('empty');
-                return;
-            }
-            const words = thesaurus.querySelector('words');
-            words.innerText = '';
-            for (let i = 0; i < response.length; i++) {
-                words.appendChild(DOM.create('li',{
-                    innerText: response[i],
-                    attributes: {
-                        tabindex: i+1
-                    },
-                    listeners: {
-                        click: ({target}) => {
-                            const newWord = target.innerText;
-                            const lenDiff = word.length - newWord.length;
-                            window.getSelection().collapse(anchor,c+lenDiff);
-
-                            thesaurus.classList.remove('open');
-                            DraftEditor.selection = rSel;
-                            insertEditorText(newWord);
-                        },
-                        keydown: (event) => {
-                            if (event.key === 'Escape') {
-                                event.preventDefault();
-                                thesaurus.classList.remove('open');
-                                window.getSelection().collapse(anchor,c);
-                            }
-                            else if (event.key === 'Enter') {
-                                event.preventDefault();
-                                event.target.dispatchEvent(new Event('click'));
-                            }
-                            else if (event.key === 'ArrowDown') {
-                                event.preventDefault();
-                                const currentTabIndex =  parseInt(event.target.getAttribute('tabindex'));
-                                const nextTabIndex = currentTabIndex >= response.length ? 1 : currentTabIndex+1;
-                                words.querySelector('[tabindex="' + nextTabIndex + '"]').focus();
-                            }
-                            else if (event.key === 'ArrowUp') {
-                                event.preventDefault();
-                                const currentTabIndex =  parseInt(event.target.getAttribute('tabindex'));
-                                const nextTabIndex = currentTabIndex <= 1 ? response.length : currentTabIndex-1;
-                                words.querySelector('[tabindex="' + nextTabIndex + '"]').focus();
-                            }
-                        }
-                    }
-                }));
-            }
-            words.querySelector('[tabindex="1"]').focus();
-        }
-    });
-});
 // Autosaved
 let autosaveData = {
     title: window.draftTitle.value,
@@ -433,7 +384,6 @@ const loadAutosave = () => {
 }
 loadAutosave();
 window.addEventListener('beforeunload', function (e) {
-    console.log(window.editedAtAll);
     if (window.editedAtAll) {
         e.preventDefault();
         e['returnValue'] = '';    

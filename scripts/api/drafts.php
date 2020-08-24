@@ -1,62 +1,47 @@
 <?php
 function api_save_draft() {
-    function return_code($code, $id = null) {
-        $rr = [
-            'code'  => $code
-        ];
-        if ($id !== null) {
-            $rr['draft_id'] = $id;
-        }
-        echo json_encode($rr);
-        exit();
-    }
     $d = &$_POST['data'];
     if (! isset($d['title']) || $d['title'] === ''){
-        return_code(8);
+        return ['code'=>8];
     }
     required_login();
-    required_params('title','draft_id','content');
+    required_params('title','draft_id','content','path');
     // Valid
     $insert = [
         'title'     => stripslashes($d['title']),
         'content'   => stripslashes($d['content']),
     ];
+    if ($d['path']) {
+        $insert['path'] = strval($d['path']);
+    }
     if ($d['draft_id'] !== 'new') {
         $insert['ID'] = $d['draft_id'];
         $draft = drafts::get_by('ID',$d['draft_id']);
         if ($draft === false) {
-            return_code(9);
+            return ['code'=>9];
         }
         if (intval($draft->user_id) !== intval(get_current_user_id())){
-            return_code(10);
+            return ['code'=>10];
         }
     }
     $valid = drafts::update($insert);
     if (err::is($valid)) {
-        return_code(11);
+        return [
+            'code' => $valid->errors[0]['error'] === 'Draft with the same title already exists in this folder' ? 12 : 11
+        ];
     }
-    return_code(1,$valid);
+    return ['code'=>1,'draft_id'=>$valid,'draft_path'=> drafts_dir::get_path()];
 }
 function api_share_draft() {
     required_login();
     required_params('draft_id','share');
-    function return_code($code, $link = null) {
-        $rr = [
-            'code'  => $code
-        ];
-        if ($link !== null) {
-            $rr['link'] = $link;
-        }
-        echo json_encode($rr);
-        exit();
-    }
     $d = &$_POST['data'];
     $draft = drafts::get_by('ID',$d['draft_id']);
     if ($draft === false) {
-        return_code(9);
+        return ['code'=>9];
     }
     if (intval($draft->user_id) !== intval(get_current_user_id())){
-        return_code(10);
+        return ['code'=>10];
     }
     $share = $d['share'] === 'true' ? bin2hex(random_bytes(11)) : null;
     $valid = drafts::update([
@@ -64,102 +49,64 @@ function api_share_draft() {
         'share' => $share
     ]);
     if ($d['share'] === 'true'){
-        return_code(1,home_url( '/drafts/' . $share ));
+        return ['code'=>1,'link'=>home_url( '/drafts/' . $share )];
     }
-    return_code(2);
+    return ['code'=>2];
 }
 function api_edit_and_save_draft() {
     required_login();
     required_params('draft_id','share');
-    function return_code($code,$new_draft_id = null) {
-        $rr = [
-            'code'  => $code
-        ];
-        if ($new_draft_id !== null) {
-            $rr['draft_id'] = $new_draft_id;
-        }
-        echo json_encode($rr);
-        exit();
-    }
     $old_draft = drafts::get_by('ID',$_POST['data']['draft_id']);
     $share = $_POST['data']['share'];
     if ($old_draft === false ) {
-        return_code(11);
+        return ['code'=>11];
     }
     if ( intval($old_draft->user_id) === intval(get_current_user_id()) ){
-        return_code(1,$old_draft->ID);
+        return ['code'=>1,'draft_id'=>$old_draft->ID];
     }
     if ($old_draft->share !== $share) {
-        return_code(9);
+        return ['code'=>9];
     }
     $valid = drafts::update([
         'title'     => $old_draft->title,
         'content'   => $old_draft->content
     ]);
     if (err::is($valid)){
-        return_code(10);
+        return ['code'=>10];
     }
-    return_code(1,$valid);
-
+    return ['code'=>1,'draft_id'=>$valid];
 }
 function api_compare_draft() {
     required_login();
     required_params('draft_id','share','compare');
-    function return_code($code,$compare_view = null) {
-        $rr = [
-            'code'  => $code
-        ];
-        if ($compare_view !== null) {
-            $rr['compare_view'] = $compare_view;
-        }
-        echo json_encode($rr);
-        exit();
-    }
     $current_user_id = intval(get_current_user_id());
     $old_draft = drafts::get_by('ID',$_POST['data']['compare']);
     $new_draft = drafts::get_by('ID',$_POST['data']['draft_id']);
     $share = $_POST['data']['share'];
     if ($old_draft === false || $new_draft === false ) {
-        return_code(11);
+        return ['code'=>11];
     }
     if ( intval($old_draft->user_id) !== $current_user_id ){
-        return_code(12);
+        return ['code'=>12];
     }
     if (intval($new_draft->user_id) !== $current_user_id && $new_draft->share !== $share){
-        return_code(9);
+        return ['code'=>9];
     }
     $x = drafts_json::compare($old_draft->content,$new_draft->content);
-    return_code(1,$x);
+    return ['code'=>1,'compare_view'=>$x];
 
 }
 function api_delete_draft() {
     required_login();
     required_params('draft_id');
-    function return_code($code) {
-        $rr = [
-            'code'  => $code
-        ];
-        echo json_encode($rr);
-        exit();
-    }
     $draft = drafts::get_by('ID',$_POST['data']['draft_id']);
     if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
-        return_code(9);
+        return ['code'=>9];
     }
     drafts::delete($draft->ID);
-    return_code(1);
+    return ['code'=>1];
 }
 function api_autosave_draft () {
-    function return_code($code, $time = null) {
-        $rr = [
-            'code'  => $code
-        ];
-        if ($time !== null) {
-            $rr['time'] = $time;
-        }
-        echo json_encode($rr);
-        exit();
-    }
     required_login();
     required_params('title','draft_id','content');
     $d = &$_POST['data'];
@@ -167,10 +114,10 @@ function api_autosave_draft () {
     $draft = drafts::get_by('ID',$d['draft_id']);
     if ($d['draft_id'] !== 'new') {
         if ($draft === false) {
-            return_code(9);
+            return ['code'=>9];
         }
         if (! is_current_user($draft->user_id)){
-            return_code(10);
+            return ['code'=>10];
         }    
     }
 
@@ -182,22 +129,32 @@ function api_autosave_draft () {
     ];
     $valid = drafts::update($insert,true);
     if ( err::is($valid) ) {
-        return_code(11);
+        return ['code'=>11];
     }
     $draft = draft_autosaves::get($valid);
-    return_code(1,intval($draft->updated));
+    return ['code'=>1,'time'=>intval($draft->updated)];
 }
 function api_load_autosave() {
     required_login();
     required_params('draft_id');
-    echo json_encode([
-        'autosave'    => draft_autosaves::for_draft($_POST['data']['draft_id'])
-    ]);
-    exit();
+    return ['autosave'=>draft_autosaves::for_draft($_POST['data']['draft_id'])];
 }
 function api_get_synonym() {
     required_params('word');
     $dict = new dict($_POST['data']['word']);
-    echo json_encode($dict->synonym());
-    exit();
+    return $dict->synonym();
+}
+function api_get_drafts() {
+    return drafts_dir::get_path();
+}
+function api_create_drafts_folder() {
+    required_login();
+    required_params('name','path');
+    $d = &$_POST['data'];
+    $name = stripslashes($d['name']);
+    $f = drafts_dir::create_dir($name,stripslashes($d['path']));
+    return err::is($f) ? ['code'=>8,'error_message'=>$f->errors[0]['error']] : [
+        'code'      => 1,
+        'drafts'    => drafts_dir::get_path()
+    ];
 }

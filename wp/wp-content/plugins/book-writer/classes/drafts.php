@@ -24,6 +24,16 @@ class drafts {
                 $update['hash'] = self::hash($overwrite['content']);
                 $update['updated'] = time();
             }
+            $exists_draft = drafts_dir::exists(
+                $update['title'] ?? $r->title,
+                $update['path'] ?? $r->path,
+                $update['user_id'] ?? $r->user_id,
+                $args['ID']
+            );
+            $e->merge($exists_draft);
+            if ($e->has()){
+                return $e;
+            }
             $wpdb->update(
                 self::$table,
                 $update,
@@ -39,12 +49,18 @@ class drafts {
             'user_id'       => get_current_user_id(),
             'share'         => null,
             'chapter_id'    => null,
+            'path'          => '',
             'updated'       => time(),
             'branch_type'   => null,
             'branch'        => null
         ],$args);
         if ( trim($args['content']) === '' || (trim($args['title']) === '' && ! $override_title) ){
             $e->add('content/title','Content and title are required.');
+            return $e;
+        }
+        $exists_draft = drafts_dir::exists($args['title'],$args['path'],$args['user_id']);
+        $e->merge($exists_draft);
+        if ($e->has()){
             return $e;
         }
         $args['hash'] = self::hash($args['content']);
@@ -66,16 +82,6 @@ class drafts {
             return false;
         }
         return $results[0];
-    }
-    public static function by_users ($user = null){
-        if ($user === null ) {
-            $user = get_current_user_id();
-        }
-        $table = self::$table;
-        global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND branch_type IS NULL AND branch IS NULL",[$user]);
-        $results = $wpdb->get_results($sql);
-        return $results;
     }
     public static function delete ($draft_id) {
         global $wpdb;
@@ -339,5 +345,97 @@ class draft_autosaves extends drafts {
             return false;
         }
         return $r[0];
+    }
+}
+class drafts_dir extends drafts {
+    public static function exists($title,$path,$user_id,$exclude = 0) {
+        global $wpdb;
+        $table = self::$table;
+        $e = new err;
+        $path = implode('/',arr::non_empty(explode('/',$path)));
+        $sql = $wpdb->prepare(
+            "SELECT * FROM $table WHERE path = %s AND user_id = %s AND (branch_type IS NULL OR branch_type = 'dir') AND ID != %s",
+            [$path,$user_id,$exclude]
+        );
+        $r = $wpdb->get_results($sql);
+        $exists_dir = $path === '' ? true : false;
+        foreach ($r as $draft ) {
+            if ($draft->branch_type === 'dir') {
+                $exists_dir = true;
+            }
+            if ($draft->branch_type === null && $draft->title === $title) {
+                $e->add('title','Draft with the same title already exists in this folder');
+                return $e;
+            }
+        }
+        if (! $exists_dir) {
+            $e->add('Folder','Folder doesn\'t exist.');
+        }
+        return $e;
+    }
+    public static function get_path () {
+        $user = get_current_user_id();
+        if ($user === 0) {
+            return [];
+        }
+        $table = self::$table;
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND (branch_type IS NULL || branch_type = 'dir') ",[$user]);
+        $results = $wpdb->get_results($sql);
+        $f = [];
+        foreach ($results as $s ) {
+            $f[$s->path] = $f[$s->path] ?? [];
+            if ( $s->branch_type === null ) {
+                $f[$s->path][] = [
+                    'ID'        => intval($s->ID),
+                    'title'     => $s->title,
+                    'time'      => intval($s->updated),
+                    'content'   => $s->content
+                ];
+            }
+        }
+        return $f;
+    }
+    public static function create_dir($name,$path = '') {
+        $e = new err;
+        $table = self::$table;
+        $name = substr($name,0,40);
+        $arrs = arr::non_empty(explode('/',$path));
+        if (count($arrs) > 2) {
+            $e->add('name','Only two subfolders are allowed.');
+            return $e;
+        }
+        if (trim($name) === '') {
+            $e->add('name','Folder name?');
+            return $e;
+        }
+        if (strlen (preg_replace ('/(\d)|(-)|( )|([A-Z])+/i','',$name) ) > 0) {
+            $e->add('name','Folder names can only contain spaces, hyphens(-), english alphabets, or numbers.');
+            return $e;
+        }
+        $path = ltrim(implode('/',$arrs) . '/' . $name,'/');
+        $current_user_id = get_current_user_id();
+        global $wpdb;
+
+        $sql = $wpdb->prepare(
+            "SELECT * FROM $table WHERE user_id = %s AND branch_type = 'dir' AND path = %s",
+            [$current_user_id,$path]
+        );
+        $exists = $wpdb->get_results($sql);
+        if (! empty($exists)) {
+            $e->add('name','Folder with same name exists.');
+            return $e;
+        }
+        $wpdb->insert(
+            $table,
+            [
+                'user_id'       => $current_user_id,
+                'content'       => '',
+                'title'         => '',
+                'updated'       => time(),
+                'branch_type'   => 'dir',
+                'path'          => $path
+            ]
+        );
     }
 }

@@ -1,0 +1,59 @@
+.popup.new {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 200px;
+    border-color: transparent;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+.popup.new::before {
+    transform: scale(1.8);
+    display: inline-block;
+    font-family: 'icons';
+    content: '\e916';
+}
+popup[new-action] {
+    max-width: 270px;
+    height: 120px;
+    display: flex;
+    justify-content: space-around;
+}
+popup[new-action] > * {
+    position: relative;
+    flex-direction: column;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    border-radius: 200px;
+    transition: background-color .3s, color .3s;
+    color: var(--lightblack);
+}
+popup[new-action] > *:hover {
+    color: var(--theme-color);
+    background-color: var(--hover);
+}
+popup[new-action] > *::before {
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.5);
+}
+popup[new-action] > [label="Draft"]::before {
+    content: '\e941';
+}
+popup[new-action] > [label="Folder"]::before {
+    content: '\e940';
+}
+popup[new-action] > *::after {
+    content: attr(label);
+}
+popup[ask] > p {
+    font-weight: bold;
+    font-size: 1.1rem;
+}

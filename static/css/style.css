@@ -18,6 +18,7 @@
     --lightred: #ff4f4f;
     --white: #fdfdfd;
     --black: #262828;
+    --lightblack: #5f6368;
 }
 html {
     background-color: var(--background-color);

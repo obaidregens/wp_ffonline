@@ -18,7 +18,5 @@ $message
 
 ";
     wp_mail( 'info@fanfiction.online', 'Message from Fanfiction Online', $email_text );
-    echo json_encode(array(
-        'code'      => 1
-    ));
+    return ['code'=>1];
 }
