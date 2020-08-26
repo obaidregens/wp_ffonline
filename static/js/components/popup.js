@@ -3,7 +3,7 @@ const popup = class {
         let popup_overlay = document.querySelector('popup-overlay');
         if (! popup_overlay){
             popup_overlay = document.createElement("popup-overlay");
-            document.documentElement.appendChild(popup_overlay);
+            document.documentElement.appendChild(popup_overlay);            
         }
         return popup_overlay;
     }
@@ -20,8 +20,8 @@ const popup = class {
     }
     static init () {
         const overlay = popup.overlay;
-        document.documentElement.addEventListener('click', popup.initTriggers);
         overlay.addEventListener('click',popup.close);
+        document.documentElement.addEventListener('click', popup.initTriggers);
     }
     static initTriggers (event) {
         if (event.target.classList.contains('popup_close')){
@@ -52,7 +52,7 @@ const popup = class {
         }
         _popup.dispatchEvent(new Event('onClose'));
         _popup.classList.remove('show');
-        if (document.querySelectorAll('popup.show, next-screen.show').length === 0){
+        if (document.querySelectorAll('popup.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
         if (document.querySelectorAll('popup.show').length === 0){

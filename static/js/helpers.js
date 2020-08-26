@@ -245,6 +245,7 @@ function preg_split (pattern, subject, limit, flags) {
 
 function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
     const options = {
+        dataType: 'JSON',
 		url: '/api',
 		type: 'post',
         data: {action},
@@ -255,9 +256,6 @@ function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
     }
     else{
         options.data.reCAPTCHA = reCAPTCHA;
-    }
-    if (dataType === 'JSON'){
-        options.dataType = dataType;
     }
     if (typeof data === 'object'){
         options.data.data = data;

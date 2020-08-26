@@ -86,7 +86,7 @@ const EditorTools = {
 let autoSaveOpt = 0;
 const shouldAutosave = (editor) => {
   const opr = editor.operations;
-  const actAt = 40;
+  const actAt = 60;
   if (opr.length === 1 && opr[0].type === 'set_selection') {
     return false;
   }
@@ -143,12 +143,10 @@ const App = () => {
     editor: editor,
     value: value,
     onChange: value => {
-      if (shouldAutosave(editor)) {
-        window.autosaveDraft(value);
-      }
       const opr = editor.operations;
       if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
         window.editedAtAll = true;
+        window.autosaveDraft(value,shouldAutosave(editor));
       }
       setValue(value);
     }

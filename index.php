@@ -474,6 +474,20 @@ $app->listen('/drafts',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/drafts/:draft_share',function($self){
+    $self->login();
+    $draft = drafts::get_by('share',$self->params['draft_share']);
+    if ($draft === false) {
+        return;
+    }
+    $self->type = 'drafts-share';
+    $self->type_id = intval($draft->ID);
+    $self->draft = $draft;
+    $self->header();
+    $self->template('/views/drafts/preview');
+    $self->footer();
+    exit();
+});
 $app->listen('/drafts/:draft_id',function($self){
     $self->_301( '/drafts/' . $self->params['draft_id'] . '/edit' );
 });
@@ -553,20 +567,6 @@ $app->listen('/drafts/:draft_id/export/ao3',function($self){
     $self->draft = $draft;
     $self->header();
     $self->template('/views/drafts/export-ao3');
-    $self->footer();
-    exit();
-});
-$app->listen('/drafts/:draft_share',function($self){
-    $self->login();
-    $draft = drafts::get_by('share',$self->params['draft_share']);
-    if ($draft === false) {
-        return;
-    }
-    $self->type = 'drafts-share';
-    $self->type_id = intval($draft->ID);
-    $self->draft = $draft;
-    $self->header();
-    $self->template('/views/drafts/preview');
     $self->footer();
     exit();
 });

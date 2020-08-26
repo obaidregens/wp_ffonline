@@ -49,7 +49,7 @@ const next_screen = class {
         }
         _next.dispatchEvent(new Event('onClose'));
         _next.classList.remove('show');
-        if (document.querySelectorAll('popup.show, next-screen.show').length === 0){
+        if (document.querySelectorAll('popup.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
     }

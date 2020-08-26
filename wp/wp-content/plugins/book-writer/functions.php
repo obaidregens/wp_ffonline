@@ -124,14 +124,20 @@ function run_at_activation(){
 		`user_id` BIGINT NOT NULL,
 		`share` VARCHAR(25) NULL ,
 		`title` VARCHAR(100) NOT NULL ,
-		`content` LONGTEXT NOT NULL ,
 		`chapter_id` BIGINT NULL ,
-		`updated` BIGINT NOT NULL ,
-		`hash` VARCHAR(40) NOT NULL ,
+		`created` BIGINT NOT NULL ,
 		`branch_type` VARCHAR(20) NULL ,
-		`branch` BIGINT NULL ,
 		`path` TEXT NOT NULL ,
-		PRIMARY KEY (ID) ,
+		PRIMARY KEY (ID)
+	) $charset_collate;";
+	$draft_revisions_table = "CREATE TABLE draft_revisions (
+		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
+		`user_id` BIGINT NOT NULL ,
+		`draft_id` BIGINT NOT NULL ,
+		`content` LONGTEXT NOT NULL ,
+		`hash` VARCHAR(40) NOT NULL ,
+		`edited` BIGINT NOT NULL ,
+		PRIMARY KEY (ID)
 	) $charset_collate;";
 
 
@@ -156,6 +162,7 @@ function run_at_activation(){
 	dbDelta( $user_connections_table );
 	// Drafts
 	dbDelta( $drafts_table );
+	dbDelta( $draft_revisions_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

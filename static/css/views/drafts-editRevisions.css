@@ -1,0 +1,17 @@
+/* Autosave Time */
+save-time:empty {
+    display: none;
+}
+save-time::before {
+    margin-right: 4px;
+    content: 'Saved';
+}
+save-time {
+    user-select: none;
+    cursor: pointer;
+    color: grey;
+    display: flex;
+    margin-top: 20px;
+    font-size: 0.8rem;
+    justify-content: flex-end;
+}
