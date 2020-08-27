@@ -17,9 +17,7 @@ save-time {
 }
 /* Revisions */
 sidenav[revisions]:empty::before {
-    content: 'No revisions yet';
-    display: block;
-    padding: 10px 15px;
+    content: 'No';
 }
 sidenav[revisions] > li {
     display: block;

@@ -28,7 +28,6 @@ body.sidenav-collapse {
     transform: translateX(calc(var(--sidenav-width) * -1));
 }
 sidenav {
-    overflow: auto;
     width: var(--sidenav-width);
     height: 100vh;
     position: fixed;

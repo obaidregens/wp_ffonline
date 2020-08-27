@@ -79,7 +79,7 @@ next_screen.create(DOM.create('next-screen',{
             children: [
                 DOM.create('button',{
                     attributes: {
-                        label: 'Restore'
+                        label: 'Use'
                     },
                     listeners: {
                         click: () => {

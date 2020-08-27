@@ -65,7 +65,7 @@ const introSteps = {
     ],
     3: [
         {
-            element: 'button[label="Export"]',
+            element: 'main > button[label="Export"]',
             intro: "Export your draft to other fanfiction sites."
         },
         {
@@ -77,17 +77,14 @@ const introSteps = {
             intro: "Press CTRL + D while writing to find similar words."
         },
         {
-            intro: 'Don\'t worry about saving. Your drafts auto-save as you write.'
-        },
-        {
-            element: "save-time",
-            intro: 'Click to compare and restore previous versions of draft.'
-        },
-        {
             intro: 'Start writing :)'
         }
     ],
     4: [
+        {
+            element: 'button[label="Compare"]',
+            intro: 'Compare draft to highlight changes made.'
+        },
         {
             element: 'button.edit-draft',
             intro: "Add your changes to draft."

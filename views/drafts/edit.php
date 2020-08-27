@@ -6,6 +6,8 @@ $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/loader');
+$app->bundle->css('css/js-components/next-screen');
+$app->bundle->js('js/components/next-screen');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/js-components/sidenav');
@@ -16,6 +18,7 @@ $app->bundle->css('css/views/drafts-edit');
 $app->bundle->css('css/views/drafts-editThesaurus');
 $app->bundle->js('js/views/drafts-editThesaurus');
 $app->bundle->css('css/views/drafts-editRevisions');
+$app->bundle->js('js/views/drafts-editRevisions');
 $app->bundle->css('css/views/drafts-editButtons');
 $app->bundle->js('js/views/drafts-editButtons');
 $app->bundle->js('js/views/drafts-editPost');
@@ -32,7 +35,7 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 <?php if (! is_user_logged_in()) { ?>
     <important>Draft is not being saved. <a onclick="prompt_login();">Login</a> to save your drafts.</important>
 <?php } ?>
-<save-time datetime="<?= $draft === false ? 0 : intval($draft->edited)*1000; ?>"></save-time>
+<save-time datetime="<?= $draft === false ? 0 : intval($draft->edited)*1000; ?>" ></save-time>
 <drafts-header>
 <a href="/drafts">Back to Drafts</a>
 <button label="Preview"></button>

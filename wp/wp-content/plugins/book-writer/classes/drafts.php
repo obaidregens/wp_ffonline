@@ -64,7 +64,7 @@ class drafts {
         global $wpdb;
         $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND branch_type IS NULL",[$value]));
         if (empty($results)) {
-            return [];
+            return false;
         }
         $revision = draft_revision::getOne($results[0]->ID);
         $results[0]->content = $revision->content;
@@ -138,12 +138,20 @@ class draft_revision extends drafts{
         $r = $wpdb->get_results($sql);
         return empty($r) ? false : $r[0];
     }
-    static function getAll($draft_id) {
+    static function getAll($draft_id,$withContent = false) {
         $table = self::$table;
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE draft_id = %s ORDER BY ID DESC",[$draft_id]);
+        $withContentQuery = $withContent ? ",content" : "";
+        $sql = $wpdb->prepare("SELECT ID,edited$withContentQuery FROM $table WHERE draft_id = %s ORDER BY ID DESC",[$draft_id]);
         $r = $wpdb->get_results($sql);
         return $r;
+    }
+    static function getById($revision_id) {
+        $table = self::$table;
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE ID = %s ORDER BY ID DESC",[$revision_id]);
+        $r = $wpdb->get_results($sql);
+        return empty($r) ? false : $r[0];
     }
 }
 class drafts_dir extends drafts {
@@ -338,18 +346,6 @@ class drafts_json extends drafts {
         $opcodes = FineDiff::getDiffOpcodes($old_text, self::simpleText($new) );
         $style =
         "
-        <style>
-        ins {
-            color: green;
-            background: #dfd;
-            text-decoration: none;
-        }
-        del {
-            color: red;
-            background: #fdd;
-            text-decoration: line-through;
-        }
-        </style>
         ";
         return $style . nl2br(FineDiff::renderDiffToHTMLFromOpcodes($old_text, $opcodes));
     }

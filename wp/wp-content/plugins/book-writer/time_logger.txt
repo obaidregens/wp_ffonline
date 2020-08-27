@@ -1,0 +1,7 @@
+Begin: 0
+Loops and get all: 0.003126859664917
+Begin: 0
+Loops and get all: 0.0015280246734619
+Begin: 0
+Loops and get all: 0.0011849403381348
+Compare: 15.808606863022

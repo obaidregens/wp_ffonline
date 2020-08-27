@@ -3,7 +3,7 @@
 function api_save_draft() {
     $d = &$_POST['data'];
     required_login();
-    required_params('title','draft_id','content','prevWasPerm');
+    required_params('title','draft_id','content','perm');
 
     // Prepared Data
     $insert = [
@@ -33,7 +33,11 @@ function api_save_draft() {
     // Now that Draft has been updated/cached let's push revisions.
     // Caching needs to be done for this as well but will be done in the class
 
-    $flag = $d['prevWasPerm'] === 'true' ? 'push' : 'update';
+    // Will be adding a session variable that records when a perm is passed.
+    // The next send will be push
+    $session_perm = &$_SESSION['drafts'][$d['draft_id']]['prev_perm'];
+    $flag = ($session_perm ?? false) ? 'push' : 'update';
+    $session_perm = $d['perm'] === 'true';
     $time = draft_revision::push($draft_id,stripslashes($d['content']),$flag );
     if (err::is($time)) {
         return ['code' => 13];
@@ -42,7 +46,8 @@ function api_save_draft() {
     return [
         'code'          => 1,
         'draft_id'      => $draft_id,
-        'time'          => $time
+        'time'          => $time,
+        'perm'          => $flag === 'push'
     ];
 }
 function api_share_draft() {
@@ -53,7 +58,7 @@ function api_share_draft() {
     if ($draft === false) {
         return ['code'=>9];
     }
-    if (intval($draft->user_id) !== intval(get_current_user_id())){
+    if (! is_current_user($draft->user_id)){
         return ['code'=>10];
     }
     $share = $d['share'] === 'true' ? bin2hex(random_bytes(11)) : null;
@@ -69,9 +74,18 @@ function api_get_draft_revisions() {
     required_login();
     required_params('draft_id');
     $d = &$_POST['data'];
+    $draft = drafts::get_by('ID',$d['draft_id']);
+    if (
+        $draft === false
+        || ! is_current_user($draft->user_id)
+    ) {
+        return ['code' => 12];
+    }
+    $revisions = draft_revision::getAll($d['draft_id']);
+    array_shift($revisions);
     return [
         'code'      => 1,
-        'revisions' => draft_revisions::for_draft($d['draft_id'])
+        'revisions' => $revisions
     ];
 }
 function api_delete_draft () {
@@ -79,7 +93,37 @@ function api_delete_draft () {
     required_params('draft_id');
     $rows = drafts::delete($_POST['data']['draft_id']);
     return [
-        'code'  => 1,
+        'code'  => 1
+    ];
+}
+function api_compare_single_revision () {
+    required_login();
+    required_params('draft_id','revision_id');
+    $d = &$_POST['data'];
+    $draft = drafts::get_by('ID',$d['draft_id']);
+    if (
+        $draft === false
+        || ! is_current_user($draft->user_id)
+    ) {
+        return ['code' => 12];
+    }
+    $revisions = draft_revision::getAll($d['draft_id'],true);
+    foreach ($revisions as $k => $rev ) {
+        $isReq = intval($d['revision_id']) === intval($rev->ID);
+        if ($isReq) {
+            $new = $rev->content;
+            $old = $revisions[$k+1]->content ?? json_encode([]);
+        break;
+        }
+    }
+    if (! isset($new)) {
+        return ['code' => 8];
+    }
+    $compare = drafts_json::compare($old,$new);
+    return [
+        'code'      => 1,
+        'compare'   => $compare,
+        'revision'  => $new
     ];
 }
 // Preview

@@ -475,6 +475,9 @@ $app->listen('/drafts',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_share',function($self){
+    if ($self->params['draft_share'] === 'new') {
+        return;
+    }
     $self->login();
     $draft = drafts::get_by('share',$self->params['draft_share']);
     if ($draft === false) {

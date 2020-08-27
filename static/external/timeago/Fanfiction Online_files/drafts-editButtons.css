@@ -1,0 +1,87 @@
+
+/* Export */
+drafts-header > button {
+    margin-right: 0;
+}
+drafts-header > button[label="Preview"] {
+    margin-left: auto;
+}
+toolbar {
+    display: flex;
+    border: 1px solid var(--grey);
+    border-bottom: none;
+    position: sticky;
+    top: 52px;
+    background-color: var(--background-color);
+}
+editor:-moz-full-screen > toolbar,
+editor:-ms-full-screen > toolbar {
+    top: 0;
+}
+editor:-webkit-full-screen > toolbar,
+editor:fullscreen > toolbar {
+    top: 0;
+}
+editor:-moz-full-screen > toolbar + div,
+editor:-ms-full-screen > toolbar + div {
+    height: calc(100vh - 30px);
+}
+editor:-webkit-full-screen > toolbar + div,
+editor:fullscreen > toolbar + div {
+    height: calc(100vh - 30px);
+}
+
+toolbar > button[action] {
+    font-family: 'icons';
+    border-color: transparent;
+    margin: 0;
+    padding: 0;
+    width: 40px;
+    border-radius: 0;
+    font-size: 1.2rem;
+}
+toolbar > button[action="bold"]::before {
+    content: '\e933';
+}
+toolbar > button[action="italic"]::before {
+    content: '\e934';
+}
+toolbar > button[action="center"]::before {
+    content: '\e935';
+}
+toolbar > button[action="fullscreen"]::before {
+    display: inline-block;
+    transform: scale(1.35);
+    content: '\e936';
+}
+toolbar + div {
+    border: 1px solid var(--grey);
+    padding: 0 10px;
+    overflow-x: hidden;
+}
+/* Save buttons */
+toolbar > button[label="Save"] {
+    border-color: transparent;
+    border-radius: 0;
+    margin: 0;
+    padding: 0 10px;
+}
+button[label="Save"] > dropdown > li::before {
+    content: attr(label);
+    font-size: 1.25rem;
+}
+/* Share Button */
+toolbar > button[action="share"]::before {
+    content: '\e908';
+    display: inline-block;
+    transform: translateY(-1px) translateX(2px);
+}
+/* Delete Button */
+toolbar > button[action="delete"] {
+    margin-left: auto;
+}
+toolbar > button[action="delete"]::before {
+    display: inline-block;
+    transform: scale(0.9);
+    content: '\e921';
+}
