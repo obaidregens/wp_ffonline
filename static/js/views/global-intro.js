@@ -4,10 +4,13 @@ const getViewId = () => {
     if (current_full === "read") {
         return 1;
     }
-    if (current_full === 'my-books') {
+    if (logged_in && current_full === 'my-books') {
         return 2;
     }
     if (current_view_parts[0] === 'drafts') {
+        if (! current_view_parts[1]) {
+            return 7;
+        }
         switch (current_view_parts[2]) {
             case "edit":
                 return 3;
@@ -59,8 +62,8 @@ const introSteps = {
     ],
     2: [
         {
-            element: 'main > a.button[label="Drafts"]',
-            intro: "Create a draft to start writing."
+            element: 'a.button[label="Drafts"]',
+            intro: "Go to drafts to start writing."
         }
     ],
     3: [
@@ -130,6 +133,12 @@ const introSteps = {
             intro: "What do you think about this chapter? Leave a review for the author."
         },
     ],
+    7: [
+        {
+            element: 'button.new.popup',
+            intro: 'Create a new draft.'
+        }
+    ]
 }
 function startIntro(){
     const viewID = getViewId();

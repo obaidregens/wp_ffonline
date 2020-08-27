@@ -36,7 +36,6 @@ window.autosaveDraft = (val,perm) => {
                     new toast('An error occured. Your draft may not have been saved.')
                     return;
                 }
-                console.log(response.perm);
                 // Flags
                 if (response.perm) {
                     window.refreshRevisions = true;

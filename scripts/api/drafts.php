@@ -91,6 +91,7 @@ function api_get_draft_revisions() {
 function api_delete_draft () {
     required_login();
     required_params('draft_id');
+    // Validation for this is being done inside the class
     $rows = drafts::delete($_POST['data']['draft_id']);
     return [
         'code'  => 1
@@ -166,4 +167,14 @@ function api_create_drafts_folder() {
         'code'      => 1,
         'drafts'    => drafts_dir::get_path()
     ];
+}
+function api_move_draft () {
+    required_login();
+    required_params('draft_id','path');
+    $d = $_POST['data'];
+    $r = drafts::move($d['draft_id'],$d['path']);
+    if (err::is($r)) {
+        return ['code' => 9];
+    }
+    return ['code' => 1];
 }

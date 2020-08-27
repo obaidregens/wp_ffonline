@@ -78,6 +78,32 @@ class drafts {
             'user_id'   => get_current_user_id()
         ]);
     }
+    static function move($draft_id,$path) {
+        $e = new err;
+        $path = implode('/',arr::non_empty(explode('/',$path)));
+        global $wpdb;
+        $draft = drafts::get_by('ID',$draft_id);
+        if ($draft === false || !is_current_user($draft->user_id)) {
+            return $e->add('draft','Draft doesn\'t exist');
+        }
+        $current_user_id = get_current_user_id();
+        $exists_draft = drafts_dir::exists($path,$current_user_id);
+        if (! $exists_dir) {
+            $e->add('folder','Folder doesn\'t exist');
+        }
+        $wpdb->update(
+            self::$table,
+            [
+                'path'  => $path
+            ],
+            [
+                'ID'        => $draft->ID,
+                'user_id'   => $current_user_id,
+
+            ]
+        );
+        return true;
+    }
 }
 class draft_revision extends drafts{
     protected static $table = 'draft_revisions';
@@ -223,6 +249,21 @@ class drafts_dir extends drafts {
                 'content'       => '',
                 'title'         => '',
                 'updated'       => time(),
+                'branch_type'   => 'dir',
+                'path'          => $path
+            ]
+        );
+    }
+    static function delete($folder) {
+        $e = new err;
+        $table = self::$table;
+        $arrs = arr::non_empty(explode('/',$folder));
+        $path = implode('/',$arrs);
+        global $wpdb;
+        $wpdb->delete(
+            self::$table,
+            [
+                'user_id'       => get_current_user_id(),
                 'branch_type'   => 'dir',
                 'path'          => $path
             ]

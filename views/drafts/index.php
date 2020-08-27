@@ -1,7 +1,10 @@
 <?php
 $app->bundle = global_bundle('drafts-index');
+$app->bundle->js('external/draggable/draggable.bundle');
 $app->bundle->css('css/js-components/ask');
 $app->bundle->js('js/components/ask');
+$app->bundle->css('css/js-components/confirmation');
+$app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/components/grid');
 $app->bundle->css('css/components/folders');
 $app->bundle->css('css/views/drafts-index');

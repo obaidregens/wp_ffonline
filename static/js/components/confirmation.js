@@ -4,6 +4,12 @@ function confirmation(string) {
             attributes: {
                 confirmation: ''
             },
+            listeners: {
+                onAfterClose: () => {
+                    resolve(false);
+                    setTimeout(() => _p.remove());    
+                }
+            },
             children: [
                 DOM.create('p',{
                     innerText: string
@@ -27,12 +33,7 @@ function confirmation(string) {
                 })
             ]
         });
-        popup.create(_p,{
-            onAfterClose: () => {
-                resolve(false);
-                setTimeout(() => _p.remove());
-            }
-        });
+        popup.create(_p);
         popup.open(_p);
     });
 }

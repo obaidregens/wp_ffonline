@@ -7,7 +7,7 @@ $updates_query = new WP_Query(array(
     'orderby'           => 'modified',
     'posts_per_page'    => $app->updates_count,
     'order'             => 'DESC',
-    'author'            => $user->ID
+    'author__in'        => [$user->ID]
 ));
 $updates_count = intval($updates_query->found_posts);
 $updates = $updates_query->posts;
