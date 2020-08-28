@@ -203,6 +203,7 @@ $includes = array(
 	'classes/drafts',
 	'classes/book_stats',
 	'classes/dict',
+	'classes/updates',
 );
 foreach($includes as $include){
 	require ($include . '.php');
