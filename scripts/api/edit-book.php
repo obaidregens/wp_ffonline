@@ -11,7 +11,12 @@ function api_edit_book() {
     }
     required_login();
     required_params(
-        'book_id','title','description','reviews','publish','anonymous_reviews'
+        'book_id',
+        'title',
+        'description',
+        'reviews',
+        'publish',
+        'anonymous_reviews'
     );
     $d = &$_POST['data'];
     $publish = $d['publish'] === "true";
@@ -47,7 +52,7 @@ function api_edit_book() {
     $chapter_ids_order = [];
     foreach (($d['chapters'] ?? []) as $chapter ) {
         if ($chapter['draft_id']) {
-            $chapter_id = drafts_chapter::save($chapter['draft_id'],$book->ID,$chapter['title']);
+            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,$chapter['title']);
             if ($chapter_id !== false) {
                 $chapter_ids_order[] = $chapter_id;
             }
@@ -59,7 +64,9 @@ function api_edit_book() {
         $chapter_ids_order[] = $chapter['ID'];
     }
     if (empty($chapter_ids_order)) {
-        $success = 2;
+        if ($d['publish'] === 'true') {
+            $success = 2;
+        }
         $publish = false;
     }
     global $wpdb;
@@ -153,5 +160,6 @@ function api_edit_book() {
     if ($d['publish'] === "true" && $publish === false) {
         $success = $success ?? 3;
     }
+    wp_cache_flush();
     return ['code'=>$success ?? 1,'selected'=>get_data($d['book_id'])['selected']];
 }

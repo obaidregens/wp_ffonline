@@ -3,6 +3,8 @@ import Select from 'https://cdn.pika.dev/react-select';
 import CreatableSelect from 'https://cdn.pika.dev/react-select/creatable';
 // window.CreatableSelect = CreatableSelect;
 
+"use strict";
+
 // Import Before
 const tags = JSON.parse(document.querySelector('tags_data').innerText);
 window.tags = tags;
@@ -165,7 +167,7 @@ const App = () => {
       })
     });
   });
-  return /*#__PURE__*/React.createElement("app", null, /*#__PURE__*/React.createElement(TextInput, {
+  return /*#__PURE__*/React.createElement("app", null, /*#__PURE__*/React.createElement("page", null, /*#__PURE__*/React.createElement(TextInput, {
     value: selected.title,
     onChange: value => selected.title = value,
     label: "",
@@ -205,7 +207,7 @@ const App = () => {
         })
       };
     })
-  }), selects, /*#__PURE__*/React.createElement(CreatableSelect, {
+  })), /*#__PURE__*/React.createElement("page", null, selects, /*#__PURE__*/React.createElement(CreatableSelect, {
     placeholder: "Select Characters",
     onChange: charChange,
     onCreateOption: newCharacter => {
@@ -269,7 +271,7 @@ const App = () => {
         label: single.name
       };
     })
-  }), /*#__PURE__*/React.createElement(Switch, {
+  })), /*#__PURE__*/React.createElement("page", null, /*#__PURE__*/React.createElement(Switch, {
     checked: selected.anonymous_reviews,
     onChange: checked => selected.anonymous_reviews = checked,
     label: "Anonymous Reviews"
@@ -281,7 +283,7 @@ const App = () => {
     checked: selected.publish,
     onChange: checked => selected.publish = checked,
     label: "Publish"
-  }));
+  })));
 };
 
 reRender();

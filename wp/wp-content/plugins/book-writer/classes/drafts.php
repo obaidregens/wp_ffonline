@@ -467,3 +467,22 @@ class drafts_json extends drafts {
         return $html;
     }
 }
+class draft_chapters extends drafts {
+    public static function save($draft_id_or_draft,$book_id,$title) {
+        $draft = $draft_id_or_draft;
+        if (is_numeric($draft_id_or_draft)) {
+            $draft = self::get_by('ID', $draft_id_or_draft);
+        }
+        if (!$draft){
+            return false;
+        }
+        $chapter_id = wp_insert_post([
+            'post_title'    => $title,
+            'post_content'  => drafts_json::read($draft->content),
+            'post_type'     => 'chapter',
+            'post_status'   => 'publish',
+            'post_parent'   => $book_id
+        ]);
+        return $chapter_id;
+    }
+}

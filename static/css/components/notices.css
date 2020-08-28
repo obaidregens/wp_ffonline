@@ -1,7 +1,13 @@
-important {
+important, exciting {
     padding: 12px;
     display: block;
+    margin: 25px 40px;
+}
+important {
     color: black;
     background-color: #ffcdcd;
-    margin: 25px 40px;
+}
+exciting {
+    color: black;
+    background-color: rgb(168 220 255 / 84%);
 }

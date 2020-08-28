@@ -263,6 +263,7 @@ class bundle {
                 'css/js-components/toast',
                 'css/js-components/popup',
                 "css/views/global-login",
+                "css/views/global-share",
             ),
             'js'    => array(
                 'js/normalize',
@@ -275,6 +276,7 @@ class bundle {
                 "js/components/toast",
                 "js/components/popup",
                 'js/views/global-login',
+                'js/views/global-share',
             ),
         ),
         'create_search_new' => array(

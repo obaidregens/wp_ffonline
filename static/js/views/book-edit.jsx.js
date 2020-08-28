@@ -162,6 +162,7 @@ const App = () => {
     });
     return (
         <app>
+        <page>
         <TextInput
         value={selected.title}
         onChange={value => selected.title = value}
@@ -201,6 +202,8 @@ const App = () => {
             }
         })}
         />
+        </page>
+        <page>
         {selects}
         <CreatableSelect
         placeholder="Select Characters"
@@ -268,6 +271,8 @@ const App = () => {
             }
         })}
         />
+        </page>
+        <page>
         <Switch
         checked={selected.anonymous_reviews}
         onChange={checked => selected.anonymous_reviews = checked}
@@ -280,6 +285,7 @@ const App = () => {
         checked={selected.publish}
         onChange={checked => selected.publish = checked}        
         label="Publish"/>
+        </page>
         </app>
     )
 }

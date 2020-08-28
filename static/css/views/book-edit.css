@@ -74,19 +74,19 @@
     font-weight: bold;
 }
 /* Labels */
-app > text-input::before,.select::before,pairing-wrapper::before {
+app > page > text-input::before,.select::before,pairing-wrapper::before {
     color: var(--theme-color);
     text-transform: uppercase;
     font-weight: bold;
     font-size: 0.8rem;
 }
-app > text-input > input,app > text-input > textarea {
+app > page > text-input > input,app > page > text-input > textarea {
     margin-top: -8px;
 }
-app > text-input:first-child::before {
+app > page > text-input:first-child::before {
     content: 'Book Title';
 }
-app > text-input:nth-child(2)::before {
+app > page > text-input:nth-child(2)::before {
     content: 'Book Summary';
 }
 .select.fandom::before {
@@ -159,4 +159,55 @@ button.add-pairing::before {
 label.switch {
     margin: 15px 10px;
     display: flex;
+}
+/* Helpers */
+
+/* Pages */
+page:not(.active) {
+    display: none;
+}
+page {
+    display: block;
+    padding: 15px;
+}
+step {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 10px;
+    flex: 1;
+    cursor: pointer;
+    position: relative;
+}
+step:not(.active) {
+    color: grey;
+}
+step.active {
+    pointer-events: none;
+}
+/* Step Border */ 
+step::after {
+    content: '';
+    border-bottom: 2px solid var(--theme-color);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    transition: transform .2s;
+}
+step:not(.active)::after {
+    transform: scaleX(0);
+}
+step:not(.active):hover::after {
+    transform: scaleX(1);
+}
+
+stepper {
+    display: flex;
+}
+@media only screen and (max-width: 500px) {
+    step {
+        font-size: 0.8rem;
+    }
 }

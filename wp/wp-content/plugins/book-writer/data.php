@@ -50,7 +50,7 @@ function get_data($book_id = 'new'){
 			'categories'	=> $categories
 		),
 		'selected' => array(
-
+			'username'	=> '@' . get_userdata( get_current_user_id() )->user_login
 		)
 	);
 	//Other Tags
@@ -81,24 +81,6 @@ function get_data($book_id = 'new'){
 			];
 		}
 	}
-	// Drafts
-	$data['all']['drafts'] = [];
-	$drafts = &$data['all']['drafts'];
-	$drafts_by_users = drafts::by_users();
-	foreach($drafts_by_users as $draft) {
-		$full_decode = json_decode($draft->content);
-		$content = $full_decode[0]->children[0]->text;
-		$substr = substr($content,0,200);
-		if (strlen($content) > 200 || count($full_decode) > 1 || count($full_decode[0]->children) > 1 ){
-			$substr .= '...';
-		}
-		$drafts[] = [
-			'ID'		=> $draft->ID,
-			'title'		=> $draft->title,
-			'excerpt'	=> $substr,
-			'updated'	=> human_time_diff( intval($draft->updated) )
-		];
-	}
 
 	//Selected
 	//Categories
@@ -109,7 +91,7 @@ function get_data($book_id = 'new'){
 	$data['selected']['title'] 				  = '';
 	$data['selected']['description'] 		  = '';
 	$data['selected']['reviews']  			  = false;
-	$data['selected']['anonymous_reviews']  = false;
+	$data['selected']['anonymous_reviews']	  = false;
 	$data['selected']['publish'] 			  = false;
 	$data['selected']['book_id']			  = $book_id;
 	if ($book_id != 'new'){
