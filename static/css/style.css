@@ -103,8 +103,10 @@ header > nav > a:hover {
     color: var(--white);
 }
 footer {
+    max-width: 960px;
+    margin: 0 auto;
+    margin-top: 10px;
     margin-bottom: 20px;
-    padding: 10px 30px;
 }
 footer > nav > a {
     color: var(--text-color);

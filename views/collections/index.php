@@ -4,14 +4,18 @@ if (! isset($app->bundle)){
 }
 $app->bundle->css('css/components/grid');
 $app->bundle->css('css/components/tooltips');
+$app->bundle->css('css/components/select');
 $app->bundle->css('css/views/collection-content');
+$app->bundle->css('css/views/collection-options');
 $app->bundle->js('js/views/collection-options');
 $app->bundle->js('js/views/collection-content');
+$app->bundle->js('js/views/search-updateCollection');
+$app->bundle->css('css/views/search-updateCollection');
 $app->bundle->enqueue();
 
 $args = array(
-    'order'         => $_GET['sort'] ?? 'ASC',
-    'orderby'       => 'count',
+    'order'         => $_GET['sort'] ?? 'DESC',
+    'orderby'       => 'created',
     'types'         => array('Public'),
     'count'         => [
         'from'  => 1
@@ -19,16 +23,27 @@ $args = array(
 );
 $type = _landing::get_type();
 if ($type['type'] === 'author-collections'){
-    $args['authors'] = array($type['type_id']);
+    $args['authors_included'] = array($type['type_id']);
     $args['types'] = array('Public','Favorites');
-    if (intval(get_current_user_id()) === intval($type['type_id'])){
+    if (is_current_user($type['type_id'])){
+        unset($args['count']);
         $args['types'] = array('Public','Favorites','Private','Unlisted');
     }
 }
 $collections = collection::query($args);
-?><collections-container class="grid"><?php
+?>
+<collection-bar>
+<button label="Create New"></button>
+<button label="My Collections"></button>
+</collection-bar>
+<collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
+<collections-container class="grid"><?php
 foreach ($collections as $collection) {
     $app->collection = $collection;
     $app->template('subviews/collection');
 }
+if (empty($collections)) {
+    $app->template('subviews/no-collections');
+}
 ?></collections-container>
+<?php

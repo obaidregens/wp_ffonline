@@ -84,10 +84,10 @@ app > page > text-input > input,app > page > text-input > textarea {
     margin-top: -8px;
 }
 app > page > text-input:first-child::before {
-    content: 'Book Title';
+    content: 'Story Title';
 }
 app > page > text-input:nth-child(2)::before {
-    content: 'Book Summary';
+    content: 'Story Summary';
 }
 .select.fandom::before {
     content: 'Fandom';

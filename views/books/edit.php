@@ -1,13 +1,13 @@
 <?php
-$book = $app->book;
+$book = $app->story;
 $book_id = $book === 'new' ? 'new' : $book->ID;
 ?>
 <tags_data hidden><?= json_encode(get_data($book_id)); ?></tags_data>
 <exciting></exciting>
 <stepper>
-    <step>Book Details</step>
-    <step>Book Tags</step>
-    <step>Book Settings</step>
+    <step>Story Details</step>
+    <step>Story Tags</step>
+    <step>Story Settings</step>
     <step>Chapters</step>
 </stepper>
 <book></book>

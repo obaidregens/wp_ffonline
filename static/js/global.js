@@ -1,6 +1,6 @@
 const logged_in = document.querySelector('logged_in').getAttribute('value') === 'true';
 function im(type){
-	const selector = type === 'collections' ? 'article.collection-content' : 'article.mainsearch-item';
+	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container > book';
 	const attr = type === 'collections' ? 'collection_id' : 'book_id';
 	const height = window.innerHeight;
 	const objs = document.querySelectorAll(selector);
@@ -18,7 +18,7 @@ function im(type){
 
 let im_books = [];
 let im_collections = [];
-let lastSend = Date.now() - 20000;
+let lastSend = Date.now() - 40000;
 _.interact(function(event){
 	if (! event || event.isTrusted !== true){
 		return;

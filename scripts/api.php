@@ -1,35 +1,21 @@
 <?php
 function api_poll(){
-    function return_code($code,$extra = 0){
-        $_return = array(
-            'code'			=>	$code,
-            'notifications'	=>  notifications::get()
-        );
-        if ($extra !== 0){
-            $_return['extra'] = $extra;
-        }
-        echo json_encode($_return);
-        exit();
-    }
     $types = _landing::decrypt($_POST['data']['data']);
     if ($types === null){
-        return_code(9);
+        return ['code' => 9];
     }
     $_POST['data']['im_books'] = isset($_POST['data']['im_books']) ? $_POST['data']['im_books'] : array();
     $_POST['data']['im_collections'] = isset($_POST['data']['im_collections']) ? $_POST['data']['im_collections'] : array();
     
     $instance = new _action($types->landing_id);
     foreach ($_POST['data']['im_books'] as $key => $book_id) {
-        $instance->log_impression('book',$book_id);
+        $instance->log_impression('story',$book_id);
     }
     foreach ($_POST['data']['im_collections'] as $key => $collection_id) {
         $instance->log_impression('collection',$collection_id);
     }
     $instance->log_view($types->type,$types->type_id);
-    // if ($_POST['data']['notification_open'] === 'true'){
-    //     $instance->log_notifications($types->type,$types->type_id);
-    // }
-    return_code(1);
+    return ['code' => 1];
 }
 $import = [
     'author',

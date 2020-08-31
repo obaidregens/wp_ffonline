@@ -266,13 +266,14 @@ function type_args($args,$placeholder){
 	global $app;
 	if ($placeholder['type'] === 'read'){}
 	else if ($placeholder['type'] === 'collection'){
-		$collection_books = array_column(collection::book_query(array($placeholder['type_id'])),'ID');
+		$collection_books =
+			array_column(collection_books::query_by('collection_id',$placeholder['type_id']),'book_id');
 		$args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;
 	}
-	else if ($placeholder['type'] === 'author-books') {
+	else if ($placeholder['type'] === 'author-stories') {
 		$args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
 	}
-	else if ($placeholder['type'] === 'ffn_author-books') {
+	else if ($placeholder['type'] === 'ffn_author-stories') {
 		$args['included']['ffn_author'] = isset($args['included']['ffn_author']) ? a_intersect($args['included']['ffn_author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
 	}
 	else{

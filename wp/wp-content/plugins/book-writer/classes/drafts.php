@@ -14,6 +14,9 @@ class drafts {
             'path'          => '',
         ];
         $args = array_replace($default_draft,$args);
+        if (intval($args['user_id']) === 0) {
+            return $e->add('user_id','No user is logged in');
+        }
         $exists_dir = drafts_dir::exists(
             $args['path'],
             $args['user_id']
@@ -382,7 +385,7 @@ class drafts_json extends drafts {
         return $text;
     }
     public static function compare($old,$new) {
-        require(MAIN_DIR . 'content/finediff.php');
+        require(MAIN_DIR . 'content/php_includes/finediff.php');
         $old_text = self::simpleText($old);
         $opcodes = FineDiff::getDiffOpcodes($old_text, self::simpleText($new) );
         $style =

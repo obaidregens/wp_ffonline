@@ -41,7 +41,7 @@ author-bio {
 }
 author-books::before {
     display: block;
-    content: attr(books) ' Books';
+    content: attr(books) ' Stories';
     color: var(--text-color);
     opacity: 0.7;
     padding: 0 0 20px 20px;
@@ -61,7 +61,7 @@ author-books > .button.more::before {
     font-size: 16px;
 }
 author-books > .button.more::after {
-    content: 'More Books';
+    content: 'More Stories';
 }
 author-books > books-container.grid {
     box-shadow: none;

@@ -74,7 +74,7 @@ class Router {
     function static($file) {
         $loc = MAIN_DIR . ltrim($file,'/');
         $ext = pathinfo($loc)['extension'];
-        $mime = json_decode(file_get_contents(__DIR__ . '/mime-type.json'),true)['.' . $ext];
+        $mime = json_decode(file_get_contents(__DIR__ . '/php_includes/mime-type.json'),true)['.' . $ext];
         header("Content-Type: $mime");
         readfile($loc);
         exit();
@@ -108,6 +108,10 @@ class Router {
     }
     function _301($url){
         header("Location: " . $url, true, 301);
+        exit();
+    }
+    function _302($url){
+        header("Location: " . $url, true, 302);
         exit();
     }
     function login(){
@@ -175,35 +179,35 @@ $app->listen('/manage',function($self){
     $self->footer();
     exit();
 });
-$app->listen("/book/:book/", function($self){
+$app->listen("/book/:story/", function($self){
     $query = (new WP_Query(array(
         'post_type'         => array('book'),
-        'post_name__in'     => array($self->params['book'])
+        'post_name__in'     => array($self->params['story'])
     )))->posts;
     if (! empty($query)){
-        $self->_301('/book/' . $query[0]->ID);
+        $self->_301('/story/' . $query[0]->ID);
     }
 });
-$app->listen('/book/:book/',function($self){
-    $book = get_post($self->params['book']);
-    if ($book === null || $book->post_type !== 'book' || $book->post_status !== 'publish' ){
+$app->listen('/story/:story/',function($self){
+    $story = get_post($self->params['story']);
+    if ($story === null || $story->post_type !== 'book' || $story->post_status !== 'publish' ){
         $self->_404();
     }
-    $self->type = 'book';
-    $self->type_id = intval($book->ID);
-    $self->book = $book;
+    $self->type = 'story';
+    $self->type_id = intval($story->ID);
+    $self->story = $story;
     $self->header([
-        'title'         => construct_page_title($book->post_title . ' by ' . author_name_single($book->ID)),
-        'description'   => $book->post_excerpt
+        'title'         => construct_page_title($story->post_title . ' by ' . author_name_single($story->ID)),
+        'description'   => $story->post_excerpt
     ]);
     $self->template('/views/book');
     $self->footer();
     exit();
 });
-$app->listen("/book/:book/chapter/:chapter", function($self){
+$app->listen("/book/:story/chapter/:chapter", function($self){
     $bquery = (new WP_Query(array(
         'post_type'         => array('book'),
-        'post_name__in'     => array($self->params['book'])
+        'post_name__in'     => array($self->params['story'])
     )))->posts;
     if (empty($bquery)){
         return;
@@ -220,12 +224,12 @@ $app->listen("/book/:book/chapter/:chapter", function($self){
         'post_parent__in'   => array($bquery[0]->ID)
     )))->posts;
     if (! empty($cquery)){
-        $self->_301('/book/' . $bquery[0]->ID . '/' . $self->params['chapter'] );
+        $self->_301('/story/' . $bquery[0]->ID . '/' . $self->params['chapter'] );
     }
 });
-$app->listen('/book/:book/:chapter',function($self){
-    $book = get_post($self->params['book']);
-    if ($book === null || $book->post_type !== 'book' || $book->post_status !== 'publish' ){
+$app->listen('/story/:story/:chapter',function($self){
+    $story = get_post($self->params['story']);
+    if ($story === null || $story->post_type !== 'book' || $story->post_status !== 'publish' ){
         $self->_404();
     }
     $query = (new WP_Query(array(
@@ -237,7 +241,7 @@ $app->listen('/book/:book/:chapter',function($self){
                 'type'      => 'NUMERIC',
             ),
         ),
-        'post_parent__in'   => array($book->ID)
+        'post_parent__in'   => array($story->ID)
     )))->posts;
     if (empty($query)){
         $self->_404();
@@ -248,14 +252,14 @@ $app->listen('/book/:book/:chapter',function($self){
     }
     $self->type = 'chapter';
     $self->type_id = intval($chapter->ID);
-    $self->book = $book;
+    $self->story = $story;
     $self->chapter = $chapter;
     $self->header([
         'title'         => construct_page_title(
             'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true),
-            $book->post_title . ' by ' . author_name_single($book->ID)
+            $story->post_title . ' by ' . author_name_single($story->ID)
         ),
-        'description'   => $book->post_excerpt
+        'description'   => $story->post_excerpt
     ]);
     $self->template('/views/chapter');
     $self->footer();
@@ -271,44 +275,41 @@ $app->listen('/collections',function($self){
     exit();
 });
 $app->listen('/collections/:collection',function($self){
-    $collection_query = collection::query(array(
-        'slug'  => $self->params['collection'],
-        'types' => array('Public','Unlisted')
-    ));
-    if (empty($collection_query)){
+    $collection = collection::get_by('ID',$self->params['collection']);
+    if (! $collection ) {
         return;
     }
     $self->type = 'collection';
-    $self->type_id = intval($collection_query[0]['ID']);
-    $self->collection = $collection_query[0];
+    $self->type_id = intval($collection->ID);
+    $self->collection = $collection;
     $self->header();
     $self->template('/views/collections/single');
     $self->footer();
     exit();
 });
-$app->listen('/@ffonline/&*',function($self) {
-    $self->_404();
-});
+// $app->listen('/@ffonline/&*',function($self) {
+//     $self->_404();
+// });
 $app->listen('/@:user/collections/:collection',function($self){
     $user = get_user_by( 'login', $self->params['user'] );
     if ($user === false){
         return;
     }
-    $types = ['Favorites'];
-    if (intval($user->ID) === intval(get_current_user_id())){
-        $types[] = 'Private';
+    if (strtolower($self->params['collection']) === 'favorites') {
+        $collection = collection::query([
+            'authors_included'  => [$user->ID],
+            'types'             => ['Favorites']
+        ]);
+        if (empty($collection)) {return;}
+        $collection = $collection[0];
     }
-    $collection_query = collection::query(array(
-        'slug'      => $self->params['collection'],
-        'authors'   => array($user->ID),
-        'types'     => $types
-    ));
-    if (empty($collection_query)){
-        return;
+    else {
+        $collection = collection::get_by('ID',$self->params['collection']);
+        if (! $collection) {return;}
     }
     $self->type = 'collection';
-    $self->type_id = intval($collection_query[0]['ID']);
-    $self->collection = $collection_query[0];
+    $self->type_id = intval($collection->ID);
+    $self->collection = $collection;
     $self->header();
     $self->template('/views/collections/single');
     $self->footer();
@@ -319,9 +320,12 @@ function author_template_load($template){
     global $app;
     $user = get_user_by( 'login', $app->params['user'] );
     if ($app->params['user'] === 'me'){
-        $user = get_user_by( 'ID', get_current_user_id() );
+        $current_user_id = get_current_user_id();
+        if ($current_user_id === 0) {return;}
+        $user = get_userdata($current_user_id );
+        $app->_302('/@' . $user->user_login . '/' . ($template === 'about' ? '' : $template) );
     }
-    if ($template === 'settings' && intval($user->ID) !== intval(get_current_user_id()) ){
+    if ( $template === 'settings' && ! is_current_user($user->ID) ){
         $app->_404();
     }
     if ($user === false){
@@ -357,8 +361,8 @@ $app->listen('/author/:user/:leading',function($self){
         $self->_301('/@' . $uquery[0]->user_login . '/' . $self->params['leading']);
     }
 });
-$app->listen('/@:user/books',function($self){
-    author_template_load('books');
+$app->listen('/@:user/stories',function($self){
+    author_template_load('stories');
 });
 $app->listen('/@:user/updates',function($self){
     author_template_load('updates');
@@ -406,8 +410,8 @@ function ffn_author_template_load($template){
 $app->listen('/ffn@:ffn_author',function($self){
     ffn_author_template_load('about');
 });
-$app->listen('/ffn@:ffn_author/books',function($self){
-    ffn_author_template_load('books');
+$app->listen('/ffn@:ffn_author/stories',function($self){
+    ffn_author_template_load('stories');
 });
 // Inbox
 $app->listen('/inbox',function($self){
@@ -433,37 +437,37 @@ $app->listen('/inbox/@:username',function($self){
     exit();
 });
 // Write
-$app->listen('/my-books',function($self){
+$app->listen('/my-stories',function($self){
     $self->login();
-    $self->type = 'my-books';
+    $self->type = 'my-stories';
     $self->type_id = 0;
     $self->header();
     $self->template('/views/books/my-books');
     $self->footer();
     exit();
 });
-$app->listen('/my-books/:id',function($self){
+$app->listen('/my-stories/:id',function($self){
     $self->login();
-    $book = get_post( $self->params['id'] );
+    $story = get_post( $self->params['id'] );
     if (
         $self->params['id'] !== 'new' &&
         (
-            ! $book
-            || intval($book->post_author) !== intval(get_current_user_id())
+            ! $story
+            || ! is_current_user($story->post_author)
         )
     ) {
         return;
     }
-    $self->type = 'edit-book';
-    $self->type_id = $self->params['id'] === 'new' ? 'new' : intval($book->ID);
-    $self->book = $self->params['id'] === 'new' ? 'new' : $book;
+    $self->type = 'edit-story';
+    $self->type_id = $self->params['id'] === 'new' ? 'new' : intval($story->ID);
+    $self->story = $self->params['id'] === 'new' ? 'new' : $story;
     $self->header();
     $self->template('/views/books/edit');
     $self->footer();
     exit();
 });
 $app->listen('/write',function($self){
-    $self->_301('/my-books');
+    $self->_301('/my-stories');
 });
 $app->listen('/drafts',function($self){
     $self->login();

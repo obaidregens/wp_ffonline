@@ -38,7 +38,7 @@ document.querySelector('save-time').addEventListener('click',() => {
                         attributes: attr
                     }));
                 }
-                if (response.revisions.length > 1) {
+                if (response.revisions.length > 0) {
                     timeago.render(s.querySelectorAll('li'), 'en_US', { minInterval: 5 });
                 }
                 window.refreshRevisions = false;

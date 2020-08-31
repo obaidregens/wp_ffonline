@@ -51,7 +51,7 @@ function Review (props) {
     return (
         <review review_id={props.ID}>
             <a
-            tooltip-top={props.self ? "Book Author" : null}
+            tooltip-top={props.self ? "Story Author" : null}
             className={"author" + (props.self ? ' book-author' : '') }
             >
                 {props.name}

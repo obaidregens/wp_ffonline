@@ -12,7 +12,7 @@ global $book_query;
 $book_query = $query;
 
 ?>
-<collections_data hidden><?= json_encode(collection::js_data()) ?></collections_data>
+<collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
 <tags_data hidden><?= json_encode(tags_data($query)); ?></tags_data>
 <prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
 
@@ -25,7 +25,7 @@ $book_query = $query;
             <text-input label="Search"></text-input>
             <select>
                 <option value="updated/DESC">Last Updated</option>
-                <option value="date/DESC">Book Published</option>
+                <option value="date/DESC">Story Published</option>
                 <option value="words/DESC">Words</option>
             </select>
             <label label="Sort"></label>
@@ -48,7 +48,7 @@ $book_query = $query;
 <loader xl></loader>
 
 <books-container class="grid">
-<book_collections hidden><?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?></book_collections>
+<book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
 <?php
 if ( $book_query->has() ){
     global $book;
@@ -57,7 +57,7 @@ if ( $book_query->has() ){
     }
 }
 else {
-    get_template_part( 'template-parts/content', 'noresult' );
+    $app->template('/subviews/no-books');
 }
 ?>
 </books-container>

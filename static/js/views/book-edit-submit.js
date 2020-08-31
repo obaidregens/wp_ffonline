@@ -1,4 +1,5 @@
 const OPT_REMOVE_FILES_CLICK = true;
+const OPT_NEW_DRAFT_IN_NEW_TAB = true;
 let currentPage = null;
 window.setCurrentPage = num => {
     if (num === '+') {
@@ -46,7 +47,7 @@ function reAddChapters() {
         chapters.push(createChapterDraggableLi({
             title: chapter.title,
             ID: chapter.ID,
-            view: '/book/' + selected.book_id + '/' + chapter.num
+            view: '/story/' + selected.book_id + '/' + chapter.num
         }));
     }
     const index = DOM.create('index',{
@@ -205,29 +206,29 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
             }
             reAddChapters();
             reRender();
-            window.history.pushState("object or string", document.querySelector("title").innerText,'/my-books/' + selected.book_id);
+            window.history.pushState("object or string", document.querySelector("title").innerText,'/my-stories/' + selected.book_id);
             if (response.code === 1) {}
             else if (response.code === 2) {
                 window.setCurrentPage(4);
                 new toast('Select a chapter to publish.');
             }
             else if (response.code === 3) {
-                new toast('Book Title, Book Summary, Rating, Language and Status are required to publish book.')
+                new toast('Story Title, Story Summary, Rating, Language and Status are required to publish story.')
             }
-            new toast('Book Updated');
+            new toast('Story Updated');
             const newPublishNotice = document.querySelector('exciting');
             if (prev_status === false && selected.publish === true) {
                 newPublishNotice.innerText = '';
                 const shareData = {
                     title: selected.title,
-                    href: '/book/' + selected.book_id,
+                    href: '/story/' + selected.book_id,
                     author: selected.username,
                     desc: selected.description,
                     callOnCopy: () => new toast('Copied!')
                 };
                 DOM.append(newPublishNotice,[
                     DOM.create('span',{
-                        innerText: 'Your book has been published!'
+                        innerText: 'Your story has been published!'
                     }),
                     DOM.create('br'),
                     DOM.create('span',{

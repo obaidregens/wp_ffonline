@@ -155,7 +155,10 @@ function api_edit_and_save_draft() {
 
 // Index
 function api_get_drafts() {
-    return drafts_dir::get_path();
+    return [
+        'code'  => 1,
+        'path'  => drafts_dir::get_path()
+    ];
 }
 function api_create_drafts_folder() {
     required_login();

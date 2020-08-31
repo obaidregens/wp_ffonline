@@ -1,9 +1,8 @@
 let all_files;
 const listing = document.querySelector('folder-listing');
 api('get_drafts',{
-    dataType: 'JSON',
-    callback: (response) => {
-        all_files = response;
+    callback: response => {
+        all_files = response.path;
         loadFolder(current_path);
     }
 });
@@ -64,6 +63,19 @@ const loadFolder = (p) => {
                 ]
             }));
         }
+    }
+    if ( (all_files[p] || []).length < 1 ) {
+        listing.appendChild(DOM.create('span',{
+            classes: ['no-drafts'],
+            innerText: 'No Drafts yet. '
+        }));
+        listing.appendChild(DOM.create('a',{
+            href: '/drafts/new',
+            attributes: typeof OPT_NEW_DRAFT_IN_NEW_TAB === 'undefined' ? {} : {
+                target: '_blank'
+            },
+            innerText: 'Create new'
+        }));
     }
     current_path = p;
 }

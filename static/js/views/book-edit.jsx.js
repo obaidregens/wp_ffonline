@@ -166,11 +166,11 @@ const App = () => {
         <TextInput
         value={selected.title}
         onChange={value => selected.title = value}
-        label=""
+        label="Story Title"
         maxlength="80"
         />
         <TextInput
-        label=""
+        label="Story Summary"
         value={selected.description}
         onChange={value => selected.description = value}
         maxlength="400"

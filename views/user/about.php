@@ -45,9 +45,9 @@ $description = get_the_author_meta( 'description', $user->ID );
     <?php } ?>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">
-        <collections_data hidden><?= json_encode(collection::js_data()) ?></collections_data>
+        <collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
         <books-container class="grid">
-            <book_collections hidden><?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?></book_collections>
+            <book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
             <?php
             global $book;
             foreach ($book_query->books as $book) {

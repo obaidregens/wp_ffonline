@@ -25,7 +25,7 @@ class _ {
         if (! func){
             return false;
         }
-        const events = ['touchstart', 'touchmove', 'click', 'wheel', 'mousedown', 'mouseup', 'focus', 'blur', 'keydown', 'change', 'resize', 'scroll'];
+        const events = ['touchstart','touchmove','click', 'wheel','mousemove','mousedown','mouseup','focus','blur','keydown','change','resize','scroll'];
         for (let i = 0; i < events.length; i++) {
             const event = events[i];
             window.addEventListener(event,func,{passive: true});

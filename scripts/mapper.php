@@ -67,7 +67,7 @@ $book_query = new book_query( array(
 ) );
 $num_pages = $book_query->pages;
 for ($i=1; $i <= $num_pages; $i++) {
-    $file = $dir . '/sitemap-book-' . $i . '.xml';
+    $file = $dir . '/sitemap-story-' . $i . '.xml';
     if (! file_exists($file) || filemtime($file) < time() - 172800){
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';

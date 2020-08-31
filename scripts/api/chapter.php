@@ -6,14 +6,14 @@ function api_search_book_contents(){
     $results = [];
     if (stripos($book->post_title,$s) !== false){
         $results[] = array(
-            'title'         => 'Book',
+            'title'         => 'Story',
             'excerpt'       => mark_search($book->post_title,$s),
             'link'          => $link
         );
     }
     if (stripos($book->post_excerpt,$s) !== false){
         $results[] = array(
-            'title'         => 'Book Summary',
+            'title'         => 'Story Summary',
             'excerpt'       => mark_search($book->post_excerpt,$s),
             'link'          => $link
         );

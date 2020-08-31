@@ -14,6 +14,11 @@ toolbar {
     top: 52px;
     background-color: var(--background-color);
 }
+@media only screen and (max-width: 500px) {
+    toolbar {
+        top: 0;
+    }
+}
 editor:-moz-full-screen > toolbar,
 editor:-ms-full-screen > toolbar {
     top: 0;

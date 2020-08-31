@@ -11,11 +11,11 @@ $books = (new WP_Query([
 ?>
 <actions>
     <a label="Drafts" href="/drafts" class="button"></a>
-    <a href="/my-books/new" class="button new-book">New Book</a>
+    <a href="/my-stories/new" class="button new-book">New Story</a>
 </actions>
 <?php foreach ($books as $book) { ?>
 <?php $stat = new book_stats($book->ID); ?>
-<a href="/my-books/<?= $book->ID; ?>" class="book">
+<a href="/my-stories/<?= $book->ID; ?>" class="book">
 <book-title><?= $book->post_title; ?></book-title>
 <book-status><?= $book->post_status === 'publish' ? 'Published' : 'Unpublished'; ?></book-status>
 <book-views>
@@ -25,5 +25,5 @@ $books = (new WP_Query([
 </a>
 <?php } ?>
 <?php if (empty($books)) { ?>
-No books
+No stories yet
 <?php } ?>

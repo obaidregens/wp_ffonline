@@ -27,7 +27,7 @@ collection > collection-meta > [tooltip-top]::after {
     margin-right: 5px;
     font-family: 'icons';
 }
-collection > collection-meta > [tooltip-top="Updated"]::after {
+collection > collection-meta > [tooltip-top="Created"]::after {
     content: '\e918';
 }
 collection > collection-meta > [tooltip-top="Books"]::after {

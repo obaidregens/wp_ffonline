@@ -19,7 +19,7 @@ $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 </author-name>
 <author-nav>
 	<a <?= $author_page === 'about' ? 'active' : '' ?> href="<?= $href; ?>">About</a>
-	<a <?= $author_page === 'books' ? 'active' : '' ?> href="<?= $href . 'books'; ?>">Books</a>
+	<a <?= $author_page === 'stories' ? 'active' : '' ?> href="<?= $href . 'stories'; ?>">Stories</a>
 	<a <?= $author_page === 'updates' ? 'active' : '' ?> href="<?= $href . 'updates'; ?>">Updates</a>
 	<a <?= $author_page === 'collections' ? 'active' : '' ?> href="<?= $href . 'collections'; ?>">Collections</a>
 	<?php if ($connection !== false) { ?>

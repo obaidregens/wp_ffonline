@@ -1,0 +1,28 @@
+popup[update_collection] > button[label="Save"],popup[update_collection] > button[label="Delete"] {
+    margin-bottom: 10px;
+    margin-right: 0;
+}
+popup[update_collection] > button[label="Save"] {
+    float: right;
+}
+popup[update_collection][collection_id="new"] > button[label="Save"]::before {
+    content: 'Create';
+}
+popup[update_collection] > button[label="Delete"] {
+    background-color: var(--red);
+    float: right;
+}
+popup[update_collection][collection_id="new"] > button[label="Delete"],
+popup[update_collection] > button[label="Delete"]:disabled {
+    pointer-events: none;
+
+    border: none;
+    background-color: #b17070;
+    color: #d0d0d0;
+}
+popup[update_collection] > a.back::before{
+    font-size: 85%;
+    font-weight: bold;
+    content: 'Back to Collections';
+    white-space: nowrap;
+}

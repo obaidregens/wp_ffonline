@@ -20,10 +20,10 @@ const getViewId = () => {
                 return false;
         }
     }
-    if (current_view_parts[0] === 'book') {
+    if (current_view_parts[0] === 'story') {
         switch (current_view_parts.length) {
             case 2:
-                // Book
+                // Story
                 return 5;
             case 3:
                 // Chapter
@@ -53,7 +53,7 @@ const introSteps = {
         },
         {
             element: 'book > .dropdown',
-            intro: "Like this book? Follow and share with others.",
+            intro: "Like this story? Follow and share with others.",
         },
         {
             element: 'footer > nav > a[href="/contact"]',
@@ -104,15 +104,15 @@ const introSteps = {
     5: [
         {
             element: 'input.collapsible',
-            intro: "See all chapters this book has."
+            intro: "See all chapters this story has."
         },
         {
             element: '.book-collections',
-            intro: "Add book to a collection."
+            intro: "Add story to a collection."
         },
         {
             element: '.book-share',
-            intro: "Share a book you like with others!."
+            intro: "Share a story you like with others!."
         }
     ],
     6: [
@@ -122,11 +122,11 @@ const introSteps = {
         },
         {
             element: '.search-button',
-            intro: "Looking for something? Search entire book."
+            intro: "Looking for something? Search entire story."
         },
         {
             element: 'book-options',
-            intro: "Like this book? Follow and share with others."
+            intro: "Like this story? Follow and share with others."
         },
         {
             element: 'reviews',

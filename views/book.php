@@ -12,7 +12,7 @@ $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
 $app->bundle->enqueue();
 
-$book = $app->book;
+$book = $app->story;
 $book_query = new book_query(array(
     'include_ids'   => array($book->ID)
 ));
@@ -32,10 +32,10 @@ $is_user_logged_in = is_user_logged_in(  );
     <book-description><?= $book->post_excerpt; ?></book-description>
     <book-options>
         <collections_data hidden>
-            <?= json_encode(collection::js_data()) ?>
+            <?= json_encode(collection_helpers::js_data()) ?>
         </collections_data>
         <book_collections hidden>
-            <?= json_encode( collection::query_by_book( array($book->ID), 'ID' ) ); ?>
+            <?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
         </book_collections>
         <button theme class="book-collections"></button>
         <button theme class="book-share"></button>
@@ -44,7 +44,6 @@ $is_user_logged_in = is_user_logged_in(  );
     <label>Chapter Index</label>
     <collapsible>
         <?php
-        $app->book = $book;
         $app->template('subviews/chapter-index');
         ?>
     </collapsible>

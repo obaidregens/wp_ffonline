@@ -22,7 +22,7 @@ function api_search() {
     ob_start();
     ?>
     <book_collections hidden>
-        <?= json_encode(collection::query_by_book(array_column($book_query->books,'ID'),'ID')); ?>
+        <?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?>
     </book_collections>
     <?php
 	if ( $book_query->has() ){

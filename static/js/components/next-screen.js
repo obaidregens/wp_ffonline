@@ -38,7 +38,9 @@ const next_screen = class {
     static open (_next) {
         popup.close();
         next_screen.close();
-        sidenav.close();
+        if (typeof sidenav !== 'undefined') {
+            sidenav.close();
+        }
         _next.classList.add('show');
         document.documentElement.style.overflow = 'hidden';    
         _next.dispatchEvent(new Event('onOpen'));

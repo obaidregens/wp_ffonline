@@ -25,7 +25,7 @@ add_filter('post_type_link','messages_link',11,2);
 function my_permalinks($permalink, $post, $leavename) {
 	$post_id = $post->ID;
 	if ($post->post_type === 'book'){
-		return get_home_url() . '/book/' . $post_id;
+		return get_home_url() . '/story/' . $post_id;
 	}
 	else if($post->post_type === 'chapter'){
 		return get_permalink($post->post_parent) . '/' . get_post_meta($post->ID,'chapter_order',true);

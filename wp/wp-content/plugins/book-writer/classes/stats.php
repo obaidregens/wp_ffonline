@@ -381,7 +381,7 @@ class _action extends stats {
     }
     function log_impression($type,$type_id){
         $error = new err();
-        if (! in_array($type,array('book','collection'))){
+        if (! in_array($type,array('story','collection'))){
             $error->add('type','Impressions can only be logged for books or collections.');
         }
         $validate_return = stats::_validate($type,$type_id);

@@ -1,5 +1,5 @@
 <?php
-$all_chapters = published_chapters($app->book->ID);
+$all_chapters = published_chapters($app->story->ID);
 ?>
 <index>
     <li head>

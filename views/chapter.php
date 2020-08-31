@@ -25,7 +25,7 @@ $app->bundle->enqueue();
 
 $chapter = $app->chapter;
 $author = get_user_by( 'ID', $chapter->post_author );
-$book = $app->book;
+$book = $app->story;
 $all_chapters = published_chapters($book->ID);
 $comments_open = comments_open( $book->ID );
 $is_user_logged_in = is_user_logged_in(  );
@@ -50,10 +50,10 @@ $next_chapter_link = rtrim(get_permalink( $book->ID ),'/') . '/' . (intval(get_p
 		<a href="<?= $next_chapter_link; ?>" theme class="button next-chapter"></a>
 		<book-options>
 			<collections_data hidden>
-				<?= json_encode(collection::js_data()) ?>
+				<?= json_encode(collection_helpers::js_data()) ?>
 			</collections_data>
 			<book_collections hidden>
-				<?= json_encode( collection::query_by_book( array($book->ID), 'ID' ) ); ?>
+				<?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
 			</book_collections>
 			<button class="book-collections"></button>
 			<button class="book-share"></button>

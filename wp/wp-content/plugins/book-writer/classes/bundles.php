@@ -293,7 +293,8 @@ class bundle {
                 'css/views/search-content',
                 'css/views/search-filters',
                 'css/views/search-options',
-                'external/noUiSlider/nouislider',        
+                'external/noUiSlider/nouislider',
+                'css/views/search-updateCollection'      
             ),
             'js'    => array(
                 "js/components/next-screen",
@@ -302,7 +303,8 @@ class bundle {
                 "external/noUiSlider/nouislider",
                 "js/views/search-filters",
                 "js/views/search-content",
-                "js/views/search-options"
+                "js/views/search-options",
+                "js/views/search-updateCollection"
             ),
         ),
         'search-content'    => array(
@@ -330,10 +332,12 @@ class bundle {
                 'css/components/select',
                 'css/js-components/switch',
                 'css/views/search-options',
+                'css/views/search-updateCollection'
             ),
             'js'    => array(
                 "js/components/switch",
                 "js/views/search-options",
+                "js/views/search-updateCollection"
             ),
         ),
         'next-screen'      => array(

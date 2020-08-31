@@ -67,7 +67,7 @@ function Review(props) {
   return /*#__PURE__*/React.createElement("review", {
     review_id: props.ID
   }, /*#__PURE__*/React.createElement("a", {
-    "tooltip-top": props.self ? "Book Author" : null,
+    "tooltip-top": props.self ? "Story Author" : null,
     className: "author" + (props.self ? ' book-author' : '')
   }, props.name), /*#__PURE__*/React.createElement("review-time", null, props.time), /*#__PURE__*/React.createElement("review-content", null, props.content), /*#__PURE__*/React.createElement(Dropdown, {
     right: true,

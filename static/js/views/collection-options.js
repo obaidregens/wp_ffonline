@@ -1,3 +1,4 @@
+OPT_BOOK_IN_COLLECTIONS = true;
 function follow_collection(collection_id,follow = true){
     api('follow_collection',{
         dataType: 'JSON',
@@ -18,3 +19,19 @@ function follow_collection(collection_id,follow = true){
         }
     });
 }
+document.querySelector('collection-bar > button[label="Create New"]').addEventListener('click',event => {
+    if (! logged_in) {
+        prompt_login();
+        new toast('Login to create collection.');
+        return;
+    }
+    create_collection_open('new');
+});
+document.querySelector('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
+    if (! logged_in) {
+        prompt_login();
+        new toast('Login to create and add books to your collections.');
+        return;
+    }
+    window.location.href = '@me/collections'
+});

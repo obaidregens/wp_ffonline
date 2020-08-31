@@ -3,6 +3,10 @@
 }
 [tooltip-top]::before, [tooltip-bottom]:after {
     /* Basic */
+    width: max-content;
+    width: -moz-max-content;
+    max-width: 320px;
+    
     display: inline-block;
     position: absolute;
     background: #212020;
