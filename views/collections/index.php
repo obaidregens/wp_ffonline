@@ -46,4 +46,3 @@ if (empty($collections)) {
     $app->template('subviews/no-collections');
 }
 ?></collections-container>
-<?php

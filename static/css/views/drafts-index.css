@@ -1,11 +1,6 @@
-folder-listing > .no-drafts {
-    margin-left: 70px;
-    margin-top: 20px;
-    color: var(--lightblack);
+file.new-draft-file > file-meta::before {
+    content: '\e916';
     display: inline-block;
-    margin-right: 4px;
-}
-folder-listing > .no-drafts + a {
-    color: var(--text-color);
-    opacity: 0.6;
+    transform: scale(1.5) translateX(-1px);
+    color: var(--lightblack);
 }

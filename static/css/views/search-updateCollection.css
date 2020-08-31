@@ -1,3 +1,6 @@
+popup[update_collection] {
+    max-width: 600px;
+}
 popup[update_collection] > button[label="Save"],popup[update_collection] > button[label="Delete"] {
     margin-bottom: 10px;
     margin-right: 0;

@@ -7,7 +7,6 @@ $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/index');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
-$app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->mix('search-options');

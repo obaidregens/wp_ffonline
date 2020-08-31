@@ -9,7 +9,6 @@
 <h2>News</h2>
 <?php
 $app->bundle = global_bundle('news');
-$app->bundle->css('/css/components/dropdown');
 $app->bundle->css('/css/views/updates-content');
 $app->bundle->js('/js/views/updates-content');
 $app->bundle->enqueue();

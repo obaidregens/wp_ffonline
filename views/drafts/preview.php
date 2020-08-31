@@ -1,6 +1,5 @@
 <?php
 $app->bundle = global_bundle('drafts-preview');
-$app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
 $app->bundle->css('css/views/drafts-preview');

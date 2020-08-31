@@ -259,6 +259,7 @@ class bundle {
                 'css/helpers',
                 'css/js-components/recaptcha',
                 'css/components/buttons',
+                'css/components/dropdown',
                 'css/js-components/text-input',
                 'css/js-components/toast',
                 'css/js-components/popup',
@@ -287,7 +288,6 @@ class bundle {
                 'css/components/tooltips',
                 'css/js-components/checkbox',
                 'css/js-components/switch',
-                'css/components/dropdown',
                 'css/js-components/next-screen',
                 'css/views/search-tags',
                 'css/views/search-content',
@@ -309,7 +309,6 @@ class bundle {
         ),
         'search-content'    => array(
             'css'   => array(
-                'css/components/dropdown',
                 'css/components/tooltips',
                 'css/components/grid',
                 'css/views/search-tags',

@@ -110,8 +110,8 @@ class Router {
         header("Location: " . $url, true, 301);
         exit();
     }
-    function _302($url){
-        header("Location: " . $url, true, 302);
+    function redirect($url){
+        header("Location: " . $url);
         exit();
     }
     function login(){
@@ -149,6 +149,15 @@ $app->listen('/',function($self){
     $self->template('/views/home');
     $self->footer();
     exit();
+});
+$app->listen('/logout',function($self){
+    if (! is_user_logged_in()) {
+        $self->redirect('my-stories');
+    }
+    $self->type = 'logout';
+    $self->type_id = 0;
+    wp_logout();
+    $self->redirect('/read');
 });
 $app->listen('/news',function($self){
     $self->type = 'news';
@@ -287,9 +296,9 @@ $app->listen('/collections/:collection',function($self){
     $self->footer();
     exit();
 });
-// $app->listen('/@ffonline/&*',function($self) {
-//     $self->_404();
-// });
+$app->listen('/@ffonline/&*',function($self) {
+    $self->_404();
+});
 $app->listen('/@:user/collections/:collection',function($self){
     $user = get_user_by( 'login', $self->params['user'] );
     if ($user === false){
@@ -323,7 +332,7 @@ function author_template_load($template){
         $current_user_id = get_current_user_id();
         if ($current_user_id === 0) {return;}
         $user = get_userdata($current_user_id );
-        $app->_302('/@' . $user->user_login . '/' . ($template === 'about' ? '' : $template) );
+        $app->redirect('/@' . $user->user_login . '/' . ($template === 'about' ? '' : $template) );
     }
     if ( $template === 'settings' && ! is_current_user($user->ID) ){
         $app->_404();
@@ -496,7 +505,7 @@ $app->listen('/drafts/:draft_share',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_id',function($self){
-    $self->_301( '/drafts/' . $self->params['draft_id'] . '/edit' );
+    $self->redirect( '/drafts/' . $self->params['draft_id'] . '/edit' );
 });
 $app->listen('/drafts/:draft_id/preview',function($self){
     $self->login();

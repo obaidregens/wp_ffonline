@@ -12,9 +12,22 @@ onePageScroll("main", {
     responsiveFallback: false        // You can fallback to normal page scroll by defining the width of the browser in which
                                      // you want the responsive fallback to be triggered. For example, set this to 600 and whenever 
                                      // the browser's width is less than 600, the fallback will kick in.
- });
- const slide = new Glide(document.querySelector('div.glide'),{
+});
+const slide = new Glide(document.querySelector('div.glide'),{
     type: 'slider',
-    perView: 1
+    perView: 1,
 });
 slide.mount();
+let doneOnce = false;
+slide.on('move',() => doneOnce = true);
+
+setInterval(() => {
+    if (doneOnce) {
+        return;
+    }
+    if (!document.querySelector('section.ops-section[data-index="2"]').classList.contains('active')) {
+        return;
+    }
+    slide.go('>');
+    doneOnce = false;
+}, 4000);

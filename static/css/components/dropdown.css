@@ -2,6 +2,9 @@
     position: relative;
     z-index: 9;
 }
+.dropdown:focus {
+    outline: none;
+}
 button.dropdown:active {
     transform: none;
 }
@@ -30,7 +33,7 @@ button.dropdown:active {
     transform: scale(1);
 }
 .dropdown:focus > dropdown{
-    transform: scale(1s);
+    transform: scale(1);
 }
 .dropdown > dropdown > *{
     color: var(--text-color);

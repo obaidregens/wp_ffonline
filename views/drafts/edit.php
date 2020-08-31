@@ -3,7 +3,6 @@ $app->bundle = global_bundle('drafts-edit');
 $app->bundle->mix('react');
 $app->bundle->mix('slate');
 $app->bundle->js('external/timeago/timeago');
-$app->bundle->css('css/components/dropdown');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/js-components/next-screen');

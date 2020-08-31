@@ -6,11 +6,11 @@ header {
 header > .logo {
     pointer-events: none;
 }
-header > nav > a {
+header > nav > * {
     font-weight: normal;
     color: var(--text-color);
 }
-header > nav > a:hover {
+header > nav > *:hover {
     background-color: transparent;
     color: var(--darkgrey);
 }

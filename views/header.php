@@ -12,6 +12,7 @@ if (! isset($_SESSION['nonce']) || ! is_array($_SESSION['nonce'])){
 }
 $_SESSION['nonce'][] = $nonce;
 $is_user_logged_in = is_user_logged_in();
+$current_user = get_userdata( get_current_user_id() );
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,8 +36,20 @@ $is_user_logged_in = is_user_logged_in();
     		</a>
 			<nav>
 				<a href="/read">Read</a>
-				<a href="/write">Write</a>
+				<a href="/my-stories">Write</a>
 				<a href="/collections">Collections</a>
+				<?php if ($is_user_logged_in) { ?>
+					<drop tabindex="0" class="dropdown" >
+						Me
+						<dropdown class="right">
+							<a href="/@<?= $current_user->user_login; ?>">Profile</a>
+							<a href="/@<?= $current_user->user_login; ?>/settings">Settings</a>
+							<a href="/logout">Logout</a>
+						</dropdown>
+				</drop>
+				<?php } else { ?>
+					<a href="/write">Login</a>
+				<?php } ?>
 			</nav>
 		</header>
 		<main>

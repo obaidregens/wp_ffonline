@@ -30,7 +30,3 @@ page[page-num="4"] > .new-chapter {
 exciting:empty {
     display: none;
 }
-/* No Drafts */
-folder-listing > span.no-drafts {
-    margin-left: 0;
-}

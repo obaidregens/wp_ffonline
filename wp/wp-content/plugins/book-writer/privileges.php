@@ -11,10 +11,6 @@ function _404($template_ = '404.php'){
     exit();
 }
 function login_only(){
-	if (isset($_GET['logged_out'])){
-    	wp_logout();
-    	?><script>window.location.href = '/';</script><?php
-	}
 	if(! is_user_logged_in()){
         ?><script>
         window.onload = function(){

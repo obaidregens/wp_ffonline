@@ -105,7 +105,7 @@ const replaceTags = function(sort = 'count'){
     insert_into.innerText = '';
     insert_into.appendChild(chkbx);
 
-};
+}
 function saveSelectedTags(){
     const _pop_ = document.querySelector('popup[tag-name].show');
     if (! _pop_){
@@ -120,7 +120,7 @@ function saveSelectedTags(){
         fandom_ID = tags_wrapper.getAttribute('value');
         tag_list = tags_wrapper.querySelector('tag_list');
         const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
-        const characters = Object.keys(tags_data['character'][fandom_ID]);
+        const characters = Object.keys(tags_data['character'][fandom_ID] || {});
         const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
         const old_selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
         selected.included = _a.diff(old_selected.included,characters);
@@ -406,7 +406,7 @@ for (let i = 0; i < select_tags.length; i++) {
     elem.addEventListener('click',function(){
         __pop = create_tags_popup(tag_name);
         popup.open(__pop);
-        replaceTags();
+        setTimeout(() => replaceTags());
     });
 }
 // Reset

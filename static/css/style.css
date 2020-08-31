@@ -64,12 +64,12 @@ div {
 }
 /* Header */
 header {
+    overflow: visible;
     width: 100%;
     user-select: none;
     color: var(--theme-color);
     display: flex;
     flex-wrap: nowrap;
-    overflow-x: auto;
     margin-bottom: 20px;
     background-color: var(--background-color);
     border-bottom: 1px solid var(--grey);
@@ -90,7 +90,8 @@ header > nav {
     margin-left: auto;
     display: flex;
 }
-header > nav > a {
+header > nav > * {
+    cursor: pointer;
     color: var(--text-color);
     padding: 0 10px;
     display: flex;
@@ -98,7 +99,7 @@ header > nav > a {
     width: fit-content;
     width: -moz-fit-content;
 }
-header > nav > a:hover {
+header > nav > *:hover {
     background-color: var(--theme-color);
     color: var(--white);
 }
@@ -175,7 +176,7 @@ dark-mode::before {
     header > .logo > svg{
         display: none;
     }
-    header > nav > a {
+    header > nav > * {
         font-size: 0;
         padding: 20px;
     }
@@ -191,7 +192,7 @@ dark-mode::before {
         color: var(--white);
         background-color: var(--theme-color);
     }
-    header > nav > a::before,header > .logo::before {
+    header > nav > *::before,header > .logo::before {
         font-size: 1rem;
         font-family: 'icons';
         display: inline-block;
@@ -201,14 +202,23 @@ dark-mode::before {
         transform: scale(1.6);
         content: '\e942';
     }
-    header > nav > a[href="/read"]::before {
+    header > nav > *[href="/read"]::before {
         content: '\e915';
     }
-    header > nav > a[href="/write"]::before {
+    header > nav > *[href="/my-stories"]::before {
         content: '\e909';
     }
-    header > nav > a[href="/collections"]::before {
+    header > nav > *[href="/collections"]::before {
         content: '\e907';
+    }
+    header > nav > .dropdown::before,header > nav > [href="/write"]::before {
+        content: '\e943';
+        transform: scale(1.8);
+    }
+    header > nav > .dropdown > dropdown {
+        top: unset;
+        bottom: -1px;
+        transform-origin: bottom right !important;
     }
     footer {
         display: none;

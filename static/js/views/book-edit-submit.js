@@ -142,7 +142,7 @@ function new_chapter_popup_create() {
                 if (target.parentElement.tagName.toLowerCase() === 'file') {
                     file = target.parentElement;
                 }
-                if (file === null) {
+                if (file === null || file.classList.contains('new-draft-file') ) {
                     return;
                 }
                 const title = chapter_title_input.value;
