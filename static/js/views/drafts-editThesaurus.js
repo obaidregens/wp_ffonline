@@ -57,6 +57,7 @@ document.querySelector('editor').addEventListener('keydown',event => {
         },
         dataType: 'JSON',
         callback: response => {
+            response = response.synonyms;
             thesaurus.classList.remove('loading');
             if (response.length === 0) {
                 thesaurus.classList.add('empty');
@@ -74,7 +75,7 @@ document.querySelector('editor').addEventListener('keydown',event => {
                         click: ({target}) => {
                             const newWord = target.innerText;
                             const lenDiff = word.length - newWord.length;
-                            window.getSelection().collapse(anchor,c+lenDiff);
+                            window.getSelection().collapse(anchor,Math.min(c+lenDiff,anchor.length));
 
                             thesaurus.classList.remove('open');
                             DraftEditor.selection = rSel;

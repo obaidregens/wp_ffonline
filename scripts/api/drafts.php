@@ -127,6 +127,11 @@ function api_compare_single_revision () {
         'revision'  => $new
     ];
 }
+function api_get_synonym() {
+    required_params('word');
+    $dict = new dict($_POST['data']['word']);
+    return ['code' => 1,'synonyms' => $dict->synonym()];
+}
 // Preview
 function api_edit_and_save_draft() {
     required_login();

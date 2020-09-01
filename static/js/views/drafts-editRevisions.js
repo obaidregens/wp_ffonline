@@ -106,7 +106,6 @@ const getSingleRevision = revision_id => {
         s.querySelector('li[selected]').removeAttribute('selected');
     }
     const isLi = s.querySelector('li[revision_id="' + revision_id + '"]');
-    isLi.setAttribute('selected','');
     const nScreen = document.querySelector('next-screen[compare-revisions]');
     const titleNode = nScreen.querySelectorAll('revision-title');
     timeago.cancel(titleNode[0]);
@@ -121,6 +120,7 @@ const getSingleRevision = revision_id => {
         }
     }));
     next_screen.open(nScreen);
+    isLi.setAttribute('selected','');
     api('compare_single_revision',{
         data: {
             draft_id: document.querySelector('editor').getAttribute('draft_id'),

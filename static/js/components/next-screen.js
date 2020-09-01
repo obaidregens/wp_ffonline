@@ -42,7 +42,7 @@ const next_screen = class {
             sidenav.close();
         }
         _next.classList.add('show');
-        document.documentElement.style.overflow = 'hidden';    
+        document.documentElement.style.overflow = 'hidden';
         _next.dispatchEvent(new Event('onOpen'));
     }
     static close () {
