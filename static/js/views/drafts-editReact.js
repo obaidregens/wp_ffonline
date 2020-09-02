@@ -86,7 +86,7 @@ const EditorTools = {
 let autoSaveOpt = 0;
 const shouldAutosave = (editor) => {
   const opr = editor.operations;
-  const actAt = 60;
+  const actAt = 50;
   if (opr.length === 1 && opr[0].type === 'set_selection') {
     return false;
   }

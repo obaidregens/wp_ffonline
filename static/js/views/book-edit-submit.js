@@ -1,3 +1,5 @@
+target.setAttribute('disabled','');
+
 const OPT_REMOVE_FILES_CLICK = true;
 const OPT_NEW_DRAFT_IN_NEW_TAB = true;
 let currentPage = null;

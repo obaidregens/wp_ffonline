@@ -1,6 +1,6 @@
 const drag = new Draggable.Droppable(document.querySelectorAll('folder-listing'), {
     draggable: 'file > file-meta',
-    dropzone: 'folder, file, delete-container',
+    dropzone: 'folder, file:not(.new-draft-file), delete-container',
     distance: 10
 });
 drag.on('droppable:dropped', event => {
@@ -29,7 +29,7 @@ drag.on('droppable:stop', event => {
                         api('get_drafts',{
                             dataType: 'JSON',
                             callback: response => {
-                                all_files = response;
+                                all_files = response.path;
                                 loadFolder("");
                                 new toast('Your draft was deleted.');
                             }
@@ -56,7 +56,7 @@ drag.on('droppable:stop', event => {
                 api('get_drafts',{
                     dataType: 'JSON',
                     callback: response => {
-                        all_files = response;
+                        all_files = response.path;
                         loadFolder(current_path);
                         new toast('Your draft was moved.');
                     }

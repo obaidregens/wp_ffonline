@@ -6,7 +6,7 @@ $landing = new _landing();
 $landing_key = $landing->encrypt();
 
 //Nonce
-$nonce = bin2hex(random_bytes(14));
+$nonce = sha1(bin2hex(random_bytes(14)) . time());
 if (! isset($_SESSION['nonce']) || ! is_array($_SESSION['nonce'])){
 	$_SESSION['nonce'] = [];
 }

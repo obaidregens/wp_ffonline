@@ -33,7 +33,7 @@ window.autosaveDraft = (val,perm) => {
             },
             callback: response => {
                 if (response.code > 5) {
-                    new toast('An error occured. Your draft may not have been saved.')
+                    new toast('An error occured while saving your draft. You might need to refresh the page.')
                     return;
                 }
                 // Flags

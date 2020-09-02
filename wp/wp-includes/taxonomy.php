@@ -1412,7 +1412,6 @@ function term_exists( $term, $taxonomy = '', $parent = null ) {
 		if ( $result ) {
 			return $result;
 		}
-
 		return $wpdb->get_row( $wpdb->prepare( "SELECT tt.term_id, tt.term_taxonomy_id FROM $wpdb->terms AS t INNER JOIN $wpdb->term_taxonomy as tt ON tt.term_id = t.term_id WHERE $else_where AND tt.taxonomy = %s $orderby $limit", $else_where_fields ), ARRAY_A );
 	}
 

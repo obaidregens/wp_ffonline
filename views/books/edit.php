@@ -3,6 +3,7 @@ $book = $app->story;
 $book_id = $book === 'new' ? 'new' : $book->ID;
 ?>
 <tags_data hidden><?= json_encode(get_data($book_id)); ?></tags_data>
+<important>You won't be able to publish your stories right now because we're working on something to make publishing stories easier. You can still keep your stories unpublished and publish them later.</important>
 <exciting></exciting>
 <stepper>
     <step>Story Details</step>

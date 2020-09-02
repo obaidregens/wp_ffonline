@@ -1,5 +1,8 @@
 <?php
 function api_edit_book() {
+    if ($d['publish'] === "true") {
+        return ['code' => 980];
+    }
     function term_replace($taxonomy, $term, $parent){
         $exists = term_exists($term,$taxonomy,$parent);
         if ($exists !== null){
