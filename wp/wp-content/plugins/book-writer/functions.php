@@ -140,6 +140,19 @@ function run_at_activation(){
 		PRIMARY KEY (ID)
 	) $charset_collate;";
 
+	$import_stories_table = "CREATE TABLE import_stories (
+		`ID` 			BIGINT NOT NULL AUTO_INCREMENT ,
+		`user_id` 		BIGINT NOT NULL ,
+		`story_id`	  	BIGINT NOT NULL ,
+		`import_user` 	VARCHAR(50) NOT NULL ,
+		`import_from` 	VARCHAR(20) NOT NULL ,
+		`import_story`	BIGINT NOT NULL ,
+		`import_status`	VARCHAR(20) NOT NULL ,
+		`request_time`	BIGINT NOT NULL ,
+		`import_time`	BIGINT NOT NULL ,
+		PRIMARY KEY (ID)
+	) $charset_collate;";
+
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -163,13 +176,15 @@ function run_at_activation(){
 	// Drafts
 	dbDelta( $drafts_table );
 	dbDelta( $draft_revisions_table );
+	// Import Stories
+	dbDelta( $import_stories_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
 		'fields'	=> array('ID')
 	));
 	foreach ($users as $user ) {
-		collection::create_default($user->ID);
+		collection_helpers::create_default($user->ID);
 	}
 	// file_put_contents( __DIR__ . '/this.err',ob_get_contents() );
 	// ob_end_clean();
@@ -204,6 +219,7 @@ $includes = array(
 	'classes/book_stats',
 	'classes/dict',
 	'classes/updates',
+	'classes/import_stories',
 );
 foreach($includes as $include){
 	require ($include . '.php');

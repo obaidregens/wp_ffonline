@@ -7,10 +7,7 @@ global $post;
 $book_query = new book_query(array(
 	'include_ids'	=> array($post->ID)
 ));
-$collections = collection::query(array(
-	'book_ids'		=> array($post->ID),
-	'types'			=> array('Favorites','Public')
-));
+$collections = collection_books::query_by('book_id',$post->ID);
 ?>
 <span class="each-tag icon-tag"><i class="fas fa-clock"></i><?= get_the_time(); ?></span>
 <span class="each-tag icon-tag"><i class="fas fa-book-open"></i><?= get_post_meta($post->ID,'word-count',true) ?></span>

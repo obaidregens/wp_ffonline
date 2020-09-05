@@ -21,7 +21,7 @@ $bundle->js('js/views/chapter-search');
 $bundle->mix('next-screen');
 $bundle->enqueue();
 
-collection::create_default(get_current_user_id());
+collection_helpers::create_default(get_current_user_id());
 $chapter = $post;
 $author = get_user_by( 'ID', $chapter->post_author );
 $book = get_post($chapter->post_parent);

@@ -71,7 +71,7 @@ class user {
                 'ID'    => $results[0]->ID
             )
         );
-        collection::create_default(intval($results[0]->ID));
+        collection_helpers::create_default(intval($results[0]->ID));
         self::internal_login($results[0]->ID);
         return true;
     }

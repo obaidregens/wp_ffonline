@@ -415,7 +415,7 @@ function api_set_password(){
     else{
         echo '1';
         $return = reset_password($user,$_POST['data']['password']);
-        collection::create_default($user->ID);
+        collection_helpers::create_default($user->ID);
     }
 }
 function api_update_profile(){
@@ -663,7 +663,7 @@ function api_validate_signup(){
         $_POST['data']['username'],
         $_POST['data']['email']
     );
-    collection::create_default($user_id);
+    collection_helpers::create_default($user_id);
     return_code(1);
 }
 function api_autosave_content(){

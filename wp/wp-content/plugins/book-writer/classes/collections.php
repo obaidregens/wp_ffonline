@@ -31,7 +31,6 @@ class collection {
         foreach ($user_collections as $collection ) {
             if (intval($collection->ID) === intval($args['ID'] ?? 0) ) {continue;}
             if (strtolower($collection->title) === $currentTitle) {
-                var_dump($collection->ID);
                 return $e->add('title','Author has collection with similar name.');
             }
         }
@@ -54,6 +53,10 @@ class collection {
         return intval($wpdb->insert_id);
     }
     static function delete($id) {
+        $collection = collection::get_by('ID',$id);
+        if (in_array($collection->title,['Favorites','Hidden'])){
+            return;
+        }
         global $wpdb;
         $wpdb->delete(
             self::$table,
@@ -306,5 +309,17 @@ class collection_helpers extends collection {
             $return[] = $collection;
         }
         return $return;
+    }
+    static function create_default($user_id) {
+        collection::update([
+            'title'     => 'Favorites',
+            'type'      => 'Favorites',
+            'author'    => $user_id
+        ]);
+        collection::update([
+            'title'     => 'Hidden',
+            'type'      => 'Private',
+            'author'    => $user_id
+        ]);
     }
 }

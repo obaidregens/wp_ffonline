@@ -46,7 +46,7 @@ class book_query{
             'object_ids'	=> array_column($this->books,'ID'),
             'orderby'		=> 'term_group',
             'fields'        => 'all_with_object_id'
-        )))->terms;
+        )))->terms ?: [];
         $tax = [];
         foreach ($terms_ as $term ) {
             $term->taxonomy = $term->taxonomy === 'category' ? 'fandom' : $term->taxonomy;
@@ -273,7 +273,7 @@ class book_query{
 class book_query_cache extends book_query {
     protected static $midfix = '</--/>';
     function __construct(){
-        $min_gap_min = 180;
+        $min_gap_min = 0.0001;
         $min_gap = $min_gap_min * 60;
 
         global $wpdb;
@@ -350,7 +350,7 @@ class book_query_cache extends book_query {
             'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
 			'object_ids'    => $ids,
 			'fields'        => 'all_with_object_id'
-        )))->terms;
+        )))->terms ?: [];
         $fandoms_of_chars = [];
         $key_value_ids = [];
         foreach ( $terms as $term ) {
