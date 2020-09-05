@@ -141,16 +141,16 @@ function run_at_activation(){
 	) $charset_collate;";
 
 	$import_stories_table = "CREATE TABLE import_stories (
-		`ID` 			BIGINT NOT NULL AUTO_INCREMENT ,
-		`user_id` 		BIGINT NOT NULL ,
-		`story_id`	  	BIGINT NOT NULL ,
 		`import_user` 	VARCHAR(50) NOT NULL ,
 		`import_from` 	VARCHAR(20) NOT NULL ,
+		`user_id` 		BIGINT NOT NULL ,
+		`story_id`	  	BIGINT NOT NULL ,
 		`import_story`	BIGINT NOT NULL ,
 		`import_status`	VARCHAR(20) NOT NULL ,
 		`request_time`	BIGINT NOT NULL ,
 		`import_time`	BIGINT NOT NULL ,
-		PRIMARY KEY (ID)
+		`viewed_time`	BIGINT NOT NULL ,
+		PRIMARY KEY (import_from,import_story)
 	) $charset_collate;";
 
 

@@ -102,7 +102,7 @@ class c_user {
         if (empty($r)){
             return false;
         }
-        return intval($r[0]->user_id);
+        return empty($r) ? false : intval($r[0]->user_id);
 
     }
     public static function current ($user = null) {
@@ -117,9 +117,21 @@ class c_user {
             "SELECT * FROM user_connections WHERE status = 'verified' AND user_id = %s",
             [$user]
         ));
-        if (empty($r)){
-            return false;
-        }
-        return $r[0]->connection_user;
+        return empty($r) ? false : $r[0]->connection_user;
     }
+    static function pending($user = null) {
+        if ($user === null){
+            if (! is_user_logged_in() ){
+                return false;
+            }
+            $user = get_current_user_id();
+        }
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM user_connections WHERE status = 'unverified' AND user_id = %s ORDER BY ID DESC",
+            [$user]
+        ));
+        return empty($r) ? false : $r[0]->connection_user;
+    }
+
 }

@@ -8,22 +8,33 @@ $app->bundle->enqueue();
 
 $logged_in = is_user_logged_in(  );
 $connected = c_user::current();
+$pending = c_user::pending();
 ?>
+<?php if ($pending !== false && $connected === false) { ?>
+<important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account.<br>If you've already sent the code, don't worry! It sometimes takes up to an hour to process the verification.</important>
+<?php } ?>
 <?php if ($connected !== false) { ?>
-<h5>Your account is connected to a <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/u/<?= $connected; ?>">FFN account</a>.</h5>
+<exciting>You've been verified as the author of <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/u/<?= $connected; ?>">this</a> FFN account. You can now <a href="/import-stories">import</a> your stories from there.</exciting>
 <?php } else { ?>
-<h1>Verify access to account.</h1>
+<h1>Verify yourself</h1>
+<p>Verify yourself as the author to easily <a href="/import-stories">import</a> your stories from other sites.</p>
 <ol>
 <?php if (! $logged_in) { ?>
 <li>Create an account on Fanfiction Online. Or if you already have one, <a onclick="prompt_login()">login</a>.</li>
 <li>Visit this <a href="/verify">page</a>.</li>
 <?php } ?>
-<li>Enter your FFN User ID & Submit.</li>
+<li>
+    Enter your FFN User ID below & Submit.
+    <ol>
+        <li>To find your User ID, go to your <a rel="nofollow" href="https://www.fanfiction.net/account/settings.php">account settings.</a></li>
+        <li>Under <strong>Account Settings</strong>, your User ID will be second on the list.</li>
+    </ol>
+</li>
 <li>You'll be provided with a verification code. Send this verification code as a private message to the account linked.</li>
 <li>Your FFN account will be connected to your Fanfiction Online account.</li>
 </ol>
 <important>
-If your account doesn't get connected within half an hour of sending the message, you should <a href="/contact">contact</a> us.
+If your account doesn't get connected within an hour of sending the message, you should <a href="/contact">contact</a> us.
 </important>
 <?php if ($logged_in) { ?>
 <verification-account></verification-account>

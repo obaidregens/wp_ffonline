@@ -1,8 +1,51 @@
 <?php
 class import_stories {
-    static function get ($author_id) {
-        $html = file_get_contents("https://www.fanfiction.net/u/" . $author_id);
+    protected static $table = 'import_stories';
+    static function import_request($stories) {
+        $current = c_user::current();
+        if ($current === false) {
+            return false;
+        }
+        $table = self::$table;
+        global $wpdb;
+        $rsql = "SELECT import_story FROM $table WHERE import_user = %s AND import_from = %s ";
+        $sql = $wpdb->prepare($rsql,[$current,'ffn']);
+        $existing = array_column($wpdb->get_results($sql),'import_story');    
+        $remove_requests = array_diff($existing,$stories);
+        $new_requests = array_diff($stories,$existing);
+        foreach ($remove_requests as $storyId ) {
+            $wpdb->delete(
+                self::$table,
+                [
+                    'import_story'      => $storyId,
+                    'import_from'       => 'ffn',
+                    'import_status'     => 'pending'
+                ]
+            );
+        }
+        foreach ($new_requests as $storyId ) {
+            $wpdb->insert(
+                $table,
+                [
+                    'import_user'   => $current,
+                    'import_from'   => 'ffn',
+                    'user_id'       => get_current_user_id(),
+                    'story_id'      => 0,
+                    'import_story'  => $storyId,
+                    'import_status' => 'pending',
+                    'request_time'  => time(),
+                    'import_time'   => 0,
+                    'viewed_time'   => 0
+                ]
+            );    
+        }
+    }
+    protected static function get_from_ffn($ffn_author) {
+        $html = file_get_contents("https://www.fanfiction.net/u/" . $ffn_author);
+        if (! $html) {return [];}
+        ob_start();
         $gzip = gzdecode($html);
+        ob_end_clean();
         if ($gzip !== false){
             $html = $gzip;
             $gzip = null;
@@ -12,7 +55,7 @@ class import_stories {
         $r = $doc->loadHTML($html);
         $html = null;
         if (!$r){
-            return;
+            return [];
         }
         $XPath = new DOMXPath ($doc);
         $nodes = ($XPath->query('//div[@class="z-list mystories"]/a[@class="stitle"]'));
@@ -27,5 +70,24 @@ class import_stories {
             ];
         }
         return $return;
+    }
+    static function view_all ($author_id) {
+        $r = c_user::get($author_id);
+        if ($r === false || !is_current_user($r)) {
+            return [];
+        }
+        $table = self::$table;
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT import_story,import_status,story_id FROM $table WHERE import_user = %s",[$author_id]);
+        $results = $wpdb->get_results($sql);
+        $r = array_column($results,'import_status','import_story');
+        $ids = array_column($results,'story_id','import_story');
+        $stories = self::get_from_ffn($author_id);
+        foreach ($stories as $k => $story ) {
+            $s = &$stories[$k];
+            $s['status'] = $r[strval($s['ID'])] ?? 'not_imported';
+            $s['storyID'] = $ids[strval($s['ID'])] ?? 0;
+        }
+        return $stories;
     }
 }

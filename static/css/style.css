@@ -108,6 +108,7 @@ footer {
     margin: 0 auto;
     margin-top: 10px;
     margin-bottom: 20px;
+    padding: 20px;
 }
 footer > nav > a {
     color: var(--text-color);
@@ -127,7 +128,7 @@ main {
     padding: 20px;
 }
 @media only screen and (max-width: 400px) {
-    main {
+    main,footer {
         max-width: 960px;
         padding: 20px 5px;
     }

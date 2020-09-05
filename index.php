@@ -445,6 +445,16 @@ $app->listen('/inbox/@:username',function($self){
     $self->footer();
     exit();
 });
+// Import Stories
+$app->listen('/import-stories',function($self){
+    $self->login();
+    $self->type = 'import-stories';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/import_stories');
+    $self->footer();
+    exit();
+});
 // Write
 $app->listen('/my-stories',function($self){
     $self->login();

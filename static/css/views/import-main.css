@@ -1,0 +1,19 @@
+button[label="Import"] {
+    display: block;
+    margin: 20px 10px;
+    margin-left: auto;
+}
+main > label.checkbox,label.imported {
+    display: block;
+    margin: 15px;
+}
+label.imported {
+    font-size: 0.9rem;
+    margin-left: 45px;
+}
+label.checkbox > status {
+    color: grey;
+    font-size: 0.8rem;
+    transform: translateY(-2px);
+    display: inline-block;
+}

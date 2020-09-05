@@ -29,7 +29,8 @@ $import = [
     'contact',
     'drafts',
     'edit-book',
-    'news'
+    'news',
+    'import',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
