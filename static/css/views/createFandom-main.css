@@ -1,0 +1,23 @@
+main {
+    max-width: 600px !important;
+}
+button[label="Create"] {
+    float: right;
+}
+ul.fandom-options {
+    position: fixed;
+    background-color: var(--background-accent);
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    -moz-max-height: 200px;
+    overflow: auto;
+}
+ul.fandom-options > li {
+    display: flex;
+    padding: 10px;
+}
+ul.fandom-options > li:hover {
+    background-color: var(--theme-color);
+    color: var(--white);
+}

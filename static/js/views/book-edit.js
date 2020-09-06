@@ -207,7 +207,12 @@ const App = () => {
         })
       };
     })
-  })), /*#__PURE__*/React.createElement("page", null, selects, /*#__PURE__*/React.createElement(CreatableSelect, {
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "help-new-fandom"
+  }, "Can't find your fandom? ", /*#__PURE__*/React.createElement("a", {
+    target: "_blank",
+    href: "/create-fandom"
+  }, "Create it"), ".")), /*#__PURE__*/React.createElement("page", null, selects, /*#__PURE__*/React.createElement(CreatableSelect, {
     placeholder: "Select Characters",
     onChange: charChange,
     onCreateOption: newCharacter => {

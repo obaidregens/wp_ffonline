@@ -31,6 +31,7 @@ $import = [
     'edit-book',
     'news',
     'import',
+    'dash',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

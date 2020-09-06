@@ -10,6 +10,7 @@ $books = (new WP_Query([
 ]))->posts;
 ?>
 <actions>
+    <a label="Import Stories" href="/import-stories" class="button"></a>
     <a label="Drafts" href="/drafts" class="button"></a>
     <a href="/my-stories/new" class="button new-book">New Story</a>
 </actions>

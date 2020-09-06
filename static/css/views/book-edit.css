@@ -170,6 +170,9 @@ page {
     display: block;
     padding: 15px;
 }
+step.introjs-showElement {
+    color: var(--text-color);
+}
 step {
     height: 50px;
     display: flex;

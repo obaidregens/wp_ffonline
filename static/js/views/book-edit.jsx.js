@@ -166,11 +166,11 @@ const App = () => {
         <TextInput
         value={selected.title}
         onChange={value => selected.title = value}
-        label="Story Title"
+        label=""
         maxlength="80"
         />
         <TextInput
-        label="Story Summary"
+        label=""
         value={selected.description}
         onChange={value => selected.description = value}
         maxlength="400"
@@ -202,6 +202,7 @@ const App = () => {
             }
         })}
         />
+        <label className="help-new-fandom">Can't find your fandom? <a target="_blank" href="/create-fandom">Create it</a>.</label>
         </page>
         <page>
         {selects}

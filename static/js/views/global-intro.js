@@ -4,8 +4,11 @@ const getViewId = () => {
     if (current_full === "read") {
         return 1;
     }
-    if (logged_in && current_full === 'my-books') {
+    if (logged_in && current_full === 'my-stories') {
         return 2;
+    }
+    if (current_view_parts[0] === 'my-stories' && current_view_parts.length > 1) {
+        return 8;
     }
     if (current_view_parts[0] === 'drafts') {
         if (! current_view_parts[1]) {
@@ -45,7 +48,7 @@ const introSteps = {
         },
         {
             element: 'header >  nav > [href="/write"]',
-            intro: 'To start writing and collaborating on books, click here.'
+            intro: 'To start writing and collaborating on stories, click here.'
         },
         {
             element: 'filter-books > button',
@@ -63,8 +66,16 @@ const introSteps = {
     2: [
         {
             element: 'a.button[label="Drafts"]',
-            intro: "Go to drafts to start writing."
-        }
+            intro: "Click on drafts to start writing."
+        },
+        {
+            element: 'a.button[label="Import Stories"]',
+            intro: "Have stories on other sites? Easily import them to Fanfiction Online."
+        },
+        {
+            element: 'a.new-book',
+            intro: "Ready to publish your first story?"
+        },
     ],
     3: [
         {
@@ -138,28 +149,48 @@ const introSteps = {
             element: 'button.new.popup',
             intro: 'Create a new draft.'
         }
+    ],
+    8: [
+        {
+            element: 'page:first-of-type',
+            intro: 'Enter some basic details about your story.'
+        },
+        {
+            element: 'step:nth-of-type(2)',
+            intro: 'Tags to help readers find your story easily.'
+        },
+        {
+            element: 'step:nth-of-type(3)',
+            intro: 'Manage story settings and publish it.'
+        },
+        {
+            element: 'step:nth-of-type(4)',
+            intro: 'Add & edit chapter(s) to story.'
+        },
     ]
 }
 function startIntro(){
-    const viewID = getViewId();
-    const visited = JSON.parse(cookies.all.intro || null) || [];
-    if (visited.includes(viewID)){
-        return;
-    }
-    visited.push(viewID);
-    cookies.set("intro",JSON.stringify(visited));
-
-    const steps = introSteps[viewID] || [];
-    if (steps.length === 0) {
-        return;
-    }
-    const intro = introJs();
-    intro.setOptions({
-        nextLabel: '',
-        prevLabel: '',
-        exitOnOverlayClick: false,
-        steps
-    });
-    intro.start();
+    setTimeout(() => {
+        const viewID = getViewId();
+        const visited = JSON.parse(cookies.all.intro || null) || [];
+        if (visited.includes(viewID)){
+            return;
+        }
+        visited.push(viewID);
+        cookies.set("intro",JSON.stringify(visited));
+    
+        const steps = introSteps[viewID] || [];
+        if (steps.length === 0) {
+            return;
+        }
+        const intro = introJs();
+        intro.setOptions({
+            nextLabel: '',
+            prevLabel: '',
+            exitOnOverlayClick: false,
+            steps
+        });
+        intro.start();    
+    },500);
 }
 window.onload = startIntro;

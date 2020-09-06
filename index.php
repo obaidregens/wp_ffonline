@@ -179,6 +179,24 @@ $app->listen('/api',function($self){
     include('scripts/api.php');
     exit();
 });
+$app->listen('/dash',function($self){
+    $self->admin();
+    $self->type = 'dash-home';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/dash/home');
+    $self->footer();
+    exit();
+});
+$app->listen('/dash/tags',function($self){
+    $self->admin();
+    $self->type = 'dash-tags';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/dash/tags');
+    $self->footer();
+    exit();
+});
 $app->listen('/manage',function($self){
     $self->admin();
     $self->type = 'manage';
@@ -482,6 +500,15 @@ $app->listen('/my-stories/:id',function($self){
     $self->story = $self->params['id'] === 'new' ? 'new' : $story;
     $self->header();
     $self->template('/views/books/edit');
+    $self->footer();
+    exit();
+});
+$app->listen('/create-fandom',function($self){
+    $self->login();
+    $self->type = 'create-fandom';
+    $self->type_id = 0;
+    $self->header();
+    $self->template('/views/create-fandom');
     $self->footer();
     exit();
 });

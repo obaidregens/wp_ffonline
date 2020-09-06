@@ -1,8 +1,5 @@
 <?php
 function api_edit_book() {
-    if ($d['publish'] === "true") {
-        return ['code' => 980];
-    }
     function term_replace($taxonomy, $term, $parent){
         $exists = term_exists($term,$taxonomy,$parent);
         if ($exists !== null){
@@ -165,4 +162,40 @@ function api_edit_book() {
     }
     wp_cache_flush();
     return ['code'=>$success ?? 1,'selected'=>get_data($d['book_id'])['selected']];
+}
+function api_create_fandom() {
+    required_login();
+    required_params('category','fandom');
+    $d = &$_POST['data'];
+    $term = get_term($d['category'],'category');
+    if (!$term || intval($term->parent) !== 0) {
+        return ['code' => 9];
+    }
+    $fandom = substr(trim($d['fandom']),0,100);
+    if ( $fandom === "") {
+        return ['code' => 10];
+    }
+    $terms = get_terms([
+        'taxonomy'  => 'category',
+        'parent'    => 0,
+        'hide_empty'=> false
+    ]);
+    $fandoms = get_terms([
+        'taxonomy'      => 'category',
+        'exclude'       => array_column($terms,'term_id'),
+        'hide_empty'    => false,
+        'fields'        => 'names'
+    ]);
+    $fs = str_replace(['_',' ','?','+','!','@','#','$','%'],'-',strtolower($fandom));
+    foreach ($fandoms as $f ) {
+        $ff = str_replace(['_',' ','?','+','!','@','#','$','%'],'-',strtolower($f));
+        if ($fs === $ff) {
+            return ['code' => 11];
+        }
+    }
+    $term_id = wp_insert_term( $fandom, 'category', [
+        'parent'    => $d['category']
+    ] )['term_id'];
+    update_term_meta( intval($term_id), 'creator', get_current_user_id() );
+    return ['code'  => 1];
 }
