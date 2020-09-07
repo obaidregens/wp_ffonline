@@ -22,7 +22,16 @@ $current_user = get_userdata( get_current_user_id() );
         <title><?= $app->header_options['title']; ?></title>
 		<meta name="Description" content="<?= $app->header_options['description']; ?>">
 		<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
-		<link rel="icon" href="/content/static/images/logo.svg"  type="image/svg+xml">
+		<!-- Images -->
+		<link rel="icon" type="image/png" href="/content/static/images/logos/16.png" sizes="16x16">
+		<link rel="icon" type="image/png" href="/content/static/images/logos/32.png" sizes="32x32">
+		<link rel="icon" type="image/png" href="/content/static/images/logos/96.png" sizes="96x96">
+		<link rel="icon" type="image/png" href="/content/static/images/logos/128.png" sizes="128x128">
+		<link rel="icon" type="image/png" href="/content/static/images/logos/192.png" sizes="192x192">
+		<link rel="icon" type="image/png" href="/content/static/images/logos/512.png" sizes="512x512">
+		<link rel="apple-touch-icon" href="/content/static/images/logos/120.png">
+		<link rel="apple-touch-icon" href="/content/static/images/logos/152.png" sizes="152x152">
+		<link rel="apple-touch-icon" href="/content/static/images/logos/180.png" sizes="180x180">
 		<!-- Meta -->
     </head>
     <body>
