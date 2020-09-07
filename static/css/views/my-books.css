@@ -7,9 +7,8 @@
     transform: rotate(-14deg) scale(0.9);
 }
 .button[label="Drafts"] {
-    display: inline-flex;
-    margin-bottom: 20px;
     margin-left: auto;
+    display: inline-flex;
     padding-left: 26px;
 }
 actions {
@@ -59,4 +58,20 @@ book-views > stat::after {
     content: attr(timespan);
     font-size: 0.8rem;
     text-transform: uppercase;
+}
+@media only screen and (max-width: 500px) {
+    actions > .button {
+        font-size: 0.6rem;
+    }
+    actions .button[label="Import Stories"] {
+        padding: 0 10px;
+        margin-left: 0;
+    }
+    actions > .button.new-book {
+        margin-right: 0;
+    }
+    actions > .button[label="Drafts"] {
+        margin-right: 0;
+        padding-left: 22px;
+    }
 }

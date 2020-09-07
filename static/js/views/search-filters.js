@@ -205,9 +205,9 @@ function create_tags_popup(tag_name){
                     }
                 }
             },
-            onClose: function(){
-                saveSelectedTags();
-                this.remove();
+            onClose: saveSelectedTags,
+            onAfterClose: function() {
+                setTimeout(() => this.remove(),100);
             }
         }
     });

@@ -152,7 +152,7 @@ $app->listen('/',function($self){
 });
 $app->listen('/logout',function($self){
     if (! is_user_logged_in()) {
-        $self->redirect('my-stories');
+        $self->redirect('login');
     }
     $self->type = 'logout';
     $self->type_id = 0;
@@ -472,6 +472,10 @@ $app->listen('/import-stories',function($self){
     $self->template('/views/import_stories');
     $self->footer();
     exit();
+});
+$app->listen('/login',function($self) {
+    $self->login();
+    $self->redirect('my-stories');
 });
 // Write
 $app->listen('/my-stories',function($self){
