@@ -134,6 +134,11 @@ function Pairing() {
 
 const App = () => {
   const charChange = newValue => {
+    if (newValue.length > 6) {
+      new toast("Stories can have up to 6 characters.");
+      return;
+    }
+
     selected.characters = newValue;
     const character_ids = (newValue || []).map(({
       value
@@ -144,12 +149,17 @@ const App = () => {
     reRender();
   };
 
-  const selects = [["rating", false], ["language", false], ["status", false], ["genre", true]].map(([tagName, isMultiple = false]) => {
+  const selects = [["rating", 1], ["language", 1], ["status", 1], ["genre", 3]].map(([tagName, maxSelect = 1]) => {
     return /*#__PURE__*/React.createElement(Select, {
       placeholder: "Select " + _.ucfirst(tagName),
       onChange: value => {
-        if (!isMultiple) {
+        if (maxSelect <= 1) {
           value = [value];
+        }
+
+        if (maxSelect > 1 && value.length > maxSelect) {
+          new toast("Stories can have up to " + maxSelect + " " + tagName + "s.");
+          return;
         }
 
         selected[tagName] = value;
@@ -158,7 +168,7 @@ const App = () => {
       value: selected[tagName],
       className: "select " + tagName,
       isSearchable: true,
-      isMulti: isMultiple,
+      isMulti: maxSelect > 1 ? true : false,
       options: Object.entries(tags.all[tagName]).map(([single_id, single]) => {
         return {
           value: single_id,
@@ -181,6 +191,11 @@ const App = () => {
   }), /*#__PURE__*/React.createElement(Select, {
     placeholder: "Select Fandom",
     onChange: newValue => {
+      if (newValue.length > 3) {
+        new toast("Stories can have up to 3 fandoms.");
+        return;
+      }
+
       selected.fandom = newValue;
       const fandom_ids = (newValue || []).map(({
         value
@@ -259,6 +274,11 @@ const App = () => {
     name: "tag",
     placeholder: "Select Tag",
     onChange: value => {
+      if (value.length > 5) {
+        new toast("Stories can have up to 5 tags.");
+        return;
+      }
+
       if (value.__isNew__) {
         value.value = 'newValue';
       }

@@ -6,12 +6,20 @@ $app->bundle->css('css/js-components/sidenav');
 $app->bundle->js('js/components/sidenav');
 $app->bundle->enqueue();
 global $wpdb;
+
 $landings = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings");
+
 $t = time() - 60*60*24*7;
-$landings_last_week = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t");
+$landings_last_week = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
 $t = time() - 60*60*24;
-$landings_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t");
+$landings_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
+
 $users_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM wp_users WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+
+$t = time() - 60*60*24*7;
+$unique_landings_last_week = $wpdb->get_results("SELECT COUNT(DISTINCT vfs) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
+$t = time() - 60*60*24;
+$unique_landings_last_24 = $wpdb->get_results("SELECT COUNT(DISTINCT vfs) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
 ?>
 <overview>
 <block label="Users" count="<?= count(get_users()); ?>"></block>
@@ -25,3 +33,8 @@ $users_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM wp_users WHERE us
 <overview>
 <block label="Users - Last 24 hours" count="<?= $users_last_24[0]->c ?>"></block>
 </overview>
+<overview>
+<block label="Unique Vsitors - Last 7 days" count="<?= $unique_landings_last_week[0]->c ?>"></block>
+<block label="Unique Vsitors - Last 24 hours" count="<?= $unique_landings_last_24[0]->c ?>"></block>
+</overview>
+<overview>

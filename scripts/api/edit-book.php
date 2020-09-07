@@ -89,28 +89,31 @@ function api_edit_book() {
     // Tags
     // Simple Tags
     $simple_tags = [
-        'status'    => true,
-        'fandom'    => true,
-        'genre'     => false,
-        'rating'    => true,
-        'language'  => true
+        'status'    => [true],
+        'fandom'    => [true,3],
+        'genre'     => [false,3],
+        'rating'    => [true],
+        'language'  => [true]
     ];
-    foreach ($simple_tags as $tagName => $required) {
+    foreach ($simple_tags as $tagName => $bnc) {
+        $required = $bnc[0];
+        $maxSelect = $bnc[1] ?? 1;
         if ( empty($d[$tagName]) && $required) {
             $publish = false;
             continue;
         }
         $tagIds = [];
-        foreach ((empty($d[$tagName]) ? [] : $d[$tagName]) as $key => $tagObj) {
+        foreach ( (empty($d[$tagName]) ? [] : array_slice($d[$tagName],0,$maxSelect) ) as $key => $tagObj) {
             $tagIds[] = intval($tagObj['value']);
         }
         wp_set_post_terms( $d['book_id'], $tagIds, $tagName === 'fandom' ? 'category' : $tagName );
     }
 
     // Characters
+    $max_characters=6;
     $charIds = [];
     $charNames = [];
-    foreach ( (empty($d['characters']) ? [] : $d['characters']) as $k => $character_obj) {
+    foreach ( (empty($d['characters']) ? [] : array_slice($d['characters'],0,$max_characters) ) as $k => $character_obj) {
         $f = intval($character_obj['fandom']);
         $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));
         $charNames[] = $character_obj['label'];
@@ -120,8 +123,9 @@ function api_edit_book() {
     
 
     // Pairing
+    $max_pairings=3;
     $pairings = [];
-    $d['pairing'] = (empty($d['pairing']) ? [] : array_slice($d['pairing'],0,3) );
+    $d['pairing'] = (empty($d['pairing']) ? [] : array_slice($d['pairing'],0,$max_pairings) );
     foreach ($d['pairing'] as $k => $pairing_chars) {
         $pairing_charNames = array_column($pairing_chars,'label');
         $error = ! empty(array_diff($pairing_charNames,$charNames)) || count($pairing_charNames) < 2 || count($pairing_charNames) > 4;
@@ -133,8 +137,9 @@ function api_edit_book() {
     }
     wp_set_object_terms( $d['book_id'], $pairings, 'pairing' );
     // Tag
+    $max_tags=5;
     $tag = [];
-    foreach ( (empty($d['tag']) ? [] : $d['tag']) as $k => $tag_obj) {
+    foreach ( (empty($d['tag']) ? [] : array_slice($d['tag'],0,$max_tags) ) as $k => $tag_obj) {
         $tag_id = intval(term_replace( 'tag', $tag_obj['label'], 0 ));
         $tag[] = $tag_id;
     }

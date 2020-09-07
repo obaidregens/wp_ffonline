@@ -273,7 +273,7 @@ class book_query{
 class book_query_cache extends book_query {
     protected static $midfix = '</--/>';
     function __construct(){
-        $min_gap_min = 0.0001;
+        $min_gap_min = 180;
         $min_gap = $min_gap_min * 60;
 
         global $wpdb;
