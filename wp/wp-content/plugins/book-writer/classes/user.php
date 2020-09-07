@@ -23,6 +23,7 @@ class user {
                 'user_pass'             => bin2hex(random_bytes(103)),
                 'user_nicename'         => $username,
                 'user_email'            => $email,
+                'user_registered'       => current_time('mysql'),
                 'user_activation_key'   => $code->ID,
                 'user_status'           => 1,
                 'display_name'          => '@' . $username

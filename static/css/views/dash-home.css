@@ -8,6 +8,7 @@ overview > block {
     height: 120px;
     flex-direction: column-reverse;
     justify-content: center;
+    text-align: center;
     align-items: center;
 }
 block::before {

@@ -1,4 +1,5 @@
-if (document.querySelector('chat-list').children.length === 0) {
+const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
+if (document.querySelector('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
     window.addEventListener('load',() => {
         document.querySelector('user-info').remove();
         document.querySelector('send-message').remove();
@@ -20,7 +21,6 @@ if (document.querySelector('chat-list').children.length === 0) {
     });
 }
 else {
-    const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
     if (full_url_parts[full_url_parts.length-1] !== 'inbox'){
         const username = full_url_parts[full_url_parts.length-1];
         const existing_user_elem = document.querySelector(`chat-list > [username="${username}"]`);
