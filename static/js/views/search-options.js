@@ -48,6 +48,7 @@ function update_collections(collection_data){
             return;
         }
         const collection_id = event.target.getAttribute('collection_id');
+        const collection_name = event.target.getAttribute('label');
         const book_id = parseInt(_popup.getAttribute('book_id'));
         const add = event.target.checked;
         api('add_to_collection',{
@@ -57,6 +58,9 @@ function update_collections(collection_data){
                 add
             },
             callback: response => {
+                if (collection_name === "Hidden (Private)" && add) {
+                    new toast("Book will be hidden in your next search.");
+                }
                 const el = document.querySelector('book_collections');
                 const prev = JSON.parse(el.innerText);
                 prev[book_id] = response.book_collections[book_id];

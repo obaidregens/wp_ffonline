@@ -69,6 +69,7 @@ class collection {
     static function get_by($field, $value) {
         $table = self::$table;
         $e = new err();
+        // Slug is null if not unlisted
         if (! in_array($field,['ID','slug'])){
             return $e->add('$field','Should be either "ID" or "slug"');
         }
@@ -86,10 +87,12 @@ class collection {
     }
     static function query ($a) {
         // Fields
+        // id_included, id_excluded
         // author_included, author_excluded
         // types
         // slug
         // order, orderby
+        // title (Strict)
         $a = array_replace([
             'types'     => ['Public','Private','Unlisted','Favorites']
         ],$a);
@@ -102,6 +105,10 @@ class collection {
         }
         $prep = $a['types'];
         $sql = "SELECT * FROM " . self::$table . " WHERE type IN(" . implode(',',array_fill(0,count($a['types']),'%s')) . ")";
+        if (isset($a['title'])) {
+            $sql .= " AND title = %s";
+            $prep[] = $a['title'];
+        }
         if ( isset($a['id_included']) ) {
             $c = (array) $a['id_included'];
             $sql .= ' AND ID IN (' . implode(',',array_fill(0,count($c),'%s')) .') ';
@@ -138,9 +145,19 @@ class collection {
         $ids = array_column($r,'ID');
         $sql_books = "SELECT * FROM " . collection_books::$table . " WHERE collection_id IN(" . implode(',',$ids) . ")";
         $rows = empty($ids) ? [] : $wpdb->get_results($sql_books);
+        $book_ids = [];
+        if (! empty($rows)) {
+            $wp_posts_sql = $wpdb->prepare(
+                "SELECT ID,post_author FROM wp_posts
+                    WHERE ID IN(" . implode(',',array_fill(0,count($rows),'%s')) . ")
+                    AND post_type = 'book' AND post_status = 'publish'"
+            ,array_column($rows,'book_id'));
+            $book_ids = array_column($wpdb->get_results($wp_posts_sql),'post_author','ID');    
+        }
         foreach ($rows as $row) {
             $loc = &$r[$row->collection_id]->book_ids;
             $loc = isset($loc) ? $loc : [];
+            if (! isset($book_ids[$row->book_id]) ){continue;}
             $loc[] = $row->book_id;
         }
 
@@ -207,7 +224,33 @@ class collection_books extends collection{
         global $wpdb;
         $sql = $wpdb->prepare("SELECT * FROM $table WHERE $field = %s",[$value]);
         $results = $wpdb->get_results($sql);
-        return $results;
+        if (empty($results) ) {
+            return [];
+        }
+        if ($field === 'collection_id') {
+            $sql = $wpdb->prepare(
+                "SELECT ID,post_author FROM wp_posts
+                    WHERE ID IN(" . implode(',',array_fill(0,count($results),'%s')) . ")
+                    AND post_type = 'book' AND post_status = 'publish'"
+            ,array_column($results,'book_id'));
+            $book_ids = array_column($wpdb->get_results($sql),'post_author','ID');
+            foreach ($results as $k => $row) {
+                if (! isset($book_ids[$row->book_id])) {
+                    unset($results[$k]);
+                }
+            }
+        }
+        else if ($field === 'book_id') {
+            $collection_ids = array_column(collection::query([
+                'id_included'   => array_column($results,'collection_id')
+            ]),'author','ID');
+            foreach ($results as $k => $row) {
+                if (! isset($collection_ids[$row->collection_id])) {
+                    unset($results[$k]);
+                }
+            }
+        }
+        return array_values($results);
     }
 }
 class collection_follow extends collection {
@@ -321,5 +364,12 @@ class collection_helpers extends collection {
             'type'      => 'Private',
             'author'    => $user_id
         ]);
+    }
+    static function get_hidden() {
+        $c = collection::query([
+            'title'             => 'Hidden',
+            'author_included'   => [get_current_user_id()]
+        ]);
+        return $c[0]->book_ids;
     }
 }

@@ -23,7 +23,7 @@ $args = array(
 );
 $type = _landing::get_type();
 if ($type['type'] === 'author-collections'){
-    $args['authors_included'] = array($type['type_id']);
+    $args['author_included'] = array($type['type_id']);
     $args['types'] = array('Public','Favorites');
     if (is_current_user($type['type_id'])){
         unset($args['count']);

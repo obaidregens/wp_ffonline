@@ -19,19 +19,23 @@ function follow_collection(collection_id,follow = true){
         }
     });
 }
-document.querySelector('collection-bar > button[label="Create New"]').addEventListener('click',event => {
-    if (! logged_in) {
-        prompt_login();
-        new toast('Login to create collection.');
-        return;
-    }
-    create_collection_open('new');
-});
-document.querySelector('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
-    if (! logged_in) {
-        prompt_login();
-        new toast('Login to create and add books to your collections.');
-        return;
-    }
-    window.location.href = '@me/collections'
-});
+if (document.querySelector('collection-bar > button[label="Create New"]')) {
+    document.querySelector('collection-bar > button[label="Create New"]').addEventListener('click',event => {
+        if (! logged_in) {
+            prompt_login();
+            new toast('Login to create collection.');
+            return;
+        }
+        create_collection_open('new');
+    });    
+}
+if (document.querySelector('collection-bar > button[label="My Collections"]')) {
+    document.querySelector('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
+        if (! logged_in) {
+            prompt_login();
+            new toast('Login to create and add books to your collections.');
+            return;
+        }
+        window.location.href = '@me/collections'
+    });
+}

@@ -281,6 +281,10 @@ function type_args($args,$placeholder){
 		$error->add('type','Unknown type for search: ' . $placeholder['type']);
 		return $error;
 	}
+	if (!($placeholder['type'] === 'collection' && collection::get_by('ID',$placeholder['type_id'])->title === 'Hidden')) {
+		$hidden = collection_helpers::get_hidden();
+		$args['exclude_ids'] = array_merge($args['exclude_ids'] ?? [],$hidden);
+	}
 	return $args;
 }
 ////Tags Data
