@@ -157,6 +157,26 @@ function api_edit_and_save_draft() {
 
     return ['code'=>1,'draft_id'=>$draft_id];
 }
+function api_compare_draft () {
+    required_params("share","draft_id","compare_with");
+    $d = &$_POST['data'];
+    $draft = drafts::get_by('ID',$d['draft_id']);
+    $compare_with = drafts::get_by('ID',$d['compare_with']);
+    if (!$draft || !$compare_with) {
+        return ['code' => 9];
+    }
+    if (!is_current_user($compare_with->user_id)) {
+        return ['code' => 10];
+    }
+    if (! (is_current_user($draft->user_id) || $draft->share === $d['share']) ) {
+        return ['code' => 8];
+    }
+    $compare = drafts_json::compare($draft->content,$compare_with->content);
+    return [
+        'code'      => 1,
+        'compare'   => $compare
+    ];
+}
 
 // Index
 function api_get_drafts() {

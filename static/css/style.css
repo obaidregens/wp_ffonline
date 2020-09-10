@@ -21,6 +21,14 @@
     --black: #262828;
     --lightblack: #5f6368;
 }
+::-moz-selection {
+    color: var(--white);
+    background: var(--theme-color);
+}
+::selection {
+    background: #e8e8e8;
+    color: var(--black);
+}
 html {
     background-color: var(--background-color);
     color: var(--text-color);
@@ -91,6 +99,7 @@ header > nav {
     display: flex;
 }
 header > nav > * {
+    transition: background-color .2s ease-out;
     cursor: pointer;
     color: var(--text-color);
     padding: 0 10px;

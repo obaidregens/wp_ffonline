@@ -153,6 +153,38 @@ function run_at_activation(){
 		PRIMARY KEY (import_from,import_story)
 	) $charset_collate;";
 
+	$ffn_outreach_table = "CREATE TABLE ffn_outreach (
+		`ffn_user_id`			BIGINT NOT NULL ,
+		`message_sent`			BIGINT NOT NULL ,
+		`ffn_username`			VARCHAR(40) NOT NULL ,
+		`ffn_joined`			BIGINT NOT NULL ,
+		`profile_updated`		BIGINT NOT NULL ,
+		`total_stories`			INT NOT NULL ,
+		`most_fandom`			VARCHAR(200) NOT NULL ,
+		`total_chapters`		INT NOT NULL ,
+		`total_words`			BIGINT NOT NULL ,
+		`total_favs`			BIGINT NOT NULL ,
+		`total_follows`			BIGINT NOT NULL ,
+		`total_reviews`			BIGINT NOT NULL ,
+		`total_rating`			INT NOT NULL ,
+		`top_favs_fandom`		VARCHAR(200) NOT NULL ,
+		`top_favs_words`		BIGINT NOT NULL ,
+		`top_favs_reviews`		INT NOT NULL ,
+		`top_favs_chapters`		INT NOT NULL ,
+		`top_favs_favs`			INT NOT NULL ,
+		`top_favs_follows`		INT NOT NULL ,
+		`top_favs_rating`		VARCHAR(5) NOT NULL ,
+		`top_favs_language`		VARCHAR(100) NOT NULL ,
+		`top_favs_genre`		VARCHAR(200) NOT NULL ,
+		`top_favs_updated`		BIGINT NOT NULL ,
+		`top_favs_published`	BIGINT NOT NULL ,
+		`oldest_published`		BIGINT NOT NULL ,
+		`oldest_updated`		BIGINT NOT NULL ,
+		`newest_published`		BIGINT NOT NULL ,
+		`newest_updated`		BIGINT NOT NULL ,
+		PRIMARY KEY (ffn_user_id)
+	) $charset_collate;";
+
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -178,6 +210,8 @@ function run_at_activation(){
 	dbDelta( $draft_revisions_table );
 	// Import Stories
 	dbDelta( $import_stories_table );
+	// FFN Outreach
+	dbDelta( $ffn_outreach_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

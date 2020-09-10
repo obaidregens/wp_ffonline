@@ -1,6 +1,6 @@
 /* Autosave Time */
 save-time:empty {
-    display: none;
+    visibility: hidden;
 }
 save-time::before {
     margin-right: 4px;
@@ -11,9 +11,11 @@ save-time {
     cursor: pointer;
     color: grey;
     display: flex;
+    margin-left: auto;
     margin-top: 20px;
     font-size: 0.8rem;
-    justify-content: flex-end;
+    width: fit-content;
+    width: -moz-fit-content;
 }
 /* Revisions */
 sidenav[revisions]:empty::before {

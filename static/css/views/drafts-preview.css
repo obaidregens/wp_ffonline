@@ -35,7 +35,9 @@ button[label="Compare"] {
     display: block;
     margin-bottom: 10px;
 }
-/* Select Draft Popup */
-popup[select-draft] > h3 {
-    margin-top: 0;
+/* Compare */
+next-screen > compare {
+    margin-top: 20px;
+    word-break: break-word;
+    display: block;
 }

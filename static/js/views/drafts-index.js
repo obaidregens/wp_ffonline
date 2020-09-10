@@ -64,20 +64,22 @@ const loadFolder = (p) => {
             }));
         }
     }
-    listing.appendChild(DOM.create('file',{
-        classes: ['new-draft-file'],
-        listeners: {
-            click: typeof OPT_REMOVE_FILES_CLICK === 'undefined' ? () => {
-                window.location.href = "/drafts/new/edit";
-            } : () => {
-                window.open('/drafts/new/edit/', '_blank');
-            }
-        },
-        children: [
-            DOM.create('file-meta',{
-                innerText: 'New Draft'
-            })
-        ]
-    }));
+    if (typeof OPT_NO_NEW_DRAFT === "undefined") {
+        listing.appendChild(DOM.create('file',{
+            classes: ['new-draft-file'],
+            listeners: {
+                click: typeof OPT_REMOVE_FILES_CLICK === 'undefined' ? () => {
+                    window.location.href = "/drafts/new/edit";
+                } : () => {
+                    window.open('/drafts/new/edit/', '_blank');
+                }
+            },
+            children: [
+                DOM.create('file-meta',{
+                    innerText: 'New Draft'
+                })
+            ]
+        }));    
+    }
     current_path = p;
 }
