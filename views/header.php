@@ -30,7 +30,7 @@ $current_user = get_userdata( get_current_user_id() );
 		<link rel="manifest" href="/content/manifest/manifest.webmanifest" />
 		<script>
 		if ('serviceWorker' in navigator) {
-			navigator.serviceWorker.register('/content/manifest/sw.js');
+			navigator.serviceWorker.register('/sw.js');
 		}
 		</script>
 		<!-- Images -->

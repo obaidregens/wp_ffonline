@@ -708,6 +708,10 @@ $app->listen('/contact',function($self){
     $self->footer();
     exit();
 });
+// Manifest
+$app->listen('/sw.js',function($self) {
+    $self->static('/content/manifest/sw.js');
+});
 // Offline
 $app->listen('/offline',function($self) {
     $self->type = 'offline';
