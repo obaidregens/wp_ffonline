@@ -708,6 +708,13 @@ $app->listen('/contact',function($self){
     $self->footer();
     exit();
 });
+// Offline
+$app->listen('/offline',function($self) {
+    $self->type = 'offline';
+    $self->type_id = 0;
+    $self->template('/views/offline');
+    exit();
+});
 // Robots
 $app->listen('/robots.txt',function(){
 ?>
