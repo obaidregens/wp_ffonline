@@ -5,9 +5,10 @@ function api_edit_book() {
         if ($exists !== null){
             return $exists['term_id'];
         }
-        return wp_insert_term($term,$taxonomy,array(
+        $i = wp_insert_term($term,$taxonomy,array(
             'parent'      => $parent,
         ));
+        return $i['term_id'];
     }
     required_login();
     required_params(
@@ -173,7 +174,7 @@ function api_create_fandom() {
     required_params('category','fandom');
     $d = &$_POST['data'];
     $term = get_term($d['category'],'category');
-    if (!$term || intval($term->parent) !== 0) {
+    if (is_wp_error( $term ) || !$term || intval($term->parent) !== 0) {
         return ['code' => 9];
     }
     $fandom = substr(trim($d['fandom']),0,100);

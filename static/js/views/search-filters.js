@@ -1,5 +1,6 @@
+// document.querySelector('tags_data').innerText = JSON.stringify({});
 function setSelectedTags(tag_name,selected){
-    let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name];
+    let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name] || {};
     if (tag_name === 'character'){
         const character_entries = Object.values(tags_data);
         tags_data = {};

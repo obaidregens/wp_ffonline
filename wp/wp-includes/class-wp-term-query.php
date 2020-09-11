@@ -766,7 +766,6 @@ class WP_Term_Query {
 				}
 			}
 		}
-
 		/*
 		 * When querying for terms connected to objects, we may get
 		 * duplicate results. The duplicates should be preserved if

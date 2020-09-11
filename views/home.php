@@ -55,7 +55,7 @@ $app->bundle->enqueue();
                 <li class="glide__slide">
                     <section-description>Collaborate</section-description>
                     <mini-description>
-                    Collaborate with others, review thir edits, and use them in your stories.
+                    Collaborate with others, review their edits, and use them in your stories.
                     <br>
                     <a href="/drafts/new">Start Writing</a>
                     </mini-description>

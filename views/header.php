@@ -20,8 +20,19 @@ $current_user = get_userdata( get_current_user_id() );
         <meta charset="UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= $app->header_options['title']; ?></title>
-		<meta name="Description" content="<?= $app->header_options['description']; ?>">
+		<?php
+		if (isset($app->header_options['description'])){
+			?><meta name="Description" content="<?= $app->header_options['description']; ?>"><?php
+		}
+		?>
 		<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+		<!-- Manifest -->
+		<link rel="manifest" href="/content/manifest/manifest.webmanifest" />
+		<script>
+		if ('serviceWorker' in navigator) {
+			navigator.serviceWorker.register('/content/manifest/sw.js');
+		}
+		</script>
 		<!-- Images -->
 		<link rel="icon" type="image/png" href="/content/static/images/logos/16.png" sizes="16x16">
 		<link rel="icon" type="image/png" href="/content/static/images/logos/32.png" sizes="32x32">
@@ -33,6 +44,8 @@ $current_user = get_userdata( get_current_user_id() );
 		<link rel="apple-touch-icon" href="/content/static/images/logos/152.png" sizes="152x152">
 		<link rel="apple-touch-icon" href="/content/static/images/logos/180.png" sizes="180x180">
 		<!-- Meta -->
+		<meta name="apple-mobile-web-app-status-bar" content="#007ACC">
+		<meta name="theme-color" content="#007ACC">
     </head>
     <body>
         <nonce hidden><?= $nonce; ?></nonce>

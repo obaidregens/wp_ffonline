@@ -114,7 +114,8 @@ function get_data($book_id = 'new'){
 
 		if (! empty($book_fandom_ids)){
 			$book_fandoms = get_terms(array(
-				'include'	=> $book_fandom_ids
+				'include'	=> $book_fandom_ids,
+				'hide_empty'=> false
 			));
 		}
 		foreach (($book_fandoms ?? []) as $key => $fandom) {

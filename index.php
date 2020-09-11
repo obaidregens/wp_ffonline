@@ -85,8 +85,7 @@ class Router {
         }
         $this->called[] = 'header';
         $this->header_options = array_replace([
-            'title'         => 'Fanfiction Online',
-            'description'   => 'The best collection of fanfics where readers & writers gather to share their love of fanfiction.'
+            'title'         => 'Fanfiction Online'
         ],$options);
         $this->template('/views/header',true);
     }
@@ -101,7 +100,9 @@ class Router {
         $this->type = '404';
         $this->type_id = 0;
         http_response_code(404);
-        $this->header();
+        $this->header([
+            'title'         => construct_page_title("Page not found"),
+        ]);
         $this->template($template === null ? 'views/404' : $template);
         $this->footer();
         exit();
@@ -145,7 +146,9 @@ $app = new Router();
 $app->listen('/',function($self){
     $self->type = 'home';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'description'   => "Read & write fanfiction online."
+    ]);
     $self->template('/views/home');
     $self->footer();
     exit();
@@ -162,7 +165,9 @@ $app->listen('/logout',function($self){
 $app->listen('/news',function($self){
     $self->type = 'news';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("News")
+    ]);
     $self->template('/views/news');
     $self->footer();
     exit();
@@ -170,7 +175,9 @@ $app->listen('/news',function($self){
 $app->listen('/read',function($self){
     $self->type = 'read';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'     => construct_page_title("Read")
+    ]);
     $self->template('/views/search');
     $self->footer();
     exit();
@@ -183,7 +190,9 @@ $app->listen('/dash',function($self){
     $self->admin();
     $self->type = 'dash-home';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'     => construct_page_title("Dash")
+    ]);
     $self->template('/views/dash/home');
     $self->footer();
     exit();
@@ -192,7 +201,9 @@ $app->listen('/dash/tags',function($self){
     $self->admin();
     $self->type = 'dash-tags';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'     => construct_page_title("Dash Tags")
+    ]);
     $self->template('/views/dash/tags');
     $self->footer();
     exit();
@@ -201,7 +212,9 @@ $app->listen('/manage',function($self){
     $self->admin();
     $self->type = 'manage';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'     => construct_page_title("Manage")
+    ]);
     $self->template('/views/manage');
     $self->footer();
     exit();
@@ -296,7 +309,9 @@ $app->listen('/story/:story/:chapter',function($self){
 $app->listen('/collections',function($self){
     $self->type = 'collection-index';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'     => construct_page_title("Collections")
+    ]);
     $self->template('/views/collections/index');
     $self->footer();
     exit();
@@ -309,7 +324,15 @@ $app->listen('/collections/:collection',function($self){
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
     $self->collection = $collection;
-    $self->header();
+    $followed = count(collection_follow::query_by('collection_id',$collection->ID));
+    $and_is_followed = "";
+    if ($followed > 5) {
+        $and_is_followed = " and is followed by " . $followed  . "people";
+    }
+    $self->header([
+        'title'         => construct_page_title($collection->title,"Collection"),
+        'description'   => $collection->title . ' has ' . $collection->count . ($collection->count > 1 ? ' stories' : ' story') . $and_is_followed . '.'
+    ]);
     $self->template('/views/collections/single');
     $self->footer();
     exit();
@@ -337,7 +360,9 @@ $app->listen('/@:user/collections/:collection',function($self){
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
     $self->collection = $collection;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($collection->title,"Collection")
+    ]);
     $self->template('/views/collections/single');
     $self->footer();
     exit();
@@ -445,7 +470,9 @@ $app->listen('/inbox',function($self){
     $self->type = 'inbox';
     $self->type_id = 0;
     $self->login();
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Inbox"),
+    ]);
     $self->template('/views/inbox');
     $self->footer();
     exit();
@@ -458,7 +485,9 @@ $app->listen('/inbox/@:username',function($self){
     }
     $self->type = 'inbox';
     $self->type_id = intval($user->ID);
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Inbox"),
+    ]);
     $self->template('/views/inbox');
     $self->footer();
     exit();
@@ -468,7 +497,9 @@ $app->listen('/import-stories',function($self){
     $self->login();
     $self->type = 'import-stories';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Import Stories"),
+    ]);
     $self->template('/views/import_stories');
     $self->footer();
     exit();
@@ -482,7 +513,9 @@ $app->listen('/my-stories',function($self){
     $self->login();
     $self->type = 'my-stories';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("My Stories"),
+    ]);
     $self->template('/views/books/my-books');
     $self->footer();
     exit();
@@ -502,7 +535,9 @@ $app->listen('/my-stories/:id',function($self){
     $self->type = 'edit-story';
     $self->type_id = $self->params['id'] === 'new' ? 'new' : intval($story->ID);
     $self->story = $self->params['id'] === 'new' ? 'new' : $story;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Edit Story"),
+    ]);
     $self->template('/views/books/edit');
     $self->footer();
     exit();
@@ -511,7 +546,9 @@ $app->listen('/create-fandom',function($self){
     $self->login();
     $self->type = 'create-fandom';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Create Fandom"),
+    ]);
     $self->template('/views/create-fandom');
     $self->footer();
     exit();
@@ -523,7 +560,9 @@ $app->listen('/drafts',function($self){
     $self->login();
     $self->type = 'drafts-index';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Drafts"),
+    ]);
     $self->template('/views/drafts/index');
     $self->footer();
     exit();
@@ -540,7 +579,9 @@ $app->listen('/drafts/:draft_share',function($self){
     $self->type = 'drafts-share';
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($draft->title,"Shared by @" . get_userdata($draft->user_id )->user_login,"Drafts"),
+    ]);
     $self->template('/views/drafts/preview');
     $self->footer();
     exit();
@@ -557,7 +598,9 @@ $app->listen('/drafts/:draft_id/preview',function($self){
     $self->type = 'drafts-preview';
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($draft->title,"Preview","Drafts"),
+    ]);
     $self->template('/views/drafts/preview');
     $self->footer();
     exit();
@@ -576,7 +619,9 @@ $app->listen('/drafts/:draft_id/edit',function($self){
     $self->type = 'drafts-edit';
     $self->type_id = $self->params['draft_id'] === 'new' ? 0 : intval($draft->ID);
     $self->draft = $draft;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($draft === false ? "Untitled" : $draft->title,"Edit", "Drafts"),
+    ]);
     $self->template('/views/drafts/edit');
     $self->footer();
     exit();
@@ -608,7 +653,9 @@ $app->listen('/drafts/:draft_id/export/ffn',function($self){
     $self->type = 'drafts-export-ffn';
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($draft->title,"Export to FFN","Drafts"),
+    ]);
     $self->template('/views/drafts/export-ffn');
     $self->footer();
     exit();
@@ -622,7 +669,9 @@ $app->listen('/drafts/:draft_id/export/ao3',function($self){
     $self->type = 'drafts-export-ao3';
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title($draft->title,"Export to AO3","Drafts"),
+    ]);
     $self->template('/views/drafts/export-ao3');
     $self->footer();
     exit();
@@ -631,7 +680,9 @@ $app->listen('/drafts/:draft_id/export/ao3',function($self){
 $app->listen('/verify',function($self){
     $self->type = 'verify';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Verify"),
+    ]);
     $self->template('/views/verify');
     $self->footer();
     exit();
@@ -639,7 +690,9 @@ $app->listen('/verify',function($self){
 $app->listen('/verify/:author_id',function($self){
     $self->type = 'verify';
     $self->type_id = $self->params['author_id'];
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Verify"),
+    ]);
     $self->template('/views/verify');
     $self->footer();
     exit();
@@ -648,7 +701,9 @@ $app->listen('/verify/:author_id',function($self){
 $app->listen('/contact',function($self){
     $self->type = 'contact';
     $self->type_id = 0;
-    $self->header();
+    $self->header([
+        'title'         => construct_page_title("Contact"),
+    ]);
     $self->template('/views/contact');
     $self->footer();
     exit();

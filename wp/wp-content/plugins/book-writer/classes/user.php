@@ -161,14 +161,14 @@ class mail_user extends user {
         update_user_meta( $current_user->ID, '_new_email', $new_user_email );
         
         $email_text = __(
-            'Hi ###USERNAME###,
-            
-            You recently requested a change in the email address associated with your account.
+'Hi ###USERNAME###,
 
-            To confirm the change, click on the link below:
-            ###ADMIN_URL###
+You recently requested a change in the email address associated with your account.
 
-            Fanfiction Online'
+To confirm the change, click on the link below:
+###ADMIN_URL###
+
+Fanfiction Online'
         );
 
         $email_text = str_replace  ( '###USERNAME###', $current_user->user_login, $email_text );
@@ -179,18 +179,18 @@ class mail_user extends user {
     protected static function signup_mail($user_id,$code){
         $user = get_user_by( 'ID', $user_id )->data;
         $email_text = __(
-            'Hi ###USERNAME###,
-            Welcome to Fanfiction Online!
-            
-            You can login by entering the code below. If you wish to set a password, you can do so after logging in. 
+'Hi ###USERNAME###,
+Welcome to Fanfiction Online!
 
-            Your verification code is
+You can login by entering the code below. If you wish to set a password, you can do so after logging in. 
 
-            ###CODE###
+Your verification code is
 
-            This code is valid for only 30 minutes. 
+###CODE###
 
-            Fanfiction Online'
+This code is valid for only 30 minutes. 
+
+Fanfiction Online'
         );
 
         $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );
@@ -200,15 +200,15 @@ class mail_user extends user {
     }
     protected static function login_code_mail($user,$code){
         $email_text = __(
-            'Hi ###USERNAME###,
+'Hi ###USERNAME###,
 
-            Your login code is
+Your login code is
 
-            ###CODE###
+###CODE###
 
-            This code is valid for only 30 minutes. 
+This code is valid for only 30 minutes. 
 
-            Fanfiction Online'
+Fanfiction Online'
         );
 
         $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );

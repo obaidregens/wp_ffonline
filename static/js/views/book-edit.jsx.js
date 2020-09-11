@@ -195,7 +195,7 @@ const App = () => {
             const fandom_ids = (newValue || []).map(({value}) => value)
             selected.characters = (selected.characters || []).filter(({fandom}) => fandom_ids.includes(fandom) );
             charChange(selected.characters || []);
-            reRender()
+            reRender();
         }}
         value={selected.fandom}
         className="select fandom"

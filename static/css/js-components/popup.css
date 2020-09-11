@@ -37,9 +37,12 @@ popup {
     z-index: 55;
 
     /* Transition */
-    transition: transform 0.2s;
+    transition: transform 0.2s /*cubic-bezier(0.6, -0.28, 0.735, 0.045)*/;
     will-change: transform;
 }
+/* popup.show {
+    transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+} */
 popup:not(.bottom) {
     top: 0;
     width: 80%;

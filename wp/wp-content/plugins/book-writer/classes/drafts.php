@@ -390,6 +390,18 @@ class drafts_json extends drafts {
         $opcodes = FineDiff::getDiffOpcodes($old_text, self::simpleText($new) );
         $style =
         "
+        <style>
+        ins {
+            color: rgb(104 140 136);
+            background: rgb(0 121 107 / 15%);
+            text-decoration: none
+        }
+        
+        del {
+            color: var(--red);
+            text-decoration: line-through
+        }
+        </style>
         ";
         return $style . nl2br(FineDiff::renderDiffToHTMLFromOpcodes($old_text, $opcodes));
     }

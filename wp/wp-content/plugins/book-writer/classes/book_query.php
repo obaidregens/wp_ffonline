@@ -273,7 +273,7 @@ class book_query{
 class book_query_cache extends book_query {
     protected static $midfix = '</--/>';
     function __construct(){
-        $min_gap_min = 180;
+        $min_gap_min = 0.00000000000001;
         $min_gap = $min_gap_min * 60;
 
         global $wpdb;
@@ -440,10 +440,11 @@ class book_query_cache extends book_query {
         if (isset($this->existing[$term_key])){
             return;
         }
-        $terms =  (new WP_Term_Query(array(
+        $terms_query = new WP_Term_Query(array(
             'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
             'fields'        => 'id=>name'
-        )))->terms;
+        ));
+        $terms =  $terms_query->terms;
         self::put(array(array(
             '_key'      => 'tag_names',
             '_value'    => 'all',
