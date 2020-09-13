@@ -12,7 +12,7 @@
         margin: 3em 3em 0 3em;
     }
     </style>
-    <script>setInterval(() => api("is_online",{callback: () => window.location.reload() }), 1000);</script>
+    <script>setInterval(() => fetch('/api').then(() => window.location.reload()), 1000);</script>
 </head>
 
 <body>

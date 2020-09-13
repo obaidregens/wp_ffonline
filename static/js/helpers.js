@@ -243,7 +243,7 @@ function preg_split (pattern, subject, limit, flags) {
     return ret;
 }
 
-function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
+function api(action,{data,callback,async = true,dataType,reCAPTCHA = null,reject}){
     const options = {
         dataType: 'JSON',
 		url: '/api',
