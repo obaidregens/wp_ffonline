@@ -99,7 +99,7 @@ header > nav {
     display: flex;
 }
 header > nav > * {
-    transition: background-color .2s ease-out;
+    transition: background-color .2s;
     cursor: pointer;
     color: var(--text-color);
     padding: 0 10px;
@@ -221,7 +221,7 @@ dark-mode::before {
     header > nav > *[href="/collections"]::before {
         content: '\e907';
     }
-    header > nav > .dropdown::before,header > nav > [href="/write"]::before {
+    header > nav > .dropdown::before,header > nav > [href="/login"]::before {
         content: '\e943';
         transform: scale(1.8);
     }

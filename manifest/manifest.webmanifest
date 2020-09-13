@@ -2,7 +2,7 @@
     "name": "Fanfiction Online",
     "short_name": "Fanfiction Online",
     "start_url": "/",
-    "display": "fullscreen",
+    "display": "standalone",
     "theme_color": "#007ACC",
     "background_color": "#fdfdfd",
     "description": "DQWDWQ",
