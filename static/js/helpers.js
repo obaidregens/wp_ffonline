@@ -263,6 +263,9 @@ function api(action,{data,callback,async = true,dataType,reCAPTCHA = null}){
     if (callback instanceof Function){
         options.success = callback;
     }
+    if (reject instanceof Function){
+        options.error = reject;
+    }
     jQuery.ajax(options);
 }
 jQuery('body').append(`
