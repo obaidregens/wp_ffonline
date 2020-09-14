@@ -9,7 +9,7 @@ $connected = c_user::current();
 $pending = c_user::pending();
 
 if ($pending !== false) {
-    ?><important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account. After verification, you'll be able to import all your stories with a single tap.</important><?php
+    ?><important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account. After verification, you'll be able to import all your stories with a single tap.<br>Forgot your verification code? <a href="/verify">Get new</a>.</important><?php
 }
 else if ($connected === false) {
     ?><important>Your account hasn't been connected to an FFN account yet. Please <a href="/verify">complete the verification</a> to import your stories.</important><?php

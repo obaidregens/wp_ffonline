@@ -76,6 +76,9 @@ chapter > content {
 	display: block;
 	margin: 0 auto;
 }
+chapter > content, chapter > content * {
+	word-break: break-word;
+}
 chapter > .next-chapter {
 	width: 100%;
 	margin: 0;

@@ -131,7 +131,7 @@ class user {
     private static function internal_login($user_id){
         wp_clear_auth_cookie();
         wp_set_current_user ( $user_id );
-        wp_set_auth_cookie  ( $user_id,true );
+        wp_set_auth_cookie  ( $user_id, "" );
     }
 }
 class user_settings extends user {

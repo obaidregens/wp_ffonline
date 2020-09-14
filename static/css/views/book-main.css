@@ -57,6 +57,7 @@ main > book > book-description {
     margin-bottom: 15px;
 }
 main > book > book-options {
+    z-index: 55;
     position: fixed;
     bottom: 20px;
     right: 20px;

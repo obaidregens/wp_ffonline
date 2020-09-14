@@ -198,6 +198,9 @@ function prompt_forgot() {
 				if (response.code === 997){
 					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
 				}
+				else if (response.code === 7) {
+					new toast("No account with this username or email exists.")
+				}
 				else if (response.code === 1){
 					new toast('The verification code has been sent to your email.');
 					data_submit.token = response.token;
