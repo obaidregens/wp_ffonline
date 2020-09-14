@@ -179,10 +179,11 @@ popup[tag-name="character"] > div > div:nth-child(1) {
 popup[tag-name="character"] > div > div:nth-child(1)::before {
     content: attr(fandom);
     display: block;
-    position: absolute;
-    left: calc( 50% - 45px );
-    width: 90px;
-    top: 4px;
+    position: relative;
+    width: 100%;
+    top: 25px;
+    text-align: center;
+    margin-top: -25px;
 }
 popup[tag-name="character"] > div > div:nth-child(1) > button {
     border: none;

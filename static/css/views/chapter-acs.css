@@ -119,6 +119,10 @@ change-options[action="font"] > button > dropdown > *:nth-child(6)::before {
 	content: 'Raleway';
 	font-family: 'Raleway';
 }
+change-options[action="font"] > button > dropdown > *:nth-child(7)::before {
+	content: 'Merriweather';
+	font-family: 'Merriweather';
+}
 /* Themes */
 change-options[action="theme"] > div {
 	width: 45px;

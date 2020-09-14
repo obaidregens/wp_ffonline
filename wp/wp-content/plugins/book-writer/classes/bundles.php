@@ -22,6 +22,7 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
+    public static $version = "1";
     public static function reset() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
@@ -168,11 +169,12 @@ class bundle {
     }
     function print(){
         $type = isset($this->script_type) ? 'type="' . $this->script_type . '"' : "";
+        $addon = (self::$version ?? null) === null ? "" : '?v=' . self::$version;
         foreach ($this->enqueued_css ?? [] as $name => $url) {
-            ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $url; ?>"><?php
+            ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $url . $addon; ?>"><?php
         }
         foreach ($this->enqueued_js ?? [] as $name => $url) {
-            ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $url; ?>"></script><?php
+            ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $url . $addon; ?>"></script><?php
         }
     }
     protected function get_bundle(){

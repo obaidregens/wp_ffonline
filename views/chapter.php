@@ -29,7 +29,21 @@ $all_chapters = published_chapters($book->ID);
 $comments_open = comments_open( $book->ID );
 $is_user_logged_in = is_user_logged_in(  );
 $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
-$next_chapter_link = rtrim(get_permalink( $book->ID ),'/') . '/' . (intval(get_post_meta( $chapter->ID, 'chapter_order', true )) + 1);
+
+$app->selected_chapter = $chapter->ID;
+$next_chapter_num = intval(get_post_meta( $chapter->ID, 'chapter_order', true )) + 1;
+$query = (new WP_Query(array(
+	'post_type' => array('chapter'),
+	'meta_query' => array(
+		array(
+			'key'       => 'chapter_order',
+			'value'     => $next_chapter_num,
+			'type'      => 'NUMERIC',
+		),
+	),
+	'post_parent__in'   => array($book->ID)
+)))->posts;
+$next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 ?>
 <main>
 	<chapter chapter_id="<?= $chapter->ID; ?>">
@@ -46,7 +60,7 @@ $next_chapter_link = rtrim(get_permalink( $book->ID ),'/') . '/' . (intval(get_p
 		</popup>
 		<chapter-title><?= $chapter->post_title; ?></chapter-title>
 		<content class="acs-elem"><?= $chapter->post_content; ?></content>
-		<a href="<?= $next_chapter_link; ?>" theme class="button next-chapter"></a>
+		<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
 		<book-options>
 			<collections_data hidden>
 				<?= json_encode(collection_helpers::js_data()) ?>

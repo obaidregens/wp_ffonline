@@ -33,13 +33,18 @@ text-input > label {
     transition: top .2s, transform .2s, color .2s;
     will-change: transform, top, color;
 }
-text-input > input:focus, text-input > textarea:focus{
+text-input > input:focus,
+text-input > textarea:focus{
     border-color: var(--theme-color);
 }
-text-input > input:focus + label, text-input > textarea:focus + label{
+text-input > input:focus ~ label,
+text-input > textarea:focus ~ label{
     color: var(--theme-color);
 }
-text-input > input:focus + label, text-input > input.filled + label, text-input > textarea:focus + label, text-input > textarea.filled + label{
+text-input > input:focus ~ label,
+text-input > input.filled ~ label,
+text-input > textarea:focus ~ label,
+text-input > textarea.filled ~ label{
     top: -12px;
     transform: scale(0.75);
 }
@@ -47,13 +52,13 @@ text-input > input:focus + label, text-input > input.filled + label, text-input 
 text-input > input.invalid {
     border-color: var(--lightred);
 }
-text-input > input.invalid + label {
+text-input > input.invalid ~ label {
     color: var(--lightred);
 }
 /* Disabled */
 text-input > input[disabled] {
     border-color: var(--grey);
 }
-text-input > input[disabled] + label{
+text-input > input[disabled] ~ label{
     color: var(--grey);
 }
