@@ -101,6 +101,9 @@ header > nav {
     margin-left: auto;
     display: flex;
 }
+header > nav > drop.dropdown.waves-effect {
+    overflow: visible;
+}
 header > nav > * {
     transition: background-color .2s;
     cursor: pointer;
