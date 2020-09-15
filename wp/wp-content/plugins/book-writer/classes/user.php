@@ -128,13 +128,42 @@ class user {
         self::internal_login($return[0]->ID);
         return true;
     }
-    private static function internal_login($user_id){
+    public static function internal_login($user_id){
+        wp_cache_delete($user_id, 'users');
         wp_clear_auth_cookie();
         wp_set_current_user ( $user_id );
-        wp_set_auth_cookie  ( $user_id, "" );
+        wp_set_auth_cookie  ( $user_id, true );
     }
 }
 class user_settings extends user {
+    public static function change_username($new_username) {
+        $validation = (new v_user([
+            'username'  => $new_username,
+        ],['username']))->return;
+        if (err::is($validation)) {
+            return $validation;
+        }
+
+        $meta_name = 'last_change_username';
+        $change_username_meta = get_user_meta( get_current_user_id(), $meta_name, true );
+        $change_username = $change_username_meta === "" ? 1 : (intval($change_username_meta) > time() - 60*60*24*30 ? 0 : 1);
+        if ($change_username < 1) {
+            return (new err())->add('username','No username change is available.');
+        }
+        update_user_meta( get_current_user_id(), $meta_name, time() );
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->users,
+            [
+                'user_login'        => $new_username,
+                'user_nicename'     => "@" . $new_username
+            ],
+            [
+                'ID'                => get_current_user_id()
+            ]
+        );
+        return true;
+    }
     public static function get ($setting, $user = null) {
         if ($user === null){
             $user = get_current_user_id();

@@ -19,10 +19,14 @@ h2 {
     position: sticky;
     top: 34px;
 }
-h2[label="Account"] + input + label + collapsible > button {
+@media only screen and (max-width: 500px) {
+    h2 {
+        top: 0px;
+    }
+}
+button[label="Change"] {
     float: right;
 }
-
 label.switch {
     display: block;
     margin: 15px 0;

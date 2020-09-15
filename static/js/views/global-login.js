@@ -89,6 +89,7 @@ function prompt_signup() {
 	const form = document.createElement('form');
 
 	const username_input = DOM.update(create_text_input({
+		prefix: "@",
 		label: 'Username',
 	}),{
 		attributes: {

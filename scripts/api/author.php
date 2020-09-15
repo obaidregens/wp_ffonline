@@ -81,3 +81,27 @@ function api_change_password () {
     user::login($user->user_login,$pass);
     return ['code'=>1];
 }
+function api_change_username() {
+    required_login();
+    required_params('new_username');
+    $new_username = $_POST['data']['new_username'];
+    $current_user = get_userdata(get_current_user_id());
+    if ($current_user->user_login === $new_username) {
+        return [
+            'code'      => 10,
+            'errors'    => [
+                'username'  => 'What\'s the new username?'
+            ]
+        ];
+    }
+    $v = user_settings::change_username($new_username);
+    if (err::is($v)) {
+        return [
+            'code'          => 10,
+            'errors'        => array_column($v->errors,'error','name')
+        ];
+    }
+    wp_cache_delete($current_user->user_login, 'userlogins');
+    user::internal_login($current_user->ID);
+    return ['code'  => 1];
+}

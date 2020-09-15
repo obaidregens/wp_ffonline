@@ -47,7 +47,7 @@ a.author-message::before {
     content: '\e937';
 }
 a.author-settings,a.author-message {
-    z-index: 50;
+    z-index: 55;
     transform: scale(2);
     display: block;
     position: fixed;

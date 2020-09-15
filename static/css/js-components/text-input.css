@@ -62,3 +62,20 @@ text-input > input[disabled] {
 text-input > input[disabled] ~ label{
     color: var(--grey);
 }
+/* Prefixed */
+text-input > prefix {
+    display: none;
+    position: absolute;
+    top: 12px;
+    left: 6px;
+}
+text-input > input:focus ~ prefix,
+text-input > textarea:focus ~ prefix,
+text-input > input.filled ~ prefix,
+text-input > textarea.filled ~ prefix {
+    display: block;
+}
+text-input + input.prefixed,
+text-input > input.prefixed {
+    padding-left: calc(1rem + 6px + 2px);
+}

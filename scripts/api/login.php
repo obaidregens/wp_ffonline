@@ -2,6 +2,9 @@
 function api_login(){
     required_params('password','username');
     $username = $_POST['data']['username'];
+    if (substr($username,0,1) === "@"){
+        $username = substr($username,1);
+    }
     $pass = $_POST['data']['password'];
     $return = user::login($username,$pass);
     if ($return === false){
@@ -11,7 +14,11 @@ function api_login(){
 }
 function api_login_with_code(){
     required_params('username');
-    $return = user::send_code($_POST['data']['username']);
+    $username = $_POST['data']['username'];
+    if (substr($username,0,1) === "@"){
+        $username = substr($username,1);
+    }
+    $return = user::send_code($username);
     if ($return === false){
         return ['code'=>7];
     }

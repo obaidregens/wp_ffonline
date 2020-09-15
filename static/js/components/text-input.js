@@ -15,7 +15,8 @@ function init_text_input(){
             type,
             label: elem.getAttribute('label'),
             input_type,
-            value: Val
+            value: Val,
+            prefix: elem.getAttribute('prefix')
         });
         let input_e = text_input.querySelector('input');
         if (! input_e) {
@@ -24,6 +25,7 @@ function init_text_input(){
 
         elem.removeAttribute('label');
         elem.removeAttribute('type');
+        elem.removeAttribute('prefix');
     
         _.moveAttr(elem,input_e);
         elem.replaceWith(text_input);
@@ -32,7 +34,7 @@ function init_text_input(){
     }
 }
 init_text_input();
-function create_text_input({type = 'input',input_type = 'text',label,value = '',attributes = {}}){
+function create_text_input({type = 'input',input_type = 'text',label,value = '',attributes = {},prefix = ""}){
     const listeners = {
         change: function(){
             if (this.value === ''){
@@ -53,18 +55,24 @@ function create_text_input({type = 'input',input_type = 'text',label,value = '',
             }
         }
     }
+    const children = [];
+    children.push(DOM.create(type,{
+        classes: prefix ? ['prefixed'] : [],
+        value,
+        attributes: Object.assign(attributes,{
+            type: input_type,
+        }),
+        listeners
+    }));
+    children.push(DOM.create('label',{
+        innerText: label
+    }));
+    if (prefix) {
+        children.push(DOM.create('prefix',{
+            innerText: prefix
+        }));
+    }
     return DOM.create('text-input',{
-        children: [
-            DOM.create(type,{
-                value,
-                attributes: Object.assign(attributes,{
-                    type: input_type,
-                }),
-                listeners
-            }),
-            DOM.create('label',{
-                innerText: label
-            })
-        ]
+        children
     });
 }
