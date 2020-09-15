@@ -1,4 +1,3 @@
-// document.querySelector('tags_data').innerText = JSON.stringify({});
 function setSelectedTags(tag_name,selected){
     let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name] || {};
     if (tag_name === 'character'){
@@ -473,6 +472,8 @@ function trigger_search(page = false){
             // Styling
             clearInterval(search_progress_interval);
             loader.classList.remove('show');
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 
             // Re add tags count
             for (let j = 0; j < select_tags.length; j++) {
