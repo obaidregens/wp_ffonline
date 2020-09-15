@@ -178,13 +178,13 @@ const App = () => {
     });
   });
   return /*#__PURE__*/React.createElement("app", null, /*#__PURE__*/React.createElement("page", null, /*#__PURE__*/React.createElement(TextInput, {
-    value: selected.title,
+    value: _.htmlspecialchars_decode(selected.title),
     onChange: value => selected.title = value,
     label: "",
     maxlength: "80"
   }), /*#__PURE__*/React.createElement(TextInput, {
     label: "",
-    value: selected.description,
+    value: _.htmlspecialchars_decode(selected.description),
     onChange: value => selected.description = value,
     maxlength: "400",
     Type: "textarea"

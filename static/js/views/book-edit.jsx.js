@@ -3,6 +3,7 @@
 const tags = (JSON.parse(document.querySelector('tags_data').innerText));
 window.tags = tags;
 window.selected = tags.selected;
+
 class TextInput extends React.Component {
     constructor(props) {
         super(props);
@@ -172,14 +173,14 @@ const App = () => {
         <app>
         <page>
         <TextInput
-        value={selected.title}
+        value={_.htmlspecialchars_decode(selected.title)}
         onChange={value => selected.title = value}
         label=""
         maxlength="80"
         />
         <TextInput
         label=""
-        value={selected.description}
+        value={_.htmlspecialchars_decode(selected.description)}
         onChange={value => selected.description = value}
         maxlength="400"
         Type="textarea"

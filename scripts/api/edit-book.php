@@ -20,6 +20,9 @@ function api_edit_book() {
         'anonymous_reviews'
     );
     $d = &$_POST['data'];
+    $d['title'] = stripslashes($d['title']);
+    $d['description'] = stripslashes($d['description']);
+
     $publish = $d['publish'] === "true";
     $reviews = $d['reviews'] === "true";
     $anon_review = $d['anonymous_reviews'] === "true";    
@@ -151,8 +154,8 @@ function api_edit_book() {
     $wpdb->update(
         'wp_posts',
         [
-            'post_title'        => substr($d['title'],0,80),
-            'post_excerpt'      => substr($d['description'],0,400),
+            'post_title'        => htmlspecialchars(substr($d['title'],0,80)),
+            'post_excerpt'      => htmlspecialchars(substr($d['description'],0,400)),
             'comment_status'    => $reviews ? 'open' : 'closed',
             'post_status'       => $publish ? 'publish' : 'draft' 
         ],

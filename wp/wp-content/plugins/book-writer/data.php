@@ -152,8 +152,8 @@ function get_data($book_id = 'new'){
 			}
 		}
 
-		$s['title'] = $book->post_title;
-		$s['description'] = $book->post_excerpt;
+		$s['title'] = ($book->post_title);
+		$s['description'] = ($book->post_excerpt);
 		$s['publish'] = $book->post_status === 'publish';
 		$s['reviews'] = $book->comment_status === 'open';
 		$s['anonymous_reviews'] = get_post_meta( $book_id,'anon_review',true) === 'true';

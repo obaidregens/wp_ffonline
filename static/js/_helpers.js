@@ -15,6 +15,14 @@ class _ {
         }
         return true;
     }
+    static htmlspecialchars_decode (str) {
+        const tagsToReplace = {
+            "&amp": "&",
+            '&lt;': '<',
+            '&gt;': '>'
+        };
+        return str.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
+    }
     static ucfirst(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }

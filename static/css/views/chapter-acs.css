@@ -8,6 +8,7 @@
 	line-height: calc( var(--lineHeight) * 0.5em);
 }
 .acs-elem > p {
+	min-height: calc(1.5em);
     margin-block-end: calc( var(--paragraphHeight) * 0.5em);
 	margin-block-start: calc( var(--paragraphHeight) * 0.5em);
 }
