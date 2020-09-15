@@ -22,7 +22,7 @@ $book_query = $app->author_books;
             ?>
         </books-container>
         <?php if ($book_query->count > 2) { ?>
-            <a href="<?= $href; ?>books" class="button more"></a>
+            <a href="<?= $href; ?>stories" class="button more"></a>
         <?php } ?>
     </author-books>
     <?php } ?>

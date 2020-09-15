@@ -156,7 +156,8 @@ class user_settings extends user {
             $wpdb->users,
             [
                 'user_login'        => $new_username,
-                'user_nicename'     => "@" . $new_username
+                'user_nicename'     => "@" . $new_username,
+                'display_name'      => "@" . $new_username
             ],
             [
                 'ID'                => get_current_user_id()

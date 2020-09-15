@@ -173,7 +173,7 @@ for ($i=1; $i <= $num_pages; $i++) {
                 'monthly'
             );
             $xml .= url_field(
-                dss(get_author_posts_url($user->ID) . '/books/'),
+                dss(get_author_posts_url($user->ID) . '/stories/'),
                 $author_time,
                 'monthly'
             );

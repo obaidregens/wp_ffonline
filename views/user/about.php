@@ -56,7 +56,7 @@ $description = get_the_author_meta( 'description', $user->ID );
             ?>                
         </books-container>
         <?php if ($book_query->count > 2) { ?>
-            <a href="<?= $href; ?>books" class="button more"></a>
+            <a href="<?= $href; ?>stories" class="button more"></a>
         <?php } ?>
     </author-books>
     <?php } ?>
