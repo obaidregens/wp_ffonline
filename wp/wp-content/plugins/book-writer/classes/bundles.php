@@ -22,7 +22,7 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
-    public static $version = "5";
+    public static $version = "6";
     public static function reset() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
@@ -267,6 +267,7 @@ class bundle {
                 'css/js-components/popup',
                 "css/views/global-login",
                 "css/views/global-share",
+                "external/waves/waves"
             ),
             'js'    => array(
                 'js/normalize',
@@ -280,6 +281,7 @@ class bundle {
                 "js/components/popup",
                 'js/views/global-login',
                 'js/views/global-share',
+                "external/waves/waves"
             ),
         ),
         'create_search_new' => array(

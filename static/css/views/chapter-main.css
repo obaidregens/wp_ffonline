@@ -83,7 +83,7 @@ chapter > .next-chapter {
 	width: 100%;
 	margin: 0;
 	justify-content: center;
-	margin-bottom: 20px;
+	margin: 20px 0;
 }
 chapter > .next-chapter[href]::before {
 	content: 'Continue';

@@ -53,15 +53,15 @@ $current_user = get_userdata( get_current_user_id() );
 	    <logged_in hidden value="<?= $is_user_logged_in ? 'true' : 'false'; ?>"></logged_in>
 		<dark-mode onclick="themes.switch();"></dark-mode>
         <header>
-			<a class="logo" href="/">
+			<a class="<?= $app->request === '/' ? 'active' : '' ?> logo waves-effect" href="/">
 				<?php include('static/images/logo.svg'); ?>
     		</a>
 			<nav>
-				<a href="/read">Read</a>
-				<a href="/my-stories">Write</a>
-				<a href="/collections">Collections</a>
+				<a class="<?= $app->request === '/read' ? 'active' : '' ?> waves-effect" href="/read">Read</a>
+				<a class="<?= $app->request === '/my-stories' ? 'active' : '' ?> waves-effect" href="/my-stories">Write</a>
+				<a class="<?= $app->request === '/collections' ? 'active' : '' ?> waves-effect" href="/collections">Collections</a>
 				<?php if ($is_user_logged_in) { ?>
-					<drop tabindex="0" class="dropdown" >
+					<drop tabindex="0" class="<?= $app->request === '/@' . $current_user->user_login ? 'active' : '' ?> dropdown waves-effect" >
 						Me
 						<dropdown class="right">
 							<a href="/@<?= $current_user->user_login; ?>">Profile</a>
@@ -70,7 +70,7 @@ $current_user = get_userdata( get_current_user_id() );
 						</dropdown>
 				</drop>
 				<?php } else { ?>
-					<a href="/login">Login</a>
+					<a class="waves-effect" href="/login">Login</a>
 				<?php } ?>
 			</nav>
 		</header>

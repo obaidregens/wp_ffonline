@@ -8,11 +8,15 @@ header > .logo {
 }
 header > nav > * {
     font-weight: normal;
-    color: var(--text-color);
 }
 header > nav > *:hover {
     background-color: transparent;
     color: var(--darkgrey);
+}
+@media only screen and (max-width: 500px) {
+    header > nav > *:hover {
+        color: var(--lightblack);
+    }    
 }
 footer {
     display: none;

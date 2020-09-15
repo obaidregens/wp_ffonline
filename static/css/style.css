@@ -39,6 +39,9 @@ html {
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
 }
+html * {
+    -webkit-tap-highlight-color: transparent;
+}
 /* Scrollbar */
 *::-webkit-scrollbar-thumb {
     background: var(--theme-color);
@@ -101,7 +104,7 @@ header > nav {
 header > nav > * {
     transition: background-color .2s;
     cursor: pointer;
-    color: var(--text-color);
+    color: var(--lightblack);
     padding: 0 10px;
     display: flex;
     align-items: center;
@@ -109,8 +112,7 @@ header > nav > * {
     width: -moz-fit-content;
 }
 header > nav > *:hover {
-    background-color: var(--theme-color);
-    color: var(--white);
+    color: var(--lightblack);
 }
 footer {
     max-width: 960px;
@@ -183,47 +185,40 @@ dark-mode::before {
         bottom: 0;
         top: unset;
     }
-    header > .logo > svg{
-        display: none;
-    }
-    header > nav > * {
-        font-size: 0;
+    header > .logo, header > nav > * {
         padding: 20px;
+    }
+    header > .logo.active, header > nav > *.active {
+        color: var(--theme-color);
     }
     header > .logo {
-        color: var(--text-color);
-        padding: 20px;
+        color: var(--lightblack);
         display: flex;
         align-items: center;
         width: fit-content;
         width: -moz-fit-content;
     }
-    header > .logo:hover {
-        color: var(--white);
-        background-color: var(--theme-color);
+    header > .logo > svg{
+        display: none;
     }
-    header > nav > *::before,header > .logo::before {
+    header > nav > * {
+        font-size: 0;
+    }
+    header > nav > *::before,
+    header > .logo::before {
         font-size: 1rem;
         font-family: 'icons';
         display: inline-block;
-        transform: scale(1.4);
+        transform: scale(1.4) translateY(-5px);
     }
-    header > .logo::before {
-        transform: scale(1.6);
-        content: '\e942';
-    }
-    header > nav > *[href="/read"]::before {
-        content: '\e915';
-    }
-    header > nav > *[href="/my-stories"]::before {
-        content: '\e909';
-    }
-    header > nav > *[href="/collections"]::before {
-        content: '\e907';
-    }
-    header > nav > .dropdown::before,header > nav > [href="/login"]::before {
-        content: '\e943';
-        transform: scale(1.8);
+    header > nav > *::after,
+    header > .logo::after {
+        font-size: 0.7rem;
+        position: absolute;
+        left: 0;
+        bottom: 3px;
+        width: 100%;
+        text-align: center;
     }
     header > nav > .dropdown > dropdown {
         top: unset;
@@ -235,6 +230,43 @@ dark-mode::before {
     }
     main {
         margin-bottom: 60px;
+    }
+    /* Individual Icons */
+    header > .logo::before {
+        transform: scale(1.6) translateY(-5px);
+        content: '\e942';
+    }
+    header > .logo::after {
+        content: 'Home';
+    }
+    header > nav > *[href="/read"]::before {
+        content: '\e915';
+    }
+    header > nav > *[href="/read"]::after {
+        content: 'Read';
+    }
+    header > nav > *[href="/my-stories"]::before {
+        content: '\e909';
+    }
+    header > nav > *[href="/my-stories"]::after {
+        content: 'Write';
+    }
+    header > nav > *[href="/collections"]::before {
+        content: '\e907';
+    }
+    header > nav > *[href="/collections"]::after {
+        content: 'Collections';
+    }
+    header > nav > .dropdown::before,
+    header > nav > [href="/login"]::before {
+        content: '\e943';
+        transform: scale(1.8) translateY(-5px);
+    }
+    header > nav > .dropdown::after {
+        content: 'Me';
+    }
+    header > nav > [href="/login"]::after {
+        content: 'Login';
     }
 }
 /* Tags Default */
