@@ -129,11 +129,11 @@ const introSteps = {
     6: [
         {
             element: '.acs-button',
-            intro: "Customize reading settings according to your preference."
+            intro: "Customize reading settings according to your preference. Swipe left to open."
         },
         {
             element: '.search-button',
-            intro: "Looking for something? Search entire story."
+            intro: "Looking for something? Search entire story. Swipe right to open."
         },
         {
             element: 'book-options',

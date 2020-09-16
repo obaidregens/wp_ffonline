@@ -1,20 +1,5 @@
-.popup.new {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 200px;
-    border-color: transparent;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-}
 .popup.new::before {
-    transform: scale(1.8);
-    display: inline-block;
-    font-family: 'icons';
+    transform: scale(1.2);
     content: '\e916';
 }
 popup[new-action] {

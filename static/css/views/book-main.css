@@ -56,30 +56,11 @@ main > book > book-description {
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
-main > book > book-options {
-    z-index: 55;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 10;
-}
-main > book > book-options > * {
-    display: inline-flex;
-    margin: 4px;
-    padding: 10px;
-    height: 45px;
-    width: 45px;
-    font-family: 'icons';
-    justify-content: center;
-    align-items: center;
-    border-radius: 100px;
-}
-main > book > book-options > .book-collections::before {
-    font-size: 1.4rem;
+main > book > floater > .book-collections::before {
     content: '\e916';
+    transform: scale(1.2);
 }
-main > book > book-options > .book-share::before {
-    font-size: 1.4rem;
+main > book > floater > .book-share::before {
     content: '\e908';
 }
 main > book input.collapsible + label {

@@ -49,6 +49,7 @@ chapter > chapter-header > book-info > a.title {
 	display: block;
 }
 chapter > chapter-header > book-info > author {
+	width: fit-content;
     display: block;
     margin-top: -4px;
     font-size: 12px;

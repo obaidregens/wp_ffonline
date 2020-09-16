@@ -4,16 +4,19 @@ $author_page = $app->type === 'author' ? 'about' : substr($app->type,7);
 $app->bundle = global_bundle('author-' . $author_page);
 $app->bundle->css('css/views/author-header');
 $app->bundle->css('css/components/tooltips');
+$app->bundle->css('css/components/floater');
 $href = rtrim(get_author_posts_url($user->ID),'/') . '/';
 $connection = c_user::current($user->ID);
 $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 ?>
-<?php if ($is_current_author) { ?>
-<a class="author-settings" href="<?= $href . 'settings'; ?>"></a>
-<?php } ?>
-<?php if (! $is_current_author) { ?>
-<a class="author-message" href="/inbox/@<?= $user->user_login; ?>"></a>
-<?php } ?>
+<floater>
+	<?php if ($is_current_author) { ?>
+	<a class="author-settings" href="<?= $href . 'settings'; ?>"></a>
+	<?php } ?>
+	<?php if (! $is_current_author) { ?>
+	<a class="author-message" href="/inbox/@<?= $user->user_login; ?>"></a>
+	<?php } ?>
+</floater>
 <author-name>
 	@<?= $user->user_login; ?>
 </author-name>

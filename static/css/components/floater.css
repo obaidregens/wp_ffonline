@@ -1,0 +1,44 @@
+floater {
+    position: fixed;
+    z-index: 54;
+    bottom: 25px;
+    right: 30px;
+    display: flex;
+}
+floater > * {
+    width: 25px;
+    height: 25px;
+    transform: scale(1.8);
+    border-radius: 100px;
+
+    color: var(--theme-color);
+    background-color: transparent;
+    transition: background-color .2s;
+    
+    border: none;
+    padding: 0;
+
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 0 13px;
+}
+floater > *:active {
+    transform: scale(1.7) !important;
+}
+floater > *:hover {
+    color: var(--text-color) !important;
+    background-color: var(--theme-color) !important;
+}
+floater > *::before,
+floater > *::after {
+    font-family: 'icons';
+    display: inline-block;
+}
+@media only screen and (max-width: 500px) {
+    floater {
+        bottom: 65px;
+        right: 15px;
+    }
+}

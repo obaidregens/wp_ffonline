@@ -162,7 +162,7 @@ dark-mode {
     border-bottom-right-radius: calc(var(--size) * 2);
     border-top-right-radius: calc(var(--size) * 2);
     z-index: 10;
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 38px;
     cursor: pointer;
@@ -182,9 +182,7 @@ dark-mode::before {
 /* For mobile */
 @media only screen and (max-width: 500px) {
     dark-mode {
-        position: fixed;
-        bottom: 38px;
-        top: unset;
+        top: -15px;
     }
     header {
         border-top: 1px solid var(--grey);

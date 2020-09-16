@@ -1,7 +1,9 @@
 const search_popup = document.querySelector('button.search-button + popup');
-popup.create(search_popup,{onOpen: function(){
+search_popup.addEventListener('onOpen',() => {
+    window.acsSwipeEnabled = false;
     search_popup.querySelector('form > text-input:first-child > input').focus();
-}});
+});
+search_popup.addEventListener('onAfterClose',() => window.acsSwipeEnabled = true );
 window.addEventListener('keydown',function(event){
     if (event.keyCode !== 70 || (! event.ctrlKey && !event.metaKey) ){
         return;
@@ -61,4 +63,16 @@ document.querySelector('button.search-button + popup > form').addEventListener('
             }
 		}
 	});
+});
+
+window.addEventListener('load',() => {
+    window.acsSwipeEnabled = true;
+    const mc = new Hammer(document.documentElement);
+    mc.on("panright", event => {
+        if (event.distance <= 70 || !window.acsSwipeEnabled) {
+            return;
+        }
+        window.acsSwipeEnabled = false;
+        popup.open(search_popup);
+    });
 });

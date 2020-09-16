@@ -46,23 +46,6 @@ a.author-message::before {
     font-family: 'icons';
     content: '\e937';
 }
-a.author-settings,a.author-message {
-    z-index: 55;
-    transform: scale(2);
-    display: block;
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 25px;
-    height: 25px;
-    border-radius: 100px;
-    text-align: center;
-    transition: .2s background-color;
-}
-a.author-settings:hover,a.author-message:hover {
-    color: var(--theme-color);
-    background-color: var(--hover);
-}
 prompt {
     padding: 10px;
     margin: 20px 0;

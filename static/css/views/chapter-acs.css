@@ -76,10 +76,10 @@ change-options > button:last-child {
 	margin-right: 0;
 }
 change-options > button:first-child::before {
-	content: '\e916';
+	content: '\e917';
 }
 change-options > button:last-child::before {
-	content: '\e917';
+	content: '\e916';
 }
 /* Fonts */
 change-options[action="font"] {
