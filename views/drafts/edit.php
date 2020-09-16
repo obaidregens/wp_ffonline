@@ -40,8 +40,8 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 <button label="Preview"></button>
 <button class="dropdown" label="Export">
     <dropdown class="right">
-        <a>FFN</a>
-        <a>AO3</a>
+        <a tabindex="0">FFN</a>
+        <a tabindex="0">AO3</a>
     </dropdown>
 </button>
 </drafts-header>

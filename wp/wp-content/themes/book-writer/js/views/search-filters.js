@@ -241,10 +241,16 @@ function create_tags_popup(tag_name){
                             classes: ['right'],
                             children: [
                                 DOM.create('li',{
-                                    innerText: 'Count'
+                                    innerText: 'Count',
+                                    attributes: {
+                                        tabindex: "0"
+                                    }
                                 }),
                                 DOM.create('li',{
-                                    innerText: 'Alphabetical'
+                                    innerText: 'Alphabetical',
+                                    attributes: {
+                                        tabindex: "0"
+                                    }
                                 })
                             ],
                             listeners: {

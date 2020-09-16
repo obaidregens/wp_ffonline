@@ -25,13 +25,41 @@ const acs_popup = DOM.create('popup',{
                        DOM.create('dropdown',{
                            classes: ['right'],
                            children: [
-                               document.createElement('li'),
-                               document.createElement('li'),
-                               document.createElement('li'),
-                               document.createElement('li'),
-                               document.createElement('li'),
-                               document.createElement('li'),
-                               document.createElement('li')
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               }),
+                               DOM.create('li',{
+                                   attributes: {
+                                       tabindex: "0"
+                                   }
+                               })
                            ]
                        })
                    ]

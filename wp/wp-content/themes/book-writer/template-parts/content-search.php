@@ -6,10 +6,10 @@ $search = $book_query->args['search'];
 <book class="grid-item" book_id="<?= $book->ID; ?>">
 	<button class="dropdown options">
 		<dropdown class="right">
-			<li label="Share"></li>
-			<li label="Favorite"></li>
-			<li label="Hide"></li>
-			<li label="Collections"></li>
+			<li tabindex="0" label="Share"></li>
+			<li tabindex="0" label="Favorite"></li>
+			<li tabindex="0" label="Hide"></li>
+			<li tabindex="0" label="Collections"></li>
 		</dropdown>
 	</button>
 	<a href="<?= get_permalink($book->ID); ?>" class="title"><?= mark_search($book->post_title, $search); ?></a>

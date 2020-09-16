@@ -42,10 +42,10 @@ function deleteReview(review_id) {
 function Review (props) {
     const fill = [];
     if (props.can_reply) {
-        fill.push(<li label="Reply"/>);
+        fill.push(<li tabindex="0" label="Reply"/>);
     }
     if (props.can_delete) {
-        fill.push(<li onClick={deleteReview.bind(null,props.ID)} label="Delete"/>);
+        fill.push(<li tabindex="0" onClick={deleteReview.bind(null,props.ID)} label="Delete"/>);
     }
 
     return (
@@ -93,6 +93,7 @@ function callReviews(opts) {
                 const reviewItems = response.reviews.map(map_reviews);
                 const userItems = response.users.map((user) => 
                     <Checkbox
+                    tabindex="0"
                     key={user.ID}
                     checked={user.checked}
                     onChange={filterUsers}
@@ -158,8 +159,8 @@ function Reviews(props) {
                 <Dropdown
                 right
                 children={[
-                    <li onClick={ReviewStates.sort[1].bind(null,'ASC')}>Oldest</li>,
-                    <li onClick={ReviewStates.sort[1].bind(null,'DESC')}>Newest</li>
+                    <li tabindex="0" onClick={ReviewStates.sort[1].bind(null,'ASC')}>Oldest</li>,
+                    <li tabindex="0" onClick={ReviewStates.sort[1].bind(null,'DESC')}>Newest</li>
                 ]}
                 />
                 <Dropdown

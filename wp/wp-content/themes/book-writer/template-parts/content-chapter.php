@@ -51,7 +51,7 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 						$attr = 'selected';
 					}
 					?>
-					<a <?= $attr; ?>><?= $link_chapter->post_title; ?></a>
+					<a tabindex="0" <?= $attr; ?>><?= $link_chapter->post_title; ?></a>
 				<?php } ?>
 			</dropdown>
 		</chapter-header>
@@ -91,12 +91,12 @@ $anon_review = get_post_meta($book->ID,'anon_review',true) === 'true';
 			<button theme class="dropdown">
 				Font
 				<dropdown class="right">
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
+					<li tabindex="0"></li>
+					<li tabindex="0"></li>
+					<li tabindex="0"></li>
+					<li tabindex="0"></li>
+					<li tabindex="0"></li>
+					<li tabindex="0"></li>
 				</dropdown>
 			</button>
 		</change-options>

@@ -17,8 +17,8 @@ $updates = $updates_query->updates;
                 <?php if ($is_current_author) { ?>
                     <button class="dropdown">
                         <dropdown class="right">
-                            <li label="Pin"></li>
-                            <li label="Delete"></li>
+                            <li tabindex="0" label="Pin"></li>
+                            <li tabindex="0" label="Delete"></li>
                         </dropdown>
                     </button>
                 <?php } ?>

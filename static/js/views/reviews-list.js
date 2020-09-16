@@ -53,12 +53,14 @@ function Review(props) {
 
   if (props.can_reply) {
     fill.push( /*#__PURE__*/React.createElement("li", {
+      tabindex: "0",
       label: "Reply"
     }));
   }
 
   if (props.can_delete) {
     fill.push( /*#__PURE__*/React.createElement("li", {
+      tabindex: "0",
       onClick: deleteReview.bind(null, props.ID),
       label: "Delete"
     }));
@@ -104,6 +106,7 @@ function callReviews(opts) {
 
         const reviewItems = response.reviews.map(map_reviews);
         const userItems = response.users.map(user => /*#__PURE__*/React.createElement(Checkbox, {
+          tabindex: "0",
           key: user.ID,
           checked: user.checked,
           onChange: filterUsers,
@@ -174,8 +177,10 @@ function Reviews(props) {
   return /*#__PURE__*/React.createElement("view-reviews", null, /*#__PURE__*/React.createElement("reviews-header", null, /*#__PURE__*/React.createElement(Dropdown, {
     right: true,
     children: [/*#__PURE__*/React.createElement("li", {
+      tabindex: "0",
       onClick: ReviewStates.sort[1].bind(null, 'ASC')
     }, "Oldest"), /*#__PURE__*/React.createElement("li", {
+      tabindex: "0",
       onClick: ReviewStates.sort[1].bind(null, 'DESC')
     }, "Newest")]
   }), /*#__PURE__*/React.createElement(Dropdown, {

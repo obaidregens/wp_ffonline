@@ -64,13 +64,13 @@ $current_user = get_userdata( get_current_user_id() );
 					<drop tabindex="0" class="<?= $app->request === '/@' . $current_user->user_login ? 'active' : '' ?> dropdown waves-effect" >
 						Me
 						<dropdown class="right">
-							<a href="/@<?= $current_user->user_login; ?>">Profile</a>
-							<a href="/@<?= $current_user->user_login; ?>/settings">Settings</a>
-							<a href="/logout">Logout</a>
+							<a tabindex="0" href="/@<?= $current_user->user_login; ?>">Profile</a>
+							<a tabindex="0" href="/@<?= $current_user->user_login; ?>/settings">Settings</a>
+							<a tabindex="0" href="/logout">Logout</a>
 						</dropdown>
 				</drop>
 				<?php } else { ?>
-					<a class="waves-effect" href="/login">Login</a>
+					<a class="waves-effect" onclick="prompt_login();">Login</a>
 				<?php } ?>
 			</nav>
 		</header>

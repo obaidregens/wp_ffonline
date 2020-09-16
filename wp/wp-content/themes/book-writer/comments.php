@@ -16,10 +16,10 @@ function print_comment($comment) {
 			<button class="dropdown">
 				<dropdown class="right">
 					<?php if ( $can_reply ) { ?>
-						<li label="Reply"></li>
+						<li tabindex="0" label="Reply"></li>
 					<?php } ?>
 					<?php if ( $can_delete ) { ?>
-						<li label="Delete"></li>
+						<li tabindex="0" label="Delete"></li>
 					<?php } ?>
 				</dropdown>
 			</button>
