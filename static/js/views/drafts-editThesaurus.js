@@ -17,7 +17,7 @@ function isWordBreak(st) {
     return [' ',',','.',':',';','?','(',')'].includes(st);
 }
 document.querySelector('editor').addEventListener('keydown',event => {
-    if (! event.ctrlKey || event.key !== 'd') {
+    if ( (! event.ctrlKey && ! event.metaKey) || event.key !== 'd') {
         return;
     }
     event.preventDefault();

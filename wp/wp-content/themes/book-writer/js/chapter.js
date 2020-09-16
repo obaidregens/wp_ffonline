@@ -111,7 +111,7 @@ jQuery("#search_book").keyup(function(event){
 	if (invalidKeys.indexOf(event.keyCode) != -1){
 		return;
 	}
-    if ((event.ctrlKey && event.keyCode === 70)) {
+    if ( (event.ctrlKey || event.metaKey) && event.keyCode === 70) {
         jQuery('#searchbook').modal('close');
         event.preventDefault();
         return;

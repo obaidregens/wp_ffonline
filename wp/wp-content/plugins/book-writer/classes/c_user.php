@@ -13,6 +13,7 @@ class c_user {
             $this->error = $error;
             return;
         }
+        $args['connection_user'] = trim($args['connection_user']);
         $args['status'] = 'unverified';
         global $wpdb;
         $connected = $wpdb->get_results($wpdb->prepare(
@@ -27,7 +28,7 @@ class c_user {
         }
         $existing = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM $table
-                WHERE connection_user = %s
+                WHERE connection_user = %d
                 AND connection_from = %s
                 AND status IN (%s,%s)
                 AND user_id = %d",

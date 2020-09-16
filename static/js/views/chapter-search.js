@@ -3,7 +3,7 @@ popup.create(search_popup,{onOpen: function(){
     search_popup.querySelector('form > text-input:first-child > input').focus();
 }});
 window.addEventListener('keydown',function(event){
-    if (event.keyCode !== 70 || ! event.ctrlKey){
+    if (event.keyCode !== 70 || (! event.ctrlKey && !event.metaKey) ){
         return;
     }
     event.preventDefault();
