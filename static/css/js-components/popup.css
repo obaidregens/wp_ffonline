@@ -21,13 +21,17 @@ popup-overlay.show {
     z-index: 54;
 }
 popup {
-    display: table;
+    display: block;
     overflow-y: auto;
     padding: 20px;
     background-color: var(--background-accent);
     position: fixed;
-    top: 50%;
-    left: 50%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    height: fit-content;
+    height: -moz-fit-content;
     min-height: 10%;
     max-height: 70%;
     z-index: 55;
@@ -40,12 +44,13 @@ popup {
     transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 } */
 popup:not(.bottom) {
+    top: 0;
     width: 80%;
     border-radius: 5px;
-    transform: translateX(-50%) translateY(-50%) scale(0);
+    transform: scale(0);
 }
 popup:not(.bottom).show {
-    transform: translateX(-50%) translateY(-50%) scale(1);
+    transform: scale(1);
 }
 popup.bottom {
     width: 100%;
