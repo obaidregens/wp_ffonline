@@ -185,6 +185,19 @@ function run_at_activation(){
 		PRIMARY KEY (ffn_user_id)
 	) $charset_collate;";
 
+	$character_pairings_tables = "CREATE TABLE character_pairings (
+		`pairing_id` 	BIGINT NOT NULL ,
+		`character_id` 	BIGINT NOT NULL ,
+		PRIMARY KEY (pairing_id,character_id)
+	) $charset_collate;";
+
+	$pairing_relationships_tables = "CREATE TABLE pairing_relationships (
+		`pairing_id` 	BIGINT NOT NULL ,
+		`book_id`		BIGINT NOT NULL ,
+		`priority`		VARCHAR(20) NOT NULL ,
+		`added_time`	BIGINT NOT NULL ,
+		PRIMARY KEY (pairing_id,book_id)
+	) $charset_collate;";
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -212,6 +225,9 @@ function run_at_activation(){
 	dbDelta( $import_stories_table );
 	// FFN Outreach
 	dbDelta( $ffn_outreach_table );
+	// Pairings
+	dbDelta( $character_pairings_tables );
+	dbDelta( $pairing_relationships_tables );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -254,6 +270,7 @@ $includes = array(
 	'classes/dict',
 	'classes/updates',
 	'classes/import_stories',
+	'classes/tags',
 );
 foreach($includes as $include){
 	require ($include . '.php');

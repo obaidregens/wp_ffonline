@@ -3,7 +3,7 @@ function construct_page_title(... $parts) {
     return 'Fanfiction Online - ' . implode(" - ",$parts);
 }
 define('MAIN_DIR',dirname(__DIR__) . '/');
-require_once(__DIR__ . '/helpers.php');
+require_once(__DIR__ . '/php_includes/helpers.php');
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
 class Router {

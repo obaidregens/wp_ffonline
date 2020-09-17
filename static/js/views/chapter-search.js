@@ -69,7 +69,7 @@ window.addEventListener('load',() => {
     window.acsSwipeEnabled = true;
     const mc = new Hammer(document.documentElement);
     mc.on("panright", event => {
-        if (event.distance <= 70 || !window.acsSwipeEnabled) {
+        if (! window.acsSwipeEnabled || ! _.isHammerSwipe(event)) {
             return;
         }
         window.acsSwipeEnabled = false;

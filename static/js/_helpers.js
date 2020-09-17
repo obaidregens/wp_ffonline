@@ -1,4 +1,8 @@
 class _ {
+    static isHammerSwipe(event){
+        const angle = event.type === "panright" ? Math.abs(event.angle) : 180 - Math.abs(event.angle);
+        return angle < 20 && event.isFinal && event.distance > 20;
+    }
     static prop (elem, prop, bool){
         if (bool) {
             elem.setAttribute(prop,'');
