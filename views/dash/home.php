@@ -9,18 +9,30 @@ global $wpdb;
 
 $landings = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings");
 
-$t = time() - 60*60*24*7;
+$t = time() - (60*60*24*7);
 $landings_last_week = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
-$t = time() - 60*60*24;
+$t = time() - (60*60*24);
 $landings_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
 
 $users_last_24 = $wpdb->get_results("SELECT COUNT(*) as c FROM wp_users WHERE user_registered > DATE_SUB(NOW(), INTERVAL 24 HOUR)");
 
-$t = time() - 60*60*24*7;
+$t = time() - (60*60*24*7);
 $unique_landings_last_week = $wpdb->get_results("SELECT COUNT(DISTINCT vfs) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
-$t = time() - 60*60*24;
+$t = time() - (60*60*24);
 $unique_landings_last_24 = $wpdb->get_results("SELECT COUNT(DISTINCT vfs) as c FROM stats_landings WHERE timestamp > $t AND user_id != 12");
+///////////////////////////////////ONLINE
+$t = time() - (60*1.5);
+$online = $wpdb->get_results(
+    "SELECT COUNT(DISTINCT(stats_landings.user_id)) as online_users,COUNT(DISTINCT(stats_landings.vfs)) as online_vfs
+    FROM stats_actions
+    INNER JOIN stats_landings ON stats_actions.landing_id = stats_landings.ID
+    WHERE stats_actions.timestamp > $t"
+);
 ?>
+<overview>
+<block label="Online User" count="<?= $online[0]->online_users; ?>"></block>
+<block label="Online Visitors" count="<?= $online[0]->online_vfs; ?>"></block>
+</overview>
 <overview>
 <block label="Users" count="<?= count(get_users()); ?>"></block>
 <block label="Published Stories" count="<?= (new book_query([]))->count; ?>"></block>
@@ -34,7 +46,6 @@ $unique_landings_last_24 = $wpdb->get_results("SELECT COUNT(DISTINCT vfs) as c F
 <block label="Users - Last 24 hours" count="<?= $users_last_24[0]->c ?>"></block>
 </overview>
 <overview>
-<block label="Unique Vsitors - Last 7 days" count="<?= $unique_landings_last_week[0]->c ?>"></block>
-<block label="Unique Vsitors - Last 24 hours" count="<?= $unique_landings_last_24[0]->c ?>"></block>
+<block label="Unique Visitors - Last 7 days" count="<?= $unique_landings_last_week[0]->c ?>"></block>
+<block label="Unique Visitors - Last 24 hours" count="<?= $unique_landings_last_24[0]->c ?>"></block>
 </overview>
-<overview>
