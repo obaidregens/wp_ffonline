@@ -1,14 +1,15 @@
 <?php
 $app->bundle = global_bundle('drafts-preview');
+$app->bundle->js('external/hammer-js/hammer');
 $app->bundle->js('js/components/next-screen');
 $app->bundle->css('css/js-components/next-screen');
 $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
+$app->bundle->css('css/views/drafts-index');
+$app->bundle->js('js/views/drafts-index');
 $app->bundle->css('css/views/drafts-preview');
 $app->bundle->js('js/views/drafts-preview');
 $app->bundle->css('css/components/folders');
-$app->bundle->css('css/views/drafts-index');
-$app->bundle->js('js/views/drafts-index');
 $app->bundle->enqueue();
 $draft = $app->draft;
 $user = get_userdata( $draft->user_id );

@@ -1,5 +1,4 @@
-const OPT_REMOVE_FILES_CLICK = true;
-const OPT_NO_NEW_DRAFT = true;
+rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NO_NEW_DRAFT: true});
 document.querySelector('.edit-draft').addEventListener('click',function(event){
     api('edit_and_save_draft',{
         dataType: 'JSON',

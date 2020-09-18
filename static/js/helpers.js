@@ -243,30 +243,38 @@ function preg_split (pattern, subject, limit, flags) {
     return ret;
 }
 
-function api(action,{data,callback,async = true,dataType,reCAPTCHA = null,reject}){
-    const options = {
-        dataType: 'JSON',
-		url: '/api',
-		type: 'post',
-        data: {action},
-        async
-    };
-    if (reCAPTCHA === null){
-        options.data.nonce = document.querySelector('nonce').innerHTML;
-    }
-    else{
-        options.data.reCAPTCHA = reCAPTCHA;
-    }
-    if (typeof data === 'object'){
-        options.data.data = data;
-    }
-    if (callback instanceof Function){
-        options.success = callback;
-    }
-    if (reject instanceof Function){
-        options.error = reject;
-    }
-    jQuery.ajax(options);
+function api(action,{data,callback,async = true,reCAPTCHA = null,reject}){
+    return new Promise((res,rej) => {
+        const options = {
+            dataType: 'JSON',
+            url: '/api',
+            type: 'post',
+            data: {action},
+            async
+        };
+        if (reCAPTCHA === null){
+            options.data.nonce = document.querySelector('nonce').innerHTML;
+        }
+        else{
+            options.data.reCAPTCHA = reCAPTCHA;
+        }
+        if (typeof data === 'object'){
+            options.data.data = data;
+        }
+        options.success = response => {
+            res(response);
+            if (callback instanceof Function){
+                callback(response);
+            }
+        };
+        options.error = response => {
+            rej(response);
+            if (reject instanceof Function){
+                reject(response);
+            }    
+        };
+        jQuery.ajax(options);
+    });
 }
 jQuery('body').append(`
 <div

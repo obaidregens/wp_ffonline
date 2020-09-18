@@ -1,6 +1,11 @@
 // Import Before
-
-const tags = (JSON.parse(document.querySelector('tags_data').innerText));
+window.tt = api('get_book_data',{
+    data: {
+        book_id: document.querySelector('book').getAttribute('book_id')
+    }
+})
+.then((response) => {
+const tags = response.data;
 window.tags = tags;
 window.selected = tags.selected;
 
@@ -91,15 +96,15 @@ function Pairing() {
             <Select
             placeholder={"Select Pairing"}
             onChange={(newValue) => {
-                selected.pairing[i] = newValue;
+                selected.pairing[i] = newValue || [];
                 reRender();
             }}
-            noOptionsMessage={() => selected.pairing[i].length >= 4 ?  "Max characters selected" : 'No options' }
+            noOptionsMessage={() => (selected.pairing[i] || []).length >= 4 ?  "Max characters selected" : 'No options' }
             className={"select pairing"}
             isSearchable
             isMulti
             value={selected.pairing[i]}
-            options={ selected.pairing[i].length >= 4 ?  [] : pairing_options }
+            options={ (selected.pairing[i] || []).length >= 4 ?  [] : pairing_options }
             />
             <button
             onClick={(event) => {
@@ -130,12 +135,13 @@ function Pairing() {
 }
 const App = () => {
     const charChange = (newValue) => {
+        newValue = newValue || [];
         if (newValue.length > 6) {
             new toast("Stories can have up to 6 characters.");
             return;
         }
         selected.characters = newValue;
-        const character_ids = (newValue || []).map(({value}) => value);
+        const character_ids = newValue.map(({value}) => value);
         (selected.pairing || []).forEach((pairing,i) => {
             selected.pairing[i] = pairing.filter((pairing_char) => character_ids.includes(pairing_char.value))
         });
@@ -149,7 +155,7 @@ const App = () => {
                 if (maxSelect <= 1) {
                     value = [value];
                 }
-                if (maxSelect > 1 && value.length > maxSelect) {
+                if (maxSelect > 1 && (value || []).length > maxSelect) {
                     new toast("Stories can have up to " + maxSelect + " " + tagName + "s.");
                     return;
                 }
@@ -173,14 +179,14 @@ const App = () => {
         <app>
         <page>
         <TextInput
-        value={_.htmlspecialchars_decode(selected.title)}
+        value={selected.title}
         onChange={value => selected.title = value}
         label=""
         maxlength="80"
         />
         <TextInput
         label=""
-        value={_.htmlspecialchars_decode(selected.description)}
+        value={selected.description}
         onChange={value => selected.description = value}
         maxlength="400"
         Type="textarea"
@@ -188,12 +194,13 @@ const App = () => {
         <Select
         placeholder="Select Fandom"
         onChange={(newValue) => {
+            newValue = newValue || [];
             if (newValue.length > 3) {
                 new toast("Stories can have up to 3 fandoms.");
                 return;
             }
-            selected.fandom = newValue
-            const fandom_ids = (newValue || []).map(({value}) => value)
+            selected.fandom = newValue;
+            const fandom_ids = newValue.map(({value}) => value)
             selected.characters = (selected.characters || []).filter(({fandom}) => fandom_ids.includes(fandom) );
             charChange(selected.characters || []);
             reRender();
@@ -268,13 +275,16 @@ const App = () => {
         name="tag"
         placeholder="Select Tag"
         onChange={(value) => {
+            value = value || [];
             if (value.length > 5) {
                 new toast("Stories can have up to 5 tags.");
                 return;
             }
-            if (value.__isNew__) {
-                value.value = 'newValue';
-            }
+            value.forEach(el => {
+                if (el.__isNew__) {
+                    el.value = 'newValue';
+                }    
+            });
             selected.tag = value;
             reRender();
         }}
@@ -308,3 +318,4 @@ const App = () => {
     )
 }
 reRender();
+});

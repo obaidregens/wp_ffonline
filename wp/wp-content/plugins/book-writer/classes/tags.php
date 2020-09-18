@@ -1,5 +1,8 @@
 <?php
 class pairing {
+    public $characters;
+    public $count;
+
     static function add($book_id,array $characters) {
         if (count($characters) < 2) {
             return false;
@@ -51,9 +54,14 @@ class pairing {
         }
         if (! $append) {
             global $wpdb;
+            $not_in = empty($pp_s) ? "" : "AND pairing_id NOT IN (" . implode(",",$pp_s) . ")";
             $wpdb->query(
-                "DELETE FROM pairing_relationships
-                WHERE pairing_id NOT IN (" . implode(",",$pp_s) . ")"
+                $wpdb->prepare(
+                    "DELETE FROM pairing_relationships
+                    WHERE book_id = %s
+                    $not_in
+                    "
+                ,[$book_id])
             );
         }
         return true;
@@ -92,6 +100,43 @@ class pairing {
             $row->characters = $pairings[$row->pairing_id] ?? [];
             $kk[] = $row;
         }
+        $empty_book_ids = array_diff($book_ids,array_column($rel,'book_id'));
+        foreach ($empty_book_ids as $book_id ) {
+            $return[$book_id] = [];
+        }
         return $return;
+    }
+    static function query(bool $hide_empty = true) {
+        global $wpdb;
+        $i = $wpdb->get_results("SELECT * FROM character_pairings");
+        $b = empty($i) ? [] : $wpdb->get_results("SELECT pairing_id,book_id FROM pairing_relationships WHERE pairing_id IN(" . implode(",",array_column($i,'pairing_id')) . ")");
+        $pairing_count = array_count_values(array_column($b,'pairing_id'));
+        $pairing_ids = [];
+        foreach ($b as $row) {
+            $k = &$pairing_ids[$row->pairing_id];
+            $k = $k ?? [];
+            $k[] = $row->book_id;
+        }
+        $terms = (new WP_Term_Query([
+            'taxonomy'		=> 'character',
+            'include'       => array_column($i,'character_id'),
+            'hide_empty'    => false
+        ]))->terms ?: [];
+        $characters = array_combine(array_column($terms,'term_id'),$terms);
+        $pairings = [];
+        foreach ($i as $row) {
+            $count = $pairing_count[$row->pairing_id] ?? 0;
+            if ($count < 1 && $hide_empty) {
+                continue;
+            }
+            $k = &$pairings[$row->pairing_id];
+            $k = $k ?? new pairing;
+            $k->characters = $k->characters ?? [];
+            $k->characters[] = $characters[$row->character_id] ?? null;
+            $k->count = $count;
+            $k->book_ids = $pairing_ids[$row->pairing_id];
+            $k->pairing_id = $row->pairing_id;
+        }
+        return $pairings;
     }
 }

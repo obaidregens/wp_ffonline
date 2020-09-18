@@ -265,14 +265,14 @@ dark-mode::before {
         content: 'Collections';
     }
     header > nav > .dropdown::before,
-    header > nav > [href="/login"]::before {
+    header > nav > [onclick="prompt_login();"]::before {
         content: '\e943';
         transform: scale(1.8) translateY(-5px);
     }
     header > nav > .dropdown::after {
         content: 'Me';
     }
-    header > nav > [href="/login"]::after {
+    header > nav > [href="prompt_login();"]::after {
         content: 'Login';
     }
 }

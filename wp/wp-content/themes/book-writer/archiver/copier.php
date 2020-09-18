@@ -1,4 +1,6 @@
 <?php
+exit();
+// Redundant
 $start = microtime(true);
 global $wpdb;
 

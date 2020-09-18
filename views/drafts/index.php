@@ -16,7 +16,7 @@ $app->bundle->js('js/views/drafts-indexActions');
 $app->bundle->enqueue();
 ?>
 <floater>
-    <button class="new popup"></button>
+    <button class="new"></button>
 </floater>
 <popup new-action>
     <a label="Draft" href="/drafts/new"></a>

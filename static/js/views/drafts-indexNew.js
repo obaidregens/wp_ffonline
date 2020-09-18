@@ -1,3 +1,4 @@
+document.querySelector('button.new').addEventListener('click',() => popup.open(document.querySelector('popup[new-action]')))
 document.querySelector('[label="Folder"]').addEventListener('click',() => {
     if (current_path.split('/').length >= 3) {
         new toast('Only two subfolders are allowed');

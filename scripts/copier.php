@@ -1,4 +1,6 @@
 <?php
+// Redundant
+exit();
 $start = microtime(true);
 
 define('WP_USE_THEMES', false);

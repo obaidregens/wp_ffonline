@@ -492,7 +492,7 @@ class draft_chapters extends drafts {
             return false;
         }
         $chapter_id = wp_insert_post([
-            'post_title'    => $title,
+            'post_title'    => htmlspecialchars($title),
             'post_content'  => drafts_json::read($draft->content),
             'post_type'     => 'chapter',
             'post_status'   => 'publish',

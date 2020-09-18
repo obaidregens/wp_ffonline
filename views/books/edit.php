@@ -10,7 +10,7 @@ $book_id = $book === 'new' ? 'new' : $book->ID;
     <step>Story Settings</step>
     <step>Chapters</step>
 </stepper>
-<book></book>
+<book book_id="<?= $book_id; ?>"></book>
 <page page-num="4"></page>
 <submit>
 <button theme label="Save"></button>
@@ -26,12 +26,12 @@ $app->bundle->css('css/components/index');
 $app->bundle->css('css/js-components/ask');
 $app->bundle->js('js/components/ask');
 $app->bundle->css('css/components/folders');
-$app->bundle->css('css/views/drafts-index');
 $app->bundle->css('css/components/tooltips');
+$app->bundle->js('js/views/drafts-index');
+$app->bundle->css('css/views/drafts-index');
 $app->bundle->css('css/views/book-edit');
 $app->bundle->js('js/views/book-edit-submit');
 $app->bundle->css('css/views/book-edit-submit');
-$app->bundle->js('js/views/drafts-index');
 $app->bundle->enqueue();
 $app->bundle->print();
 $app->bundle = new bundle('edit-book-react');

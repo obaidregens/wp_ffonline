@@ -146,7 +146,7 @@ const introSteps = {
     ],
     7: [
         {
-            element: 'button.new.popup',
+            element: 'floater > button.new',
             intro: 'Create a new draft.'
         }
     ],

@@ -1,4 +1,6 @@
 <?php
+// Redundant
+exit();
 /**
  * Template Name: Scraper
  *

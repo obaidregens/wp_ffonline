@@ -34,9 +34,8 @@ function my_permalinks($permalink, $post, $leavename) {
 }
 add_filter('post_type_link', 'my_permalinks', 11, 3);
 // // Register Custom Taxonomies
-function bw_register_ct()
-{
-		$labels = array(
+function bw_register_ct(){
+	$labels = array(
 		'name'                       => 'Genres',
 		'singular_name'              => 'Genre',
 		'menu_name'                  => 'Genre',
@@ -68,7 +67,7 @@ function bw_register_ct()
 		'show_tagcloud'              => true,
 	);
 	register_taxonomy( 'genre', array( 'book' ), $args );
-		$labels = array(
+	$labels = array(
 		'name'                       => 'Ratings',
 		'singular_name'              => 'Rating',
 		'menu_name'                  => 'Rating',
@@ -100,7 +99,7 @@ function bw_register_ct()
 		'show_tagcloud'              => true,
 	);
 	register_taxonomy( 'rating', array( 'book' ), $args );
-		$labels = array(
+	$labels = array(
 		'name'                       => 'Languages',
 		'singular_name'              => 'Language',
 		'menu_name'                  => 'Language',
@@ -132,7 +131,7 @@ function bw_register_ct()
 		'show_tagcloud'              => true,
 	);
 	register_taxonomy( 'language', array( 'book' ), $args );
-		$labels = array(
+	$labels = array(
 		'name'                       => 'Characters',
 		'singular_name'              => 'Character',
 		'menu_name'                  => 'Character',
@@ -164,39 +163,7 @@ function bw_register_ct()
 		'show_tagcloud'              => true,
 	);
 	register_taxonomy( 'character', array( 'book' ), $args );
-		$labels = array(
-		'name'                       => 'Pairings',
-		'singular_name'              => 'Pairing',
-		'menu_name'                  => 'Pairing',
-		'all_items'                  => 'All Pairings',
-		'parent_item'                => 'Parent Pairing',
-		'parent_item_colon'          => 'Parent pairing:',
-		'new_item_name'              => 'New Pairing',
-		'add_new_item'               => 'Add New Pairing',
-		'edit_item'                  => 'Edit Pairing',
-		'update_item'                => 'Update Pairing',
-		'view_item'                  => 'View Pairing',
-		'separate_items_with_commas' => 'Separate pairings with commas',
-		'add_or_remove_items'        => 'Add or remove pairings',
-		'choose_from_most_used'      => 'Choose from the most used',
-		'popular_items'              => 'Popular Pairings',
-		'search_items'               => 'Search Pairing',
-		'not_found'                  => 'Not Found',
-		'no_terms'                   => 'No Pairings',
-		'items_list'                 => 'Pairing list',
-		'items_list_navigation'      => 'Pairing list navigation',
-	);
-	$args = array(
-		'labels'                     => $labels,
-		'hierarchical'               => true,
-		'public'                     => true,
-		'show_ui'                    => true,
-		'show_admin_column'          => true,
-		'show_in_nav_menus'          => true,
-		'show_tagcloud'              => true,
-	);
-	register_taxonomy( 'pairing', array( 'book' ), $args );
-		$labels = array(
+	$labels = array(
 		'name'                       => 'Status',
 		'singular_name'              => 'Status',
 		'menu_name'                  => 'Status',

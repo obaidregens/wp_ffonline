@@ -1,3 +1,4 @@
+const loadFolder = rootDraftsIndex('folder-listing');
 const drag = new Draggable.Droppable(document.querySelectorAll('folder-listing'), {
     draggable: 'file > file-meta',
     dropzone: 'folder, file:not(.new-draft-file), delete-container',

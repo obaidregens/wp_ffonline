@@ -1,5 +1,3 @@
-const OPT_REMOVE_FILES_CLICK = true;
-const OPT_NEW_DRAFT_IN_NEW_TAB = true;
 let currentPage = null;
 window.setCurrentPage = num => {
     if (num === '+') {
@@ -70,15 +68,17 @@ function reAddChapters() {
     }));
 }
 window.addEventListener('load',() => {
-    document.querySelector('stepper').addEventListener('click',({target}) => {
-        if (target.tagName.toLowerCase() !== 'step') {
-            return;
-        }
-        const i = Array.prototype.indexOf.call(target.parentElement.children, target)+1;
-        window.setCurrentPage(i);
+    window.tt.then(() => {
+        document.querySelector('stepper').addEventListener('click',({target}) => {
+            if (target.tagName.toLowerCase() !== 'step') {
+                return;
+            }
+            const i = Array.prototype.indexOf.call(target.parentElement.children, target)+1;
+            window.setCurrentPage(i);
+        });
+        reAddChapters();
+        window.setCurrentPage(1);    
     });
-    reAddChapters();
-    window.setCurrentPage(1);
 });
 function createChapterDraggableLi(chapter) {
     const topLevelAttr = {
@@ -94,7 +94,7 @@ function createChapterDraggableLi(chapter) {
                 classes: ['counter'],
             }),
             DOM.create('cell',{
-                innerText: chapter.title,
+                innerText: _.htmlspecialchars_decode(chapter.title),
             }),
             DOM.create('cell',{
                 children: [
@@ -162,6 +162,7 @@ function new_chapter_popup_create() {
         }
     }));
     popup.create(p);
+    rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NEW_DRAFT_IN_NEW_TAB: true});
 }
 new_chapter_popup_create();
 document.querySelector('submit > [label="Save"]').addEventListener('click',({target}) => {

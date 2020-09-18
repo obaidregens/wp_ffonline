@@ -39,8 +39,9 @@ function api_edit_book() {
     }
     $book = get_post($d['book_id']);
     if (
-        !$book || $book->post_type !== 'book'
-        || intval($book->post_author) !== intval(get_current_user_id())
+        !$book
+        || $book->post_type !== 'book'
+        || !is_current_user($book->post_author)
     ){
         return ['code'=>9];
     }
@@ -56,7 +57,7 @@ function api_edit_book() {
     $chapter_ids_order = [];
     foreach (($d['chapters'] ?? []) as $chapter ) {
         if ($chapter['draft_id']) {
-            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,$chapter['title']);
+            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,substr($chapter['title'],0,80));
             if ($chapter_id !== false) {
                 $chapter_ids_order[] = $chapter_id;
             }
@@ -120,7 +121,7 @@ function api_edit_book() {
     foreach ( (empty($d['characters']) ? [] : array_slice($d['characters'],0,$max_characters) ) as $k => $character_obj) {
         $f = intval($character_obj['fandom']);
         $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));
-        $charNames[] = $character_obj['label'];
+        $charNames[$f . '>>>' . $character_obj['label']] = $char_id;
         $charIds[] = $char_id;
     }
     wp_set_post_terms( $d['book_id'], $charIds, 'character' );
@@ -131,15 +132,20 @@ function api_edit_book() {
     $pairings = [];
     $d['pairing'] = (empty($d['pairing']) ? [] : array_slice($d['pairing'],0,$max_pairings) );
     foreach ($d['pairing'] as $k => $pairing_chars) {
-        $pairing_charNames = array_column($pairing_chars,'label');
-        $error = ! empty(array_diff($pairing_charNames,$charNames)) || count($pairing_charNames) < 2 || count($pairing_charNames) > 4;
+        $error = count($pairing_chars) < 2 || count($pairing_chars) > 4;
         if ($error) {
             continue;
         }
-        sort($pairing_charNames);
-        $pairings[] = implode('/',$pairing_charNames);
+        $pairing_charIds = [];
+        foreach ($pairing_chars as $pairingChar) {
+            $pCharId = $charNames[intval($pairingChar['fandom']) . '>>>' . $pairingChar['label']] ?? null;
+            if ($pCharId === null) {continue 2;}
+            $pairing_charIds[] = intval($pCharId);
+        }
+        $pairings[] = $pairing_charIds;
     }
-    wp_set_object_terms( $d['book_id'], $pairings, 'pairing' );
+    pairing::set($d['book_id'],$pairings);
+
     // Tag
     $max_tags=5;
     $tag = [];
@@ -170,7 +176,10 @@ function api_edit_book() {
         $success = $success ?? 3;
     }
     wp_cache_flush();
-    return ['code'=>$success ?? 1,'selected'=>get_data($d['book_id'])['selected']];
+    return [
+        'code'      => $success ?? 1,
+        'selected'  => get_data($d['book_id'])['selected']
+    ];
 }
 function api_create_fandom() {
     required_login();
@@ -207,4 +216,27 @@ function api_create_fandom() {
     ] )['term_id'];
     update_term_meta( intval($term_id), 'creator', get_current_user_id() );
     return ['code'  => 1];
+}
+function api_get_book_data() {
+    required_login('book_id');
+    required_params();
+    wp_cache_flush();
+    if ($_POST['data']['book_id'] === "new") {
+        return [
+            'code'   => 1,
+            'data'   => get_data("new")
+        ];
+    }
+    $book = get_post($_POST['data']['book_id']);
+    if (
+        !$book ||
+        $book->post_type !== 'book' ||
+        !is_current_user($book->post_author)
+    ){
+        return ['code'=>9];
+    }
+   return [
+       'code'   => 1,
+       'data'   => get_data($book->ID)
+    ];
 }

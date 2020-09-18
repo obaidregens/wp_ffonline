@@ -140,20 +140,21 @@ function get_data($book_id = 'new'){
 			$s['characters'][] = $character_name_hash[$character->name];
 		}
 
-		$book_pairings = wp_get_post_terms($book->ID,'pairing');
+		$book_pairings = pairing::for_books([$book->ID])[$book->ID];
 		foreach($book_pairings as $k => $pairing){
 			$s['pairing'][$k] = [];
-			$pairing_chars = explode('/',$pairing->name);
-			foreach ($pairing_chars as $char_name) {
-				if (!isset($character_name_hash[$char_name])) {
-					continue;
-				}
-				$s['pairing'][$k][] = $character_name_hash[$char_name];
+			foreach ($pairing->characters as $character) {
+				$s['pairing'][$k][] = [
+					'value'		=> strval($character->term_id),
+					'label'		=> $character->name,
+					'fandom'	=> strval($character->parent),
+					'category'	=> strval($book_categories[$character->parent])	
+				];
 			}
 		}
 
-		$s['title'] = ($book->post_title);
-		$s['description'] = ($book->post_excerpt);
+		$s['title'] = htmlspecialchars_decode($book->post_title);
+		$s['description'] = htmlspecialchars_decode($book->post_excerpt);
 		$s['publish'] = $book->post_status === 'publish';
 		$s['reviews'] = $book->comment_status === 'open';
 		$s['anonymous_reviews'] = get_post_meta( $book_id,'anon_review',true) === 'true';

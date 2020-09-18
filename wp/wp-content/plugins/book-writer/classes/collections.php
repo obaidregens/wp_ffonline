@@ -366,6 +366,9 @@ class collection_helpers extends collection {
         ]);
     }
     static function get_hidden() {
+        if (! is_user_logged_in(  )) {
+            return [];
+        }
         $c = collection::query([
             'title'             => 'Hidden',
             'author_included'   => [get_current_user_id()]

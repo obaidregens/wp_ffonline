@@ -1,4 +1,6 @@
 <?php
+exit();
+// Redundant
 function api_add_to_collection(){
     $_POST['data'] = json_decode(str_replace('\\','',$_POST['data']['data_']),true);
     function return_code($code,$extra = 0){

@@ -44,6 +44,7 @@ class book_query{
     protected function book_tags(){
         $terms_ = (new WP_Term_Query(array(
             'object_ids'	=> array_column($this->books,'ID'),
+            'taxonomy'      => array('genre','fandom','language','status','character','rating','tag'),
             'orderby'		=> 'term_group',
             'fields'        => 'all_with_object_id'
         )))->terms ?: [];
@@ -55,6 +56,18 @@ class book_query{
                 'name'      => $term->name,
                 'link'      => '<a href="/read?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $term->name . '</a>',
             );
+        }
+        $book_pairings = pairing::for_books(array_column($this->books,'ID'));
+        foreach ($book_pairings as $book_pairing) {
+            foreach ($book_pairing as $pairing ) {
+                $name = implode('/',array_column($pairing->characters,"name"));
+                $tax[$pairing->book_id]['pairing'][] = array(
+                    'ID'        => $pairing->pairing_id,
+                    'name'      => $name,
+                    'link'      => '<a href="/read?pairing_included=' . $pairing->pairing_id . '">' . $name . '</a>',
+                );    
+            }
+
         }
         return $tax;
     }
@@ -347,7 +360,7 @@ class book_query_cache extends book_query {
         global $wpdb;
         $ids = json_or_serialize_decode($wpdb->get_results("SELECT ids FROM " . self::$table . " WHERE _key = 'words' AND _value = '0'")[0]->ids);
         $terms = (new WP_Term_Query(array(
-            'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+            'taxonomy'		=> array('category','rating','language','status','genre','character','tag'),
 			'object_ids'    => $ids,
 			'fields'        => 'all_with_object_id'
         )))->terms ?: [];
@@ -441,7 +454,7 @@ class book_query_cache extends book_query {
             return;
         }
         $terms_query = new WP_Term_Query(array(
-            'taxonomy'		=> array('category','rating','language','status','genre','character','pairing','tag'),
+            'taxonomy'		=> array('category','rating','language','status','genre','character','tag'),
             'fields'        => 'id=>name'
         ));
         $terms =  $terms_query->terms;
@@ -450,6 +463,37 @@ class book_query_cache extends book_query {
             '_value'    => 'all',
             'ids'       => $terms
         )));
+    }
+    function pairing_tag_names(){
+        $term_key = 'pairing_tag_names' . self::$midfix . 'all';
+        if (isset($this->existing[$term_key])){
+            return;
+        }
+        $pairings = pairing::query();
+        $terms = [];
+        foreach ($pairings as $pairing ) {
+            $terms[$pairing->pairing_id] = implode(array_column($pairing->characters,'name'),'/');
+        }
+        self::put(array(array(
+            '_key'      => 'pairing_tag_names',
+            '_value'    => 'all',
+            'ids'       => $terms
+        )));
+    }
+    function pairings() {
+        global $wpdb;        
+        $terms = pairing::query();
+        foreach ( $terms as $term ) {
+            $term_key = 'pairing' . self::$midfix . $term->pairing_id;
+            if (isset($this->existing[$term_key])){
+                continue;
+            }
+            self::put([[
+                '_key'      => 'pairing',
+                '_value'    => $term->pairing_id,
+                'ids'       => $term->book_ids
+            ]]);
+        }
     }
     function ffn_author() {
         global $wpdb;
@@ -502,35 +546,33 @@ class tag_query extends book_query{
         }
         $results = $wpdb->get_results(
             "SELECT * FROM " . self::$table . "
-            WHERE `_key` IN ('" . implode('\', \'',self::$taxonomies) . "','tag_names','character_fandoms')"
+            WHERE `_key` IN ('" . implode('\', \'',self::$taxonomies) . "','tag_names','pairing_tag_names','character_fandoms')"
         );
-        // Tag Names
-        $index_of_names = array_search('tag_names',array_column($results,'_key'));
-        $tag_names = json_or_serialize_decode($results[$index_of_names]->ids);
-        unset($results[$index_of_names]);
-        sort($results);
-
-        // Character Fandom
-        $index_of_char_fandoms = array_search('character_fandoms',array_column($results,'_key'));
-        $character_fandoms = json_or_serialize_decode($results[$index_of_char_fandoms]->ids);
-        unset($results[$index_of_char_fandoms]);
-        sort($results);
-
+        $meta = [];
+        // Get Meta
+        $meta_names = ['tag_names','pairing_tag_names','character_fandoms'];
+        foreach($meta_names as $metaN) {
+            $index_of_names = array_search($metaN,array_column($results,'_key'));
+            $meta[$metaN] = json_or_serialize_decode($results[$index_of_names]->ids);
+            unset($results[$index_of_names]);
+            sort($results);    
+        }
         $terms_with_count = [];
         foreach ($results as $term) {
             $term->_value = intval($term->_value);
-            if (! isset($tag_names[$term->_value])){
+            $tn = $term->_key === 'pairing' ? $meta['pairing_tag_names'] : $meta['tag_names'];
+            if (! isset($tn[$term->_value])){
                 continue;
             }
             if ($term->_key === 'character'){
-                $ref = &$terms_with_count[$term->_key][$character_fandoms[$term->_value]][$term->_value];
+                $ref = &$terms_with_count[$term->_key][$meta['character_fandoms'][$term->_value]][$term->_value];
             }
             else {
                 $ref = &$terms_with_count[$term->_key][$term->_value];
             }
             $ref = array(
                 'count'         => count(a_intersect($book_ids,json_or_serialize_decode($term->ids))),
-                'name'          => $tag_names[$term->_value]
+                'name'          => $tn[$term->_value]
             );
         }
         $this->terms_with_count = $terms_with_count;
