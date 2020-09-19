@@ -150,7 +150,7 @@ function run_at_activation(){
 		`request_time`	BIGINT NOT NULL ,
 		`import_time`	BIGINT NOT NULL ,
 		`viewed_time`	BIGINT NOT NULL ,
-		PRIMARY KEY (import_from,import_story)
+		PRIMARY KEY (`import_from`,`import_story`)
 	) $charset_collate;";
 
 	$ffn_outreach_table = "CREATE TABLE ffn_outreach (
@@ -182,13 +182,13 @@ function run_at_activation(){
 		`oldest_updated`		BIGINT NOT NULL ,
 		`newest_published`		BIGINT NOT NULL ,
 		`newest_updated`		BIGINT NOT NULL ,
-		PRIMARY KEY (ffn_user_id)
+		PRIMARY KEY (`ffn_user_id`)
 	) $charset_collate;";
 
 	$character_pairings_tables = "CREATE TABLE character_pairings (
 		`pairing_id` 	BIGINT NOT NULL ,
 		`character_id` 	BIGINT NOT NULL ,
-		PRIMARY KEY (pairing_id,character_id)
+		PRIMARY KEY (`pairing_id`,`character_id`)
 	) $charset_collate;";
 
 	$pairing_relationships_tables = "CREATE TABLE pairing_relationships (
@@ -196,8 +196,21 @@ function run_at_activation(){
 		`book_id`		BIGINT NOT NULL ,
 		`priority`		VARCHAR(20) NOT NULL ,
 		`added_time`	BIGINT NOT NULL ,
-		PRIMARY KEY (pairing_id,book_id)
+		PRIMARY KEY (`pairing_id`,`book_id`)
 	) $charset_collate;";
+
+	$contact_tables = "CREATE TABLE contact (
+		`ID` 			BIGINT NOT NULL AUTO_INCREMENT ,
+		`user_id`		BIGINT NOT NULL ,
+		`from`		 	VARCHAR(400) NOT NULL ,
+		`to`			VARCHAR(200) NOT NULL ,
+		`received_time`	FLOAT NOT NULL ,
+		`subject`		VARCHAR(200) NOT NULL ,
+		`headers`		LONGTEXT NOT NULL ,
+		`message`		LONGTEXT NOT NULL ,
+		PRIMARY KEY (ID)
+	) $charset_collate;";
+
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -228,6 +241,8 @@ function run_at_activation(){
 	// Pairings
 	dbDelta( $character_pairings_tables );
 	dbDelta( $pairing_relationships_tables );
+	// Contact Table
+	dbDelta( $contact_tables );
 
 	//Create Default Collections for users
 	$users = get_users(array(
