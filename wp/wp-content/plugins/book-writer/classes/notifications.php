@@ -108,7 +108,11 @@ class notifications {
             $message .= get_permalink($chapter->ID) . "\r\n\r\n";
             $message .= 'You can disable notifications for this collection here: ' . collection::link($collection['ID']) . '\r\n';
             $message .= collection::$mail_footer;
-            wp_mail($emails,$subject,$message);
+            email([
+                'to'        => $emails,
+                'subject'   => $subject,
+                'plaintext' => $message
+            ]);
         }
     }
     public static function new_message($message_id){
@@ -127,7 +131,11 @@ class notifications {
         $message = $author->display_name . ' just messaged you.' . "\r\n";
         $message .= 'See here: ' . get_permalink($message->ID) . "\r\n\r\n";
         $message .= notifications::$mail_footer;
-        wp_mail($to->user_email,$subject,$message);
+        email([
+            'to'        => $to->user_email,
+            'subject'   => $subject,
+            'plaintext' => $message
+        ]);
     }
     public static function new_comment($comment_id){
         $error = new err();
@@ -142,6 +150,10 @@ class notifications {
         $message = 'You just got a new comment on your chapter \'' . $chapter_on->post_title . '\'.' . "\r\n";
         $message .= 'See here: ' . get_comment_link($id) . "\r\n\r\n";
         $message .= notifications::$mail_footer;
-        wp_mail($chapter_author->user_email,$subject,$message);
+        email([
+            'to'        => $chapter_author->user_email,
+            'subject'   => $subject,
+            'plaintext' => $message
+        ]);
     }
 }

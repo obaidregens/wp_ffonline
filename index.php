@@ -4,10 +4,12 @@ function construct_page_title(... $parts) {
 }
 define('MAIN_DIR',dirname(__DIR__) . '/');
 require_once(__DIR__ . '/php_includes/helpers.php');
-require_once(__DIR__ . '/php_includes/mail/mail.php');
 
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
+
+require_once(__DIR__ . '/php_includes/mail/mail.php');
+
 class Router {
     public $request;
     private $r;

@@ -5,6 +5,7 @@
     --text-color: #262828;
     --background-color: #fdfdfd;
     --background-accent: #ececec;
+    --transparent-accent: rgb(128 128 128 / 12%);
 
     --hover: rgba(206,206,206,.22);
     --border: 1.5px solid rgba(129, 129, 129, 0.49);

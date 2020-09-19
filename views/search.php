@@ -10,7 +10,6 @@ if (err::is($query->args)){
 $query->query();
 global $book_query;
 $book_query = $query;
-
 ?>
 <collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
 <tags_data hidden><?= json_encode(tags_data($query)); ?></tags_data>
@@ -73,4 +72,4 @@ $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->mix('glide_js');
 $app->bundle->mix('create_search_new');
-$app->bundle->enqueue('dev');
+$app->bundle->enqueue();

@@ -204,7 +204,11 @@ Fanfiction Online'
         $email_text = str_replace  ( '###USERNAME###', $current_user->user_login, $email_text );
         $email_text = str_replace  ( '###ADMIN_URL###', esc_url( admin_url( 'profile.php?newuseremail=' . $hash ) ), $email_text );
     
-        wp_mail( $new_email, 'Email Change Request', $email_text );    
+        email( [
+            'to'        => $new_email,
+            'subject'   => 'Email Change Request',
+            'plaintext' => $email_text
+        ]);
     }
     protected static function signup_mail($user_id,$code){
         $user = get_user_by( 'ID', $user_id )->data;
@@ -226,7 +230,11 @@ Fanfiction Online'
         $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );
         $email_text = str_replace  ( '###CODE###', $code , $email_text );
 
-        wp_mail( $user->user_email, 'Welcome to Fanfiction Online!', $email_text );
+        email( [
+            'to'        => $user->user_email,
+            'subject'   => 'Welcome to Fanfiction Online!',
+            'plaintext' => $email_text
+        ] );
     }
     protected static function login_code_mail($user,$code){
         $email_text = __(
@@ -244,7 +252,11 @@ Fanfiction Online'
         $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );
         $email_text = str_replace  ( '###CODE###', $code , $email_text );
 
-        wp_mail( $user->user_email, 'Login Code', $email_text );
+        email( [
+            'to'        => $user->user_email,
+            'subject'   => 'Login Code',
+            'plaintext' => $email_text
+        ] );
     }
 }
 class v_user extends user {

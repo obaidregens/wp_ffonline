@@ -6,7 +6,7 @@ button,
     min-width: min-content;
     min-width: -moz-min-content;
     font-size: 12px;
-    background-color: var(--background-accent);
+    background-color: var(--transparent-accent);
     color: var(--text-color);
     border: 1px solid transparent;
     border-radius: 4px;
