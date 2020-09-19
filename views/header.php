@@ -15,9 +15,9 @@ $is_user_logged_in = is_user_logged_in();
 $current_user = get_userdata( get_current_user_id() );
 ?>
 <!DOCTYPE html>
-<html>
+<html <?php if ($_COOKIE['theme'] === 'dark'){ ?>class="force-dark"<?php } ?> >
     <head>
-		<style>html {background-color: #121212;}</style>
+		<style>html.force-dark {background-color: #121212;}</style>
         <meta charset="UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= $app->header_options['title']; ?></title>

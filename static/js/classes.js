@@ -81,6 +81,7 @@ themes.all = {
     }
 }
 themes.set(themes.current);
+document.querySelector('html').classList.remove('force-dark');
 const DOM = class {
     static create(tagName,opts = {}){
         return DOM.update(document.createElement(tagName),opts);
