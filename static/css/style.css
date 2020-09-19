@@ -280,7 +280,7 @@ dark-mode::before {
     header > nav > .dropdown::after {
         content: 'Me';
     }
-    header > nav > [href="prompt_login();"]::after {
+    header > nav > [onclick="prompt_login();"]::after {
         content: 'Login';
     }
 }

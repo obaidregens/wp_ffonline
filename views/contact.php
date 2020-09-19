@@ -15,7 +15,7 @@ main {
 }
 </style>
 <h3>Contact us</h3>
-<p>If you need any help, or have any suggestions for us, just shoot us a message through the form below.</p>
+<p>If you have any questions, or need any help, send us a message. We'll get back to you as quickly as possible.</p>
 <text-input input_type="email" label="Email"></text-input>
 <text-input label="Send Message" type="multi"></text-input>
 <recaptcha></recaptcha>

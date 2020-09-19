@@ -6,9 +6,9 @@ button,
     min-width: min-content;
     min-width: -moz-min-content;
     font-size: 12px;
-    background-color: transparent;
+    background-color: var(--background-accent);
     color: var(--text-color);
-    border: 1px solid var(--text-color);
+    border: 1px solid transparent;
     border-radius: 4px;
     user-select: none;
     text-decoration: none;
@@ -32,7 +32,7 @@ button:hover:not([disabled]),
 button.active:not([disabled]),
 .button:hover:not([disabled]),
 .button.active:not([disabled]) {
-    border: 1px solid transparent;
+    border-color: transparent;
     background-color: var(--theme-color);
     color: var(--white);
 }

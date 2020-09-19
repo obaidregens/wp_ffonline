@@ -73,4 +73,4 @@ $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->mix('glide_js');
 $app->bundle->mix('create_search_new');
-$app->bundle->enqueue();
+$app->bundle->enqueue('dev');

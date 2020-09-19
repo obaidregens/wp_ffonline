@@ -1,9 +1,10 @@
 <?php
 $app->bundle = global_bundle('dash-home');
-$app->bundle->css('css/views/dash-home');
-$app->bundle->js('js/views/dash-home');
+$app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');
 $app->bundle->js('js/components/sidenav');
+$app->bundle->js('js/views/dash-main');
+$app->bundle->css('css/views/dash-home');
 $app->bundle->enqueue();
 global $wpdb;
 

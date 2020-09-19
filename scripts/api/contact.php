@@ -1,22 +1,27 @@
 <?php
 function api_contact() {
+    required_params('message','email');
     $d = &$_POST['data'];
-    $message = $d['message'];
-    $email = $d['email'] ?? 'None specified';
-    $author = is_user_logged_in(  ) ? get_user_by( 'ID', get_current_user_id() )->display_name : 'None';
-    $email_text = 
-"
-Label- Misc
-
-Message From: $email
-
-Author: $author
-
-Message:
-
-$message
-
-";
-    wp_mail( 'info@fanfiction.online', 'Message from Fanfiction Online', $email_text );
+    $message = $d['message'] ?? "";
+    if (trim($message === "")) {
+        return ['code'=>8];
+    }
+    $email = $d['email'] ?? "";
+    if ( !filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+        return ['code'=>9];
+    }
+    global $wpdb;
+    $wpdb->insert(
+        'contact',
+        [
+            'user_id'       => get_current_user_id(),
+            'from'          => $email,
+            'to'            => 'Contact',
+            'received_time' => microtime(true),
+            'subject'       => '',
+            'headers'       => '',
+            'message'       => $message
+        ]
+    );
     return ['code'=>1];
 }

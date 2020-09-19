@@ -204,7 +204,7 @@ function run_at_activation(){
 		`user_id`		BIGINT NOT NULL ,
 		`from`		 	VARCHAR(400) NOT NULL ,
 		`to`			VARCHAR(200) NOT NULL ,
-		`received_time`	FLOAT NOT NULL ,
+		`received_time`	DOUBLE NOT NULL ,
 		`subject`		VARCHAR(200) NOT NULL ,
 		`headers`		LONGTEXT NOT NULL ,
 		`message`		LONGTEXT NOT NULL ,

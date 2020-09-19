@@ -1,4 +1,5 @@
 document.querySelector('button').addEventListener('click',function(){
+    const rcp = document.querySelector('main > recaptcha');
     const message = document.querySelector('text-input > textarea').value;
     if (message === ''){
         new toast("What's your message?")
@@ -7,18 +8,31 @@ document.querySelector('button').addEventListener('click',function(){
     this.setAttribute('disabled','');
     api('contact',{
         dataType: 'JSON',
-        reCAPTCHA: grecaptcha.getResponse(document.querySelector('recaptcha').getAttribute('widget-id')),
+        reCAPTCHA: grecaptcha.getResponse(rcp.getAttribute('widget-id')),
         data: {
             email: document.querySelector('text-input > input').value,
             message
         },
-        callback: (response) => {
+        callback: response => {
+            grecaptcha.reset(rcp.getAttribute('widget-id'));
             this.removeAttribute('disabled');
+            if (response.code === 8) {
+                new toast("What's your message?");
+                return;
+            }
+            if (response.code === 9) {
+                new toast("Enter a valid email.");
+                return;
+            }
             if (response.code === 997){
                 new toast ('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
                 return;
             }
-            new toast('Message Sent.');
+            if (response.code > 5) {
+                new toast("An error occured");
+                return;
+            }
+            new toast('Message Sent');
         }
     });
 });

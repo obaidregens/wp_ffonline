@@ -1,0 +1,49 @@
+document.documentElement.appendChild(
+    DOM.create('floater',{
+        children: [
+            DOM.create('button',{
+                innerText: "<",
+                listeners: {
+                    click: () => sidenav.open(si)
+                }
+            })
+        ]
+    })    
+);
+const styling = `
+sidenav > a {
+    display: flex;
+    width: 100%;
+    padding: 12px;
+    color: var(--text-color) !important;
+}
+sidenav > a:hover {
+    background-color: var(--hover);
+}
+`
+const si = DOM.create('sidenav',{
+    children: [
+        DOM.create("style",{
+            innerText: styling
+        }),
+        DOM.create("a",{
+            innerText: "Home",
+            attributes: {
+                href: "/dash"
+            }
+        }),
+        DOM.create("a",{
+            innerText: "Tags",
+            attributes: {
+                href: "/dash/tags"
+            }
+        }),
+        DOM.create("a",{
+            innerText: "Contact",
+            attributes: {
+                href: "/dash/contact"
+            }
+        }),
+    ],
+});
+sidenav.create(si);

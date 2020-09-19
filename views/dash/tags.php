@@ -1,9 +1,11 @@
 <?php
 $app->bundle = global_bundle('dash-tags');
-$app->bundle->css('css/components/select');
-$app->bundle->css('css/components/index');
+$app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');
 $app->bundle->js('js/components/sidenav');
+$app->bundle->js('js/views/dash-main');
+$app->bundle->css('css/components/select');
+$app->bundle->css('css/components/index');
 $app->bundle->css('css/views/dash-tags');
 $app->bundle->js('js/views/dash-tags');
 $app->bundle->enqueue();

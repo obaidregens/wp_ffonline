@@ -1,5 +1,10 @@
 OPT_BOOK_IN_COLLECTIONS = true;
 function follow_collection(collection_id,follow = true){
+    if (! logged_in) {
+        prompt_login();
+        new toast("Login to follow collection.");
+        return;
+    }
     api('follow_collection',{
         dataType: 'JSON',
         data: {

@@ -15,7 +15,7 @@ $is_user_logged_in = is_user_logged_in();
 $current_user = get_userdata( get_current_user_id() );
 ?>
 <!DOCTYPE html>
-<html <?php if ($_COOKIE['theme'] === 'dark'){ ?>class="force-dark"<?php } ?> >
+<html <?php if ($_COOKIE['theme'] ?? 'light' === 'dark'){ ?>class="force-dark"<?php } ?> >
     <head>
 		<style>html.force-dark {background-color: #121212;}</style>
         <meta charset="UTF-8"></meta>

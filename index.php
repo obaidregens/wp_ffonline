@@ -4,6 +4,8 @@ function construct_page_title(... $parts) {
 }
 define('MAIN_DIR',dirname(__DIR__) . '/');
 require_once(__DIR__ . '/php_includes/helpers.php');
+require_once(__DIR__ . '/php_includes/mail/mail.php');
+
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
 class Router {
@@ -205,6 +207,17 @@ $app->listen('/dash/tags',function($self){
         'title'     => construct_page_title("Dash Tags")
     ]);
     $self->template('/views/dash/tags');
+    $self->footer();
+    exit();
+});
+$app->listen('/dash/contact',function($self){
+    $self->admin();
+    $self->type = 'dash-contact';
+    $self->type_id = 0;
+    $self->header([
+        'title'     => construct_page_title("Dash Contact")
+    ]);
+    $self->template('/views/dash/contact');
     $self->footer();
     exit();
 });
