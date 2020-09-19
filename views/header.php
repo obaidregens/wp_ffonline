@@ -17,6 +17,7 @@ $current_user = get_userdata( get_current_user_id() );
 <!DOCTYPE html>
 <html>
     <head>
+		<style>html {background-color: #121212;}</style>
         <meta charset="UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= $app->header_options['title']; ?></title>

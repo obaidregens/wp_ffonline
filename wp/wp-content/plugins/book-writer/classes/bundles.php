@@ -22,7 +22,7 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
-    public static $version = "17";
+    public static $version = "18";
     public static function reset() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
