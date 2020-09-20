@@ -2,11 +2,11 @@
 function api_contact() {
     required_params('message','email');
     $d = &$_POST['data'];
-    $message = $d['message'] ?? "";
+    $message = stripslashes($d['message'] ?? "");
     if (trim($message === "")) {
         return ['code'=>8];
     }
-    $email = $d['email'] ?? "";
+    $email = stripslashes($d['email'] ?? "");
     if ( !filter_var($email, FILTER_VALIDATE_EMAIL) ) {
         return ['code'=>9];
     }
