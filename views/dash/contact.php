@@ -7,7 +7,7 @@ $app->bundle->js('js/views/dash-main');
 // Unique
 $app->bundle->css('css/views/dash-contact');
 $app->bundle->js('js/views/dash-contact');
-$app->bundle->enqueue();
+$app->bundle->enqueue('dev');
 global $wpdb;
 $r = $wpdb->get_results("SELECT * FROM contact ORDER BY received_time");
 $re = [];
@@ -16,17 +16,17 @@ foreach ($r as $message ) {
     if ($conv === "Contact" || (explode('@',$conv)[1] ?? '') === "fanfiction.online"){
         $conv = $message->to;
     }
-    $k = &$re[$conv];
+    $k = &$re[htmlspecialchars($conv)];
     $k = $k ?? [];
     $k[] = [
-        'message'   => htmlspecialchars( ($message->subject === "" ? "" : "<h4>" . $message->subject . "</h4><br>") . $message->message),
+        'message'   => htmlspecialchars( ($message->subject === "" ? "" : "<h3>" . $message->subject . "</h3><br>") . $message->message),
         'time'      => intval(floatval($message->received_time) * 1000),
-        'from'      => $message->from,
+        'from'      => htmlspecialchars($message->from),
         'user_id'   => $message->user_id
     ];
 }
 ?>
-<json-data hidden><?= json_encode($re); ?></json-data>
+<json-data data="<?= htmlspecialchars(json_encode($re)); ?>" hidden></json-data>
 <with class="show">
 <?php foreach ($re as $user => $conv ) { ?>
     <single <?= is_current_user($conv[count($conv)-1]['user_id']) ? "hidden" : "" ?> ><?= $user; ?></single>

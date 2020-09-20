@@ -3,55 +3,22 @@
 // Script from
 // https://stackoverflow.com/questions/3468937/how-to-insert-incoming-e-mail-message-into-mysql-database/3469203
 chdir(dirname(__FILE__));
-$fd = fopen("php://stdin", "r");
-$email = "";
-while (!feof($fd)) {
-    $email .= fread($fd, 1024);
-}
-fclose($fd);
 
-if(strlen($email)<1) {
-    die(); 
-}
-
-// handle email
-$lines = explode("\n", $email);
+$maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
+require $maindir . '/content/php_includes/mail/PhpMimeMailParser/Parser.php';
+$parser = new PhpMimeMailParser\Parser();
+$parser->setStream(fopen("php://stdin", "r"));
 
 // empty vars
-$from = "";
-$to="";
-$subject = "";
-$headers = "";
-$message = "";
+$from = $parser->getAddresses('from')[0]['address'];
+$to = $parser->getAddresses('to')[0]['address'];
+$subject = $subject = $parser->getHeader('subject');
+$headers = json_encode($parser->getHeaders());
+$plaintext = $parser->getMessageBody('text');
+$html = $parser->getMessageBody('html');
 $splittingheaders = true;
-
-for ($i=0; $i < count($lines); $i++) {
-    if ($splittingheaders) {
-        // this is a header
-        $headers .= $lines[$i]."\n";
-        // look out for special headers
-        if (preg_match("/^Subject: (.*)/", $lines[$i], $matches)) {
-            $subject = $matches[1];
-        }
-        if (preg_match("/^From: (.*)/", $lines[$i], $matches)) {
-            $from = $matches[1];
-        }
-        if (preg_match("/^To: (.*)/", $lines[$i], $matches)) {
-            $to = $matches[1];
-        }
-    } else {
-        // not a header, but message
-        $message .= $lines[$i]."\n";
-    }
-    if (trim($lines[$i])=="") {
-        // empty line, header section has ended
-        $splittingheaders = false;
-    }
-}
-
 // Insert
 define('WP_USE_THEMES', false);
-$maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
 $wp_dir = $maindir . '/content/wp/';
 require( $wp_dir . 'wp-load.php');
 global $wpdb;
@@ -64,6 +31,6 @@ $wpdb->insert(
         'received_time' => microtime(true),
         'subject'       => $subject,
         'headers'       => $headers,
-        'message'       => $message
+        'message'       => $html
     ]
 );

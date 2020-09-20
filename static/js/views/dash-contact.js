@@ -1,7 +1,7 @@
 document.querySelector('toggle').addEventListener('click',() => {
     document.querySelector('with').classList.toggle('show')
 });
-const all = JSON.parse(document.querySelector('json-data').innerText);
+const all = JSON.parse(_.htmlspecialchars_decode(document.querySelector('json-data').getAttribute('data')));
 const msg_elem = document.querySelector('messages');
 document.querySelector('with').addEventListener('click',({target}) => {
     if (target.tagName.toLowerCase() !== "single"){return;}
