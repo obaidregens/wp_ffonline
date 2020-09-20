@@ -5,7 +5,21 @@
 chdir(dirname(__FILE__));
 
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
-require $maindir . '/content/php_includes/mail/PhpMimeMailParser/Parser.php';
+$base_load = $maindir . "/content/php_includes/mail/PhpMimeMailParser/";
+$files = [
+    "Contracts/CharsetManager.php",
+    "Contracts/Middleware.php",
+    "Charset.php",
+    "MimePart.php",
+    "Attachment.php",
+    "Exception.php",
+    "Middleware.php",
+    "MiddlewareStack.php",
+    "Parser.php"
+];
+foreach ($files as $f) {
+    require_once $base_load . $f;
+}
 $parser = new PhpMimeMailParser\Parser();
 $parser->setStream(fopen("php://stdin", "r"));
 

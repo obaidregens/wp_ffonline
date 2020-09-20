@@ -11,7 +11,7 @@ function api_reply_to_contact() {
     required_params('to','message');
     $d = &$_POST['data'];
 
-    $message = $d['message'] ?? "";
+    $d['message'] = $d['message'] ?? "";
     if (trim($d['message'] === "") || !filter_var($d['to'], FILTER_VALIDATE_EMAIL) ) {
         return ['code'=>8];
     }
@@ -23,9 +23,15 @@ function api_reply_to_contact() {
             'from'          => "contact@fanfiction.online",
             'to'            => $d['to'],
             'received_time' => microtime(true),
-            'subject'       => '',
+            'subject'       => 'Reply from Fanfiction Online',
             'headers'       => '',
             'message'       => $d['message']
         ]
+    );
+    email(
+        'to'        => $d['to'],
+        'from'      => 'contact',
+        'subject'   => 'Reply from Fanfiction Online',
+        'plaintext' => $d['message']
     );
 }

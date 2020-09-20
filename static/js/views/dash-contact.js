@@ -21,12 +21,10 @@ document.querySelector('with').addEventListener('click',({target}) => {
     document.querySelector('with').classList.remove('show');
 });
 document.querySelector('button[label="Reply"]').addEventListener('click',() => {
-    const from = document.querySelector('message-box').getAttribute('from');
-    new toast("Haven't set up replying yet.");
-    return;
+    const to = document.querySelector('message-box').getAttribute('from');
     api('reply_to_contact',{
         data: {
-            from
+            to
         },
         callback: response => {
             if (response.code > 5) {
