@@ -19,6 +19,7 @@ document.querySelector('with').addEventListener('click',({target}) => {
         }));
     }
     document.querySelector('with').classList.remove('show');
+    window.scrollTo(0,document.body.scrollHeight);
 });
 document.querySelector('button[label="Reply"]').addEventListener('click',() => {
     const to = document.querySelector('message-box').getAttribute('from');

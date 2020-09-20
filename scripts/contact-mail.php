@@ -1,9 +1,4 @@
-#!/usr/bin/php -q
 <?php
-// Script from
-// https://stackoverflow.com/questions/3468937/how-to-insert-incoming-e-mail-message-into-mysql-database/3469203
-chdir(dirname(__FILE__));
-
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
 $base_load = $maindir . "/content/php_includes/mail/PhpMimeMailParser/";
 $files = [

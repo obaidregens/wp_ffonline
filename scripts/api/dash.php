@@ -16,6 +16,16 @@ function api_reply_to_contact() {
         return ['code'=>8];
     }
     global $wpdb;
+    $sql = $wpdb->prepare("SELECT * FROM contact WHERE `from` = %s AND `to` = 'contact@fanfiction.online' ORDER BY received_time DESC", [$d['to']] );
+    $r = $wpdb->get_results($sql);
+    $subject = 'Reply from Fanfiction Online';
+    if (! empty($r)) {
+        $subject = $r[0]->subject;
+        if (substr($subject,0,4) === "Re: ") {
+            $subject = substr($subject,4);
+        }
+        $subject = "Re: " . $subject;
+    }
     $wpdb->insert(
         'contact',
         [
@@ -23,7 +33,7 @@ function api_reply_to_contact() {
             'from'          => "contact@fanfiction.online",
             'to'            => $d['to'],
             'received_time' => microtime(true),
-            'subject'       => 'Reply from Fanfiction Online',
+            'subject'       => $subject,
             'headers'       => '',
             'message'       => $d['message']
         ]
@@ -31,7 +41,7 @@ function api_reply_to_contact() {
     email([
         'to'        => $d['to'],
         'from'      => 'contact',
-        'subject'   => 'Reply from Fanfiction Online',
+        'subject'   => $subject,
         'plaintext' => $d['message']
     ]);
     return ['code'  => 1];
