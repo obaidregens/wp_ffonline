@@ -20,7 +20,8 @@ function api_contact() {
             'received_time' => microtime(true),
             'subject'       => '',
             'headers'       => '',
-            'message'       => $message
+            'message'       => $message,
+            'message_id'    => ""
         ]
     );
     return ['code'=>1];

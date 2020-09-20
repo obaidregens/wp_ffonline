@@ -12,6 +12,7 @@ function email(array $args) {
         'subject'   => "Message from Fanfiction Online",
         'plaintext' =>  "",
         'html'      =>  "",
+        'reply-to'  => ""
     ],$args);
     if ( empty($args['to']) ){
         return $e->add('to',"Which email to send to?");
@@ -45,7 +46,10 @@ function email(array $args) {
     // if (trim($args['html'])  !== "") {
     //     $mail->AltBody = $args['plaintext'];
     // }
-
+    if (trim($args['reply-to']) !== "") {
+        $mail->addCustomHeader('References', $args['reply-to']);
+        $mail->addCustomHeader('In-Reply-To', $args['reply-to']);    
+    }
     foreach ($args['to'] as $to) {
         $mail->addAddress( $to );
     }

@@ -40,6 +40,7 @@ $wpdb->insert(
         'received_time' => microtime(true),
         'subject'       => $subject,
         'headers'       => $headers,
-        'message'       => $html
+        'message'       => $html,
+        'message_id'    => $parser->getHeader('Message-ID')
     ]
 );

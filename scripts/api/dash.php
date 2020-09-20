@@ -35,14 +35,19 @@ function api_reply_to_contact() {
             'received_time' => microtime(true),
             'subject'       => $subject,
             'headers'       => '',
-            'message'       => $d['message']
+            'message'       => $d['message'],
+            'message_id'    => ""
         ]
     );
-    email([
+    $email_params = [
         'to'        => $d['to'],
         'from'      => 'contact',
         'subject'   => $subject,
-        'plaintext' => $d['message']
-    ]);
+        'plaintext' => $d['message'],
+    ];
+    if (! empty($r)) {
+        $email_params['reply-to'] = $r[0]->message_id;
+    }
+    email($email_params);
     return ['code'  => 1];
 }
