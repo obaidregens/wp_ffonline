@@ -209,6 +209,7 @@ function run_at_activation(){
 		`headers`		LONGTEXT NOT NULL ,
 		`message`		LONGTEXT NOT NULL ,
 		`message_id`	VARCHAR(300) NOT NULL ,
+		`vfs`			VARCHAR(100) NOT NULL ,
 		PRIMARY KEY (ID)
 	) $charset_collate;";
 

@@ -55,7 +55,7 @@ function email(array $args) {
     }
     try {
         $mail->send();
-        return true;
+        return $mail->getLastMessageID();
     } catch (Exception $error) {
         return $e->add('sending',"Message not sent");
     }

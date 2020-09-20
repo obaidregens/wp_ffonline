@@ -21,7 +21,8 @@ function api_contact() {
             'subject'       => '',
             'headers'       => '',
             'message'       => $message,
-            'message_id'    => ""
+            'message_id'    => "",
+            'vfs'           => $_COOKIE['vfs'],
         ]
     );
     return ['code'=>1];

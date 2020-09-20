@@ -14,6 +14,9 @@ author-main > * {
 author-bio {
     word-break: break-word;
 }
+author-bio > content {
+    white-space: break-spaces;
+}
 /* Edit */
 .edit-about:empty::before {
     color: var(--theme-color);

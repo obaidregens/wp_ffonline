@@ -41,6 +41,7 @@ $wpdb->insert(
         'subject'       => $subject,
         'headers'       => $headers,
         'message'       => $html,
-        'message_id'    => $parser->getHeader('Message-ID')
+        'message_id'    => $parser->getHeader('Message-ID'),
+        'vfs'           => "",
     ]
 );
