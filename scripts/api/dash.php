@@ -28,10 +28,11 @@ function api_reply_to_contact() {
             'message'       => $d['message']
         ]
     );
-    email(
+    email([
         'to'        => $d['to'],
         'from'      => 'contact',
         'subject'   => 'Reply from Fanfiction Online',
         'plaintext' => $d['message']
-    );
+    ]);
+    return ['code'  => 1];
 }

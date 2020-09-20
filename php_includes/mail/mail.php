@@ -20,6 +20,7 @@ function email(array $args) {
         return $e->add('message',"What's the email?");
     }
     $args['to'] = (array) $args['to'];
+    
     // Permanent Settings
     $mail = new PHPMailer(true);
     $mail->isSMTP();
@@ -29,13 +30,14 @@ function email(array $args) {
     $mail->SMTPSecure = defined("SMTP_SECURE") ? SMTP_SECURE : "tls";
 
     global $email_creds;
+
     // Variable Settings
     $cred = &$email_creds[$args['from']];
     $mail->Username = $cred['email'];
     $mail->Password = $cred['pass'];
     $mail->setFrom($cred['email'], $cred['name']);
     $mail->addReplyTo($cred['email'], $cred['name']);
-
+    
     // Content
     $mail->isHTML(false);
     $mail->Subject = $args['subject'];

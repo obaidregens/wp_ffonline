@@ -24,7 +24,8 @@ document.querySelector('button[label="Reply"]').addEventListener('click',() => {
     const to = document.querySelector('message-box').getAttribute('from');
     api('reply_to_contact',{
         data: {
-            to
+            to,
+            message: document.querySelector('message-box > text-input > textarea').value
         },
         callback: response => {
             if (response.code > 5) {
