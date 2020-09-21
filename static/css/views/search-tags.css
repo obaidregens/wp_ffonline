@@ -21,6 +21,9 @@ book-meta > span[tooltip-top="Updated"]::after{
 book-meta > span[tooltip-top="Collections"]::after{
     content: '\e907';
 }
+book-meta > span[tooltip-top="Votes"]::after{
+    content: '\e945';
+}
 /* Book Tags */
 tags {
     display: block;

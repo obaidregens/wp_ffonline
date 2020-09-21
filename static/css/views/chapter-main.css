@@ -107,35 +107,46 @@ chapter > .next-chapter:not([href])::before {
 }
 /* Book Options */
 chapter > book-options {
-	text-align: right;
-	display: block;
+	display: flex;
 }
-chapter > book-options > .book-share,chapter > book-options > .book-collections {
+chapter > book-options > button {
 	margin-left: 0;
 }
-chapter > book-options > .book-share::before,chapter > book-options > .book-collections::before {
-	position: absolute;
+chapter > book-options > button.book-share {
+	margin-left: auto;
+}
+chapter > book-options > button::before {
 	font-family: 'icons';
+	display: inline-block;
+	margin-right: 8px;
 }
 chapter > book-options > .book-share::before {
-	font-size: 125%;
 	content: '\e908';
-	top: 5px;
-	left: 11px;
+	transform: scale(1.2);
 }
 chapter > book-options > .book-collections::before {
-	left: 12px;
+	transform: scale(1.4);
 	content: '\e916';
-	transform: scale(1.3);
 }
-chapter > book-options > .book-share::after,chapter > book-options > .book-collections::after{
-	margin-left: 17.5px;
+chapter > book-options > .book-vote::before {
+	content: '\e945';
 }
 chapter > book-options > .book-share::after {
 	content: 'Share';
 }
 chapter > book-options > .book-collections::after {
 	content: 'Collections';
+}
+chapter > book-options > .book-vote::after {
+	content: 'Vote';
+}
+/* Voted */
+chapter > book-options > .book-vote.active {
+	background-color: var(--theme-color);
+    color: var(--white);
+}
+chapter > book-options > .book-vote.active::after {
+	content: 'Voted';
 }
 /* Reviews */
 reply-to > review, review > review {

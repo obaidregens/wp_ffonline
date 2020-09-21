@@ -82,3 +82,27 @@ document.querySelector('.book-share').addEventListener('click',function(){
         desc: book_info.querySelector('book-description').innerText
     });
 });
+document.querySelector('.book-vote').addEventListener('click',({target}) => {
+    if (! logged_in) {
+        new toast('Login to vote on story');
+        prompt_login();
+        return;
+    }
+    api('vote_story',{
+        data: {
+            story_id: book_id
+        },
+        callback: response => {
+            if (response.code > 5) {
+                new toast("An error occured");
+                return;
+            }
+            if (response.code === 2) {
+                target.classList.remove('active');
+            }
+            else if (response.code === 1){
+                target.classList.add('active');
+            }
+        }
+    });
+});

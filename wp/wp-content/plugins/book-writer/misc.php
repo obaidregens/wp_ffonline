@@ -57,6 +57,7 @@ function print_book_meta($book_id) {
 		<span tooltip-top="Updated"><?= get_the_time('',$book_id); ?></span>
 		<span tooltip-top="Words"><?= get_post_meta($book_id,'word-count',true); ?></span>
 		<span tooltip-top="Collections"><?= count($collections); ?></span>
+		<span tooltip-top="Votes"><?= count(vote::query_by('story','type_id',$book_id)) ?></span>
 	</book-meta>
 	<?php
 }

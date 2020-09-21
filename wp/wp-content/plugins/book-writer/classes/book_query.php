@@ -247,7 +247,7 @@ class book_query{
                     if (count($array) <= 1){
                         continue;
                     }
-                    $args['orderby'] = in_array($array[0],array('updated','words','favorites')) ? $array[0] : 'updated';
+                    $args['orderby'] = in_array($array[0],array('updated','words','votes','date')) ? $array[0] : 'updated';
                     $args['order'] = in_array($array[1],array('DESC','ASC')) ? $array[1] : 'DESC';
                 }
                 else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
@@ -355,6 +355,25 @@ class book_query_cache extends book_query {
                 ));    
             }
         }
+        global $wpdb;
+        $r = array_column($wpdb->get_results(
+            "SELECT type_id,COUNT(type_id) as count FROM votes
+            WHERE type = 'story'
+            GROUP BY type_id
+            ORDER BY count DESC"
+        ),'type_id');
+        self::put([
+            [
+                '_key'      => 'sort',
+                '_value'    => 'votes/DESC',
+                'ids'       => $r
+            ],
+            [
+                '_key'      => 'sort',
+                '_value'    => 'votes/ASC',
+                'ids'       => array_reverse($r)
+            ]
+        ]);
     }
     function tax(){
         global $wpdb;

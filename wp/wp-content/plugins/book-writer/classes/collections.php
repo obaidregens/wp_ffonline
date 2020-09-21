@@ -156,7 +156,7 @@ class collection {
         }
         foreach ($rows as $row) {
             $loc = &$r[$row->collection_id]->book_ids;
-            $loc = isset($loc) ? $loc : [];
+            $loc = $loc ?? [];
             if (! isset($book_ids[$row->book_id]) ){continue;}
             $loc[] = $row->book_id;
         }
@@ -165,7 +165,8 @@ class collection {
         $n = [];
         foreach ($r as $k => $c) {
             $collection = &$r[$k];
-            $collection->count = count($collection->book_ids ?? []);
+            $collection->book_ids = $collection->book_ids ?? [];
+            $collection->count = count($collection->book_ids);
             $c = $collection->count;
             if (
                 $c >= ($a['count']['from'] ?? 0) &&

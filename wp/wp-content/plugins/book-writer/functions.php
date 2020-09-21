@@ -221,7 +221,7 @@ function run_at_activation(){
 		`type_id`		BIGINT NOT NULL ,
 		`user_id`		BIGINT NOT NULL ,
 		`landing_id`	BIGINT NOT NULL ,
-		`liked_time`	DOUBLE NOT NULL ,
+		`voted_time`	DOUBLE NOT NULL ,
 		PRIMARY KEY (`type`,`type_id`,`user_id`)
 	) $charset_collate;";
 
@@ -302,6 +302,7 @@ $includes = array(
 	'classes/import_stories',
 	'classes/tags',
 	'classes/follow',
+	'classes/vote',
 );
 foreach($includes as $include){
 	require ($include . '.php');

@@ -2,6 +2,7 @@
 class follow {
     public static $table = 'follows';
     protected static $types = ['collection','user'];
+    protected static $notifications = ['all','none'];
     static function new($args) {
         $e = new err();
         $e->is_required([
@@ -9,6 +10,7 @@ class follow {
             'type_id',
             'landing_id'
         ],$args);
+        $e->one_of('notifications',$args['notifications'],self::$notifications);
         $e->one_of('type',$args['type'],self::$types);
         $e->numeric('type_id',$args['type_id']);
         $e->numeric('landing_id',$args['landing_id']);

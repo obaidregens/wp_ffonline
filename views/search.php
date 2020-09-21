@@ -26,6 +26,7 @@ $book_query = $query;
                 <option value="updated/DESC">Last Updated</option>
                 <option value="date/DESC">Story Published</option>
                 <option value="words/DESC">Words</option>
+                <option value="votes/DESC">Votes</option>
             </select>
             <label label="Sort"></label>
             <select-tag label="Fandom" name="fandom"></select-tag>

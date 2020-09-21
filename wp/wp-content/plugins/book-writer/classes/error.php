@@ -11,7 +11,7 @@ class err {
     }
     function is_required($params,$args){
         foreach ($params as $param) {
-            if (empty($args[$param])) {
+            if (!isset($args[$param])) {
                 $this->add($param,"$param is required");
             }
         }
