@@ -11,8 +11,7 @@ function api_search() {
     }
     else{
         $book_query->args_from_url($_POST['data']['search']);
-        $placeholder = ctrk_decrypt($_POST['data']['placeholder'],true);
-        $book_query->args = type_args($book_query->args,$placeholder);
+        $book_query->args = type_args($book_query->args,ctrk_decrypt($_POST['placeholder'],true));
     }
     $book_query->query();
     $response = array(

@@ -1,7 +1,7 @@
 <?php
 $collection = $app->collection;
 $author = get_user_by( 'ID', $collection->author )->data;
-$follows = count(collection_follow::query_by('collection_id',$collection->ID));
+$follows = count(collection_follow::query_by('type_id',$collection->ID));
 ?>
 <collection class="grid-item" collection_id="<?= $collection->ID ?>">
     <button class="follow-collection options <?= collection_follow::exists($collection->ID,get_current_user_id()) ? 'followed' : '' ?>"></button>

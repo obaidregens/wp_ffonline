@@ -60,7 +60,7 @@ function api_follow_collection(){
     $follow = $_POST['data']['follow'] === "true";
     $collection_id = $_POST['data']['collection_id'];
     if ($follow) {
-        collection_follow::follow( $collection_id, get_current_user_id() );
+        collection_follow::follow( $collection_id, get_current_user_id(),$_POST['landing_id'] );
         return ['code' => 1];
     }
     collection_follow::unfollow( $collection_id, get_current_user_id() );

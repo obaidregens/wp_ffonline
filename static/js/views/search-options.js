@@ -59,7 +59,7 @@ function update_collections(collection_data){
             },
             callback: response => {
                 if (collection_name === "Hidden (Private)" && add) {
-                    new toast("Book will be hidden in your next search.");
+                    new toast("Story will be hidden in your next search.");
                 }
                 const el = document.querySelector('book_collections');
                 const prev = JSON.parse(el.innerText);

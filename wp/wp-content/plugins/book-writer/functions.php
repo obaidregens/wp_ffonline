@@ -84,14 +84,6 @@ function run_at_activation(){
 		PRIMARY KEY (`collection_id`,`book_id`)
 	) $charset_collate;";
 
-	$collection_follow_table = "CREATE TABLE collection_follow (
-		`collection_id` BIGINT NOT NULL ,
-		`user_id` BIGINT NOT NULL ,
-		`notifications` VARCHAR(20) NOT NULL ,
-		`time_followed` BIGINT NOT NULL ,
-		PRIMARY KEY (`collection_id`,`user_id`)
-	) $charset_collate;";
-
 	$search_cache_table = "CREATE TABLE search_cache (
 		`_key` VARCHAR(50) NOT NULL ,
 		`_value` VARCHAR(50) NOT NULL ,
@@ -213,6 +205,25 @@ function run_at_activation(){
 		PRIMARY KEY (ID)
 	) $charset_collate;";
 
+	// Follows/Notifications
+	$follow_tables = "CREATE TABLE follows (
+		`type` 			VARCHAR(50) NOT NULL ,
+		`type_id`		BIGINT NOT NULL ,
+		`user_id`		BIGINT NOT NULL ,
+		`notifications`	VARCHAR(20) NOT NULL ,
+		`landing_id`	BIGINT NOT NULL ,
+		`followed_time`	DOUBLE NOT NULL ,
+		PRIMARY KEY (`type`,`type_id`,`user_id`)
+	) $charset_collate;";
+
+	$votes_tables = "CREATE TABLE votes (
+		`type` 			VARCHAR(50) NOT NULL ,
+		`type_id`		BIGINT NOT NULL ,
+		`user_id`		BIGINT NOT NULL ,
+		`landing_id`	BIGINT NOT NULL ,
+		`liked_time`	DOUBLE NOT NULL ,
+		PRIMARY KEY (`type`,`type_id`,`user_id`)
+	) $charset_collate;";
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -226,7 +237,6 @@ function run_at_activation(){
 	// Collections
 	dbDelta( $collections_table );
 	dbDelta( $collection_books_table );
-	dbDelta( $collection_follow_table );
 	// Cache
 	dbDelta( $search_cache_table );
 	// Codes
@@ -245,6 +255,9 @@ function run_at_activation(){
 	dbDelta( $pairing_relationships_tables );
 	// Contact Table
 	dbDelta( $contact_tables );
+	// Follows/Notifications
+	dbDelta( $follow_tables );
+	dbDelta( $votes_tables );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -288,6 +301,7 @@ $includes = array(
 	'classes/updates',
 	'classes/import_stories',
 	'classes/tags',
+	'classes/follow',
 );
 foreach($includes as $include){
 	require ($include . '.php');

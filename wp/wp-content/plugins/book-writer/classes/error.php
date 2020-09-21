@@ -9,6 +9,20 @@ class err {
     function __construct(){
         $this->errors = [];
     }
+    function is_required($params,$args){
+        foreach ($params as $param) {
+            if (empty($args[$param])) {
+                $this->add($param,"$param is required");
+            }
+        }
+        return $this;
+    }
+    function one_of($name,$var,$from) {
+        return in_array($var,$from) ? $this : $this->add($name,"$name must be one of " . implode(',',$from));
+    }
+    function numeric($name,$var) {
+        return is_numeric($var) ? $this : $this->add($name,"$name must be numeric");
+    }
     function add($name,$error){
         $build_error = array(
             'name'      => $name,

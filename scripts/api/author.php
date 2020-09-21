@@ -105,3 +105,25 @@ function api_change_username() {
     user::internal_login($current_user->ID);
     return ['code'  => 1];
 }
+function api_follow_user() {
+    required_login();
+    required_params('user_id');
+    $user = get_userdata( $_POST['data']['user_id'] );
+    if (! $user) {
+        return ['code'  => 9];
+    }
+    if (is_current_user($user->ID)) {
+        return ['code'  => 10];
+    }
+    $exists = follow::exists('user',$user->ID);
+    if ($exists === false) {
+        follow::new([
+            'type'      => 'user',
+            'type_id'   => $user->ID,
+            'landing_id'=> $_POST['landing_id']
+        ]);
+        return ['code'=>1];
+    }
+    follow::unfollow('user',$user->ID);
+    return ['code'=>2];
+}

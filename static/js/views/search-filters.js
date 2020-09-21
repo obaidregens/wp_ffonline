@@ -463,7 +463,6 @@ function trigger_search(page = false){
         data: {
             search: construct,
             page,
-            placeholder: document.querySelector('placeholder_data').innerText,
             prev: prev_ss.innerText
         },
         dataType: 'JSON',

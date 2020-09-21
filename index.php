@@ -339,7 +339,7 @@ $app->listen('/collections/:collection',function($self){
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
     $self->collection = $collection;
-    $followed = count(collection_follow::query_by('collection_id',$collection->ID));
+    $followed = count(collection_follow::query_by('type_id',$collection->ID));
     $and_is_followed = "";
     if ($followed > 5) {
         $and_is_followed = " and is followed by " . $followed  . "people";
@@ -353,7 +353,9 @@ $app->listen('/collections/:collection',function($self){
     exit();
 });
 $app->listen('/@ffonline/&*',function($self) {
-    $self->_404();
+    if (! current_user_can( 'administrator' )){
+        $self->_404();
+    }
 });
 $app->listen('/@:user/collections/:collection',function($self){
     $user = get_user_by( 'login', $self->params['user'] );

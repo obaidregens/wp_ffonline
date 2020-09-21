@@ -11,8 +11,6 @@ function api_reply_to_contact() {
     required_params('to','message');
     $d = &$_POST['data'];
 
-    $d['to'] = stripslashes($d['to'] ?? "");
-    $d['message'] = stripslashes($d['message'] ?? "");
     if (trim($d['message'] === "") || !filter_var($d['to'], FILTER_VALIDATE_EMAIL) ) {
         return ['code'=>8];
     }

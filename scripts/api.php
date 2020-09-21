@@ -1,17 +1,15 @@
 <?php
 function api_poll(){
-    $types = _landing::decrypt($_POST['data']['data']);
-    if ($types === null){
-        return ['code' => 9];
-    }
-    $_POST['data']['im_books'] = isset($_POST['data']['im_books']) ? $_POST['data']['im_books'] : array();
-    $_POST['data']['im_collections'] = isset($_POST['data']['im_collections']) ? $_POST['data']['im_collections'] : array();
+    $types = _landing::decrypt($_POST['placeholder']);
+    $d = &$_POST['data'];
+    $d['im_books'] = isset($d['im_books']) ? $d['im_books'] : array();
+    $d['im_collections'] = isset($d['im_collections']) ? $d['im_collections'] : array();
     
     $instance = new _action($types->landing_id);
-    foreach ($_POST['data']['im_books'] as $key => $book_id) {
+    foreach ($d['im_books'] as $key => $book_id) {
         $instance->log_impression('story',$book_id);
     }
-    foreach ($_POST['data']['im_collections'] as $key => $collection_id) {
+    foreach ($d['im_collections'] as $key => $collection_id) {
         $instance->log_impression('collection',$collection_id);
     }
     $instance->log_view($types->type,$types->type_id);
@@ -85,6 +83,16 @@ else{
         'code'  => 998
     ));
     exit();
+}
+$placeholder = ctrk_decrypt($_POST['placeholder']);
+if ($placeholder === null) {
+    echo json_encode(array(
+        'code'      => 993
+    ));
+    exit();
+}
+else {
+    $_POST['landing_id'] = $placeholder->landing_id;
 }
 //Call User Functions
 if (! function_exists('api_' . $_POST['action'])){

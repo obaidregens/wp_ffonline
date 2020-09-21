@@ -249,7 +249,10 @@ function api(action,{data,callback,async = true,reCAPTCHA = null,reject}){
             dataType: 'JSON',
             url: '/api',
             type: 'post',
-            data: {action},
+            data: {
+                action,
+                placeholder: document.querySelector('placeholder_data').innerText
+            },
             async
         };
         if (reCAPTCHA === null){
@@ -262,6 +265,9 @@ function api(action,{data,callback,async = true,reCAPTCHA = null,reject}){
             options.data.data = data;
         }
         options.success = response => {
+            if (response.code === 993) {
+                window.location.reload();
+            }
             res(response);
             if (callback instanceof Function){
                 callback(response);

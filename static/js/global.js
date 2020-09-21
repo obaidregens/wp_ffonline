@@ -32,7 +32,6 @@ _.interact(function(event){
 	api('poll',{
 		dataType: 'JSON',
 		data: {
-			data: document.querySelector('placeholder_data').innerText,
 			im_books,
 			im_collections,
 		}

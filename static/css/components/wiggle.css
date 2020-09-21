@@ -1,0 +1,8 @@
+.wiggle {
+    animation: wiggle .3s infinite;
+}
+@keyframes wiggle {
+    0% {-webkit-transform:rotate(0.4deg);}
+    50% {-webkit-transform:rotate(-0.4deg);}
+    100% {-webkit-transform:rotate(0.4deg);}
+}

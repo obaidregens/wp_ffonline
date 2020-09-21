@@ -7,7 +7,7 @@ function api_save_draft() {
 
     // Prepared Data
     $insert = [
-        'title'     => stripslashes($d['title']),
+        'title'     => $d['title'],
     ];
     // If Draft is new, save to DB
     if ($d['draft_id'] === 'new') {
@@ -38,7 +38,7 @@ function api_save_draft() {
     $session_perm = &$_SESSION['drafts'][$d['draft_id']]['prev_perm'];
     $flag = ($session_perm ?? false) ? 'push' : 'update';
     $session_perm = $d['perm'] === 'true';
-    $time = draft_revision::push($draft_id,stripslashes($d['content']),$flag );
+    $time = draft_revision::push($draft_id,$d['content'],$flag );
     if (err::is($time)) {
         return ['code' => 13];
     }
@@ -189,8 +189,8 @@ function api_create_drafts_folder() {
     required_login();
     required_params('name','path');
     $d = &$_POST['data'];
-    $name = stripslashes($d['name']);
-    $f = drafts_dir::create_dir($name,stripslashes($d['path']));
+    $name = $d['name'];
+    $f = drafts_dir::create_dir($name,$d['path']);
     return err::is($f) ? ['code'=>8,'error_message'=>$f->errors[0]['error']] : [
         'code'      => 1,
         'drafts'    => drafts_dir::get_path()

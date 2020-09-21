@@ -254,46 +254,21 @@ class collection_books extends collection{
     }
 }
 class collection_follow extends collection {
-    public static $table = 'collection_follow';
-    static function follow ($collection, $user) {
-        global $wpdb;
-        $wpdb->insert(
-            self::$table,
-            [
-                'collection_id'   => $collection,
-                'user_id'         => $user,
-                'notifications'   => 'all',
-                'time_followed'   => time()
-            ]
-        );
+    static function follow ($collection, $user, $landing_id) {
+        return follow::new([
+            'type'      => 'collection',
+            'type_id'   => $collection,
+            'landing_id'=> $landing_id
+        ]);
     }
     static function unfollow ($collection, $user) {
-        global $wpdb;
-        $wpdb->delete(
-            self::$table,
-            [
-                'collection_id'   => $collection,
-                'user_id'         => $user
-            ]
-        );
+        return follow::unfollow('collection',$collection, $user);
     }
     static function exists($collection, $user) {
-        $table = self::$table;
-        global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE collection_id = %s AND user_id = %s",[$collection,$user]);
-        $r = $wpdb->get_results($sql);
-        return empty($r) ? false : intval($r[0]->time_followed);
+        return follow::exists('collection',$collection,$user);
     }
     static function query_by($field, $value) {
-        $table = self::$table;
-        $e = new err();
-        if (! in_array($field,['collection_id','user_id'])){
-            return $e->add('$field','Should be either "collection_id" or "user_id"');
-        }
-        global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE $field = %s",[$value]);
-        $results = $wpdb->get_results($sql);
-        return $results;
+        return follow::query_by('collection',$field,$value);
     }
 }
 class collection_helpers extends collection {

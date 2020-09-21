@@ -1,10 +1,34 @@
 author-name {
     display: flex;
-    padding-bottom: 20px;
     justify-content: center;
     font-size: 2rem;
     word-break: break-word;
+    margin-bottom: 10px;
+    text-align: center;
+}
+author-stats {
+    color: var(--darkgrey);
+    justify-content: center;
+    text-align: center;
+    display: flex;
+    margin-bottom: 10px;
+}
+author-stats > stat {
+    display: flex;
+    flex-direction: column;
     margin: 0 20px;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+}
+author-stats > stat::before {
+    margin-left: -1px;
+    margin-bottom: -5px;
+    content: attr(count);
+    text-align: center;
+}
+author-stats > stat::after {
+    content: attr(label);
     text-align: center;
 }
 author-nav {
@@ -45,6 +69,16 @@ a.author-settings::before {
 a.author-message::before {
     font-family: 'icons';
     content: '\e937';
+    transform: scale(0.95);
+}
+a.author-follow::before {
+    font-family: 'icons';
+    content: '\e930';
+    transform: scale(0.8);
+}
+a.author-follow.followed::before {
+    content: '\e901';
+    transform: scale(1);
 }
 prompt {
     padding: 10px;

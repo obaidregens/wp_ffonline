@@ -20,8 +20,6 @@ function api_edit_book() {
         'anonymous_reviews'
     );
     $d = &$_POST['data'];
-    $d['title'] = stripslashes($d['title']);
-    $d['description'] = stripslashes($d['description']);
 
     $publish = $d['publish'] === "true";
     $reviews = $d['reviews'] === "true";

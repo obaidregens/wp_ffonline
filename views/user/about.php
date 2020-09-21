@@ -14,12 +14,7 @@ $user = $app->user;
 $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 global $book_query;
 $href = rtrim(get_author_posts_url($user->ID),'/') . '/';
-$book_query = new book_query(array(
-    'included'		=> array(
-        'author'		=> array($user->ID)
-    ),
-    'per_page'		=> 2
-));
+$book_query = $app->author_stories_query;
 $description = get_the_author_meta( 'description', $user->ID );
 ?>
 <author-main user_id="<?= $user->ID; ?>">
