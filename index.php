@@ -644,7 +644,7 @@ $app->listen('/drafts/:draft_id/edit',function($self){
 $app->listen('/drafts/:draft_id/export/ffn/download',function($self){
     $self->login();
     $draft = drafts::get_by('ID', $self->params['draft_id'] );
-    if ($draft === false || intval($draft->user_id) !== intval(get_current_user_id()) ) {
+    if ($draft === false || !is_current_user($draft->user_id) ) {
         return;
     }
     $self->type = 'drafts-download-ffn';
@@ -653,7 +653,7 @@ $app->listen('/drafts/:draft_id/export/ffn/download',function($self){
     drafts_json::output_odt($draft->content,$file);
     header("Content-Description: File Transfer");
     header("Content-Type: application/vnd.oasis.opendocument.text"); 
-    header('Content-Disposition: attachment; filename="draft.odt"');
+    header('Content-Disposition: attachment; filename="' . $draft->title . '.odt"');
     header('Content-Length: ' . filesize($file) );
     header( 'Cache-Control: no-store' );
     readfile($file);

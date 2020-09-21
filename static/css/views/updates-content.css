@@ -41,6 +41,7 @@ author-updates > update > button.dropdown::before {
     display: inline-block;
 }
 author-updates > update > button.dropdown {
+    background-color: transparent;
     border-color: transparent;
     float: right;
     border-radius: 50px;

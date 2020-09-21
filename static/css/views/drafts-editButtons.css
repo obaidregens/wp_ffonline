@@ -37,6 +37,7 @@ editor:fullscreen > toolbar + div {
 }
 
 toolbar > button[action] {
+    background-color: transparent;
     font-family: 'icons';
     border-color: transparent;
     margin: 0;
