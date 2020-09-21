@@ -41,6 +41,6 @@ if (document.querySelector('collection-bar > button[label="My Collections"]')) {
             new toast('Login to create and add books to your collections.');
             return;
         }
-        window.location.href = '@me/collections'
+        window.location.href = '/@me/collections'
     });
 }
