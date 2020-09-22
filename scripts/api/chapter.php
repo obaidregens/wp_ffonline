@@ -52,22 +52,22 @@ function api_search_book_contents(){
         'exceeded'  => $exceeded ?? false
     ];
 }
-function api_vote_story() {
+function api_vote_chapter() {
     required_login();
-    required_params('story_id');
-    $story = get_post( $_POST['data']['story_id'] );
-    if (!$story || $story->post_type !== 'book' || $story->post_status !== 'publish') {
+    required_params('chapter_id');
+    $chapter = get_post( $_POST['data']['chapter_id'] );
+    if (!$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
         return ['code'=>8];
     }
-    $exists = vote::exists('story',$story->ID);
+    $exists = vote::exists('chapter',$chapter->ID);
     if (!$exists) {
         vote::new([
-            'type'      => 'story',
-            'type_id'   => $story->ID,
+            'type'      => 'chapter',
+            'type_id'   => $chapter->ID,
             'landing_id'=> $_POST['landing_id']
         ]);
         return ['code'=>1];
     }
-    vote::unvote('story',$story->ID);
+    vote::unvote('chapter',$chapter->ID);
     return ['code'=>2];
 }

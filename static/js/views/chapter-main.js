@@ -84,13 +84,13 @@ document.querySelector('.book-share').addEventListener('click',function(){
 });
 document.querySelector('.book-vote').addEventListener('click',({target}) => {
     if (! logged_in) {
-        new toast('Login to vote on story');
+        new toast('Login to vote for chapter');
         prompt_login();
         return;
     }
-    api('vote_story',{
+    api('vote_chapter',{
         data: {
-            story_id: book_id
+            chapter_id
         },
         callback: response => {
             if (response.code > 5) {

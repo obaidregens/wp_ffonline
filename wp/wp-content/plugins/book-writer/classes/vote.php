@@ -1,7 +1,7 @@
 <?php
 class vote {
     public static $table = 'votes';
-    protected static $types = ['story'];
+    protected static $types = ['chapter'];
     static function new($args) {
         $e = new err;
         $e->is_required([
@@ -51,15 +51,29 @@ class vote {
     }
     static function query_by($type, $field, $value) {
         $e = new err();
+        global $wpdb;
+        if ($type === 'story' && $field = 'type_id') {
+            $sql = 
+            "
+            SELECT votes.type,votes.type_id,votes.user_id,votes.landing_id,voted_time
+            FROM votes
+            INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
+            WHERE votes.type = 'chapter'
+            AND wp_posts.post_parent = %d
+            AND wp_posts.post_type = 'chapter'
+            AND wp_posts.post_status = 'publish'
+            ";
+            return $wpdb->get_results($wpdb->prepare($sql,[$value]));
+        }
         $e->one_of('$type',$type,self::$types ?? []);
         $e->one_of('$field',$field,['type_id','user_id']);
         if ($e->has()) {
             return $e;
         }
-        global $wpdb;
         $table = self::$table;
         $sql = $wpdb->prepare("SELECT * FROM $table WHERE $field = %s",[$value]);
         $results = $wpdb->get_results($sql);
+
         return $results;
     }
 }
