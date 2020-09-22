@@ -356,12 +356,16 @@ class book_query_cache extends book_query {
             }
         }
         global $wpdb;
-        $r = array_column($wpdb->get_results(
-            "SELECT type_id,COUNT(type_id) as count FROM votes
-            WHERE type = 'story'
-            GROUP BY type_id
-            ORDER BY count DESC"
-        ),'type_id');
+        $r = array_column($wpdb->get_results("
+            SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
+            FROM votes
+            INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
+            WHERE votes.type = 'chapter'
+            AND wp_posts.post_type = 'chapter'
+            AND wp_posts.post_status = 'publish'
+            GROUP BY wp_posts.post_parent
+            ORDER BY c DESC
+        "),'story');
         self::put([
             [
                 '_key'      => 'sort',
