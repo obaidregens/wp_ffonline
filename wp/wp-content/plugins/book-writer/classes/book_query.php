@@ -355,29 +355,34 @@ class book_query_cache extends book_query {
                 ));    
             }
         }
-        global $wpdb;
-        $r = array_column($wpdb->get_results("
-            SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
-            FROM votes
-            INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
-            WHERE votes.type = 'chapter'
-            AND wp_posts.post_type = 'chapter'
-            AND wp_posts.post_status = 'publish'
-            GROUP BY wp_posts.post_parent
-            ORDER BY c DESC
-        "),'story');
-        self::put([
-            [
-                '_key'      => 'sort',
-                '_value'    => 'votes/DESC',
-                'ids'       => $r
-            ],
-            [
-                '_key'      => 'sort',
-                '_value'    => 'votes/ASC',
-                'ids'       => array_reverse($r)
-            ]
-        ]);
+        $term_key = 'sort' . self::$midfix . 'votes/DESC';
+        if (! isset($this->existing[$term_key])){
+            global $wpdb;
+            $r = array_column($wpdb->get_results("
+                SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
+                FROM votes
+                INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
+                WHERE votes.type = 'chapter'
+                AND wp_posts.post_type = 'chapter'
+                AND wp_posts.post_status = 'publish'
+                GROUP BY wp_posts.post_parent
+                ORDER BY c DESC
+            "),'story');
+            $word_ids = json_or_serialize_decode($wpdb->get_results("SELECT ids FROM search_cache WHERE _key = 'sort' AND _value = 'words/DESC'")[0]->ids);
+            $r = array_merge($r,array_diff($word_ids,$r));
+            self::put([
+                [
+                    '_key'      => 'sort',
+                    '_value'    => 'votes/DESC',
+                    'ids'       => $r
+                ],
+                [
+                    '_key'      => 'sort',
+                    '_value'    => 'votes/ASC',
+                    'ids'       => array_reverse($r)
+                ]
+            ]);    
+        }
     }
     function tax(){
         global $wpdb;
