@@ -2,10 +2,10 @@
 function api_contact() {
     required_params('message','email');
     $d = &$_POST['data'];
-    if (trim($message === "")) {
+    if (trim($d['message'] === "")) {
         return ['code'=>8];
     }
-    if ( !filter_var($email, FILTER_VALIDATE_EMAIL) ) {
+    if ( !filter_var($d['email'], FILTER_VALIDATE_EMAIL) ) {
         return ['code'=>9];
     }
     global $wpdb;
@@ -13,12 +13,12 @@ function api_contact() {
         'contact',
         [
             'user_id'       => get_current_user_id(),
-            'from'          => $email,
+            'from'          => $d['email'],
             'to'            => 'Contact',
             'received_time' => microtime(true),
             'subject'       => '',
             'headers'       => '',
-            'message'       => $message,
+            'message'       => $d['message'],
             'message_id'    => "",
             'vfs'           => $_COOKIE['vfs'],
         ]
