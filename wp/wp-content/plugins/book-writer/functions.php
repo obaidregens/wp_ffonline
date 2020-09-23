@@ -225,6 +225,19 @@ function run_at_activation(){
 		PRIMARY KEY (`type`,`type_id`,`user_id`)
 	) $charset_collate;";
 
+	$notifications_table = "CREATE TABLE notifications (
+		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`user_id`			BIGINT NOT NULL ,
+		`notification_type` VARCHAR(100) NOT NULL ,
+		`type_of`			VARCHAR(70) NOT NULL ,
+		`type_of_id`		BIGINT NOT NULL ,
+		`type_by`			VARCHAR(70) NOT NULL ,
+		`type_by_id`		BIGINT NOT NULL ,
+		`email_status`		VARCHAR(120) NOT NULL ,
+		`timestamp`			DOUBLE NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -258,6 +271,7 @@ function run_at_activation(){
 	// Follows/Notifications
 	dbDelta( $follow_tables );
 	dbDelta( $votes_tables );
+	dbDelta( $notifications_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

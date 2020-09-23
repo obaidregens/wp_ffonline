@@ -355,7 +355,7 @@ class _action extends stats {
         }
         return $wpdb->insert_id;
     }
-    function log_notifications($type,$type_id){
+    function log_notifications($type,$type_id,$t){
         $error = new err();
         $validate_return =  stats::_validate($type,$type_id);
         if (err::is($validate_return)){
@@ -366,7 +366,7 @@ class _action extends stats {
             'stat'              => 'notifications',
             'type'              => $type,
             'type_id'           => $type_id,
-            'timestamp'         => current_time('timestamp',true),
+            'timestamp'         => min(time(),$t),
         );
         global $wpdb;
         $response = $wpdb->insert(

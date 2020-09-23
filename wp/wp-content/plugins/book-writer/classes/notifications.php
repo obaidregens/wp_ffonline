@@ -1,159 +1,202 @@
 <?php
 class notifications {
-    public static function get(){
-
-        if (! is_user_logged_in(  )){
-            return array(
-                'unread'        => 0,
-                'notifications' => array()
-            );
-        }
-        $last_opened = stats::last_online(array(
-            'user_ids'      => array(get_current_user_id()),
-            'stats'         => array('notifications'),
-        ));
-        $new = 0;
-        $all = array();
-        //Books
-        $collections = collection::query(array(
-            'follower_ids'  => array(get_current_user_id())
-        ));
-        foreach ($collections as $collection) {
-            $books = collection::book_query($collection['ID'],array(
-                'order'     => 'DESC',
-                'orderby'   => 'updated'
-            ));
-            foreach ($books as $book ) {
-                $timestamp = strtotime($book->post_modified);
-                $new += $timestamp > $last_opened ? 1 : 0;
-                $this_book = array(
-                    'ID'        => $book->ID,
-                    'title'     => $book->post_title,
-                    'timestamp' => $timestamp,
-                    'link'      => get_permalink( $book->ID ),
-                    'type'      => 'book_updated',
-                    'collection'=> $collection['title']
-                );
-                $all[] = $this_book;
-            }
-        }
-        //Messages
-        $received_messages = chats::query(array(
-            'users_included'    => array(get_current_user_id()),
-            'author__not_in'    => array(get_current_user_id())
-        ));
-        foreach ($received_messages as $message) {
-            $timestamp = strtotime($message->post_modified);
-            $new += $timestamp > $last_opened ? 1 : 0;
-            $this_message = array(
-                'ID'        => $message->ID,
-                'from'      => get_the_author_meta('display_name',$message->post_author),
-                'timestamp' => $timestamp,
-                'link'      => '/dashboard/chat/' . get_the_author_meta( 'user_login', $message->post_author ),
-                'type'      => 'message_received',
-            );
-            $all[] = $this_message;
-        }
-        //Comments
-        $comments = (new WP_Comment_Query( array(
-            'post_author__in'           => array(get_current_user_id()),
-            'author__not_in'            => array(get_current_user_id()),
-        ) ))->comments;
-        foreach ($comments as $comment ) {
-            $chapter = get_post($comment->comment_post_ID);
-            $timestamp = strtotime($comment->comment_date);
-            $new += $timestamp > $last_opened ? 1 : 0;
-            $this_comment = array(
-                'ID'            => $comment->comment_ID,
-                'timestamp'     => $timestamp,
-                'chapter_title' => $chapter->post_title,
-                'book_title'    => get_the_title( $chapter->post_parent ),
-                'link'          => get_comment_link( $comment->comment_ID ),
-                'type'          => 'comment'
-            );
-            $all[] = $this_comment;
-        }
-        array_multisort( array_column($all, "timestamp"), SORT_DESC, $all );
-        return array(
-            'unread'        => $new,
-            'notifications' => $all
-        );
+    protected static $table = 'notifications';
+    static function lastOpen() {
+        global $wpdb;
+        $lastOpen = $wpdb->get_results("SELECT timestamp FROM stats_actions ORDER BY timestamp DESC LIMIT 1");
+        return empty($lastOpen) ? 0 : intval($lastOpen[0]->timestamp);
     }
-    ///////////EMAIL/////////////////
-    private static $mail_footer =  'You can disable all notifications here: https://fanfiction.online/dashboard/settings';
-    public static function new_chapter($chapter_id){
-        $error = new err();
+    static function createNotification($row) {
+        switch ($row->notification_type) {
+            case 'chapter_review':
+                return [
+                    'message'   => "Someone left a review for you.",
+                    'link'      => rtrim(get_permalink( $row->type_by_id ),'/') . '/#review-' . $row->type_of_id
+                ];
+            case 'review_reply':
+                return [
+                    'message'   => "The author replied to your review.",
+                    'link'      => rtrim(get_permalink( get_comment($row->type_by_id)->comment_post_ID ),'/') . '/#review-' . $row->type_of_id
+                ];
+            case 'chapter_vote':
+                return [
+                    'message'   => "Your chapter got another vote!",
+                    'link'      => get_permalink( $row->type_of_id )
+                ];
+            case 'user_update':
+                return [
+                    'message'   => "An author you follow just posted an update!",
+                    'link'      => rtrim(get_author_posts_url( $row->type_by_id ),'/') 
+                ];
+            case 'follow_user':
+                return [
+                    'message'   => "Someone followed you.",
+                    'link'      => rtrim(get_author_posts_url( get_current_user_id() ),'/')
+                ];
+            case 'follow_collection':
+                return [
+                    'message'   => "Someone followed your collection.",
+                    'link'      => rtrim(collection_helpers::link( $row->type_of_id ),'/')
+                ];
+            default:
+                return false;
+        }
+    }
+    static function get(){
+        $lastOpen = self::lastOpen();
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM notifications WHERE user_id = %d ORDER BY timestamp ASC",[get_current_user_id()]);
+        $r = $wpdb->get_results($sql);
+        $rr = [];
+        foreach ($r as $row ) {
+            $n = self::createNotification($row);
+            $n['read'] = intval($row->timestamp) < $lastOpen;
+            $rr[] = $n;
+        }
+        return $rr;
+    }
+}
+class notifications_insert extends notifications {
+    function updateStory($chapter_id) {
         $chapter = get_post($chapter_id);
-        $book = get_post($chapter->post_parent);
-        $author = get_userdata( $book->post_author );
-        if ($chapter === null || $chapter->post_type !== 'chapter'){
-            $error->add('chapter_id','Invalid Chapter ID');
-            return $error;
+        if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
+            return false;
         }
-        $collections = collection::query(array(
-            'book_ids'      => array($book->ID),
-        ));
-        $followers = array_column(collection::follower_query(array(
-            'collection_ids'    => array_column($collections,'ID'),
-            'notifications'     => array('all')
-        )),'user_id','collection_id');
-        foreach ($collections as $key => $collection) {
-            $emails = array_column((new WP_User_Query(array(
-                'include'       => $followers[$collections['ID']],
-                'fields'        => 'email'
-            )))->results,'data');
-            $subject = $book->post_title . ' by ' . $author->display_name . ' just got a new chapter!';
-            $message = $book->post_title . ' by ' . $author->display_name . 'from your collection \'' . $collection['title'] .  '\' just got a new chapter!' . "\r\n\r\n";
-            $message .=  'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true) . ': ' . $chapter -> post_title  . "\r\n";
-            $message .= get_permalink($chapter->ID) . "\r\n\r\n";
-            $message .= 'You can disable notifications for this collection here: ' . collection::link($collection['ID']) . '\r\n';
-            $message .= collection::$mail_footer;
-            email([
-                'to'        => $emails,
-                'subject'   => $subject,
-                'plaintext' => $message
-            ]);
+        $followers = follow::query_by('user','type_id',$chapter->post_author);
+        $chapter_author = intval($chapter->post_author);
+        foreach ( $followers as $follower ) {
+            if ( $chapter_author === intval($follower->user_id) ) {
+                continue;
+            }
+            $args['user_id'] = $follower->user_id;
+            self::insert($args);
+        }
+        $sql = $wpdb->prepare("
+        SELECT follows.user_id as user_id FROM collection_books
+        INNER JOIN follows.type_id = collection_books.collection_id
+        WHERE collection_books.book_id = %d
+        AND follows.type = 'collection'
+        AND follows.notifications = 'all'
+        ",[$chapter->post_parent]);
+        $followers = $wpdb->get_results($sql);
+        foreach ( $followers as $follower ) {
+            if ( $chapter_author === intval($follower->user_id) ) {
+                continue;
+            }
+            $args['user_id'] = $follower->user_id;
+            self::insert($args);
         }
     }
-    public static function new_message($message_id){
-        $error = new err();
-        $message = get_post($message_id);
-        if ($message === null || $message->post_type != 'message'){
-            $error->add('message_id','Message ID invalid.');
-            return $error;
+    function addReview($review_id) {
+        $review = get_comment( $review_id );
+        $chapter = get_post( $review->comment_post_ID );
+        if ( !$review || !$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
+            return false;
         }
-        $msg_bw = wp_get_object_terms($message_id,'message_between',array('fields'=>'names'));
-        unset($msg_bw[array_search(strval($message->post_author),$msg_bw)]);
-        $to = get_userdata( array_values($msg_bw)[0] );
+        if ( 
+            intval($chapter->post_author) === intval($review->user_id) &&
+            intval($review->comment_parent) === 0
+        ) {
+            return false;
+        }
+        $parent_0 = intval($review->comment_parent) === 0;
+        $args = [
+            'notification_type' => $parent_0 ? 'chapter_review' : 'review_reply',
+            'type_of'           => 'review',
+            'type_of_id'        => $review,
+            'type_by'           => $parent_0 ? 'chapter' : 'review',
+            'type_by_id'        => $parent_0 ? $chapter->ID : $review->comment_parent,
+            'user_id'           => $parent_0 ? $chapter->post_author : get_comment( $review->comment_parent )->user_id
+        ];
+        self::insert($args);
+    }
+    function vote($chapter_id,$user_id) {
+        $chapter = get_post($chapter_id);
+        if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
+            return false;
+        }
+        if (intval($chapter->post_author) === intval($user_id)) {
+            return false;
+        }
+        $args = [
+            'notification_type' => 'chapter_vote',
+            'type_of'           => 'chapter',
+            'type_of_id'        => $chapter_id,
+            'type_by'           => 'user',
+            'type_by_id'        => $user_id,
+            'user_id'           => $chapter->post_author
+        ];
+        self::insert($args);
+    }
+    function addUpdate($update_id) {
 
-        $author = get_userdata( $message->post_author );
-        $subject = $author->display_name . ' just messaged you.';
-        $message = $author->display_name . ' just messaged you.' . "\r\n";
-        $message .= 'See here: ' . get_permalink($message->ID) . "\r\n\r\n";
-        $message .= notifications::$mail_footer;
-        email([
-            'to'        => $to->user_email,
-            'subject'   => $subject,
-            'plaintext' => $message
-        ]);
-    }
-    public static function new_comment($comment_id){
-        $error = new err();
-        $comment = get_comment($comment_id);
-        $chapter = get_post($comment->comment_post_ID);
-        $chapter_author = get_userdata( $chapter->post_author );
-        if ($comment === null){
-            $error->add('comment_id','Comment ID invalid.');
-            return $error;
+        $update = get_post($update_id);
+        if (! $update || $update->post_type !== 'post' || $update->post_status !== 'publish') {
+            return false;
         }
-        $subject = 'New comment on your chapter \'' . $chapter->post_title . '\'.';
-        $message = 'You just got a new comment on your chapter \'' . $chapter_on->post_title . '\'.' . "\r\n";
-        $message .= 'See here: ' . get_comment_link($id) . "\r\n\r\n";
-        $message .= notifications::$mail_footer;
-        email([
-            'to'        => $chapter_author->user_email,
-            'subject'   => $subject,
-            'plaintext' => $message
-        ]);
+        $args = [
+            'notification_type' => 'user_update',
+            'type_of'           => 'update',
+            'type_of_id'        => $update->ID,
+            'type_by'           => 'user',
+            'type_by_id'        => $update->post_author,
+        ];
+        $followers = follow::query_by('user','type_id',$update->post_author);
+        $update_author = intval($update->post_author);
+        foreach ($followers as $follower ) {
+            if ($update_author === intval($follower->user_id)) {
+                continue;
+            }
+            $args['user_id'] = $follower->user_id;
+            self::insert($args);
+        }
+    }
+    function followUser($user_id,$by_user_id) {
+        $user = get_userdata($user_id);
+        $by_user = get_userdata( $by_user_id );
+        if (! $user || !$by_user ) {
+            return false;
+        }
+        if (intval($user->ID) === intval($by_user->ID)) {
+            return false;
+        }
+        $args = [
+            'notification_type' => 'follow_user',
+            'type_of'           => 'user',
+            'type_of_id'        => $user->ID,
+            'type_by'           => 'user',
+            'type_by_id'        => $by_user->ID,
+            'user_id'           => $user->ID
+        ];
+        self::insert($args);
+    }
+    function followCollection($collection_id,$by_user) {
+        $collection = collection::get_by('ID',$collection_id);
+        $by_user = get_userdata( $by_user );
+        if (! $collection || !$by_user ) {
+            return false;
+        }
+        if ( intval($collection->author) === intval($by_user->ID) ) {
+            return false;
+        }
+        $args = [
+            'notification_type' => 'follow_collection',
+            'type_of'           => 'collection',
+            'type_of_id'        => $collection->ID,
+            'type_by'           => 'user',
+            'type_by_id'        => $by_user->ID,
+            'user_id'           => $collection->author
+        ];
+        self::insert($args);
+    }
+    static function insert($args) {
+        $args['timestamp'] = microtime(true);
+        $args['email_status'] = 'none';
+        global $wpdb;
+        $wpdb->insert(
+            self::$table,
+            $args
+        );
+        return $wpdb->insert_id;
     }
 }

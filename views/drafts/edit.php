@@ -5,8 +5,6 @@ $app->bundle->mix('slate');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/loader');
-$app->bundle->css('css/js-components/next-screen');
-$app->bundle->js('js/components/next-screen');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/js-components/sidenav');

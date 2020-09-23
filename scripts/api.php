@@ -13,7 +13,11 @@ function api_poll(){
         $instance->log_impression('collection',$collection_id);
     }
     $instance->log_view($types->type,$types->type_id);
-    return ['code' => 1];
+    if (intval($d['lastOpen']) > 0) {
+        $t = max(intval($d['lastOpen']),time() - 60);
+        $instance->log_notifications($types->type,$types->type_id,$t);
+    }
+    return ['code' => 1, 'notifications' => notifications::get()];
 }
 $import = [
     'author',
@@ -85,7 +89,7 @@ else{
     exit();
 }
 $placeholder = ctrk_decrypt($_POST['placeholder']);
-if ($placeholder === null) {
+if ( trim($_POST['placeholder'] ?? '') === "" || !$placeholder ) {
     echo json_encode(array(
         'code'      => 993
     ));

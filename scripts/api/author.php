@@ -7,11 +7,13 @@ function api_add_update(){
     if (trim($update) === ''){
         return ['code'=>7];
     }
-    wp_insert_post(array(
+    $update_id = wp_insert_post(array(
         'post_title'    	=> 'None',
         'post_content'  	=> htmlspecialchars($update),
         'post_status'   	=> 'publish',
     ));
+    $inst = new notifications_insert;
+    $inst->addUpdate($update_id);
     return ['code'=>1];
 }
 function api_update_action(){

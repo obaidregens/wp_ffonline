@@ -31,6 +31,7 @@ $app->author_stories_query = new book_query(array(
 <author-stats>
 <stat count="<?= $app->author_stories_query->count; ?>" label="Stories"></stat>
 <stat count="<?= count(follow::query_by('user','type_id',$user->ID)) ?>" label="Followers"></stat>
+<stat count="<?= count(vote::all_votes($user->ID)) ?>" label="Votes"></stat>
 </author-stats>
 <author-nav>
 	<a <?= $author_page === 'about' ? 'active' : '' ?> href="<?= $href; ?>">About</a>

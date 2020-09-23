@@ -5,6 +5,10 @@ class follow {
     protected static $notifications = ['all','none'];
     static function new($args) {
         $e = new err();
+        $args = array_replace([
+            'user_id'       => get_current_user_id(),
+            'notifications' => "all"
+        ],$args);
         $e->is_required([
             'type',
             'type_id',
@@ -14,15 +18,10 @@ class follow {
         $e->one_of('type',$args['type'],self::$types);
         $e->numeric('type_id',$args['type_id']);
         $e->numeric('landing_id',$args['landing_id']);
-        $e->numeric('user_id',$args['user_id'] ?? 0);
+        $e->numeric('user_id',$args['user_id']);
         if ($e->has()){
-
             return $e;
         }
-        $args = array_replace([
-            'user_id'       => get_current_user_id(),
-            'notifications' => "all"
-        ],$args);
         $args['followed_time'] = microtime(true);
         ob_start();
         global $wpdb;
@@ -30,7 +29,18 @@ class follow {
             self::$table,
             $args
         );
+        $err = ob_get_contents();
         ob_end_clean();
+        if ($err === "") {
+            if ($args['type'] === 'user') {
+                $inst = new notifications_insert;
+                $inst->followUser($args['type_id'],$args['user_id']);
+            }
+            else if ($args['type'] === 'collection'){
+                $inst = new notifications_insert;
+                $inst->followCollection($args['type_id'],$args['user_id']);
+            }
+        }
         return true;
     }
     static function unfollow ($type, $type_id, $user = null) {

@@ -18,7 +18,6 @@ $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
 $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
-$app->bundle->mix('next-screen');
 $app->bundle->mix('react');
 $app->bundle->js('js/views/reviews-list');
 $app->bundle->enqueue();

@@ -19,6 +19,7 @@ function im(type){
 let im_books = [];
 let im_collections = [];
 let lastSend = Date.now() - 40000;
+let lastOpen = 0;
 _.interact(function(event){
 	if (! event || event.isTrusted !== true){
 		return;
@@ -34,6 +35,41 @@ _.interact(function(event){
 		data: {
 			im_books,
 			im_collections,
+			lastOpen
+		},
+		callback: response => {
+			lastOpen = 0;
+			let notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+			if (! notificationsWrapper) {
+				const ns = DOM.create('next-screen',{
+					attributes: {
+						notifications: ""
+					},
+					children: [
+						DOM.create('notifications')
+					],
+					listeners: {
+						onOpen: () => {
+							lastOpen = Date.now();
+						},
+						onClose: () => {
+							lastOpen = Date.now();
+						},
+					}
+				});
+				next_screen.create(ns);
+				document.querySelector('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
+			}
+			notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+			for (let i = notificationsWrapper.children.length; i < response.notifications.length; i++) {
+				const n = response.notifications[i];
+				notificationsWrapper.appendChild(DOM.create('a',{
+					innerText: n.message,
+					attributes: {
+						href: n.link
+					}
+				}));
+			}
 		}
 	});
 });

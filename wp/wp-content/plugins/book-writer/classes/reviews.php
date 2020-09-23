@@ -29,6 +29,8 @@ class reviews {
             'comment_content'   => htmlspecialchars($args['review']),
             'comment_author_IP' => $_SERVER['REMOTE_ADDR']
         ));
+        $inst = new notifications_insert;
+        $inst->addReview($comment_id);
         return $comment_id;
     }
     static function query($args = []) {

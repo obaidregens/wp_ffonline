@@ -265,9 +265,10 @@ class bundle {
                 'css/js-components/text-input',
                 'css/js-components/toast',
                 'css/js-components/popup',
+                'css/js-components/next-screen',
                 "css/views/global-login",
                 "css/views/global-share",
-                "external/waves/waves"
+                "external/waves/waves",
             ),
             'js'    => array(
                 'js/normalize',
@@ -279,9 +280,10 @@ class bundle {
                 "js/components/text-input",
                 "js/components/toast",
                 "js/components/popup",
+                'js/components/next-screen',
                 'js/views/global-login',
                 'js/views/global-share',
-                "external/waves/waves"
+                "external/waves/waves",
             ),
         ),
         'create_search_new' => array(
@@ -292,7 +294,6 @@ class bundle {
                 'css/components/tooltips',
                 'css/js-components/checkbox',
                 'css/js-components/switch',
-                'css/js-components/next-screen',
                 'css/views/search-tags',
                 'css/views/search-content',
                 'css/views/search-filters',
@@ -301,7 +302,6 @@ class bundle {
                 'css/views/search-updateCollection'      
             ),
             'js'    => array(
-                "js/components/next-screen",
                 "js/components/checkbox",
                 "js/components/switch",
                 "external/noUiSlider/nouislider",
@@ -341,14 +341,6 @@ class bundle {
                 "js/components/switch",
                 "js/views/search-options",
                 "js/views/search-updateCollection"
-            ),
-        ),
-        'next-screen'      => array(
-            'css'   => array(
-                'css/js-components/next-screen'
-            ),
-            'js'    => array(
-                'js/components/next-screen'
             ),
         ),
         'glide_js'      => array(

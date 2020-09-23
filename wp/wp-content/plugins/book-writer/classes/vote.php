@@ -26,7 +26,12 @@ class vote {
             self::$table,
             $args
         );
+        $err = ob_get_contents();
         ob_end_clean();
+        if ($err === ""){
+            $inst = new notifications_insert;
+            $inst->vote($args['type_id'],$args['user_id']);
+        }
         return true;
     }
     static function unvote ($type, $type_id, $user = null) {
@@ -75,5 +80,20 @@ class vote {
         $results = $wpdb->get_results($sql);
 
         return $results;
+    }
+    static function all_votes($user) {
+        $sql =
+        "
+        SELECT votes.type,votes.type_id,votes.user_id,votes.landing_id,voted_time
+        FROM votes
+        INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
+        WHERE votes.type = 'chapter'
+        AND wp_posts.post_author = %d
+        AND wp_posts.post_type = 'chapter'
+        AND wp_posts.post_status = 'publish'
+        ";
+        global $wpdb;
+        return ($wpdb->get_results($wpdb->prepare($sql,[$user])));
+
     }
 }

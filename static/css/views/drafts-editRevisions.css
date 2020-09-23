@@ -54,8 +54,12 @@ revision-header > button {
     margin-left: 0;
 }
 revision-header > .select-revision {
+    background-color: transparent;
     margin-right: 0;
     margin-left: auto;
+}
+revision-header > .close_next-screen {
+    background-color: transparent;
 }
 revision-header > button::before {
     font-family: 'icons';
@@ -77,6 +81,7 @@ revision-header,revision-footer {
     background-color: var(--grey);
 }
 revision-footer > button {
+    background-color: transparent;
     margin-right: 0;
     margin-left: auto;
     border-color: transparent;
