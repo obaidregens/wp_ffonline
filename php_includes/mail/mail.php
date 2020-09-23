@@ -10,20 +10,27 @@ function email(array $args) {
     $args = array_replace([
         'from'      => 'noreply',
         'subject'   => "Message from Fanfiction Online",
-        'plaintext' =>  "",
-        'html'      =>  "",
-        'reply-to'  => ""
+        'reply-to'  => "",
+        'template'  => "",
+        'params'    => [],
+        'txtparams' => [],
+        'htmlparams'=> [],
     ],$args);
+
+    $args['to'] = (array) ($args['to'] ?? []);
     if ( empty($args['to']) ){
         return $e->add('to',"Which email to send to?");
     }
-    if ( trim($args['plaintext']) === "" && trim($args['html']) === "" ){
-        return $e->add('message',"What's the email?");
+    ob_start();
+    $html_template = file_get_contents(__DIR__ . '/templates/' . $args['template'] . '.html');
+    $txt_template = file_get_contents(__DIR__ . '/templates/' . $args['template'] . '.txt');
+    ob_end_clean();
+    if ( $html_template === false || $txt_template === false ){
+        return $e->add('template',"Invalid template");
     }
-    $args['to'] = (array) $args['to'];
-    
     // Permanent Settings
     $mail = new PHPMailer(true);
+    $mail->CharSet="UTF-8";
     $mail->isSMTP();
     $mail->Host = defined("SMTP_HOST") ? SMTP_HOST : "";
     $mail->SMTPAuth = defined("SMTP_AUTH") ? SMTP_AUTH : true;
@@ -31,25 +38,38 @@ function email(array $args) {
     $mail->SMTPSecure = defined("SMTP_SECURE") ? SMTP_SECURE : "tls";
 
     global $email_creds;
-
     // Variable Settings
     $cred = &$email_creds[$args['from']];
+    if (! isset($cred)) {
+        return $e->add('from','No credentials found');
+    }
     $mail->Username = $cred['email'];
     $mail->Password = $cred['pass'];
     $mail->setFrom($cred['email'], $cred['name']);
     $mail->addReplyTo($cred['email'], $cred['name']);
-    
+
+    // Replace Params in Template
+    foreach ($args['htmlparams'] as $k => $v) {
+        $html_template = str_replace($k,$v,$html_template);
+    }
+    foreach ($args['txtparams'] as $k => $v) {
+        $txt_template = str_replace($k,$v,$txt_template);
+    }
+    foreach ($args['params'] as $k => $v) {
+        $html_template = str_replace($k,$v,$html_template);
+        $txt_template = str_replace($k,$v,$txt_template);
+    }
+
     // Content
-    $mail->isHTML(false);
+    $mail->isHTML(true);
     $mail->Subject = $args['subject'];
-    $mail->Body = $args['plaintext'];
-    // if (trim($args['html'])  !== "") {
-    //     $mail->AltBody = $args['plaintext'];
-    // }
+    $mail->Body = $html_template;
+    $mail->AltBody = $txt_template;
     if (trim($args['reply-to']) !== "") {
         $mail->addCustomHeader('References', $args['reply-to']);
         $mail->addCustomHeader('In-Reply-To', $args['reply-to']);    
     }
+    
     foreach ($args['to'] as $to) {
         $mail->addAddress( $to );
     }

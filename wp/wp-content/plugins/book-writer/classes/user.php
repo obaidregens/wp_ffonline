@@ -204,58 +204,36 @@ Fanfiction Online'
         $email_text = str_replace  ( '###USERNAME###', $current_user->user_login, $email_text );
         $email_text = str_replace  ( '###ADMIN_URL###', esc_url( admin_url( 'profile.php?newuseremail=' . $hash ) ), $email_text );
     
-        email( [
-            'to'        => $new_email,
-            'subject'   => 'Email Change Request',
-            'plaintext' => $email_text
-        ]);
+        // email( [
+        //     'to'        => $new_email,
+        //     'subject'   => 'Email Change Request',
+        //     'plaintext' => $email_text
+        // ]);
     }
     protected static function signup_mail($user_id,$code){
         $user = get_user_by( 'ID', $user_id )->data;
-        $email_text = __(
-'Hi ###USERNAME###,
-Welcome to Fanfiction Online!
-
-You can login by entering the code below. If you wish to set a password, you can do so after logging in. 
-
-Your verification code is
-
-###CODE###
-
-This code is valid for only 30 minutes. 
-
-Fanfiction Online'
-        );
-
-        $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );
-        $email_text = str_replace  ( '###CODE###', $code , $email_text );
-
         email( [
             'to'        => $user->user_email,
+            'template'  => 'signup',
             'subject'   => 'Welcome to Fanfiction Online!',
-            'plaintext' => $email_text
+            'params'    => [
+                '###SUBJECT###' => 'Welcome to Fanfiction Online!',
+                '###SETTINGS_URL###' => "https://fanfiction.online/" . '@' . $user->user_login . '/settings',
+                '###USERNAME###'=> '@' . $user->user_login,
+                '###CODE###'    => $code,
+            ],
         ] );
     }
     protected static function login_code_mail($user,$code){
-        $email_text = __(
-'Hi ###USERNAME###,
-
-Your login code is
-
-###CODE###
-
-This code is valid for only 30 minutes. 
-
-Fanfiction Online'
-        );
-
-        $email_text = str_replace  ( '###USERNAME###', $user->user_login, $email_text );
-        $email_text = str_replace  ( '###CODE###', $code , $email_text );
-
         email( [
             'to'        => $user->user_email,
-            'subject'   => 'Login Code',
-            'plaintext' => $email_text
+            'template'  =>'OTP',
+            'subject'   => 'Here\'s your One-Time PIN',
+            'params'    => [
+                '###SUBJECT###' => 'Here\'s your One-Time PIN',
+                '###USERNAME###'=> "@" . $user->user_login,
+                '###CODE###'    => $code,
+            ],
         ] );
     }
 }

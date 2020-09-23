@@ -28,9 +28,28 @@ function api_reply_to_contact() {
     $email_params = [
         'to'        => $d['to'],
         'from'      => 'contact',
+        'template'  => 'contact',
         'subject'   => $subject,
-        'plaintext' => $d['message'],
+        'params'    => [
+            '###SUBJECT###' => 'Reply from Fanfiction Online',
+        ],
+        'txtparams'    => [
+            '###MESSAGE###' => $d['message'],
+        ],
+        'htmlparams'    => [
+            '###MESSAGE###' => str_replace(["\r\n", "\r", "\n"], "<br/>", $d['message']),
+        ],
     ];
+    if (empty($r)) {
+        $all_from = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM contact WHERE `from` = '%s' AND `to` = 'Contact' ORDER BY received_time DESC"
+        , [$d['to']] ))[0] ?? false;
+        if ($all_from !== false) {
+            $email_params['template'] = 'contact-first';
+            $email_params['txtparams']['###PREV_MESSAGE###'] = $all_from->message;
+            $email_params['htmlparams']['###PREV_MESSAGE###'] = str_replace(["\r\n","\r","\n"], "<br/>", $all_from->message);    
+        }
+    }
     if (! empty($r)) {
         $email_params['reply-to'] = $r[0]->message_id;
     }

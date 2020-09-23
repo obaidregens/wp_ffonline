@@ -1,0 +1,9 @@
+###SUBJECT###
+
+Your query:
+###PREV_MESSAGE###
+
+Reply:
+###MESSAGE###
+
+You can reply to this email if you have any other queries.
