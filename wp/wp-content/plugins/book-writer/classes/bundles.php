@@ -268,6 +268,7 @@ class bundle {
                 'css/js-components/next-screen',
                 "css/views/global-login",
                 "css/views/global-share",
+                "css/views/global-notifications",
                 "external/waves/waves",
             ),
             'js'    => array(

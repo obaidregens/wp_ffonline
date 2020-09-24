@@ -47,14 +47,14 @@ class reviews {
                 'content'   => $comment->comment_content,
                 'time'      => human_time_diff( strtotime( $comment->comment_date ) ),
                 'chapter'   => [
-                    'num'       => $chapter_num,
-                    'title'     => $chapter->post_title,
+                    'num'       => $chapter_num ?? 0,
+                    'title'     => $chapter->post_title ?? '',
                 ],
                 'user'      => [
                     'self'          => $chapter_author === $comment_author,
                     'ID'            => $comment_author,
                     'name'          => $comment_author === 0 ? 'Anonymous' : '@' . $user->user_login,
-                    'can_delete'    => $current_user_id === $comment_author && $current_user_id !== 0,
+                    'can_delete'    => reviews::can_delete($comment),
                     'can_reply'     => $current_user_id === $chapter_author && $comment_author !== $current_user_id && $current_user_id !== 0
                 ]
             ];
@@ -119,11 +119,32 @@ class reviews {
         ];
     }
     static function delete($comment_id) {
-        $comment = get_comment($comment_id);
-        if ( !is_user_logged_in() || !$comment || !is_current_user($comment->user_id) ){
+        if ( ! self::can_delete($comment_id) ){
             return false;
         }
-        wp_delete_comment($comment->comment_ID);
+        wp_delete_comment($comment_id);
+    }
+    static function can_delete($comment_id) {
+        if ($comment_id instanceof WP_Comment) {
+            $comment = $comment_id;
+        }
+        else {
+            $comment = get_comment($comment_id);
+        }
+        if ( !is_user_logged_in() || !$comment ){
+            return false;
+        }
+        if ( is_current_user($comment->user_id) ) {
+            return true;
+        }
+        $chapter = get_post($comment->comment_post_ID);
+        if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
+            return false;
+        }
+        if ( intval($comment->user_id) === 0 && is_current_user($chapter->post_author) ) {
+            return true;
+        }
+        return false;
     }
     static function can_review($chapter_id_or_book_id,$logged_in = null){
         if ($logged_in === null) {

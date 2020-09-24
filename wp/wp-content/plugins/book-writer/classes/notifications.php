@@ -9,34 +9,43 @@ class notifications {
     static function createNotification($row) {
         switch ($row->notification_type) {
             case 'chapter_review':
+                $comment = get_comment( $row->type_of_id );
+                if (! $comment ) {
+                    return null;
+                }
+                $user_commented = get_userdata( $comment->user_id );
                 return [
-                    'message'   => "Someone left a review for you.",
-                    'link'      => rtrim(get_permalink( $row->type_by_id ),'/') . '/#review-' . $row->type_of_id
+                    'message'   => "@" . $user_commented->user_login . " left a review for you.",
+                    'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $user_commented->ID
                 ];
             case 'review_reply':
+                $comment = get_comment($row->type_by_id);
                 return [
                     'message'   => "The author replied to your review.",
-                    'link'      => rtrim(get_permalink( get_comment($row->type_by_id)->comment_post_ID ),'/') . '/#review-' . $row->type_of_id
+                    'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $comment->user_id
                 ];
             case 'chapter_vote':
                 return [
                     'message'   => "Your chapter got another vote!",
-                    'link'      => get_permalink( $row->type_of_id )
+                    'link'      => get_permalink( $row->type_of_id ),
                 ];
             case 'user_update':
+                $user = get_userdata( $row->type_by_id );
+                $udisplay = "@" . $user->user_login;
                 return [
-                    'message'   => "An author you follow just posted an update!",
-                    'link'      => rtrim(get_author_posts_url( $row->type_by_id ),'/') 
+                    'message'   => $udisplay . " just posted an update!",
+                    'link'      => 'https://fanfiction.online/' . $udisplay,
                 ];
             case 'follow_user':
                 return [
-                    'message'   => "Someone followed you.",
-                    'link'      => rtrim(get_author_posts_url( get_current_user_id() ),'/')
+                    'message'   => "You got a new follower!",
+                    'link'      => get_author_posts_url( get_current_user_id() ),
                 ];
             case 'follow_collection':
+                $collection = collection::get_by('ID',$row->type_of_id);
                 return [
-                    'message'   => "Someone followed your collection.",
-                    'link'      => rtrim(collection_helpers::link( $row->type_of_id ),'/')
+                    'message'   => "Your " . $collection->type . " collection " . $collection->title . " just got a new follower!",
+                    'link'      => collection_helpers::link( $collection ),
                 ];
             default:
                 return false;
@@ -48,12 +57,22 @@ class notifications {
         $sql = $wpdb->prepare("SELECT * FROM notifications WHERE user_id = %d ORDER BY timestamp ASC",[get_current_user_id()]);
         $r = $wpdb->get_results($sql);
         $rr = [];
+        $unread = 0;
         foreach ($r as $row ) {
             $n = self::createNotification($row);
+            if ($n === null) {
+                continue;
+            }
             $n['read'] = intval($row->timestamp) < $lastOpen;
+            if (! $n['read']) {
+                $unread += 1;
+            }
             $rr[] = $n;
         }
-        return $rr;
+        return [
+            'notifications'     => $rr,
+            'unread'            => $unread
+        ];
     }
 }
 class notifications_insert extends notifications {

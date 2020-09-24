@@ -50,15 +50,23 @@ _.interact(function(event){
 					],
 					listeners: {
 						onOpen: () => {
+							document.querySelector('.notification-pulse').classList.remove('show');
 							lastOpen = Date.now();
 						},
 						onClose: () => {
+							document.querySelector('.notification-pulse').classList.remove('show');
 							lastOpen = Date.now();
 						},
 					}
 				});
 				next_screen.create(ns);
 				document.querySelector('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
+				document.documentElement.appendChild(DOM.create('button',{
+					classes: ['notification-pulse'],
+					listeners: {
+						click: () => next_screen.open(ns)
+					}
+				}));
 			}
 			notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
 			for (let i = notificationsWrapper.children.length; i < response.notifications.length; i++) {
@@ -69,6 +77,9 @@ _.interact(function(event){
 						href: n.link
 					}
 				}));
+			}
+			if (response.unread > 0) {
+				document.querySelector('.notification-pulse').classList.add('show')
 			}
 		}
 	});

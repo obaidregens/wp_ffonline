@@ -92,12 +92,19 @@ const map_reviews = reviewObj => {
   });
 };
 
+let filters = {
+  sort: 'DESC',
+  exclude_users: [],
+  page: 1
+};
+
 function callReviews(opts) {
   return new Promise((resolve, reject) => {
-    opts.chapter_id = chapter_id;
     api('get_reviews', {
       dataType: 'JSON',
-      data: opts,
+      data: Object.assign(opts, {
+        chapter_id
+      }),
       callback: response => {
         if (response.code && response.code > 5) {
           resolve([], []);
@@ -122,34 +129,33 @@ function callReviews(opts) {
 let ReviewStates;
 
 function updateReviews() {
-  callReviews({
-    sort: ReviewStates.sort[0],
-    exclude_users: ReviewStates.exclude_users[0],
-    page: ReviewStates.page[0]
-  }).then(([reviewItems, userItems]) => {
-    ReviewStates.reviewItems[1](reviewItems);
-    ReviewStates.userItems[1](userItems);
+  return new Promise((resO, rejO) => {
+    callReviews(filters).then(([reviewItems, userItems]) => {
+      ReviewStates.reviewItems[1](reviewItems);
+      ReviewStates.userItems[1](userItems);
+      resO("");
+    });
   });
 }
 
 function filterUsers(event) {
   const userId = event.target.getAttribute('value');
-  let newUsers = ReviewStates.exclude_users[0];
+  let newUsers = filters.exclude_users;
 
   if (event.target.checked) {
-    const indexOf = ReviewStates.exclude_users[0].indexOf(userId);
-    ReviewStates.exclude_users[0].splice(indexOf, 1);
-    newUsers = ReviewStates.exclude_users[0];
+    const indexOf = filters.exclude_users.indexOf(userId);
+    filters.exclude_users.splice(indexOf, 1);
+    newUsers = filters.exclude_users;
   } else {
     newUsers.push(userId);
   }
 
-  ReviewStates.exclude_users[1](newUsers);
+  filters.exclude_users = newUsers;
   updateReviews();
 }
 
 function setPage(to) {
-  const current = parseInt(ReviewStates.page[0]);
+  const current = parseInt(filters.page);
   to = to === 'next' ? current + 1 : to;
   to = to === 'prev' ? current - 1 : to;
 
@@ -157,20 +163,22 @@ function setPage(to) {
     return;
   }
 
-  ReviewStates.page[1](to);
+  filters.page = to;
+  updateReviews();
+}
+
+function setSort(order) {
+  filters.sort = order;
+  updateReviews();
 }
 
 function Reviews(props) {
   ReviewStates = {
-    sort: React.useState('DESC'),
-    exclude_users: React.useState([]),
-    page: React.useState([1]),
     reviewItems: React.useState([]),
     userItems: React.useState([])
   };
-  React.useEffect(updateReviews, [ReviewStates.page[0], ReviewStates.sort[0], ReviewStates.exclude_users[0]]);
 
-  if (ReviewStates.reviewItems[0].length === 0) {
+  if (ReviewStates.reviewItems[0].length === 0 && ReviewStates.userItems[0].length === 0 && filters.page === 1) {
     return null;
   }
 
@@ -178,10 +186,10 @@ function Reviews(props) {
     right: true,
     children: [/*#__PURE__*/React.createElement("li", {
       tabindex: "0",
-      onClick: ReviewStates.sort[1].bind(null, 'ASC')
+      onClick: setSort.bind(null, 'ASC')
     }, "Oldest"), /*#__PURE__*/React.createElement("li", {
       tabindex: "0",
-      onClick: ReviewStates.sort[1].bind(null, 'DESC')
+      onClick: setSort.bind(null, 'DESC')
     }, "Newest")]
   }), /*#__PURE__*/React.createElement(Dropdown, {
     right: true,
@@ -192,10 +200,37 @@ function Reviews(props) {
     onClick: setPage.bind(null, 'prev')
   }), /*#__PURE__*/React.createElement("button", {
     active: ""
-  }, ReviewStates.page[0]), /*#__PURE__*/React.createElement("button", {
+  }, filters.page), /*#__PURE__*/React.createElement("button", {
     onClick: setPage.bind(null, 'next')
   })));
 }
 
-ReactDOM.render( /*#__PURE__*/React.createElement(Reviews, null), document.querySelector('reviews-wrapper'));
-updateReviews();
+ReactDOM.render( /*#__PURE__*/React.createElement(Reviews, null), document.querySelector('reviews-wrapper')); // User Review Filter from hash
+
+function userReviewsFromHash() {
+  const hash = window.location.hash;
+
+  if (hash.substr(0, 9) !== '#reviews-') {
+    return false;
+  }
+
+  let userId = parseInt(hash.substr(9));
+
+  if (!userId) {
+    return false;
+  }
+
+  document.querySelector(`reviews-wrapper`).scrollIntoView();
+  const excl_users = [];
+  ReviewStates.userItems[0].forEach(v => {
+    if (parseInt(v.key) !== userId) {
+      excl_users.push(v.key);
+    }
+  });
+  filters.exclude_users = excl_users;
+  updateReviews();
+  return true;
+}
+
+window.addEventListener('hashchange', userReviewsFromHash);
+updateReviews().then(userReviewsFromHash);

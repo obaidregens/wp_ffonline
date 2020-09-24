@@ -17,7 +17,12 @@ function api_poll(){
         $t = max(intval($d['lastOpen']),time() - 60);
         $instance->log_notifications($types->type,$types->type_id,$t);
     }
-    return ['code' => 1, 'notifications' => notifications::get()];
+    $notifications = notifications::get();
+    return [
+        'code' => 1,
+        'notifications' => $notifications['notifications'],
+        'unread'        => $notifications['unread']
+    ];
 }
 $import = [
     'author',

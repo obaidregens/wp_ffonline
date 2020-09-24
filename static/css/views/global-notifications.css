@@ -1,0 +1,99 @@
+/* Notifications */
+next-screen[notifications] {
+    padding: 0;
+}
+next-screen[notifications] > notifications {
+    justify-content: flex-end;
+    display: flex;
+    min-height: 100vh;
+    -moz-min-height: 100vh;
+    max-width: 500px;
+    -moz-max-width: 500px;
+    margin: 0 auto;
+    flex-direction: column-reverse;
+    border-color: var(--grey);
+    border-width: 0 1px;
+    border-style: solid;
+}
+next-screen[notifications] > notifications:empty::before {
+    content: 'No notifications yet.';
+    display: flex;
+    padding: 15px;
+}
+next-screen[notifications] > notifications > a {
+    padding: 15px;
+    min-height: 60px;
+    width: 100%;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s;
+    color: var(--text-color);
+    border-bottom: 1px solid var(--grey);
+}
+next-screen[notifications] > notifications > a:hover {
+    background-color: var(--hover);
+}
+/* Pulse */
+button.notification-pulse:not(.show) {
+    display: none;
+}
+button.notification-pulse {
+    position: fixed;
+    top: 5px;
+    right: -5px;
+    height: 40px;
+    width: 40px;
+    border-radius: 200px;
+    z-index: 60;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    background-color: transparent;
+}
+button.notification-pulse:hover {
+    background-color: var(--hover);
+    color: var(--text-color);
+}
+button.notification-pulse::before {
+    font-family: 'icons';
+    content: '\e946';
+    display: inline-block;
+    transform: scale(2);
+}
+button.notification-pulse::after {
+    content: "";
+    position: absolute;
+    background-color: red;
+    animation: pulse 1s ease-out infinite;
+    top: 7px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    border-radius: 200px;
+}
+@keyframes pulse {
+    0% {
+        opacity: 0.4;
+        -webkit-transform: scale(0.5);
+    }
+    25% {
+        opacity: 0.2;
+        -webkit-transform: scale(0.5);
+    }
+    50% {
+        opacity: 0.0;
+        -webkit-transform: scale(0.5);
+    }
+    
+    75% {
+        opacity: 0.0;
+        -webkit-transform: scale(0.5);
+    }
+  
+    100% {
+        opacity: 0.6;
+        -webkit-transform: scale(1);
+    }
+}

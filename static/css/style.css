@@ -89,41 +89,6 @@ a:hover {
 div {
     overflow: auto;
 }
-/* Notifications */
-next-screen[notifications] {
-    padding: 0;
-}
-next-screen[notifications] > notifications {
-    justify-content: flex-end;
-    display: flex;
-    min-height: 100vh;
-    -moz-min-height: 100vh;
-    max-width: 500px;
-    -moz-max-width: 500px;
-    margin: 0 auto;
-    flex-direction: column-reverse;
-    border-color: var(--grey);
-    border-width: 0 1px;
-    border-style: solid;
-}
-next-screen[notifications] > notifications:empty::before {
-    content: 'No notifications yet.';
-    display: flex;
-    padding: 15px;
-}
-next-screen[notifications] > notifications > a {
-    padding: 15px;
-    min-height: 60px;
-    width: 100%;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color .2s;
-    color: var(--text-color);
-    border-bottom: 1px solid var(--grey);
-}
-next-screen[notifications] > notifications > a:hover {
-    background-color: var(--hover);
-}
 /* Header */
 header {
     overflow: visible;

@@ -67,6 +67,9 @@ class collection {
         );
     }
     static function get_by($field, $value) {
+        if ( is_object($value) && isset($value->author) && isset($value->type) ) {
+            return $value;
+        }
         $table = self::$table;
         $e = new err();
         // Slug is null if not unlisted
