@@ -8,6 +8,16 @@ class notifications {
     }
     static function createNotification($row) {
         switch ($row->notification_type) {
+            case 'account_verified':
+                return [
+                    'message'   => "You've been verified. Start importing stories from FFN now!",
+                    'link'      => 'https://fanfiction.online/import-stories'
+                ];
+            case 'import_stories':
+                return [
+                    'message'   => "Your stories have been imported.",
+                    'link'      => 'https://fanfiction.online/my-stories'
+                ];    
             case 'chapter_review':
                 $comment = get_comment( $row->type_of_id );
                 if (! $comment ) {

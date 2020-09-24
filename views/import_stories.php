@@ -18,6 +18,10 @@ else {
 $remote_stories = import_stories::view_all($connected);
 ?>
 <h2>Stories to Import</h2>
+<label class="checkbox">
+    <input type="checkbox" check-all>
+    <text>Select All</text>
+</label>
 <?php foreach($remote_stories as $story) { ?>
 <?php if ($story['status'] === 'imported') { ?>
 <label class="imported">
