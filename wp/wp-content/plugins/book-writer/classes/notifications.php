@@ -13,7 +13,7 @@ class notifications {
                     'message'   => "You've been verified. Start importing stories from FFN now!",
                     'link'      => 'https://fanfiction.online/import-stories'
                 ];
-            case 'import_stories':
+            case 'stories_imported':
                 return [
                     'message'   => "Your stories have been imported.",
                     'link'      => 'https://fanfiction.online/my-stories'

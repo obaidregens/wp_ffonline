@@ -1,6 +1,6 @@
 floater {
     position: fixed;
-    z-index: 54;
+    z-index: 53;
     bottom: 25px;
     right: 30px;
     display: flex;

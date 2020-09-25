@@ -8,6 +8,7 @@ $books = (new WP_Query([
     'posts_per_page'		 => -1,
     'author__in'             => [get_current_user_id()]
 ]))->posts;
+$book_stat_instances = book_stats::multiple(array_column($books,'ID'));
 ?>
 <actions>
     <a label="Import Stories" href="/import-stories" class="button"></a>
@@ -15,7 +16,7 @@ $books = (new WP_Query([
     <a href="/my-stories/new" class="button new-book">New Story</a>
 </actions>
 <?php foreach ($books as $book) { ?>
-<?php $stat = new book_stats($book->ID); ?>
+<?php $stat = $book_stat_instances[$book->ID]; ?>
 <a href="/my-stories/<?= $book->ID; ?>" class="book">
 <book-title><?= $book->post_title; ?></book-title>
 <book-status><?= $book->post_status === 'publish' ? 'Published' : 'Unpublished'; ?></book-status>

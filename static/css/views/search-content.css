@@ -9,16 +9,9 @@ books-container {
     transition: opacity var(--show-books-loader-time);
     will-change: opacity;
 }
-@media only screen and (min-width: 400px) {
+@media only screen and (max-width: 400px) {
     books-container {
-        grid-template-columns: repeat( auto-fill, minmax(280px, 1fr) );
-    }
-}
-@media only screen and (min-width: 800px) {
-    books-container {
-        grid-template-columns: repeat( auto-fill, minmax(350px, 1fr) );
-        box-shadow: var(--shadow-light);
-        padding: 20px;
+        font-size: 0.95rem;
     }
 }
 books-container > book {

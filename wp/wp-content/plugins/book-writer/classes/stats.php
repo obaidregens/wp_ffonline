@@ -616,7 +616,7 @@ class reports extends stats {
                 <?php foreach ($from as $ref => $each) { ?>
                     <?php
                     $ref = explode('<->',$ref);
-                    if (in_array($type,array('chapter','book'))){
+                    if (in_array($type,array('chapter','story'))){
                         $ref[0] = '<a href="' . get_permalink( $ref[0] ) . '">' . get_the_title( $ref[0] ) . '</a>';
                     }
                     else if (in_array($type,array('author','author-updates','author-collections','author-books'))){
