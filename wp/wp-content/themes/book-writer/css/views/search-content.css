@@ -15,7 +15,6 @@ books-container {
 }
 @media only screen and (min-width: 800px) {
     books-container {
-        box-shadow: var(--shadow-light);
         grid-template-columns: repeat(2, calc(50% - 10px) );
         padding: 20px;
     }
@@ -25,11 +24,6 @@ books-container > book {
     position: relative;
     cursor: pointer;
     padding: 1.5rem;
-    transition: box-shadow 0.3s;
-    will-change: box-shadow;
-}
-books-container > book:hover {
-    box-shadow: var(--shadow-light); 
 }
 books-container > book > button.dropdown {
     display: flex;

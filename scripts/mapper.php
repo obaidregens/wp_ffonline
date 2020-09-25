@@ -46,8 +46,8 @@ for ($i=2; $i <= $num_pages; $i++) {
 }
 
 // Collection Page
-$collections = collection::query(array(
-    'orderby'   => 'modified',
+$collections_all = collection::query(array(
+    'orderby'   => 'created',
     'order'     => 'DESC',
     'types'     => array('Public','Favorites'),
     'count'     => array(
@@ -56,7 +56,7 @@ $collections = collection::query(array(
 ));
 $xml .= url_field(
     'https://fanfiction.online/collections/',
-    f_stamp($collections[0]['modified']),
+    f_stamp($collections_all[0]->created),
     'daily'
 );
 $xml .= '</urlset>';
@@ -96,16 +96,7 @@ for ($i=1; $i <= $num_pages; $i++) {
     }
 }
 
-$total_num = (collection::query(array(
-    'select'    => 'count',
-    'orderby'   => 'modified',
-    'order'     => 'DESC',
-    'types'     => array('Public','Favorites'),
-    'limit'     => 9999999999999999999999999999,
-    'count'     => array(
-        'from'      => 1,
-    )
-)));
+$total_num = count($collections_all);
 $num_pages = intval($total_num/100+1);
 if ($total_num % 100 === 0){
     $num_pages = intval($total_num/100);
@@ -116,20 +107,11 @@ for ($i=1; $i <= $num_pages; $i++) {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
         <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-        $collections = collection::query(array(
-            'orderby'   => 'modified',
-            'order'     => 'DESC',
-            'types'     => array('Public','Favorites'),
-            'limit'     => 100,
-            'page'      => $i,
-            'count'     => array(
-                'from'      => 1,
-            )
-        ));
+        $collections = array_slice($collections_all,($i*100)-100,100);
         foreach($collections as $collection){
             $xml .= url_field(
-                rtrim(collection::link($collection['ID']), '/') . '/' ,
-                f_stamp($collection['modified']),
+                rtrim(collection_helpers::link($collection->ID), '/') . '/' ,
+                f_stamp($collection->created),
                 'weekly'
             );
         }

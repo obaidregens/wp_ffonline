@@ -13,6 +13,7 @@
     --shadow-light: 0px 0px 4px 0px #646464;
     --shadow-strong: 0px 0px 10px 0px #646464;
     --shadow-faded: rgb(105 105 105 / 15%) 0px 1px 3px 1px;
+    --elevate-light: 0 0 2px 0 var(--transparent-accent), 0 4px 16px 0 var(--transparent-accent);
 }
 html.force-dark {
     /* Dark Theme On Load*/

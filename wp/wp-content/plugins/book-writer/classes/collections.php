@@ -96,6 +96,7 @@ class collection {
         // slug
         // order, orderby
         // title (Strict)
+        // count => ['from','to']
         $a = array_replace([
             'types'     => ['Public','Private','Unlisted','Favorites']
         ],$a);

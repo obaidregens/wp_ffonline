@@ -12,7 +12,7 @@
 @media only screen and (min-width: 800px) {
     .grid {
         grid-template-columns: repeat( auto-fill, minmax(320px, 1fr) );
-        box-shadow: var(--shadow-light);
+        border: 1px solid var(--grey);
         padding: 20px;
     }
 }
@@ -29,7 +29,7 @@
     }
 }
 .grid > .grid-item:hover {
-    box-shadow: var(--shadow-light); 
+    box-shadow: var(--elevate-light); 
 }
 /* Extra Options Button */
 .grid-item > button.options {
