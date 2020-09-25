@@ -5,44 +5,43 @@ function api_get_chat(){
 
     $user = get_user_by( 'login', $_POST['data']['username'] );
     if ($user === false) {
-        return ['messages'=>false];
+        return ['code'=>8];
     }
     $users_in_chat = array(
         intval( get_current_user_id() ),
         intval( $user->ID )
     );
     if ($users_in_chat[0] === $users_in_chat[1]){
-        return ['messages'=>false];
+        return ['code'=>9];
     }
-    $chats = chats::query(array(
+    $chats = chats::query([
         'users_included'  => $users_in_chat
-    ));
-    $read_chats = chats::query(array(
-        'limit'             => -1,
-        'users_included'    => $users_in_chat,
-        'status_included'   => array('Read'),
-        'fields'            => 'ids'
-    ));
-    $chats_f = array();
+    ]);
+    $set_to_read = [];
+    $chats_f = [];
     foreach ( $chats as $chat ) {
-        $chat_author = intval($chat->post_author);
-        $this_chat_obj = array(
+        $chat_author = intval($chat->from);
+        $this_chat_obj = [
             'from'      => $users_in_chat[0] === $chat_author ? 'my' : 'other',
-            'date'      => $chat->post_date,
-            'message'   => $chat->post_content
-        );
-        if ($this_chat_obj['from'] === 'my'){
-            // $this_chat_obj['status'] = in_array($chat->ID,$read_chats) ? 'read' : 'sent';
-        }
+            'time'      => $chat->milli_timestamp,
+            'message'   => $chat->message,
+        ];
         $chats_f[] = $this_chat_obj;
-        if ($chat_author !== $users_in_chat[0] && ! in_array($chat->ID,$read_chats)){
-            wp_set_object_terms($chat->ID,'Read', 'message_status');            
+        if ($chat_author !== $users_in_chat[0] && $chat->status === 'sent' ){
+            $set_to_read[] = $chat->ID;
         }
     }
+    if (! empty($set_to_read)) {
+        global $wpdb;
+        $wpdb->query($wpdb->prepare("
+        UPDATE chats
+        SET status = 'read'
+        WHERE ID IN(" . implode(',',array_fill(0,count($set_to_read),'%s')) . ")
+        ",$set_to_read));    
+    }
+    
     return [
-        'user'          => array(
-                'name'      => $user->display_name
-        ),
+        'username'      => $user->user_login,
         'messages'      => array_reverse($chats_f),
         'blocked'       => chats_blocking::is_blocked($users_in_chat[1]),
         'chat_blocked'  => chats_blocking::is_chat_blocked($users_in_chat)
@@ -68,4 +67,5 @@ function api_block () {
     required_params('block','username');
     $user = get_user_by( 'login', $_POST['data']['username'] );
     $_POST['data']['block'] === "true" ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
+    return ['code'  => 1];
 }

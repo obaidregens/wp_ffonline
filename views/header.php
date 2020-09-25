@@ -66,6 +66,7 @@ $current_user = get_userdata( get_current_user_id() );
 						Me
 						<dropdown class="right">
 							<a tabindex="0" class="notifications">Notifications</a>
+							<a tabindex="0" href="/inbox">Inbox</a>
 							<a tabindex="0" href="/@<?= $current_user->user_login; ?>">Profile</a>
 							<a tabindex="0" href="/@<?= $current_user->user_login; ?>/settings">Settings</a>
 							<a tabindex="0" href="/logout">Logout</a>

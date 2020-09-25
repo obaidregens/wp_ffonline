@@ -755,12 +755,11 @@ function api_get_chat(){
     $chats = chats::query(array(
         'users_included'  => $users_in_chat
     ));
-    $read_chats = chats::query(array(
-        'limit'             => -1,
+    $read_chats = array_column(chats::query(array(
+        'per_page'          => -1,
         'users_included'    => $users_in_chat,
         'status_included'   => array('Read'),
-        'fields'            => 'ids'
-    ));
+    )),'ID');
     $chats_f = array();
     foreach ( $chats as $chat ) {
         $chat_author = intval($chat->post_author);

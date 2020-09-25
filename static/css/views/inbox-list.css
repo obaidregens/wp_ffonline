@@ -53,7 +53,7 @@ user-info > a,user-info > a:hover {
     color: var(--text-color);
 }
 user-info > button {
-    border-color: transparent;
+    background-color: transparent;
     width: 40px;
     height: 40px;
     border-radius: 40px;
@@ -77,6 +77,8 @@ user-info > button.block::before {
     content: '\e929';
 }
 messages {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     padding-top: 15px;
     width: 70vw;
@@ -221,10 +223,9 @@ send-message > button::before {
 }
 send-message > button {
     margin: auto 15px;
-    border-color: transparent;
     transform: scale(1.1);
 }
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
     /* Adjust Sizes */
     chat-list,messages,send-message,user-info {
         width: 100vw;
@@ -235,6 +236,12 @@ send-message > button {
     chat-list {
         border-right: none;
         display: none;
+    }
+    user-info {
+        top: 0;
+    }
+    send-message {
+        bottom: 53px
     }
     chat-list.show {
         display: block;

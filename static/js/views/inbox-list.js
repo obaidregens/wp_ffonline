@@ -141,16 +141,10 @@ else {
                     }
                     // Add Messages
                     const frag = document.createDocumentFragment();
-                    let new_hit = false;
                     for (let i = 0; i < response.messages.length; i++) {
                         const msg = response.messages[i];
-                        // if (msg.from === 'other' && msg.status === 'sent' && new_hit === false){
-                        //     frag.appendChild(DOM.create('new-messages'));
-                        //     new_hit = true;
-                        // }
                         const attr = {
-                            time: _t.utcString(msg.date),
-                            // status: msg.status
+                            time: _t.local(new Date(parseInt(msg.time))),
                         };
                         attr[msg.from] = '';
                         frag.appendChild(DOM.create('message',{

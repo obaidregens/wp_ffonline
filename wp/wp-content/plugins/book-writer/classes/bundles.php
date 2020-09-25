@@ -22,13 +22,13 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
-    public static $version = "30";
+    public static $version = "31";
     public static function reset() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
-        $f - scandir($bundles_dir);
+        $f = scandir($bundles_dir);
         $t = time() - 10000;
-        foreach ($dirs as $b) {
+        foreach ($f as $b) {
             if (in_array($b,['.','..'])){continue;}
             touch(MAIN_DIR . 'content/static/bundles/' . $b,$t);
         }

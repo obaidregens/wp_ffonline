@@ -238,6 +238,16 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+	$chats_table = "CREATE TABLE chats (
+		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`from`				BIGINT NOT NULL ,
+		`to`				BIGINT NOT NULL ,
+		`status`			VARCHAR(20) NOT NULL ,
+		`message`			VARCHAR(400) NOT NULL ,
+		`milli_timestamp`	BIGINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -272,6 +282,8 @@ function run_at_activation(){
 	dbDelta( $follow_tables );
 	dbDelta( $votes_tables );
 	dbDelta( $notifications_table );
+	// Chats
+	dbDelta( $chats_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

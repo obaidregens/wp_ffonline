@@ -83,9 +83,14 @@ class book_stats extends stats {
         $landing_query = $wpdb->prepare("SELECT * FROM $landing_table WHERE type = 'story' AND type_id IN(" . implode(',',array_fill(0,count($book_ids),'%s')) . ") ORDER BY ID DESC",$book_ids);
         $landings = $wpdb->get_results($landing_query,ARRAY_A);
         if (empty($landings)) {
-            $this->by_vfs = [];
-            $this->landings = []; 
-            return;
+            $instances = [];
+            foreach ( $book_ids as $book_id ) {
+                $instances[$book_id] = new book_stats($book_id, [
+                    'landings'  => [],
+                    'gactions'  => [],
+                ]);
+            }
+            return $instances;
         }
 
         $landing_ids = array_column($landings,'ID');

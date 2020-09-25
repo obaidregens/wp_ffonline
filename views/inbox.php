@@ -6,11 +6,12 @@ $app->bundle->css('css/views/inbox-list');
 $app->bundle->js('js/views/inbox-list');
 $app->bundle->enqueue();
 
+
 $chats_with = chats::with();
 ?>
 <chat-list>
     <?php foreach ($chats_with as $key => $chat) { ?>
-        <chat username="@<?= $chat->username; ?>" unread="<?= $chat->unread; ?>"></chat>
+        <chat username="<?= $chat['username']; ?>" unread="<?= $chat['unread']; ?>"></chat>
     <?php } ?>
 </chat-list>
 <user-info>
