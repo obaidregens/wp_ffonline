@@ -132,6 +132,10 @@ header > nav > * {
     width: fit-content;
     width: -moz-fit-content;
 }
+/* Waves */
+.waves-effect .waves-ripple {
+    background-color: var(--transparent-accent);
+}
 header > nav > *:hover {
     color: var(--lightblack);
 }

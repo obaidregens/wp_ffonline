@@ -21,7 +21,7 @@
     /* Positioning */
     transition: transform .2s;
     left: 50%;
-    transform: translateX(-50%) scaleY(0);
+    transform: translateX(-50%) scale(0);
     will-change: transform;
 }
 [tooltip-top]::before {
@@ -35,5 +35,5 @@
     content: attr(tooltip-bottom);
 }
 [tooltip-top]:hover::before,[tooltip-bottom]:hover::after {
-    transform: translateX(-50%) scaleY(1);
+    transform: translateX(-50%) scale(1);
 }

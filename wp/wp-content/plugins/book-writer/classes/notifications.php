@@ -58,7 +58,7 @@ class notifications {
                     'link'      => collection_helpers::link( $collection ),
                 ];
             default:
-                return false;
+                return null;
         }
     }
     static function get(){
@@ -73,6 +73,7 @@ class notifications {
             if ($n === null) {
                 continue;
             }
+            $n['time'] = intval(floatval($row->timestamp)*1000);
             $n['read'] = intval($row->timestamp) < $lastOpen;
             if (! $n['read']) {
                 $unread += 1;

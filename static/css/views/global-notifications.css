@@ -21,14 +21,24 @@ next-screen[notifications] > notifications:empty::before {
     padding: 15px;
 }
 next-screen[notifications] > notifications > a {
-    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
     min-height: 60px;
+    -moz-min-height: 60px;
     width: 100%;
     cursor: pointer;
     user-select: none;
     transition: background-color .2s;
     color: var(--text-color);
     border-bottom: 1px solid var(--grey);
+}
+next-screen[notifications] > notifications > a::after {
+    display: flex;
+    margin-left: auto;
+    content: attr(time);
+    font-size: 0.8rem;
+    color: var(--lightblack);
 }
 next-screen[notifications] > notifications > a:hover {
     background-color: var(--hover);

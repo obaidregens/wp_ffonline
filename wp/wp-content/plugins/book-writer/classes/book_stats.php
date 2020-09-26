@@ -1,7 +1,7 @@
 <?php
 class book_stats extends stats {
     function __construct($book_id,$da = false) {
-        if ($da !== false) {
+        if ($da === false) {
             global $wpdb;
             // Landings
             $landing_table = self::$landing_table;

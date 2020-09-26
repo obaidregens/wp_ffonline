@@ -33,6 +33,7 @@ chapter > chapter-header.dropdown > dropdown > *[selected]{
 	cursor: default;
 }
 chapter > chapter-header > .down-arrow {
+	pointer-events: none;
 	display: flex;
 	align-items: center;
 	margin-left: auto;

@@ -74,7 +74,8 @@ _.interact(function(event){
 				notificationsWrapper.appendChild(DOM.create('a',{
 					innerText: n.message,
 					attributes: {
-						href: n.link
+						href: n.link,
+						time: _t.local(new Date(n.time)),
 					}
 				}));
 			}
