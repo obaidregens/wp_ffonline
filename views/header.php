@@ -55,7 +55,7 @@ $current_user = get_userdata( get_current_user_id() );
 		<dark-mode onclick="themes.switch();"></dark-mode>
         <header>
 			<a class="<?= $app->request === '/' ? 'active' : '' ?> logo waves-effect" href="/">
-				<?php include('static/images/logo.svg'); ?>
+				<?php include(MAIN_DIR . '/content/static/images/logo.svg'); ?>
     		</a>
 			<nav>
 				<a class="<?= $app->request === '/read' ? 'active' : '' ?> waves-effect" href="/read">Read</a>
