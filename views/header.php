@@ -31,9 +31,7 @@ $current_user = get_userdata( get_current_user_id() );
 		<link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
 		<!-- Load Font -->
-		<link rel="preload" as="font" href="/content/static/css/fonts/icons.woff" type="font/woff" crossorigin="anonymous">
-		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-		<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"></noscript>		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap">
 
 		<!-- Manifest -->
 		<link rel="manifest" href="/content/manifest/manifest.webmanifest" />

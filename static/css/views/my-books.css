@@ -31,7 +31,7 @@ a.book {
     transition: background-color .2s;
 }
 a.book:hover {
-    background-color: var(--hover);
+    background-color: var(--transparent-accent);
 }
 book-title {
     font-size: 1.2rem;
@@ -58,6 +58,20 @@ book-views > stat::after {
     content: attr(timespan);
     font-size: 0.8rem;
     text-transform: uppercase;
+}
+/* Zoom in */
+a.book book-title,a.book book-status {
+    transition: opacity .2s;
+}
+a.book stat {
+    transform-origin: bottom;
+    transition: transform .2s;
+}
+a.book:hover stat {
+    transform:scale(1.5);
+}
+a.book:hover book-title,a.book:hover book-status {
+    opacity: 0;
 }
 @media only screen and (max-width: 500px) {
     actions > .button {

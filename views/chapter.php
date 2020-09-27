@@ -18,7 +18,6 @@ $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
 $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
-$app->bundle->mix('react');
 $app->bundle->js('js/views/reviews-list');
 $app->bundle->enqueue();
 
@@ -96,3 +95,8 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 		<loader medium></loader>
 	</popup>
 </main>
+<?php
+$bundle = new bundle('react-ps');
+$bundle->mix('react');
+$bundle->enqueue();
+$bundle->print();

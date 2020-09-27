@@ -15,7 +15,7 @@ next-screen > div {
 @media only screen and (min-width: 800px) {
     next-screen > div {
         padding: 20px;
-        box-shadow: var(--shadow-light);
+        box-shadow: var(--elevate-light);
     }
 }
 select-tag {
