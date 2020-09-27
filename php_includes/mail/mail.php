@@ -15,7 +15,10 @@ class email {
     protected $from;
     protected $template = false;
     protected $mail;
-    function __construct(array $args) {
+    function __construct(array $args = []) {
+        $this->sent = 0;
+        $this->unsent = 0;
+
         $this->subject = $args['subject'] ?? 'Message from Fanfiction Online';
         $this->params = $args['params'] ?? [];
         $this->txtparams = $args['txtparams'] ?? [];
@@ -41,29 +44,36 @@ class email {
         $html_template = file_get_contents(__DIR__ . '/templates/' . $template . '.html');
         $txt_template = file_get_contents(__DIR__ . '/templates/' . $template . '.txt');
         ob_end_clean();
-        if ( $html_template === false || $txt_template === false ){
+        if ( $txt_template === false ){
             return false;
         }
-        foreach ($this->htmlparams as $k => $v) {
+        foreach ( ($html_template === false ? [] : $this->htmlparams) as $k => $v) {
             $html_template = str_replace($k,$v,$html_template);
         }
         foreach ($this->txtparams as $k => $v) {
             $txt_template = str_replace($k,$v,$txt_template);
         }
         foreach ($this->params as $k => $v) {
-            $html_template = str_replace($k,$v,$html_template);
+            if ($html_template !== false) {
+                $html_template = str_replace($k,$v,$html_template);
+            }
             $txt_template = str_replace($k,$v,$txt_template);
-        }    
+        }
         $this->template = $template;
-        $this->mail->isHTML(true);
-        $this->mail->Body = $html_template;
-        $this->mail->AltBody = $txt_template;
+        $this->mail->isHTML($html_template === false ? false : true);
+        if ($html_template === false) {
+            $this->mail->Body = $txt_template;
+        }
+        else {
+            $this->mail->Body = $html_template;
+            $this->mail->AltBody = $txt_template;
+        }
     }
     function setReply($mailId) {
         $this->mail->clearCustomHeaders();
         if (trim($mailId) !== "") {
             $this->mail->addCustomHeader('References', $mailId);
-            $this->mail->addCustomHeader('In-Reply-To', $mailId);    
+            $this->mail->addCustomHeader('In-Reply-To', $mailId);
         }
     }
     function setFrom($from) {
@@ -83,7 +93,12 @@ class email {
         foreach ($to as $to_email ) {
             $this->mail->clearAddresses();
             $this->mail->addAddress( $to_email );
-            $this->mail->send();
+            try {
+                $this->mail->send();
+                $this->sent++;
+            } catch(Exception $e) {
+                $this->unsent++;
+            }
         }
         return $this->mail->getLastMessageID();
     }

@@ -41,7 +41,17 @@ class chats {
         );
         $this->ID = $wpdb->insert_id;
     }
-    public static function query($args) {
+    static function unread() {
+        $table = self::$table;
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE `to` = %d AND `status` = 'sent' ORDER BY milli_timestamp DESC",[get_current_user_id()]);
+        $r = $wpdb->get_results($sql);
+        return [
+            'unread'    => count($r),
+            'last'      => intval($r[0]->milli_timestamp),
+        ];
+    }
+    static function query($args) {
         $error = new err();
         $opers = [
             'IN'        => 'included',
@@ -99,7 +109,7 @@ class chats {
             $args['per_page'] ?? 50
         );
     }
-    public static function with(){
+    static function with(){
         $table = self::$table;
         $current_user_id = intval(get_current_user_id());
         global $wpdb;

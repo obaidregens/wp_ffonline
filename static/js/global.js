@@ -38,7 +38,6 @@ _.interact(function(event){
 			lastOpen
 		},
 		callback: response => {
-			lastOpen = 0;
 			let notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
 			if (! notificationsWrapper) {
 				const ns = DOM.create('next-screen',{
@@ -69,6 +68,9 @@ _.interact(function(event){
 				}));
 			}
 			notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+			if (notificationsWrapper.querySelector('.new-messages')) {
+				notificationsWrapper.querySelector('.new-messages').remove();
+			}
 			for (let i = notificationsWrapper.children.length; i < response.notifications.length; i++) {
 				const n = response.notifications[i];
 				notificationsWrapper.appendChild(DOM.create('a',{
@@ -81,6 +83,19 @@ _.interact(function(event){
 			}
 			if (response.unread > 0) {
 				document.querySelector('.notification-pulse').classList.add('show')
+			}
+			if (response.new_messages.unread > 0) {
+				notificationsWrapper.appendChild(DOM.create('a',{
+					classes: ['new-messages'],
+					innerText: `You have ${response.new_messages.unread} unread message${response.new_messages.unread > 1 ? "s" : ""}.`,
+					attributes: {
+						href: '/inbox',
+						time: "",
+					}
+				}));
+				if (response.new_messages.last >= lastOpen){
+					document.querySelector('.notification-pulse').classList.add('show');
+				}
 			}
 		}
 	});

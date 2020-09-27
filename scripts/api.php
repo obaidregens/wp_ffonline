@@ -21,7 +21,8 @@ function api_poll(){
     return [
         'code' => 1,
         'notifications' => $notifications['notifications'],
-        'unread'        => $notifications['unread']
+        'unread'        => $notifications['unread'],
+        'new_messages'  => chats::unread(),
     ];
 }
 $import = [

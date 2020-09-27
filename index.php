@@ -332,7 +332,10 @@ $app->listen('/collections',function($self){
     exit();
 });
 $app->listen('/collections/:collection',function($self){
-    $collection = collection::get_by('ID',$self->params['collection']);
+    $collection = collection::get_by('slug',$self->params['collection']);
+    if (! $collection) {
+        $collection = collection::get_by('ID',$self->params['collection']);
+    }
     if (! $collection ) {
         return;
     }

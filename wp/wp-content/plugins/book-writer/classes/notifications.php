@@ -1,6 +1,23 @@
 <?php
 class notifications {
     protected static $table = 'notifications';
+    protected static $priorities = [
+        'stories_imported',
+        'account_verified',
+        'review_reply',
+        'chapter_review',
+        'follow_user',
+        'chapter_vote',
+        'user_update',
+        'follow_collection',
+    ];
+    protected static $priorities_map = false;
+    static function getPriority($n) {
+        if (self::$priorities_map === false) {
+            self::$priorities_map = array_flip(self::$priorities);
+        }
+        return self::$priorities_map[$n] ?? 10000000000000;
+    }
     static function lastOpen() {
         global $wpdb;
         $lastOpen = $wpdb->get_results("SELECT timestamp FROM stats_actions ORDER BY timestamp DESC LIMIT 1");

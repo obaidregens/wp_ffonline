@@ -134,7 +134,7 @@ header > nav > * {
 }
 /* Waves */
 .waves-effect .waves-ripple {
-    background-color: var(--transparent-accent);
+    background-color: var(--transparent-accent) !important;
 }
 header > nav > *:hover {
     color: var(--lightblack);
