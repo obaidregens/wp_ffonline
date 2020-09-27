@@ -41,10 +41,11 @@ class chats {
         );
         $this->ID = $wpdb->insert_id;
     }
-    static function unread() {
+    static function unread($user = null) {
+        $user = $user === null ? get_current_user_id() : $user;
         $table = self::$table;
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE `to` = %d AND `status` = 'sent' ORDER BY milli_timestamp DESC",[get_current_user_id()]);
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE `to` = %d AND `status` = 'sent' ORDER BY milli_timestamp DESC",[$user]);
         $r = $wpdb->get_results($sql);
         return [
             'unread'    => count($r),

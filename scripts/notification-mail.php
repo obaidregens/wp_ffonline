@@ -47,6 +47,17 @@ foreach ($by_users as $notifications) {
     $mail->subject = $notification['message'];
     $user = $users[$not->user_id] ?? null;
     if ($user === null) {continue;}
+    // More string
+    $more_notifications = $total - 1;
+    $more_messages = chats::unread($not->user_id)['unread'];
+    $more_str = '';
+    if (max($more_messages,$more_notifications) > 0) {
+        $more_str .= "You have ";
+        $more_str .= $more_notifications > 0 ? "$more_notifications notifications " : "";
+        $more_str .= min($more_messages,$more_notifications) > 0 ? 'and ';
+        $more_str .= $more_messages > 0 ? "$more_messages new messages " : "";
+        $more_str .= 'waiting for you.'
+    }
     $mail->txtparams = [
         '###USERNAME###'            => "@" . $user->user_login,
         '###NOTIFICATION###'        => $notification['message'],
