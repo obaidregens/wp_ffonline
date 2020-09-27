@@ -740,18 +740,8 @@ $app->listen('/offline',function($self) {
     exit();
 });
 // Robots
-$app->listen('/robots.txt',function(){
-?>
-<pre style="word-wrap: break-word; white-space: pre-wrap;">
-User-agent: *
-Allow: /
-Disallow: /write/
-Disallow: /inbox/
-
-Sitemap: https://fanfiction.online/sitemap/sitemap-index.xml
-</pre>
-<?php
-exit();
+$app->listen('/robots.txt',function($self){
+    $self->static('/content/robots.txt');
 });
 // 404
 $app->listen('&*',function($self){

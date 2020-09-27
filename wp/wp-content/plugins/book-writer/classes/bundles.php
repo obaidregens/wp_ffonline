@@ -144,8 +144,8 @@ class bundle {
         ){
             $this->write();
         }
+        $raw_urls = $this->get_raw_urls();
         if ($mode === 'dev'){
-            $raw_urls = $this->get_raw_urls();
             $this->enqueued = [];
             foreach ($raw_urls['css'] as $key => $filename) {
                 $queue_name = 'bundle_' . $this->name . '_css_' . $key;
@@ -160,12 +160,16 @@ class bundle {
             }
             return;
         }
-        $this->enqueued_css = [
-            'bundle_' . $this->name . '_css'    => $this->css_file,
-        ];
-        $this->enqueued_js = [
-            'bundle_' . $this->name . '_js'     => $this->js_file
-        ];
+        if (!empty($raw_urls['css'])){
+            $this->enqueued_css = [
+                'bundle_' . $this->name . '_css'    => $this->css_file,
+            ];    
+        }
+        if (! empty($raw_urls['js'])) {
+            $this->enqueued_js = [
+                'bundle_' . $this->name . '_js'     => $this->js_file
+            ];    
+        }
     }
     function print(){
         $type = isset($this->script_type) ? 'type="' . $this->script_type . '"' : "";

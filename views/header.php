@@ -15,7 +15,7 @@ $is_user_logged_in = is_user_logged_in();
 $current_user = get_userdata( get_current_user_id() );
 ?>
 <!DOCTYPE html>
-<html <?php if ($_COOKIE['theme'] ?? 'light' === 'dark'){ ?>class="force-dark"<?php } ?> >
+<html lang="en" <?php if ($_COOKIE['theme'] ?? 'light' === 'dark'){ ?>class="force-dark"<?php } ?> >
     <head>
 		<style>html.force-dark {background-color: #121212;}</style>
         <meta charset="UTF-8"></meta>
@@ -26,7 +26,15 @@ $current_user = get_userdata( get_current_user_id() );
 			?><meta name="Description" content="<?= $app->header_options['description']; ?>"><?php
 		}
 		?>
-		<link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+		<!-- Preconnections -->
+		<link rel="dns-prefetch" href="https://www.gstatic.com">
+		<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+		<!-- Load Font -->
+		<link rel="preload" as="font" href="/content/static/css/fonts/icons.woff" type="font/woff" crossorigin="anonymous">
+		<link rel="preload" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+		<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap"></noscript>		
+
 		<!-- Manifest -->
 		<link rel="manifest" href="/content/manifest/manifest.webmanifest" />
 		<script>

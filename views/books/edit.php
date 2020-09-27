@@ -16,10 +16,14 @@ $book_id = $book === 'new' ? 'new' : $book->ID;
 <button theme label="Save"></button>
 </submit>
 <?php
+$bundle = new bundle('react-ps');
+$bundle->mix('react');
+$bundle->enqueue();
+$bundle->print();
+
 $app->bundle = global_bundle('edit-book');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/select');
-$app->bundle->mix('react');
 $app->bundle->js('external/draggable/draggable.bundle');
 $app->bundle->css('css/js-components/switch');
 $app->bundle->css('css/components/index');

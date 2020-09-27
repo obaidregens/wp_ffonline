@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /my-stories/
+Disallow: /drafts/
+Disallow: /inbox/
+
+Sitemap: https://fanfiction.online/sitemap/sitemap-index.xml

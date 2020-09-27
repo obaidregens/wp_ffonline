@@ -1,7 +1,10 @@
 <?php
+$bundle = new bundle('drafts-editSlate-ps');
+$bundle->mix('react');
+$bundle->mix('slate');
+$bundle->enqueue();
+
 $app->bundle = global_bundle('drafts-edit');
-$app->bundle->mix('react');
-$app->bundle->mix('slate');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/loader');
@@ -49,3 +52,6 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 
 <input maxlength="70" placeholder="Title">
 <editor draft_id="<?= $draft_id; ?>"></editor>
+
+<?php
+$bundle->print();
