@@ -97,6 +97,7 @@ _.interact(function(event){
 					document.querySelector('.notification-pulse').classList.add('show');
 				}
 			}
+			lastOpen = 0;
 		}
 	});
 });

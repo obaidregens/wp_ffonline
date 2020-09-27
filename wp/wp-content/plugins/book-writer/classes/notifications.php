@@ -18,9 +18,20 @@ class notifications {
         }
         return self::$priorities_map[$n] ?? 10000000000000;
     }
-    static function lastOpen() {
+    static function lastOpen($user = null) {
+        if (! is_user_logged_in(  )) {return 0;}
+        $user = $user === null ? get_current_user_id() : $user;
         global $wpdb;
-        $lastOpen = $wpdb->get_results("SELECT timestamp FROM stats_actions ORDER BY timestamp DESC LIMIT 1");
+        $lastOpen = $wpdb->get_results(
+            $wpdb->prepare(
+            "SELECT stats_actions.timestamp FROM stats_actions
+            INNER JOIN stats_landings ON stats_actions.landing_id = stats_landings.ID
+            WHERE stats_landings.user_id = %d
+            AND stats_actions.stat = 'notifications' 
+            ORDER BY stats_actions.timestamp DESC
+            LIMIT 1"
+            ,[$user])
+        );
         return empty($lastOpen) ? 0 : intval($lastOpen[0]->timestamp);
     }
     static function createNotification($row) {
@@ -79,6 +90,12 @@ class notifications {
         }
     }
     static function get(){
+        if (! is_user_logged_in(  )) {
+            return [
+                'notifications'     => [],
+                'unread'            => [],
+            ];
+        }
         $lastOpen = self::lastOpen();
         global $wpdb;
         $sql = $wpdb->prepare("SELECT * FROM notifications WHERE user_id = %d ORDER BY timestamp ASC",[get_current_user_id()]);

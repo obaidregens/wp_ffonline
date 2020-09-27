@@ -1,5 +1,8 @@
 <?php
-function handle_all_breaking_errors() {
+function handle_all_breaking_errors($a = 1) {
+    if (!in_array($a,[1,4,16,64,256,4096])) {
+        return;
+    }
     http_response_code(503);
     header("x-is-still-in-temp: true");
     ?>
@@ -34,7 +37,6 @@ function handle_all_breaking_errors() {
     exit();
 }
 set_error_handler ( 'handle_all_breaking_errors' );
-set_exception_handler ( 'handle_all_breaking_errors' );
 if (!file_exists(__DIR__ . '/content/index.php')) {
     handle_all_breaking_errors();
 }

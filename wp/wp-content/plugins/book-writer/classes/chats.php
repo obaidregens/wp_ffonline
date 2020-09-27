@@ -49,7 +49,7 @@ class chats {
         $r = $wpdb->get_results($sql);
         return [
             'unread'    => count($r),
-            'last'      => intval($r[0]->milli_timestamp),
+            'last'      => intval($r[0]->milli_timestamp ?? 0),
         ];
     }
     static function query($args) {
@@ -61,20 +61,19 @@ class chats {
         $table = self::$table;
         $sql = "SELECT * FROM $table WHERE 1";
         $prep = [];
+        // Users Included
+        $ui = &$args['users_included'];
+        if (! empty($ui)) {
+            $sql .= " AND (
+                (`from` = %d AND `to` = %d) OR
+                (`to` = %d AND `from` = %d)
+            )";
+            $prep = array_merge($prep,[
+                $ui[0],$ui[1],
+                $ui[0],$ui[1],
+            ]);
+        }
         foreach ($opers as $oper => $oper_arg) {
-            // Users
-            $k = &$args['users_' . $oper_arg];
-            $k = (array) ($k ?? []);
-            if (!empty($k)) {
-                $placeholder = implode(',',array_fill(0,count($k),'%s'));
-                $sql .= " AND (
-                    `from` $oper(" . $placeholder . ") OR
-                    `to` $oper(" . $placeholder . ")
-                )
-                ";
-                $prep = array_merge($prep,$k,$k);    
-            }
-
             $fields = ['status','from'];
             foreach ($fields as $field ) {
                 $k = &$args[$field . '_' . $oper_arg];
