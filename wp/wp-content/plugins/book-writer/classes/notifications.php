@@ -77,7 +77,7 @@ class notifications {
             case 'follow_user':
                 return [
                     'message'   => "You got a new follower!",
-                    'link'      => get_author_posts_url( get_current_user_id() ),
+                    'link'      => get_author_posts_url( $row->user_id ),
                 ];
             case 'follow_collection':
                 $collection = collection::get_by('ID',$row->type_of_id);
@@ -89,8 +89,9 @@ class notifications {
                 return null;
         }
     }
-    static function get(){
-        if (! is_user_logged_in(  )) {
+    static function get($user = null){
+        $user = $user === null ? get_current_user_id() : $user;
+        if (intval($user) === 0) {
             return [
                 'notifications'     => [],
                 'unread'            => [],
@@ -98,7 +99,7 @@ class notifications {
         }
         $lastOpen = self::lastOpen();
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM notifications WHERE user_id = %d ORDER BY timestamp ASC",[get_current_user_id()]);
+        $sql = $wpdb->prepare("SELECT * FROM notifications WHERE user_id = %d ORDER BY timestamp ASC",[$user]);
         $r = $wpdb->get_results($sql);
         $rr = [];
         $unread = 0;
