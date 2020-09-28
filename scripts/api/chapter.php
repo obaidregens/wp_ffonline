@@ -59,13 +59,19 @@ function api_vote_chapter() {
     if (!$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
         return ['code'=>8];
     }
+    if ( is_current_user($chapter->post_author) ){
+        return ['code'=>11];
+    }
     $exists = vote::exists('chapter',$chapter->ID);
     if (!$exists) {
-        vote::new([
+        $return = vote::new([
             'type'      => 'chapter',
             'type_id'   => $chapter->ID,
             'landing_id'=> $_POST['landing_id']
         ]);
+        if (err::is($return)) {
+            return ['code'=>7];
+        }
         return ['code'=>1];
     }
     vote::unvote('chapter',$chapter->ID);

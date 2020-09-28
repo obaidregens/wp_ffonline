@@ -93,6 +93,10 @@ document.querySelector('.book-vote').addEventListener('click',({target}) => {
             chapter_id
         },
         callback: response => {
+            if (response.code === 11) {
+                new toast("You can't vote on your story");
+                return;
+            }
             if (response.code > 5) {
                 new toast("An error occured");
                 return;

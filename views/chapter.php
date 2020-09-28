@@ -67,7 +67,7 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 			<book_collections hidden>
 				<?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
 			</book_collections>
-			<button class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
+			<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
 			<button class="book-collections"></button>
 			<button class="book-share"></button>
 		</book-options>
