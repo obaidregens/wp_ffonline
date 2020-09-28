@@ -19,6 +19,7 @@ function api_get_chat(){
     ]);
     $set_to_read = [];
     $chats_f = [];
+    $first_unread = false;
     foreach ( $chats as $chat ) {
         $chat_author = intval($chat->from);
         $this_chat_obj = [
@@ -26,6 +27,10 @@ function api_get_chat(){
             'time'      => $chat->milli_timestamp,
             'message'   => $chat->message,
         ];
+        if ($this_chat_obj['from'] === 'other' && $chat->status === 'sent' && !$first_unread ){
+            $this_chat_obj['new'] = true;
+            $first_unread = true;
+        }
         $chats_f[] = $this_chat_obj;
         if ($chat_author !== $users_in_chat[0] && $chat->status === 'sent' ){
             $set_to_read[] = $chat->ID;

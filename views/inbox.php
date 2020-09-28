@@ -9,14 +9,14 @@ $app->bundle->enqueue();
 
 $chats_with = chats::with();
 ?>
-<chat-list>
+<chat-list class="show">
     <?php foreach ($chats_with as $key => $chat) { ?>
         <chat username="<?= $chat['username']; ?>" unread="<?= $chat['unread']; ?>"></chat>
     <?php } ?>
 </chat-list>
 <user-info>
     <button class="back"></button>
-    <a href="/@ffonline" target="_blank">@ffonline</a>
+    <a target="_blank"></a>
     <button tooltip-bottom="Block" class="block"></button>
 </user-info>
 <messages></messages>

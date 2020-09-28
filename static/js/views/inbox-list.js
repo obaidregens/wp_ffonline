@@ -60,6 +60,7 @@ else {
             this.children[i].removeAttribute('active');
         }
         event.target.setAttribute('active','');
+        event.target.setAttribute('unread','0');
 
         const messages_wrapper = document.querySelector('messages');
         messages_wrapper.classList.add('loading');
@@ -71,18 +72,21 @@ else {
             }
         });
         load_chat(username,function(){
-            const new_messages_tab = messages_wrapper.querySelector('new-messages');
-            if (new_messages_tab){
-                new_messages_tab.scrollIntoView();
-                messages_wrapper.scrollTop = messages_wrapper.scrollTop - 30;
-            }
-            else {
-                messages_wrapper.scrollTop = messages_wrapper.scrollHeight;
-            }
             document.querySelector('chat-list').classList.remove('show');
+            setTimeout(() => {
+                const new_messages_tab = messages_wrapper.querySelector('new-messages');
+                if (new_messages_tab){
+                    new_messages_tab.scrollIntoView();
+                    messages_wrapper.scrollTop = messages_wrapper.scrollTop - 30;
+                }
+                else {
+                    console.log(messages_wrapper.scrollTop,messages_wrapper.scrollHeight);
+                    messages_wrapper.scrollTop = messages_wrapper.scrollHeight;
+                }    
+            });
         });
     });
-    document.querySelector('chat-list > chat:first-child').dispatchEvent(new Event('click', {bubbles: true}));
+    // document.querySelector('chat-list > chat:first-child').dispatchEvent(new Event('click', {bubbles: true}));
 
     // Message Validation
     document.querySelector('send-message > text-input > input').addEventListener('input',function(){
@@ -127,6 +131,9 @@ else {
     });
     // Retrieve Messages.
     function load_chat(username,callback = function(){}){
+        if (username === true) {
+            username = document.querySelector('messages').getAttribute('username').substr(1);
+        }
         new Promise(function(resolve, reject){
             api('get_chat',{
                 dataType: 'JSON',
@@ -143,6 +150,9 @@ else {
                     const frag = document.createDocumentFragment();
                     for (let i = 0; i < response.messages.length; i++) {
                         const msg = response.messages[i];
+                        if (msg.new){
+                            frag.appendChild(DOM.create('new-messages'));
+                        }
                         const attr = {
                             time: _t.local(new Date(parseInt(msg.time))),
                         };
@@ -169,7 +179,7 @@ else {
     }
     // Interval to refresh chat
     const lfg = setInterval(load_chat,8000,
-        document.querySelector('messages').getAttribute('username').substr(1),() => {
+        true,() => {
             const messages_wrapper = document.querySelector('messages');
             const messagesHeight = parseInt(getComputedStyle(messages_wrapper).getPropertyValue('height'));
             const new_messages_tab = messages_wrapper.querySelector('new-messages');

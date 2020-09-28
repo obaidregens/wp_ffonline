@@ -17,6 +17,7 @@
     text-transform: none;
     font-size: 10px;
     font-family: var(--font);
+    font-weight: normal;
 
     /* Positioning */
     transition: transform .2s;

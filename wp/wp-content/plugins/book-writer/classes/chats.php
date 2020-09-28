@@ -125,7 +125,7 @@ class chats {
                 'username'  => "@" . $usernames[strval($user_id)],
                 'unread'    => 0,
             ];
-            if ($row->status === 'sent'){
+            if ($row->status === 'sent' && intval($row->to) === $current_user_id){
                 $users[$user_id]['unread'] += 1;
             }
         }
