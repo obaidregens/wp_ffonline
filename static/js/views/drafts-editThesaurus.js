@@ -17,6 +17,9 @@ function isWordBreak(st) {
     return [' ',',','.',':',';','?','(',')'].includes(st);
 }
 document.querySelector('editor').addEventListener('keydown',event => {
+    if (['Escape','ArrowRight','ArrowLeft'].includes(event.key) && thesaurus.classList.contains('open') ) {
+        thesaurus.classList.remove('open');
+    }
     if ( (! event.ctrlKey && ! event.metaKey) || event.key !== 'd') {
         return;
     }
@@ -82,7 +85,7 @@ document.querySelector('editor').addEventListener('keydown',event => {
                             insertEditorText(newWord);
                         },
                         keydown: (event) => {
-                            if (event.key === 'Escape') {
+                            if (['Escape','ArrowRight','ArrowLeft'].includes(event.key)) {
                                 event.preventDefault();
                                 thesaurus.classList.remove('open');
                                 window.getSelection().collapse(anchor,c);

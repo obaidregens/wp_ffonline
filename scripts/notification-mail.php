@@ -10,7 +10,6 @@ $not_older_than_hours = 24;
 
 // Setup
 $greater_than = time() - ($not_older_than_hours*60*60);
-$greater_than = 0;
 global $wpdb;
 $sql = $wpdb->prepare(
 "SELECT * FROM notifications WHERE email_status = 'none' AND timestamp > %d"
@@ -32,7 +31,7 @@ $lastOpened = array_column($wpdb->get_results(
 ),'timestamp','user_id');
 $by_users = [];
 foreach ($r as $v) {
-    if ( 1==2 && intval($lastOpened[$v->user_id]) > intval($v->timestamp)  ) {
+    if ( intval($lastOpened[$v->user_id]) > intval($v->timestamp)  ) {
         continue;
     }
     $ref = &$by_users[$v->user_id];

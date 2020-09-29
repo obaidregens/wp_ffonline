@@ -488,7 +488,7 @@ class draft_chapters extends drafts {
         if (is_numeric($draft_id_or_draft)) {
             $draft = self::get_by('ID', $draft_id_or_draft);
         }
-        if (!$draft){
+        if (!$draft || !is_current_user($draft->user_id)){
             return false;
         }
         $chapter_id = wp_insert_post([
@@ -498,6 +498,8 @@ class draft_chapters extends drafts {
             'post_status'   => 'publish',
             'post_parent'   => $book_id
         ]);
+        $inst = new notifications_insert;
+        $inst->updateStory($chapter_id);
         return $chapter_id;
     }
 }

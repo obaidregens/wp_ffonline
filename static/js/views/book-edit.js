@@ -320,7 +320,9 @@ window.tt = api('get_book_data', {
       checked: selected.publish,
       onChange: checked => selected.publish = checked,
       label: "Publish"
-    })));
+    }), /*#__PURE__*/React.createElement("span", null, "By publishing your story, you agree to adhere to our ", /*#__PURE__*/React.createElement("a", {
+      href: "/guidelines"
+    }, "content guidelines"))));
   };
 
   reRender();

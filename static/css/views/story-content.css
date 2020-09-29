@@ -1,0 +1,28 @@
+stories-list {
+    display: flex;
+    flex-direction: column;
+}
+stories-list > a.story {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    transition: background-color .2s;
+    width: 100%;
+    color: var(--text-color);
+}
+stories-list > a.story::before {
+    content: attr(status);
+    font-size: 0.8rem;
+    color: grey;
+    position: absolute;
+    right: 4px;
+}
+stories-list > a.story::after {
+    display: flex;
+    font-size: 0.9rem;
+    content: attr(fandom);
+}
+stories-list > a.story:hover {
+    background-color: var(--hover);
+}

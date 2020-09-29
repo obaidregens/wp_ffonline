@@ -62,6 +62,7 @@ window.draftTitle = {
         window.editedAtAll = true;
         document.querySelector('input[placeholder="Title"]').value = val;
         window.draftTitle.value = val;
+        document.title = `Fanfiction Online - ${val} - Edit - Drafts`;
         if (!initial) {
             window.autosaveDraft(window.draftContent.value,false);
         }

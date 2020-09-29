@@ -53,6 +53,7 @@ $current_user = get_userdata( get_current_user_id() );
 		<!-- Meta -->
 		<meta name="apple-mobile-web-app-status-bar" content="#007ACC">
 		<meta name="theme-color" content="#007ACC">
+		<meta name="color-scheme" content="dark light">
     </head>
     <body>
         <nonce hidden><?= $nonce; ?></nonce>

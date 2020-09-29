@@ -55,7 +55,7 @@ function api_edit_book() {
     $chapter_ids_order = [];
     foreach (($d['chapters'] ?? []) as $chapter ) {
         if ($chapter['draft_id']) {
-            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,substr($chapter['title'],0,80));
+            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,(substr($chapter['title'],0,80)));
             if ($chapter_id !== false) {
                 $chapter_ids_order[] = $chapter_id;
             }

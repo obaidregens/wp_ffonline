@@ -313,6 +313,7 @@ const App = () => {
         checked={selected.publish}
         onChange={checked => selected.publish = checked}        
         label="Publish"/>
+        <span>By publishing your story, you agree to adhere to our <a href="/guidelines">content guidelines</a></span>
         </page>
         </app>
     )

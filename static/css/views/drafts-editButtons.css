@@ -3,7 +3,7 @@
 drafts-header > button {
     margin-right: 0;
 }
-drafts-header > button[label="Preview"] {
+drafts-header > button[label="Publish"] {
     margin-left: auto;
 }
 toolbar {
@@ -82,6 +82,12 @@ toolbar > button[action="share"]::before {
     display: inline-block;
     transform: translateY(-1px) translateX(2px);
 }
+/* Preview Button */
+toolbar > button[action="preview"]::before {
+    content: '\e947';
+    display: inline-block;
+    transform: translateY(-1px) translateX(2px);
+}
 /* Delete Button */
 toolbar > button[action="delete"] {
     margin-left: auto;
@@ -91,3 +97,4 @@ toolbar > button[action="delete"]::before {
     transform: scale(0.9);
     content: '\e921';
 }
+

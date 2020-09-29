@@ -1,4 +1,5 @@
 <?php
+ignore_user_abort(true);
 function api_poll(){
     $types = _landing::decrypt($_POST['placeholder']);
     $d = &$_POST['data'];

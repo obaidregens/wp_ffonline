@@ -132,6 +132,45 @@ function api_get_synonym() {
     $dict = new dict($_POST['data']['word']);
     return ['code' => 1,'synonyms' => $dict->synonym()];
 }
+function api_get_stories() {
+    required_login();
+    $q = (new WP_Query([
+        'post_type'              => array( 'book' ),
+        'post_status'            => array( 'publish','draft' ),
+        'posts_per_page'		 => -1,
+        'author__in'             => [get_current_user_id()]
+    ]))->posts;
+    $stories = [];
+    foreach ($q as $k => $story) {
+        $stories[] = [
+            'ID'        => $story->ID,
+            'title'     => $story->post_title,
+            'fandom'    => implode('/',array_column(wp_get_object_terms( $story->ID, 'category' ),'name')),
+            'status'    => $story->post_status === 'publish' ? 'Published' : 'Unpublished',
+        ];
+    }
+    return ['code'=>1,'stories'=>$stories];
+}
+function api_publish_to_story() {
+    required_login();
+    required_params('chapter_title','draft_id','storyID');
+    $d = &$_POST['data'];
+    $story = get_post($d['storyID']);
+    if (! $story || $story->post_type !== 'book' || ! is_current_user($story->post_author)){
+        return ['code'=>7];
+    }
+    if (trim($d['chapter_title']) === "") {
+        return ['code'=>8];
+    }
+    $title = htmlspecialchars(substr($d['chapter_title'],0,80));
+    $chapter_id = draft_chapters::save($d['draft_id'],$story->ID,substr($d['chapter_title'],0,80));
+    if ($chapter_id === false) {
+        return ['code'=>9];
+    }
+    $chapter_num = count(published_chapters($story->ID,-1,'ids'));
+    update_post_meta( $chapter_id, 'chapter_order', $chapter_num );
+    return ['code'=>1,'new_chapter_link'=>'/story/'.$story->ID.'/'.$chapter_num];
+}
 // Preview
 function api_edit_and_save_draft() {
     required_login();

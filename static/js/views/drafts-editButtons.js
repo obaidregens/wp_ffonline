@@ -48,6 +48,22 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
         }
     }
 }));
+// Preview Button
+document.querySelector('toolbar').appendChild(DOM.create('button',{
+    attributes: {
+        action: 'preview'
+    },
+    listeners: {
+        click: () => {
+            const draft_id = document.querySelector('editor').getAttribute('draft_id');
+            if (draft_id === 'new') {
+                new toast('Your draft is');
+                return;
+            }
+            window.open('/drafts/' + draft_id + '/preview', '_blank');        
+        }
+    }
+}));
 // Share Button
 document.querySelector('toolbar').appendChild(DOM.create('button',{
     attributes: {
@@ -163,17 +179,8 @@ document.querySelector('button[label="Export"] > dropdown').addEventListener('cl
     }
     const draft_id = document.querySelector('editor').getAttribute('draft_id');
     if (draft_id === 'new') {
-        new toast('Save story first!');
+        new toast('This draft hasn\'t been saved.');
         return;
     }
     window.open('/drafts/' + draft_id + '/export/' + inner.toLowerCase(), '_blank');
-});
-// Preview Button
-document.querySelector('button[label="Preview"]').addEventListener('click', ({target}) => {
-    const draft_id = document.querySelector('editor').getAttribute('draft_id');
-    if (draft_id === 'new') {
-        new toast('Save story first!');
-        return;
-    }
-    window.open('/drafts/' + draft_id + '/preview', '_blank');
 });

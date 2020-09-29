@@ -87,6 +87,10 @@ const introSteps = {
             intro: "Collaborate on draft with others."
         },
         {
+            element: 'button[label="Publish"]',
+            intro: "Publish draft as chapter."
+        },
+        {
             element: 'editor',
             intro: "Press CTRL + D while writing to find similar words."
         },

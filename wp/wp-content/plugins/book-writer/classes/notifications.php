@@ -10,6 +10,7 @@ class notifications {
         'chapter_vote',
         'user_update',
         'follow_collection',
+        'story_update',
     ];
     protected static $priorities_map = false;
     static function getPriority($n) {
@@ -36,6 +37,16 @@ class notifications {
     }
     static function createNotification($row) {
         switch ($row->notification_type) {
+            case 'story_update':
+                $story = get_post($row->type_by_id);
+                if (! $story || $story->post_status !== 'publish' || $story->post_type !== 'book'){
+                    return null;
+                }
+                $chapter_num = get_post_meta( $row->type_of_id, 'chapter_order', true );
+                return [
+                    'message'   => '"' . $story->post_title . '" just got a new chapter!',
+                    'link'      => "https://fanfiction.online/story/" . $story->ID . '/' . $chapter_num ,
+                ];
             case 'account_verified':
                 return [
                     'message'   => "You've been verified. Start importing stories from FFN now!",
@@ -127,8 +138,19 @@ class notifications_insert extends notifications {
         if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
         }
+        $story = get_post($chapter->post_parent);
+        if (! $story || $story->post_type !== 'book' || $story->post_status !== 'publish') {
+            return false;
+        }
         $followers = follow::query_by('user','type_id',$chapter->post_author);
         $chapter_author = intval($chapter->post_author);
+        $args = [
+            'notification_type'     => 'story_update',
+            'type_of'               => 'chapter',
+            'type_of_id'            => $chapter->ID,
+            'type_by'               => 'story',
+            'type_by_id'            => $story->ID,
+        ];
         foreach ( $followers as $follower ) {
             if ( $chapter_author === intval($follower->user_id) ) {
                 continue;
@@ -136,9 +158,10 @@ class notifications_insert extends notifications {
             $args['user_id'] = $follower->user_id;
             self::insert($args);
         }
+        global $wpdb;
         $sql = $wpdb->prepare("
         SELECT follows.user_id as user_id FROM collection_books
-        INNER JOIN follows.type_id = collection_books.collection_id
+        INNER JOIN follows ON follows.type_id = collection_books.collection_id
         WHERE collection_books.book_id = %d
         AND follows.type = 'collection'
         AND follows.notifications = 'all'

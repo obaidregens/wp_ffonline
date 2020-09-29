@@ -4,6 +4,8 @@ $book_id = $book === 'new' ? 'new' : $book->ID;
 ?>
 <tags_data hidden><?= json_encode(get_data($book_id)); ?></tags_data>
 <exciting></exciting>
+<?php
+?>
 <stepper>
     <step>Story Details</step>
     <step>Story Tags</step>
@@ -13,6 +15,11 @@ $book_id = $book === 'new' ? 'new' : $book->ID;
 <book book_id="<?= $book_id; ?>"></book>
 <page page-num="4"></page>
 <submit>
+<?php
+if ($book_id !== 'new' && $book->post_status === 'publish') {
+    ?><a theme class="button" href="<?= get_permalink( $book_id ); ?>" label="View"></a><?php
+}
+?>
 <button theme label="Save"></button>
 </submit>
 <?php

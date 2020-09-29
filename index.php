@@ -718,7 +718,7 @@ $app->listen('/verify/:author_id',function($self){
     $self->footer();
     exit();
 });
-// Verify Account
+// Contact
 $app->listen('/contact',function($self){
     $self->type = 'contact';
     $self->type_id = 0;
@@ -726,6 +726,17 @@ $app->listen('/contact',function($self){
         'title'         => construct_page_title("Contact"),
     ]);
     $self->template('/views/contact');
+    $self->footer();
+    exit();
+});
+// Content Guidlines
+$app->listen('/guidelines',function($self){
+    $self->type = 'content-guidelines';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Content Guidelines"),
+    ]);
+    $self->template('/views/content-guidelines');
     $self->footer();
     exit();
 });

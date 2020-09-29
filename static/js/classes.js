@@ -80,7 +80,14 @@ themes.all = {
         backgroundAccent: "#ececec"
     }
 }
-themes.set(themes.current);
+var frewfrewgfre = (function(){
+    let currentTheme = themes.current;
+    if (! currentTheme) {
+        const userPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        currentTheme = userPrefersDark ? 'dark' : 'light';
+    }
+    themes.set(currentTheme);
+})();
 document.querySelector('html').classList.remove('force-dark');
 const DOM = class {
     static create(tagName,opts = {}){

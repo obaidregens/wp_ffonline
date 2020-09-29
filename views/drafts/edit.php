@@ -22,6 +22,9 @@ $app->bundle->js('js/views/drafts-editRevisions');
 $app->bundle->css('css/views/drafts-editButtons');
 $app->bundle->js('js/views/drafts-editButtons');
 $app->bundle->js('js/views/drafts-editPost');
+$app->bundle->js('js/views/drafts-editPublish');
+$app->bundle->css('css/views/drafts-editPublish');
+$app->bundle->css('css/views/story-content');
 $app->bundle->enqueue();
 $draft = $app->draft;
 $content = $draft === false ? '' : $draft->content;
@@ -38,7 +41,7 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 <save-time datetime="<?= $draft === false ? 0 : intval($draft->edited)*1000; ?>" ></save-time>
 <drafts-header>
 <a href="/drafts">Back to Drafts</a>
-<button label="Preview"></button>
+<button label="Publish"></button>
 <button class="dropdown" label="Export">
     <dropdown class="right">
         <a tabindex="0">FFN</a>
