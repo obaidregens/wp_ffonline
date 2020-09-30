@@ -52,11 +52,12 @@ $unread_count = array_column($wpdb->get_results(
 $mail = new email;
 foreach ($by_users as $notifications) {
     $prioritized = [];
-    foreach ($notifications as $not) {
+    foreach ($notifications as $k => $not) {
         $notification = notifications::createNotification($not);
         if ($notification === null) {continue;}
         $notification['ID'] = $not->ID;
-        $prioritized[notifications::getPriority($not->notification_type)] = $notification;
+        $pr = notifications::getPriority($not->notification_type);
+        $prioritized[$pr+$k] = $notification;
     }
     if (empty($prioritized)) {
         continue;

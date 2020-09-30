@@ -17,7 +17,7 @@ class notifications {
         if (self::$priorities_map === false) {
             self::$priorities_map = array_flip(self::$priorities);
         }
-        return self::$priorities_map[$n] ?? 10000000000000;
+        return self::$priorities_map[$n]*10000 ?? 99999999999999999999999999999999999999999999999999999999999999;
     }
     static function lastOpen($user = null) {
         if (! is_user_logged_in(  )) {return 0;}
@@ -37,6 +37,29 @@ class notifications {
     }
     static function createNotification($row) {
         switch ($row->notification_type) {
+            case 'add_to_collection':
+                $story = get_post($row->type_of_id);
+                if (! $story || $story->post_status !== 'publish' || $story->post_type !== 'book'){
+                    return null;
+                }
+                $collection = collection::get_by('ID',$row->type_by_id);
+                if (!$collection){
+                    return null;
+                }
+                if ($collection->type === 'Favorites'){
+                    $collection_author = get_userdata( $collection->author );
+                    $message = "@" . $collection_author->user_login . ' favorited your story "' . $story->post_title . '".';
+                }
+                else if ($collection->type === 'Public'){
+                    $message = '"' . $story->post_title . '" was added to the collection "' . $collection->title . '".';
+                }
+                else {
+                    return null;
+                }
+                return [
+                    'message'   => $message,
+                    'link'      => collection_helpers::link($collection) ,
+                ];
             case 'story_update':
                 $story = get_post($row->type_by_id);
                 if (! $story || $story->post_status !== 'publish' || $story->post_type !== 'book'){
@@ -62,10 +85,16 @@ class notifications {
                 if (! $comment ) {
                     return null;
                 }
-                $user_commented = get_userdata( $comment->user_id );
+                $message = 'An anonymous reviewer left a comment for you.';
+                $link = rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-0';
+                if (intval($comment->user_id) !== 0) {
+                    $user_commented = get_userdata( $comment->user_id );
+                    $message = "@" . $user_commented->user_login . " left a review for you.";
+                    $link = substr($link,0,strlen($link)-1) . $user_commented->ID;
+                }
                 return [
-                    'message'   => "@" . $user_commented->user_login . " left a review for you.",
-                    'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $user_commented->ID
+                    'message'   => $message,
+                    'link'      => $link
                 ];
             case 'review_reply':
                 $comment = get_comment($row->type_by_id);
@@ -177,6 +206,13 @@ class notifications_insert extends notifications {
     }
     function addReview($review_id) {
         $review = get_comment( $review_id );
+        $parent_0 = intval($review->comment_parent) === 0;
+        if (!$parent_0){
+            $parent_review = get_comment( $review->comment_parent );
+            if (intval($parent_review->user_id) === 0) {
+                return false;
+            }
+        }
         $chapter = get_post( $review->comment_post_ID );
         if ( !$review || !$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
@@ -187,14 +223,13 @@ class notifications_insert extends notifications {
         ) {
             return false;
         }
-        $parent_0 = intval($review->comment_parent) === 0;
         $args = [
             'notification_type' => $parent_0 ? 'chapter_review' : 'review_reply',
             'type_of'           => 'review',
             'type_of_id'        => $review,
             'type_by'           => $parent_0 ? 'chapter' : 'review',
             'type_by_id'        => $parent_0 ? $chapter->ID : $review->comment_parent,
-            'user_id'           => $parent_0 ? $chapter->post_author : get_comment( $review->comment_parent )->user_id
+            'user_id'           => $parent_0 ? $chapter->post_author : $parent_review->user_id
         ];
         self::insert($args);
     }
@@ -238,6 +273,31 @@ class notifications_insert extends notifications {
             $args['user_id'] = $follower->user_id;
             self::insert($args);
         }
+    }
+    function addToCollection($storyID, $by_collection_id) {
+        $story = get_post($storyID);
+        if (! $story || $story->post_type !== 'book' || $story->post_status !== 'publish'){
+            return false;
+        }
+        $by_collection = collection::get_by('ID',$by_collection_id);
+        if (! $by_collection ) {
+            return false;
+        }
+        if ( intval($by_collection->author) === intval($story->post_author) ) {
+            return false;
+        }
+        if ( ! in_array($by_collection->type,['Favorites','Public']) ){
+            return false;
+        }
+        $args = [
+            'notification_type' => 'add_to_collection',
+            'type_of'           => 'story',
+            'type_of_id'        => $story->ID,
+            'type_by'           => 'collection',
+            'type_by_id'        => $by_collection->ID,
+            'user_id'           => $story->post_author
+        ];
+        self::insert($args);
     }
     function followUser($user_id,$by_user_id) {
         $user = get_userdata($user_id);

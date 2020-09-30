@@ -52,6 +52,10 @@ function print_book_tags($book_id,$book_query) {
 }
 function print_book_meta($book_id) {
 	$collections = collection_books::query_by('book_id',$book_id);
+	$collections = collection::query([
+		'id_included'	=> array_column($collections,'collection_id'),
+		'types'			=> ['Favorites','Public'],
+	]);
 	?>
 	<book-meta>
 		<span tooltip-top="Updated"><?= get_the_time('',$book_id); ?></span>

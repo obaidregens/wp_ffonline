@@ -22,7 +22,8 @@ delete-container::before {
 .draggable--is-dragging delete-container {
     transform: translateY(0);
 }
-delete-container:hover::before {
+delete-container:hover::before,
+delete-container.draggable-dropzone--occupied::before {
     background-color: var(--red);
     color: var(--white);
 }

@@ -368,7 +368,7 @@ $app->listen('/@:user/collections/:collection',function($self){
     }
     if (strtolower($self->params['collection']) === 'favorites') {
         $collection = collection::query([
-            'authors_included'  => [$user->ID],
+            'author_included'  => [$user->ID],
             'types'             => ['Favorites']
         ]);
         if (empty($collection)) {return;}

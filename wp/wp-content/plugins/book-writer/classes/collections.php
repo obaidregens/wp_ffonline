@@ -202,6 +202,8 @@ class collection_books extends collection{
                 'time_added'      => time()
             ]
         );
+        $inst = new notifications_insert;
+        $inst->addToCollection($book, $collection);
     }
     static function remove($collection, $book) {
         global $wpdb;
