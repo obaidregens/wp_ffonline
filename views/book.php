@@ -5,6 +5,8 @@ $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->mix('search-options');
+$app->bundle->css('css/js-components/confirmation');
+$app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/index');
 $app->bundle->css('/css/components/floater');

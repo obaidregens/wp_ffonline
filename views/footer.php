@@ -1,6 +1,7 @@
 </main>
 <footer>
 	<nav>
+		<a href="/faq">FAQ</a>
 		<a href="/news">News</a>
 		<a href="/contact">Contact us</a>
 	</nav>

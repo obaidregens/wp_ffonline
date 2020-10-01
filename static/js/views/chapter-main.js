@@ -1,6 +1,6 @@
 const chapter_id = document.querySelector('chapter').getAttribute('chapter_id');
 // Reviews
-document.querySelector('reviews-wrapper').addEventListener('click',function(){
+document.querySelector('reviews-wrapper').addEventListener('click',function(event){
     if (event.target.parentNode.tagName.toLowerCase() !== 'dropdown'){
         return;
     }

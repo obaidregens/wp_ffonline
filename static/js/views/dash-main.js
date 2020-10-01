@@ -44,6 +44,12 @@ const si = DOM.create('sidenav',{
                 href: "/dash/contact"
             }
         }),
+        DOM.create("a",{
+            innerText: "FAQ",
+            attributes: {
+                href: "/dash/faq"
+            }
+        }),
     ],
 });
 sidenav.create(si);

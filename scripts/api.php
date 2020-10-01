@@ -41,6 +41,7 @@ $import = [
     'news',
     'import',
     'dash',
+    'faq',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
@@ -74,7 +75,15 @@ function required_admin(){
         exit();
     }
 }
-$reCAPTCHA_apis = ['login','login_with_code','signup','verify_code','contact','publish_review'];
+$reCAPTCHA_apis = [
+    'login',
+    'login_with_code',
+    'signup',
+    'verify_code',
+    'contact',
+    'publish_review',
+    'ask_question',
+];
 if ( in_array($_POST['action'] ?? [],$reCAPTCHA_apis) ){
     if (! isset($_POST['reCAPTCHA']) || verify_reCAPTCHA($_POST['reCAPTCHA'])['success'] != true){
         echo json_encode(array(

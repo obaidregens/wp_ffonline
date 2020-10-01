@@ -297,3 +297,8 @@ mark {
     background-color: var(--theme-color);
     color: var(--white);
 }
+blockquote {
+    margin: 20px 0;
+    border-left: 4px solid var(--theme-color);
+    padding: 20px;
+}

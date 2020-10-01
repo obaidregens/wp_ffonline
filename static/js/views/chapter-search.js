@@ -5,7 +5,7 @@ search_popup.addEventListener('onOpen',() => {
 });
 search_popup.addEventListener('onAfterClose',() => window.acsSwipeEnabled = true );
 window.addEventListener('keydown',function(event){
-    if (event.keyCode !== 70 || (! event.ctrlKey && !event.metaKey) ){
+    if (event.key.toLowerCase() !== 'f' || (! event.ctrlKey && !event.metaKey) ){
         return;
     }
     event.preventDefault();
@@ -22,6 +22,8 @@ function paraFromHash(){
     }
     const paraTo = document.querySelector(`chapter > content > p:nth-child(${paraNum})`);
     paraTo.scrollIntoView();
+    const ht = document.querySelector('html');
+    ht.scrollTop = ht.scrollTop - 55;
 }
 window.addEventListener('hashchange',paraFromHash);
 paraFromHash();

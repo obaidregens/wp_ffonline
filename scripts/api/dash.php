@@ -70,3 +70,10 @@ function api_reply_to_contact() {
     );
     return ['code'  => 1];
 }
+function api_reply_to_question() {
+    required_admin();
+    required_params('question_id','question','answer');
+    $d = &$_POST['data'];
+    questions::answer($d['question_id'],$d['answer'],$d['question']);
+    return ['code'=>1];
+}

@@ -19,6 +19,7 @@ $app->bundle->js('js/views/chapter-acs');
 $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
 $app->bundle->js('js/views/reviews-list');
+$app->bundle->js('js/views/chapter-tracking');
 $app->bundle->enqueue();
 
 $chapter = $app->chapter;
@@ -45,7 +46,7 @@ $query = (new WP_Query(array(
 $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 ?>
 <main>
-	<chapter chapter_id="<?= $chapter->ID; ?>">
+	<chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
 		<chapter-header tabindex="1" class="popup">
 			<book-info book_id="<?= $book->ID; ?>">
 				<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>

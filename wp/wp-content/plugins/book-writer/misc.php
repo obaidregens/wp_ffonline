@@ -1,5 +1,10 @@
 <?php
-
+function sqlPlaceholder($a,$type = '%s') {
+	return implode(',',array_fill(0,count($a),$type));
+}
+function millitime(){
+	return round(microtime(true) * 1000);
+}
 // Author Link
 add_filter( 'author_link', function($link,$author_id,$author_nicename){
 	return home_url( '@' ) . get_the_author_meta( 'user_login', $author_id );

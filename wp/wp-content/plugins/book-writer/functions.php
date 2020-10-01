@@ -248,6 +248,23 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+	$questions_table = "CREATE TABLE questions (
+		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`email`				VARCHAR(300) NOT NULL ,
+		`user_id`			BIGINT NOT NULL ,
+		`for_user`			BIGINT NOT NULL ,
+		`status`			VARCHAR(20) NOT NULL,
+		`category`			VARCHAR(200) NOT NULL,
+		`question`			TEXT NOT NULL ,
+		`answer`			TEXT NOT NULL ,
+		`landing_id`		BIGINT NOT NULL ,
+		`asked_millitime`	BIGINT UNSIGNED NOT NULL ,
+		`replied_millitime`	BIGINT UNSIGNED NOT NULL ,
+		`deleted_millitime`	BIGINT UNSIGNED NOT NULL ,
+		`is_anonymous`		TINYINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -284,6 +301,8 @@ function run_at_activation(){
 	dbDelta( $notifications_table );
 	// Chats
 	dbDelta( $chats_table );
+
+	dbDelta( $questions_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -329,6 +348,7 @@ $includes = array(
 	'classes/tags',
 	'classes/follow',
 	'classes/vote',
+	'classes/questions',
 );
 foreach($includes as $include){
 	require ($include . '.php');

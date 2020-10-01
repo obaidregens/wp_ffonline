@@ -1,0 +1,26 @@
+questions {
+    display: flex;
+    border: 1px solid var(--grey);
+    padding: 10px;
+    width: 100%;
+    flex-direction: column;
+}
+questions > question-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+question-wrapper > * {
+    margin: 10px 0;
+    display: flex;
+}
+reply:not(.show) {
+    display: none;
+}
+button[label="Reply"] {
+    display: block;
+    margin-left: auto;
+}
+popup[change_question] > button {
+    display: block;
+    margin-left: auto;
+}

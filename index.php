@@ -202,6 +202,17 @@ $app->listen('/dash',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/dash/faq',function($self){
+    $self->admin();
+    $self->type = 'dash-faq';
+    $self->type_id = 0;
+    $self->header([
+        'title'     => construct_page_title("Dash FAQ")
+    ]);
+    $self->template('/views/dash/faq');
+    $self->footer();
+    exit();
+});
 $app->listen('/dash/tags',function($self){
     $self->admin();
     $self->type = 'dash-tags';
@@ -737,6 +748,32 @@ $app->listen('/guidelines',function($self){
         'title'         => construct_page_title("Content Guidelines"),
     ]);
     $self->template('/views/content-guidelines');
+    $self->footer();
+    exit();
+});
+// FAQ
+$app->listen('/faq',function($self){
+    $self->type = 'faq';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("FAQ")
+    ]);
+    $self->template('/views/faq/home');
+    $self->footer();
+    exit();
+});
+$app->listen('/faq/:q',function($self){
+    $q = questions::get($self->params["q"]);
+    if ($q === false) {
+        return;
+    }
+    $self->faq_question = $q;
+    $self->type = 'faq-' . $q->ID;
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("FAQ"),
+    ]);
+    $self->template('/views/faq/single');
     $self->footer();
     exit();
 });

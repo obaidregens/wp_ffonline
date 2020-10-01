@@ -36,7 +36,7 @@ class chats {
                 'to'                => $to,
                 'status'            => 'sent',
                 'message'           => $message,
-                'milli_timestamp'   => intval(microtime(true)*1000)
+                'milli_timestamp'   => millitime()
             ]
         );
         $this->ID = $wpdb->insert_id;

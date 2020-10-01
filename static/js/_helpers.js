@@ -33,6 +33,13 @@ class _ {
     static camelToHyphen(key) {
         return key.replace( /([A-Z])/g, "-$1").toLowerCase();
     }
+    static scrollEnd(func) {
+        let scrollingTimer = 0;
+        window.addEventListener('scroll', function ( event ) {
+            clearTimeout( scrollingTimer );
+            scrollingTimer = setTimeout(func, 100);
+        }, {capture: false,passive: true});
+    }
     static interact (func){
         if (! func){
             return false;
