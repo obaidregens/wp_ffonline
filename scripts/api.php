@@ -42,6 +42,7 @@ $import = [
     'import',
     'dash',
     'faq',
+    'poll',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

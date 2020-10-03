@@ -21,10 +21,13 @@ function handle_all_breaking_errors($a = 1) {
         }
         </style>
         <script>
-        setInterval(() => fetch('/').then((res) => {
+        const intID = setInterval(() => fetch('/').then((res) => {
             const isT = res.headers.has('x-is-still-in-temp');
             if (! isT) {
-                window.location.reload();
+                clearInterval(intID);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 3000);
             }
         }), 1000);</script>
     </head>

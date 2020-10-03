@@ -1,0 +1,61 @@
+poll {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+}
+poll-description {
+    display: flex;
+    margin: 10px 0;
+}
+poll-options {
+    display: flex;
+    flex-direction: column;
+}
+poll-option {
+    display: flex;
+    padding: 7px;
+    border-radius: 5px;
+    margin: 5px 0;
+    font-size: 0.9rem;
+    user-select: none;
+    color: var(--lightblack);
+    transition: background-color .2s;
+    position: relative;
+    border: 2px solid var(--grey);
+}
+poll-options:not([results]) > poll-option {
+    cursor: pointer;
+}
+poll-options:not([results]) > poll-option:hover {
+    background-color: var(--hover);
+}
+poll-options[results] > poll-option {
+    border-color: transparent;
+}
+poll-options[results] > poll-option::before {
+    content: "";
+    background-color: var(--theme-color);
+    position: absolute;
+    height: 100%;
+    top: 0px;
+    left: 0;
+    transition: width .3s;
+    width: calc(var(--percentage) * 1%);
+    opacity: 0.5;
+    border-radius: 3px 10px 10px 3px;
+}
+poll-options[results] > poll-option::after {
+    counter-reset: perc var(--percentage);
+    content: counter(perc) "%";
+    position: absolute;
+    right: 10px;
+}
+poll-meta {
+    margin-top: 5px;
+    color: var(--lightblack);
+    font-size: 0.9rem;
+}
+poll-meta > single:not(:first-child)::before {
+    content: " - ";
+}

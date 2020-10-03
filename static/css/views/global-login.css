@@ -10,6 +10,8 @@ popup[login] > form,
 popup[signup] > form,
 popup[forgot] > form,
 popup[email_code] > form {
+    display: flex;
+    flex-direction: column;
     text-align: left;
     margin-bottom: 15px;
 }

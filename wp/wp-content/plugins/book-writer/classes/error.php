@@ -9,6 +9,9 @@ class err {
     function __construct(){
         $this->errors = [];
     }
+    function filled_string($name,$v) {
+        return is_string($v) && trim($v) !== "" ? $this : $this->add($name,"$name can't be empty");
+    }
     function is_required($params,$args){
         foreach ($params as $param) {
             if (!isset($args[$param])) {

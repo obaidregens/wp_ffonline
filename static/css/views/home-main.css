@@ -28,6 +28,9 @@ footer {
 main {
     max-width: unset;
 }
+.onepage-pagination {
+    top: calc(50% - 70px);
+}
 .onepage-pagination li a::before {
     width: 6px;
     height: 6px;

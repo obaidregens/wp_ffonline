@@ -265,6 +265,33 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+	$polls_table = "CREATE TABLE polls (
+		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`user_id`			BIGINT NOT NULL ,
+		`description`		TEXT NOT NULL ,
+		`status`			VARCHAR(20) NOT NULL ,
+		`created_milli`		BIGINT NOT NULL ,
+		`deleted_milli`		BIGINT NOT NULL ,
+		`expire_in`			BIGINT NOT NULL,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
+	$poll_options_table = "CREATE TABLE poll_options (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`poll_id`			BIGINT UNSIGNED NOT NULL ,
+		`title`				VARCHAR(50) NOT NULL ,
+		UNIQUE (`poll_id`,`title`) ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
+	$poll_votes_table = "CREATE TABLE poll_votes (
+		`poll_id`			BIGINT UNSIGNED NOT NULL ,
+		`option_id`			BIGINT NOT NULL ,
+		`user_id`			BIGINT NOT NULL ,
+		`voted_millitime`	BIGINT NOT NULL ,
+		PRIMARY KEY (`poll_id`,`user_id`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -301,8 +328,12 @@ function run_at_activation(){
 	dbDelta( $notifications_table );
 	// Chats
 	dbDelta( $chats_table );
-
+	// Questions
 	dbDelta( $questions_table );
+	// Polls
+	dbDelta( $polls_table );
+	dbDelta( $poll_options_table );
+	dbDelta( $poll_votes_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -349,6 +380,7 @@ $includes = array(
 	'classes/follow',
 	'classes/vote',
 	'classes/questions',
+	'classes/poll',
 );
 foreach($includes as $include){
 	require ($include . '.php');
