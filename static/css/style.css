@@ -16,13 +16,6 @@
 
     --font: 'Varela Round';
 }
-html.force-dark {
-    /* Dark Theme On Load*/
-    --theme-color: #265f86;
-    --text-color: #b7bfc4;
-    --background-color: #121212;
-    --background-accent: #212020;    
-}
 /* Colors */
 :root {
     --red: #bd3535;

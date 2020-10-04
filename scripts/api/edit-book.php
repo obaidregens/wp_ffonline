@@ -49,7 +49,7 @@ function api_edit_book() {
 
     // Chapter
     $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
-    $old_chapter_ids =  array_map('strval',published_chapters($book->ID,-1,'ids'));
+    $old_chapter_ids = array_map('strval',published_chapters($book->ID,-1,'ids'));
     $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
     $old_chapters_lookup = array_flip($old_chapter_ids);
     $chapter_ids_order = [];
@@ -72,18 +72,8 @@ function api_edit_book() {
         }
         $publish = false;
     }
-    global $wpdb;
     foreach ($to_remove as $chapter_id ) {
-        delete_post_meta( $chapter_id, 'chapter_order' );
-        $wpdb->update(
-            'wp_posts',
-            [
-                'post_status'   => 'trash'
-            ],
-            [
-                'ID'            => $chapter_id
-            ]
-        );
+        wp_delete_post( $chapter_id, true );
     }
     foreach ($chapter_ids_order as $k => $chapter_id) {
         update_post_meta( $chapter_id, 'chapter_order', $k+1 );
@@ -98,6 +88,7 @@ function api_edit_book() {
         'rating'    => [true],
         'language'  => [true]
     ];
+    $selectedFandomIds = [];
     foreach ($simple_tags as $tagName => $bnc) {
         $required = $bnc[0];
         $maxSelect = $bnc[1] ?? 1;
@@ -109,6 +100,9 @@ function api_edit_book() {
         foreach ( (empty($d[$tagName]) ? [] : array_slice($d[$tagName],0,$maxSelect) ) as $key => $tagObj) {
             $tagIds[] = intval($tagObj['value']);
         }
+        if ( $tagName === 'fandom' ) {
+            $selectedFandomIds = $tagIds;
+        }
         wp_set_post_terms( $d['book_id'], $tagIds, $tagName === 'fandom' ? 'category' : $tagName );
     }
 
@@ -118,6 +112,9 @@ function api_edit_book() {
     $charNames = [];
     foreach ( (empty($d['characters']) ? [] : array_slice($d['characters'],0,$max_characters) ) as $k => $character_obj) {
         $f = intval($character_obj['fandom']);
+        if ( !in_array($f,$selectedFandomIds) ) {
+            continue;
+        }
         $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));
         $charNames[$f . '>>>' . $character_obj['label']] = $char_id;
         $charIds[] = $char_id;
@@ -154,7 +151,7 @@ function api_edit_book() {
     wp_set_post_terms( $d['book_id'], $tag, 'tag' );
 
     // Update Book
-
+    global $wpdb;
     $wpdb->update(
         'wp_posts',
         [

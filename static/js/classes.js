@@ -88,7 +88,11 @@ var frewfrewgfre = (function(){
     }
     themes.set(currentTheme);
 })();
-document.querySelector('html').classList.remove('force-dark');
+document.querySelector('loading-shadow').classList.add('hide');
+setTimeout(() => {
+    document.querySelector('loading-shadow + style').remove();
+    document.querySelector('loading-shadow').remove();    
+},400);
 const DOM = class {
     static create(tagName,opts = {}){
         return DOM.update(document.createElement(tagName),opts);

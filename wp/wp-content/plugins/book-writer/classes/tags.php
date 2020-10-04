@@ -7,10 +7,10 @@ class pairing {
         if (count($characters) < 2) {
             return false;
         }
-        sort($characters);
         global $wpdb;
         $r = $wpdb->get_results("SELECT * FROM character_pairings");
         $characters = array_map('strval',$characters);
+        sort($characters);
         $n = [];
         foreach ($r as $k => $row) {
             $n[$row->pairing_id] = $n[$row->pairing_id] ?? [];
@@ -21,7 +21,7 @@ class pairing {
             sort($characters_of);
             if ($characters === $characters_of) {
                 $pp = $pairing_id;
-            break;
+                break;
             }
         }
         // Pairing ID Got

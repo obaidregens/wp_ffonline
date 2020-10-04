@@ -15,9 +15,8 @@ $is_user_logged_in = is_user_logged_in();
 $current_user = get_userdata( get_current_user_id() );
 ?>
 <!DOCTYPE html>
-<html lang="en" <?php if ($_COOKIE['theme'] ?? 'light' === 'dark'){ ?>class="force-dark"<?php } ?> >
+<html lang="en" >
     <head>
-		<style>html.force-dark {background-color: #121212;}</style>
         <meta charset="UTF-8"></meta>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= $app->header_options['title']; ?></title>
@@ -56,6 +55,13 @@ $current_user = get_userdata( get_current_user_id() );
 		<meta name="color-scheme" content="dark light">
     </head>
     <body>
+		<loading-shadow>
+			<div class="dot-loader"></div>
+			<div class="dot-loader dot-loader--2"></div>
+			<div class="dot-loader dot-loader--3"></div>
+		</loading-shadow>
+		<style>loading-shadow.hide{opacity: 0;}loading-shadow{transition: opacity .3s;-webkit-box-flex:0;-ms-flex:0 0 25%;flex:0 0 25%;margin:0;position:relative;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;align-items:center;overflow:hidden}loading-shadow{position:fixed;top:0;left:0;height:100vh;width:100vw;z-index:1000;background-color:<?= (($_COOKIE['theme'] ?? 'light') === 'dark') ? "#121212" : "#fdfdfd"?>}.dot-loader{height:20px;width:20px;border-radius:50%;background-color:<?= (($_COOKIE['theme'] ?? 'light') === 'dark') ? "#265f86" : "#007ACC"?>;position:relative;-webkit-animation:1.2s grow ease-in-out infinite;animation:1.2s grow ease-in-out infinite}.dot-loader--2{-webkit-animation:1.2s grow ease-in-out infinite .15555s;animation:1.2s grow ease-in-out infinite .15555s;margin:0 20px}.dot-loader--3{-webkit-animation:1.2s grow ease-in-out infinite .3s;animation:1.2s grow ease-in-out infinite .3s}@-webkit-keyframes grow{0%,100%,40%{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes grow{0%,100%,40%{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}</style>
+
         <nonce hidden><?= $nonce; ?></nonce>
 	    <placeholder_data hidden><?= $landing_key; ?></placeholder_data>
 	    <logged_in hidden value="<?= $is_user_logged_in ? 'true' : 'false'; ?>"></logged_in>
