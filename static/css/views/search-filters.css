@@ -170,8 +170,11 @@ tag_list > label.checkbox:hover {
     background-color: var(--hover);
 }
 /* Async popup */
-popup.async tag_list:empty::before {
-    content: "Search to see tags";
+popup[tag-name="character"].async tag_list:empty::before {
+    content: "Start typing to see characters";
+}
+popup[tag-name="pairing"].async tag_list:empty::before {
+    content: "Start typing to see pairings";
 }
 popup.async.no-results tag_list:empty::before {
     content: "No tags found";

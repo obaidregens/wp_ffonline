@@ -134,6 +134,7 @@ const async_tags = () => {
         if (! current_popup ){
             return;
         }
+        current_popup.classList.remove('no-results');
         const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
         const tag_name = current_popup.getAttribute('tag-name');
         const this_tags = tags_data[tag_name] || {};
@@ -141,6 +142,9 @@ const async_tags = () => {
         const res = await api('load_' + tag_name,{
             data: {s}
         });
+        if (s !== "" && res.tags.length === 0) {
+            current_popup.classList.add('no-results');
+        }
         const tags_list = current_popup.querySelector('tag_list');    
         const unchecked = tags_list.querySelectorAll('label.checkbox > input:not(:checked)');
         const checked_ids = [...tags_list.querySelectorAll('label.checkbox > input:checked')].map(el => {
@@ -159,7 +163,7 @@ const async_tags = () => {
                         }
                     }),
                     DOM.create('text',{
-                        innerText: `${name} (${this_tags[ID].count})`
+                        innerText: `${name} (${this_tags[ID].count || 0})`
                     }),
                 ]
             }));
