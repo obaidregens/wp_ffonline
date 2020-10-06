@@ -160,9 +160,6 @@ tag_list:empty::before {
     display: block;
     margin: 18px;
 }
-popup[tag-name="character"] div.glide__track > ul {
-    margin: 0;
-}
 tag_list > label.checkbox {
     display: block;
     padding: 11px 10px 9px 10px;
@@ -172,40 +169,10 @@ tag_list > label.checkbox {
 tag_list > label.checkbox:hover {
     background-color: var(--hover);
 }
-popup[tag-name="character"] > div > div:nth-child(1) {
-    margin: 10px 0;
-    position: relative;
+/* Async popup */
+popup.async tag_list:empty::before {
+    content: "Search to see tags";
 }
-popup[tag-name="character"] > div > div:nth-child(1)::before {
-    content: attr(fandom);
-    display: block;
-    position: relative;
-    width: 100%;
-    top: 25px;
-    text-align: center;
-    margin-top: -25px;
-}
-popup[tag-name="character"] > div > div:nth-child(1) > button {
-    border: none;
-}
-popup[tag-name="character"] > div > div:nth-child(1) > button:hover {
-    background-color: var(--hover);
-}
-popup[tag-name="character"] > div:nth-child(1) > button[data-glide-dir="<"] {
-    float: left;
-}
-popup[tag-name="character"] > div > div:nth-child(1) > button[data-glide-dir="<"]::before {
-    font-family: 'icons';
-    content: '\e902';
-}
-popup[tag-name="character"] > div > div:nth-child(1) > button[data-glide-dir=">"] {
-    float: right;
-}
-popup[tag-name="character"] > div > div:nth-child(1) > button[data-glide-dir=">"]::before {
-
-    font-family: 'icons';
-    content: '\e903';
-}
-.glide__slide:not(.glide__slide--active) {
-    height: 0;
+popup.async.no-results tag_list:empty::before {
+    content: "No tags found";
 }

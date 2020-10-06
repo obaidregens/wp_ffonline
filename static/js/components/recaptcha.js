@@ -1,5 +1,4 @@
 function init_reCAPTCHA(){
-    window.innerWidth = 512;
     const reCAPTCHA_sitekey = '6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth';
     const captcha_elems = document.querySelectorAll('reCAPTCHA');
     for (let i = 0; i < captcha_elems.length; i++) {

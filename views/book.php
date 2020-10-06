@@ -9,6 +9,7 @@ $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/index');
+$app->bundle->css('css/components/tooltips');
 $app->bundle->css('/css/components/floater');
 $app->bundle->css('css/views/search-tags');
 $app->bundle->js('js/views/book-main');

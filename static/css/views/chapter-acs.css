@@ -79,6 +79,8 @@ change-options > button:first-child::before {
 	content: '\e917';
 }
 change-options > button:last-child::before {
+	display: inline-block;
+	transform: scale(1.4);
 	content: '\e916';
 }
 /* Fonts */

@@ -77,3 +77,21 @@ function api_vote_chapter() {
     vote::unvote('chapter',$chapter->ID);
     return ['code'=>2];
 }
+function api_offline_chapter() {
+    required_params('chapter_id');
+    $d = &$_POST['data'];
+    $chapter = get_post($d['chapter_id']);
+    if (!$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish' ) {
+        return ['code'=>10];
+    }
+    $chapter_num = get_post_meta( $chapter->ID, 'chapter_order', true );
+    offline_stats::new([
+        'type'          => 'offline',
+        'landing_id'    => $_POST['landing_id'],
+        'story_id'      => $chapter->post_parent,
+        'chapter_id'    => $chapter->ID,
+        'chapter_num'   => $chapter_num,
+        'stat_millitime'=> millitime(),
+    ]);
+    return ['code'=>1];
+}

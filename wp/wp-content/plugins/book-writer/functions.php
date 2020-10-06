@@ -292,6 +292,18 @@ function run_at_activation(){
 		PRIMARY KEY (`poll_id`,`user_id`)
 	) $charset_collate;";
 
+	$offline_stats_table = "CREATE TABLE offline_stats (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`type`				VARCHAR(20) NOT NULL ,
+		`landing_id`		BIGINT NOT NULL ,
+		`story_id`			BIGINT NOT NULL ,
+		`chapter_id`		BIGINT NOT NULL ,
+		`chapter_num`		BIGINT NOT NULL ,
+		`stat_millitime`	BIGINT NOT NULL ,
+		`added_millitime`	BIGINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -334,6 +346,8 @@ function run_at_activation(){
 	dbDelta( $polls_table );
 	dbDelta( $poll_options_table );
 	dbDelta( $poll_votes_table );
+	// Offline
+	dbDelta( $offline_stats_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -381,6 +395,7 @@ $includes = array(
 	'classes/vote',
 	'classes/questions',
 	'classes/poll',
+	'classes/offline_stats',
 );
 foreach($includes as $include){
 	require ($include . '.php');

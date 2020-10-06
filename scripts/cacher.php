@@ -9,5 +9,5 @@ $cache->sort();
 $cache->pairings();
 $cache->author();
 $cache->tag_names();
-$cache->pairing_tag_names();
 $cache->ffn_author();
+$cache->pairing_tag_names();

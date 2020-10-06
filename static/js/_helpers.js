@@ -1,4 +1,15 @@
 class _ {
+    static debounce (func, wait = 600) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
     static isHammerSwipe(event){
         const angle = event.type === "panright" ? Math.abs(event.angle) : 180 - Math.abs(event.angle);
         return angle < 20 && event.isFinal && event.distance > 20;

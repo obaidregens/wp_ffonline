@@ -20,6 +20,7 @@ $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
 $app->bundle->js('js/views/reviews-list');
 $app->bundle->js('js/views/chapter-tracking');
+$app->bundle->js('js/views/chapter-offline');
 $app->bundle->enqueue();
 
 $chapter = $app->chapter;
@@ -45,57 +46,56 @@ $query = (new WP_Query(array(
 )))->posts;
 $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 ?>
-<main>
-	<chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
-		<chapter-header tabindex="1" class="popup">
-			<book-info book_id="<?= $book->ID; ?>">
-				<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>
-				<author><?= author_href($chapter->post_parent); ?></author>
-				<book-description hidden><?= $book->post_excerpt; ?></book-description>
-			</book-info>
-			<div class="down-arrow"></div>
-		</chapter-header>
-		<popup>
-			<?= $app->template('/subviews/chapter-index'); ?>
-		</popup>
-		<chapter-title><?= $chapter->post_title; ?></chapter-title>
-		<content class="acs-elem"><?= $chapter->post_content; ?></content>
-		<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
-		<book-options>
-			<collections_data hidden>
-				<?= json_encode(collection_helpers::js_data()) ?>
-			</collections_data>
-			<book_collections hidden>
-				<?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
-			</book_collections>
-			<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
-			<button class="book-collections"></button>
-			<button class="book-share"></button>
-		</book-options>
-	</chapter>
-	<reviews-wrapper></reviews-wrapper>
-	<?php if ( reviews::can_review($chapter->ID)  ){	?>
-		<write-review>
-			<reply-to hidden review_id="0"></reply-to>
-			<text-input type="multi" label="Write Review"></text-input>
-			<reCAPTCHA></reCAPTCHA>
-			<button label="Submit"></button>
-		</write-review>
-	<?php }	else if ($comments_open && ! $is_user_logged_in) { ?>
-		<a onclick="prompt_login();">Anonymous reviews have been disabled. Login to review.</a>
-	<?php }	else if (! $comments_open) { ?>
-		<text>Reviews are closed.</text>
-	<?php } ?>
-	<button class="search-button popup"></button>
+<chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
+	<chapter-header tabindex="1" class="popup">
+		<book-info book_id="<?= $book->ID; ?>">
+			<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>
+			<author><?= author_href($chapter->post_parent); ?></author>
+			<book-description hidden><?= $book->post_excerpt; ?></book-description>
+		</book-info>
+		<div class="down-arrow"></div>
+	</chapter-header>
 	<popup>
-		<form>
-			<text-input label="Search"></text-input>
-			<button></button>
-		</form>
-		<results></results>
-		<loader medium></loader>
+		<?= $app->template('/subviews/chapter-index'); ?>
 	</popup>
-</main>
+	<chapter-title><?= $chapter->post_title; ?></chapter-title>
+	<content class="acs-elem"><?= $chapter->post_content; ?></content>
+	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
+	<book-options>
+		<collections_data hidden>
+			<?= json_encode(collection_helpers::js_data()) ?>
+		</collections_data>
+		<book_collections hidden>
+			<?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
+		</book_collections>
+		<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
+		<button class="book-collections"></button>
+		<button class="book-share"></button>
+		<button class="book-offline"></button>
+	</book-options>
+</chapter>
+<reviews-wrapper></reviews-wrapper>
+<?php if ( reviews::can_review($chapter->ID)  ){	?>
+	<write-review>
+		<reply-to hidden review_id="0"></reply-to>
+		<text-input type="multi" label="Write Review"></text-input>
+		<reCAPTCHA></reCAPTCHA>
+		<button label="Submit"></button>
+	</write-review>
+<?php }	else if ($comments_open && ! $is_user_logged_in) { ?>
+	<a onclick="prompt_login();">Anonymous reviews have been disabled. Login to review.</a>
+<?php }	else if (! $comments_open) { ?>
+	<text>Reviews are closed.</text>
+<?php } ?>
+<button class="search-button popup"></button>
+<popup>
+	<form>
+		<text-input label="Search"></text-input>
+		<button></button>
+	</form>
+	<results></results>
+	<loader medium></loader>
+</popup>
 <?php
 $bundle = new bundle('react-ps');
 $bundle->mix('react');

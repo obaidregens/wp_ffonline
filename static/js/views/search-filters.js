@@ -1,12 +1,5 @@
-function setSelectedTags(tag_name,selected){
+const setSelectedTags = (tag_name,selected) => {
     let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name] || {};
-    if (tag_name === 'character'){
-        const character_entries = Object.values(tags_data);
-        tags_data = {};
-        for (let i = 0; i < character_entries.length; i++) {
-            tags_data = Object.assign(tags_data,character_entries[i]);
-        }
-    }
     const frag = document.createDocumentFragment();
     const select_tag = document.querySelector(`select-tag[name="${tag_name}"]`);
     select_tag.setAttribute('selected',JSON.stringify(selected));
@@ -26,7 +19,7 @@ function setSelectedTags(tag_name,selected){
     select_tag.innerText = '';
     select_tag.appendChild(frag);
 }
-const replaceTags = function(sort = 'count'){
+const replaceTags = (sort = 'count') => {
     function sort_tags(tags,sort){
         const this_tag_ids = Object.keys(tags);
         const sortFunc = sort === 'alphabetical' ? function(a, b){
@@ -71,27 +64,41 @@ const replaceTags = function(sort = 'count'){
         }
         return fragment;
     }
-    const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
     const current_popup = document.querySelector('popup[tag-name].show');
     if (! current_popup ){
         return;
     }
+    const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
     const tag_name = current_popup.getAttribute('tag-name');
-    let this_tags = tags_data[tag_name] || {};
-    if (tag_name === 'character'){
-        const fandom_ID = document.querySelector('popup[tag-name="character"] .glide__slide.glide__slide--active').getAttribute('value');
-        this_tags = tags_data.character[fandom_ID] || {};
-    }
+    const this_tags = tags_data[tag_name] || {};
     const this_tag_ids = sort_tags(this_tags, sort);
-    const chkbx = tags_checkboxes_fragment(this_tags,this_tag_ids);
+    const chkbx = async_tag_names.includes(tag_name) ? document.createDocumentFragment() : tags_checkboxes_fragment(this_tags,this_tag_ids);
     // Selection
     const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
     const selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
     const _mixed = selected.included.concat(selected.excluded);
     for (let m = 0; m < _mixed.length; m++) {
-        const elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
+        let elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
         if (! elem_){
-            continue;
+            const tag = this_tags[_mixed[m]];
+            if ( !tag ) {
+                continue;
+            }
+            chkbx.appendChild(DOM.create('label',{
+                classes: ['checkbox'],
+                children: [
+                    DOM.create('input',{
+                        attributes: {
+                            type: 'checkbox',
+                            value: _mixed[m],
+                        }
+                    }),
+                    DOM.create('text',{
+                        innerText: tag.name + ' (' + tag.count + ')'
+                    })
+                ]
+            }));
+            elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
         }
         elem_.checked = true;
         if (selected.excluded.includes(_mixed[m])){
@@ -99,14 +106,10 @@ const replaceTags = function(sort = 'count'){
         }
     }
     let insert_into = document.querySelector(`popup[tag-name="${tag_name}"] > tag_list`);
-    if (tag_name === 'character'){
-        insert_into = document.querySelector('popup[tag-name="character"] .glide__slide.glide__slide--active > tag_list');
-    }
     insert_into.innerText = '';
     insert_into.appendChild(chkbx);
-
 }
-function saveSelectedTags(){
+const saveSelectedTags = () => {
     const _pop_ = document.querySelector('popup[tag-name].show');
     if (! _pop_){
         return;
@@ -115,17 +118,6 @@ function saveSelectedTags(){
     let tag_list = _pop_.querySelector('tag_list');
     let fandom_ID = null;
     const selected = {included: [], excluded: []};
-    if (tag_name === 'character'){
-        const tags_wrapper = _pop_.querySelector('.glide__track > ul > .glide__slide.glide__slide--active');
-        fandom_ID = tags_wrapper.getAttribute('value');
-        tag_list = tags_wrapper.querySelector('tag_list');
-        const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
-        const characters = Object.keys(tags_data['character'][fandom_ID] || {});
-        const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
-        const old_selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
-        selected.included = _a.diff(old_selected.included,characters);
-        selected.excluded = _a.diff(old_selected.excluded,characters);
-    }
     const inputs = tag_list.querySelectorAll(' label.checkbox > input:checked');
     for (let i = 0; i < inputs.length; i++) {
         const input = inputs[i];
@@ -135,67 +127,55 @@ function saveSelectedTags(){
     setSelectedTags(tag_name,selected);
     tag_list.innerText = '';
 }
-function create_tags_popup(tag_name){
-    let popup_content = DOM.create('tag_list');
-    if (tag_name === 'character'){
-        const slide_wrapper = DOM.create('ul',{
-            classes: ['glide__slides']
-        });
-        const fandom_entries = Object.entries(JSON.parse(document.querySelector('tags_data').innerText)['fandom']);
-        for (let i = 0; i < fandom_entries.length; i++) {
-            const fandom_ID = fandom_entries[i][0];
-            const fandom_name = fandom_entries[i][1].name;
-            const slide = DOM.create('li',{
-                classes: ['glide__slide'],
-                attributes: {
-                    label: fandom_name,
-                    value: fandom_ID
-                },
-                children: [
-                    DOM.create('tag_list')
-                ]
-            });
-            slide_wrapper.appendChild(slide);
+const async_tag_names = ['pairing','character'];
+const async_tags = () => {
+    return new Promise( async (resolve,reject) => {
+        const current_popup = document.querySelector('popup[tag-name].show');
+        if (! current_popup ){
+            return;
         }
-        const glide = DOM.create('div',{
-            classes: ['glide'],
-            children: [
-                DOM.create('div',{
-                    attributes: {
-                        "data-glide-el": "controls"
-                    },
-                    children: [
-                        DOM.create('button',{
-                            attributes: {
-                                "data-glide-dir": "<"
-                            }
-                        }),
-                        DOM.create('button',{
-                            attributes: {
-                                "data-glide-dir": ">"
-                            }
-                        })
-                    ]
-                }),
-                DOM.create('div',{
-                    classes: ['glide__track'],
-                    attributes: {
-                        "data-glide-el": "track"
-                    },
-                    children: [
-                        slide_wrapper
-                    ]
-                })
-            ]
+        const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
+        const tag_name = current_popup.getAttribute('tag-name');
+        const this_tags = tags_data[tag_name] || {};
+        const s = current_popup.querySelector('wrap > text-input > input').value;
+        const res = await api('load_' + tag_name,{
+            data: {s}
         });
-        popup_content = glide;
-    }
+        const tags_list = current_popup.querySelector('tag_list');    
+        const unchecked = tags_list.querySelectorAll('label.checkbox > input:not(:checked)');
+        const checked_ids = [...tags_list.querySelectorAll('label.checkbox > input:checked')].map(el => {
+            return el.getAttribute('value');
+        });
+        unchecked.forEach(v => v.parentElement.remove());
+        res.tags.forEach(({ID,name}) => {
+            if (checked_ids.includes(ID)){return;}
+            tags_list.appendChild(DOM.create('label',{
+                classes: ['checkbox'],
+                children: [
+                    DOM.create('input',{
+                        attributes: {
+                            type: 'checkbox',
+                            value: ID,
+                        }
+                    }),
+                    DOM.create('text',{
+                        innerText: `${name} (${this_tags[ID].count})`
+                    }),
+                ]
+            }));
+        });
+        resolve("");
+    });
+}
+const create_tags_popup = (tag_name) => {
+    let popup_content = DOM.create('tag_list');
     let _popup = DOM.create('popup',{
+        classes: async_tag_names.includes(tag_name) ? ['async'] : [],
         attributes: {
             "tag-name": tag_name
         },
         listeners: {
-            change: function(){
+            change: function(event){
                 if (
                     event.target.tagName.toLowerCase() === 'input' &&
                     event.target.getAttribute('type') === 'checkbox'
@@ -212,7 +192,7 @@ function create_tags_popup(tag_name){
         }
     });
     _popup = DOM.append(_popup,[
-        DOM.create('wrap',{
+        [].includes(tag_name) ? null : DOM.create('wrap',{
             children: [
                 DOM.create('button',{
                     classes: ['include','active'],
@@ -234,7 +214,7 @@ function create_tags_popup(tag_name){
                         }
                     }
                 }),
-                DOM.create('button',{
+                async_tag_names.includes(tag_name) ? null : DOM.create('button',{
                     classes: ['dropdown'],
                     attributes: {
                         label: 'Sort'
@@ -257,10 +237,9 @@ function create_tags_popup(tag_name){
                                 })
                             ],
                             listeners: {
-                                click: function(){
+                                click: function(event){
                                     this.parentElement.blur();
                                     replaceTags(event.target.innerText.toLowerCase());
-                                    init_checkbox();
                                 }
                             }
                         }),
@@ -270,7 +249,7 @@ function create_tags_popup(tag_name){
                     label: 'Search'
                 }),{
                     listeners: {
-                        input: function(){
+                        input: async_tag_names.includes(tag_name) ? _.debounce(async_tags) : function(){
                             const _search = this.firstChild.value.toLowerCase();
                             if (_search === ''){
                                 return;
@@ -279,10 +258,6 @@ function create_tags_popup(tag_name){
                             const tag_name = _popup.getAttribute('tag-name');
                             let tag_list = _popup.querySelector('tag_list');
                             let offset = -120;
-                            if (tag_name === 'character'){
-                                offset = 35 ;
-                                tag_list = _popup.querySelector(".glide__track > ul > .glide__slide.glide__slide--active > tag_list");
-                            }
                             const _boxes = tag_list.querySelectorAll('label.checkbox > text');
                             for (let i = 0; i < _boxes.length; i++) {
                                 const box = _boxes[i];
@@ -324,27 +299,9 @@ function create_tags_popup(tag_name){
         })
     ]);
     popup.create(_popup);
-    if (tag_name === 'character'){
-        const glide_elem = _popup.querySelector('div.glide');
-        const glide = new Glide(glide_elem,{
-            type: 'carousel',
-            perView: 1
-        });
-        glide.on('run.before',function(){
-            saveSelectedTags();
-        });
-        function changeFandom(){
-            const fandom_name = glide_elem.querySelector(`.glide__track > ul > .glide__slide--active`).getAttribute('label');
-            glide_elem.querySelector('[data-glide-el="controls"]').setAttribute('fandom',fandom_name);
-            replaceTags('count');
-        }
-        glide.on('run.after', changeFandom);
-        glide.mount();
-        changeFandom();
-    }
     return _popup;
 }
-function words(action = 'set',words){
+const words = (action = 'set',words) => {
     const slider = document.querySelector('words-slider');
     if (slider.noUiSlider){
         if (action === 'reset'){
@@ -425,7 +382,7 @@ document.querySelector('filter-books > next-screen > div > button[label="Reset"]
     }
 });
 // Search
-function trigger_search(page = false){
+const trigger_search = (page = false) => {
     next_screen.close();
     let search_progress_interval = 0;
     const loader = document.querySelector('loader');

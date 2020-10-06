@@ -1,5 +1,10 @@
 const chapter_id = document.querySelector('chapter').getAttribute('chapter_id');
 // Reviews
+window.addEventListener('load',() => {
+    if (typeof grecaptcha === 'undefined'){
+        document.querySelector('write-review').style.setProperty('display','none');
+    }    
+});
 document.querySelector('reviews-wrapper').addEventListener('click',function(event){
     if (event.target.parentNode.tagName.toLowerCase() !== 'dropdown'){
         return;

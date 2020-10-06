@@ -1,4 +1,8 @@
 function prompt_login() {
+	if (typeof grecaptcha === 'undefined') {
+		new toast("You're offline.");
+		return;
+	}
 	let login_popup = document.querySelector('popup[login]');
 	if (login_popup) {
 		popup.close();

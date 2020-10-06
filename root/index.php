@@ -29,7 +29,8 @@ function handle_all_breaking_errors($a = 1) {
                     window.location.reload();
                 }, 3000);
             }
-        }), 1000);</script>
+        }), 1000);
+        </script>
     </head>
     
     <body>

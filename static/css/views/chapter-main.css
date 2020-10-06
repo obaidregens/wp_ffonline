@@ -6,7 +6,7 @@ chapter > chapter-header {
 	user-select: none;
 	cursor: pointer;
 	display: flex;
-	margin-bottom: 40px;
+	margin-bottom: 20px;
 	padding: 10px;
 	transition: background-color 0.2s;
 	will-change: background-color;
@@ -110,36 +110,50 @@ chapter > .next-chapter:not([href])::before {
 chapter > book-options {
 	display: flex;
 }
-chapter > book-options > button {
-	margin-left: 0;
-}
-chapter > book-options > button.book-share {
-	margin-left: auto;
-}
 chapter > book-options > button::before {
 	font-family: 'icons';
 	display: inline-block;
-	margin-right: 8px;
+	margin-right: 5px;
 }
-chapter > book-options > .book-share::before {
-	content: '\e908';
-	transform: scale(1.2);
+/* Icons */
+chapter > book-options > .book-collections::before {content: '\e916';transform: scale(1.3);margin-right: 6px;}
+chapter > book-options > .book-vote::before {content: '\e945';transform: scale(1);}
+chapter > book-options > .book-share::before {content: '\e908';transform: scale(1.1);margin-right: 7px;}
+chapter > book-options > .book-offline::before {content: '\e949';transform: scale(1.2);margin-right: 6px;}
+/* Labels */
+chapter > book-options > .book-collections::after {content: 'Collections';}
+chapter > book-options > .book-vote::after {content: 'Vote';}
+chapter > book-options > .book-share::after {content: 'Share';}
+chapter > book-options > .book-offline::after {content: 'Offline';}
+/* Pull Right */
+chapter > book-options > .book-share {
+	margin-left: auto;
 }
-chapter > book-options > .book-collections::before {
-	transform: scale(1.4);
-	content: '\e916';
+/* Offline */
+chapter > book-options > .book-offline.active::before {
+	content: '\e948';
 }
-chapter > book-options > .book-vote::before {
-	content: '\e945';
-}
-chapter > book-options > .book-share::after {
-	content: 'Share';
-}
-chapter > book-options > .book-collections::after {
-	content: 'Collections';
-}
-chapter > book-options > .book-vote::after {
-	content: 'Vote';
+@media only screen and (max-width: 600px) {
+	chapter > book-options > .book-vote {
+		margin-left: 0;
+	}
+	chapter > book-options > button,
+	chapter > book-options > .book-share::before,
+	chapter > book-options > .book-offline::before {
+		margin-right: 0;
+	}
+	chapter > book-options > .book-share::after,
+	chapter > book-options > .book-offline::after {
+		content: unset;
+	}
+	chapter > book-options > .book-collections,
+	chapter > book-options > .book-vote {
+		padding: 0 6px;
+	}
+	chapter > book-options > .book-share,
+	chapter > book-options > .book-offline {
+		padding: 0 10px;
+	}
 }
 /* Voted */
 chapter > book-options > .book-vote.active {

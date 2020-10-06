@@ -265,6 +265,7 @@ function api(action,{data,callback,async = true,reCAPTCHA = null,reject} = {}){
             options.data.data = data;
         }
         options.success = response => {
+            window.is_online = true;
             if (response.code === 993) {
                 window.location.reload();
             }
@@ -274,6 +275,7 @@ function api(action,{data,callback,async = true,reCAPTCHA = null,reject} = {}){
             }
         };
         options.error = response => {
+            window.is_online = false;
             rej(response);
             if (reject instanceof Function){
                 reject(response);

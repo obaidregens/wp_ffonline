@@ -7,8 +7,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 function email(array $args) {
     $mail = new email($args);
-    $mail->send($args['to']);
+    $id = $mail->send($args['to']);
     $mail->close();
+    return $id;
 }
 
 class email {

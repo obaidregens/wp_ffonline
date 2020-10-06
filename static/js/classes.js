@@ -102,7 +102,7 @@ const DOM = class {
         innerText = null,
         innerHTML = null,
         href = null,
-        value = '',
+        value = null,
         attributes = {},
         listeners = {},
         children = []
@@ -124,23 +124,23 @@ const DOM = class {
         }
         const attr_entries = Object.entries(attributes);
         for (let i = 0; i < attr_entries.length; i++) {
-            const attr_arr = attr_entries[i];
-            the_elem.setAttribute(attr_arr[0],attr_arr[1]);
+            the_elem.setAttribute(attr_entries[i][0],attr_entries[i][1]);
         }
         const listener_entries = Object.entries(listeners);
         for (let i = 0; i < listener_entries.length; i++) {
-            const listener = listener_entries[i];
-            the_elem.addEventListener(listener[0],listener[1]);
+            the_elem.addEventListener(listener_entries[i][0],listener_entries[i][1]);
         }
         the_elem = DOM.append(the_elem,children);
         return the_elem;
     }
     static append(to,elems){
         if (! elems instanceof Array){
+            if (!elems){return;}
             to.appendChild(elems);
             return;
         }
         for (let i = 0; i < elems.length; i++) {
+            if (!elems[i]){continue;}
             to.appendChild( elems[i] );
         }
         return to;

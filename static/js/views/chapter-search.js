@@ -29,6 +29,10 @@ window.addEventListener('hashchange',paraFromHash);
 paraFromHash();
 document.querySelector('button.search-button + popup > form').addEventListener('submit',function(event){
     event.preventDefault();
+	if (typeof grecaptcha === 'undefined') {
+		new toast("You're offline.");
+		return;
+    }
     const results_elem = document.querySelector('button.search-button + popup > results');
     results_elem.classList.add('loading');
     api('search_book_contents',{
