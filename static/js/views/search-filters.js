@@ -127,7 +127,7 @@ const saveSelectedTags = () => {
     setSelectedTags(tag_name,selected);
     tag_list.innerText = '';
 }
-const async_tag_names = ['pairing','character'];
+const async_tag_names = ['pairing','character','fandom'];
 const async_tags = () => {
     return new Promise( async (resolve,reject) => {
         const current_popup = document.querySelector('popup[tag-name].show');

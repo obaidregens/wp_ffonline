@@ -59,15 +59,6 @@ function api_load_character() {
         a.name LIKE %s OR
         c.name LIKE %s
     )";
-    // $sql =
-    // "SELECT a.term_id as ID,a.name as name, c.name as fandom FROM wp_terms as a
-    // INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
-    // INNER JOIN wp_terms as c ON b.parent = c.term_id
-    // WHERE b.taxonomy = 'character'
-    // AND (
-    //     a.name LIKE %s OR
-    //     c.name LIKE %s
-    // )";
     global $wpdb;
     $prepared = $wpdb->prepare($sql,[$s,$s]);
     $r = $wpdb->get_results(
@@ -98,4 +89,28 @@ function api_load_pairing() {
         ];
     }
     return ['code'=>1,'tags'=>$tags];
+}
+function api_load_fandom() {
+    required_params('s');
+    $d = &$_POST['data'];
+    $s = (string) "%" . $d['s'] . "%";
+    if ($s === "%%") {
+        return ['code'=>1,'tags'=>[]];
+    }
+    $sql =
+    "SELECT a.term_id as ID,CONCAT(c.name, ' > ', a.name ) as name FROM wp_terms as a
+    INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
+    INNER JOIN wp_terms as c ON b.parent = c.term_id
+    WHERE b.taxonomy = 'category'
+    AND b.count > 0
+    AND (
+        a.name LIKE %s OR
+        c.name LIKE %s
+    )";
+    global $wpdb;
+    $prepared = $wpdb->prepare($sql,[$s,$s]);
+    $r = $wpdb->get_results(
+        $prepared
+    );
+    return ['code'=>1,'tags'=>$r];
 }
