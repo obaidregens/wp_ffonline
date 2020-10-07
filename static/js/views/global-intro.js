@@ -113,8 +113,7 @@ const introSteps = {
         {
             element: 'button.acs-button',
             intro: "Customize reading settings according to your preference."
-        }
-
+        },
     ],
     5: [
         {
@@ -140,11 +139,19 @@ const introSteps = {
             intro: "Looking for something? Search entire story. Swipe right to open."
         },
         {
-            element: 'book-options',
-            intro: "Like this story? Follow and share with others."
+            element: '.book-offline',
+            intro: "Save story offline to read later without internet."
         },
         {
-            element: 'reviews',
+            element: '.book-vote',
+            intro: "Enjoyed reading chapter? Vote for it!"
+        },
+        {
+            element: 'book-options',
+            intro: "Like the story? Follow and share with others."
+        },
+        {
+            element: 'write-review',
             intro: "What do you think about this chapter? Leave a review for the author."
         },
     ],

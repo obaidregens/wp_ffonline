@@ -20,10 +20,12 @@ const pi = DOM.create('popup',{
     ]
 });
 popup.create(pi);
-document.querySelector('question-wrapper > a').addEventListener('click',({target}) => {
-    document.querySelector('reply').classList.add('show');
-    document.querySelector('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
-    document.querySelector('reply > blockquote').innerText = target.previousElementSibling.innerText;
+document.querySelectorAll('question-wrapper > a').forEach(el => {
+    el.addEventListener('click',({target}) => {
+        document.querySelector('reply').classList.add('show');
+        document.querySelector('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
+        document.querySelector('reply > blockquote').innerText = target.previousElementSibling.innerText;
+    });
 });
 document.querySelector('reply > a').addEventListener('click',({target}) => {
     popup.open(pi);
