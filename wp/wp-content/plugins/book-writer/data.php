@@ -6,44 +6,44 @@ function get_data($book_id = 'new'){
 		'hide_empty' => false,
 		'parent'    => 0,
 	));
-	$categories = array();
+	$categories = [];
 	foreach ($all_categories as $category){
 		$categories[$category->term_id] = array(
 			'name'		=> $category->name,
-			'fandoms'	=> array()
+			'fandoms'	=> [],
 		);
 	}
 	//Fandoms
-	$all_fandoms = get_terms(array(
+	$fandom_lookup = get_terms([
 		'taxonomy'		=> 'category',
 		'hide_empty'	=> false,
 		'exclude'		=> array_column($all_categories,'term_id')
-	));
-
-	$all_characters = get_terms(array(
+	]);
+	$fandom_lookup = array_combine(array_column($fandom_lookup,'term_id'),$fandom_lookup);
+	$all_characters = get_terms([
 		'taxonomy'			=> 'character',
-		'hide_empty'		=> false
-	));
-	foreach($all_fandoms as $fandom){
-		$categories[$fandom->parent]['fandoms'][$fandom->term_id] = array(
+		'hide_empty'		=> false,
+	]);
+	$no_character_fandoms = array_diff(array_keys($fandom_lookup),array_column($all_characters,'parent'));
+	foreach($no_character_fandoms as $f_id){
+		$fandom = &$fandom_lookup[$f_id];
+		$categories[$fandom->parent]['fandoms'][$fandom->term_id] = [
 			'name'				=> $fandom->name,
-			'characters'		=> array(),
-		);
-
-		// Characters
-		// Looping through $all_characters in every fandom loop is a bit inefficient.
-		// Alternative 1 - Call get_terms('parent' => term_id) in every fandom loop (More inefficient)
-		// Alternative 2 - Drag loop outside fandom loop (Can't nest under fandom)
-		// Alternative 3 - Don't make objects nested,just reference parents 
-		// (Completely different idea, might implement later if there are issues with the current one)
-		foreach($all_characters as $character){
-			if ($character->parent == $fandom->term_id){
-				
-				$categories[$fandom->parent]['fandoms'][$fandom->term_id]['characters'][$character->term_id] = array(
-					'name'			=> $character->name,
-				);
-			}
+			'characters'		=> [],
+		];
+	}
+	foreach ($all_characters as $k => $character) {
+		$fandom = &$fandom_lookup[$character->parent];
+		$fandom_loc = &$categories[$fandom->parent ?? 0]['fandoms'][$fandom->term_id ?? 0];
+		if (!isset($fandom_loc)) {
+			$fandom_loc = [
+				'name'			=> $fandom->name ?? 'General',
+				'characters'	=> [],
+			];
 		}
+		$fandom_loc['characters'][$character->term_id] = [
+			'name'			=> $character->name,
+		];
 	}
 	$data = array(
 		'all'		=> 	array(
@@ -84,9 +84,9 @@ function get_data($book_id = 'new'){
 
 	//Selected
 	//Categories
-	$data['selected']['fandom'] = array();
-	$data['selected']['characters'] = array();
-	$data['selected']['pairing'] = array();
+	$data['selected']['fandom'] = [];
+	$data['selected']['characters'] = [];
+	$data['selected']['pairing'] = [];
 
 	$data['selected']['title'] 				  = '';
 	$data['selected']['description'] 		  = '';
@@ -120,22 +120,19 @@ function get_data($book_id = 'new'){
 		}
 		foreach (($book_fandoms ?? []) as $key => $fandom) {
 			$s['fandom'][] = [
-				'category' 	=> $fandom->parent,
-				'value'		=> $fandom->term_id,
+				'category' 	=> strval($fandom->parent),
+				'value'		=> strval($fandom->term_id),
 				'label'		=> $fandom->name
 			];
 		}
 		$book_characters = wp_get_post_terms($book->ID,'character');
 		$character_name_hash = [];
 		foreach ($book_characters as $character ) {
-			if (intval($character->parent) === 0) {
-				continue;
-			}
 			$character_name_hash[$character->name] = [
 				'value'		=> strval($character->term_id),
 				'label'		=> $character->name,
 				'fandom'	=> strval($character->parent),
-				'category'	=> strval($book_categories[$character->parent])
+				'category'	=> strval($book_categories[$character->parent] ?? 0)
 			];
 			$s['characters'][] = $character_name_hash[$character->name];
 		}
@@ -161,7 +158,7 @@ function get_data($book_id = 'new'){
 	}
 
 	//Chapters
-	$s['chapters'] = array();
+	$s['chapters'] = [];
 	if ($book_id !== 'new'){
 		$all_chapters = published_chapters($book->ID);
 		foreach($all_chapters as $k => $chapter){

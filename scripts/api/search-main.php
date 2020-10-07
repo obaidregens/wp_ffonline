@@ -49,6 +49,18 @@ function api_load_character() {
     if ($s === "%%") {
         return ['code'=>1,'tags'=>[]];
     }
+    global $wpdb;
+    $sql =
+    "SELECT a.term_id as ID,CONCAT('General', ' > ', a.name ) as name FROM wp_terms as a
+    INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
+    WHERE b.taxonomy = 'character'
+    AND b.parent = 0
+    AND b.count > 0
+    AND a.name LIKE %s";
+    $prepared = $wpdb->prepare($sql,[$s]);
+    $r1 = $wpdb->get_results(
+        $prepared
+    );
     $sql =
     "SELECT a.term_id as ID,CONCAT(c.name, ' > ', a.name ) as name FROM wp_terms as a
     INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
@@ -59,12 +71,11 @@ function api_load_character() {
         a.name LIKE %s OR
         c.name LIKE %s
     )";
-    global $wpdb;
     $prepared = $wpdb->prepare($sql,[$s,$s]);
-    $r = $wpdb->get_results(
+    $r2 = $wpdb->get_results(
         $prepared
     );
-    return ['code'=>1,'tags'=>$r];
+    return ['code'=>1,'tags'=>array_merge($r1,$r2)];
 }
 function api_load_pairing() {
     required_params('s');

@@ -1,10 +1,11 @@
+(async () => {
 // Import Before
 window.tt = api('get_book_data',{
     data: {
         book_id: document.querySelector('book').getAttribute('book_id')
     }
-})
-.then((response) => {
+});
+const response = await window.tt;
 const tags = response.data;
 window.tags = tags;
 window.selected = tags.selected;
@@ -201,7 +202,7 @@ const App = () => {
             }
             selected.fandom = newValue;
             const fandom_ids = newValue.map(({value}) => value)
-            selected.characters = (selected.characters || []).filter(({fandom}) => fandom_ids.includes(fandom) );
+            selected.characters = (selected.characters || []).filter(({fandom}) => fandom_ids.includes(fandom) || parseInt(fandom) === 0 );
             charChange(selected.characters || []);
             reRender();
         }}
@@ -209,7 +210,7 @@ const App = () => {
         className="select fandom"
         isSearchable
         isMulti
-        options={Object.entries(tags.all.categories).map( ([category_id,category]) => {
+        options={(Object.entries(tags.all.categories)).filter(v=>v[0]!=0).map( ([category_id,category]) => {
             return {
                 label: category.name,
                 options: Object.entries(category.fandoms).map(([fandom_id,fandom]) => {
@@ -256,7 +257,7 @@ const App = () => {
         isSearchable
         isMulti
         value={selected.characters}
-        options={( (selected.fandom || []) ).map( (fandom) => {
+        options={( [{category: 0,label: "General",value: 0}].concat(selected.fandom || []) ).map( (fandom) => {
             return {
                 label: fandom.label,
                 options: Object.entries(tags.all.categories[fandom.category].fandoms[fandom.value].characters).map(([character_id,character]) => {
@@ -319,4 +320,4 @@ const App = () => {
     )
 }
 reRender();
-});
+})();

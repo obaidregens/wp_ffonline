@@ -2,7 +2,6 @@
 $book = $app->story;
 $book_id = $book === 'new' ? 'new' : $book->ID;
 ?>
-<tags_data hidden><?= json_encode(get_data($book_id)); ?></tags_data>
 <exciting></exciting>
 <?php
 ?>

@@ -100,10 +100,10 @@ function api_edit_book() {
         foreach ( (empty($d[$tagName]) ? [] : array_slice($d[$tagName],0,$maxSelect) ) as $key => $tagObj) {
             $tagIds[] = intval($tagObj['value']);
         }
+        $added = wp_set_post_terms( $d['book_id'], $tagIds, $tagName === 'fandom' ? 'category' : $tagName );
         if ( $tagName === 'fandom' ) {
-            $selectedFandomIds = $tagIds;
+            $selectedFandomIds = array_map('intval',$added);
         }
-        wp_set_post_terms( $d['book_id'], $tagIds, $tagName === 'fandom' ? 'category' : $tagName );
     }
 
     // Characters
@@ -112,15 +112,21 @@ function api_edit_book() {
     $charNames = [];
     foreach ( (empty($d['characters']) ? [] : array_slice($d['characters'],0,$max_characters) ) as $k => $character_obj) {
         $f = intval($character_obj['fandom']);
-        if ( !in_array($f,$selectedFandomIds) ) {
-            continue;
+        if ($f !== 0) {
+            if ( !in_array($f,$selectedFandomIds) ) {
+                continue;
+            }
+            $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));    
         }
-        $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));
+        else {
+            $exists = term_exists($character_obj['label'],'character',$f );
+            if ($exists === null) {continue;}
+            $char_id = intval($exists['term_id']);
+        }
         $charNames[$f . '>>>' . $character_obj['label']] = $char_id;
         $charIds[] = $char_id;
     }
     wp_set_post_terms( $d['book_id'], $charIds, 'character' );
-    
 
     // Pairing
     $max_pairings=3;

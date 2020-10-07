@@ -15,7 +15,7 @@ $terms = get_terms( array(
     'hide_empty'    => false,
     'parent'        => 0
 ) );
-$tax_all = ['category','rating','language','status','genre'];
+$tax_all = ['category','rating','language','status','genre','character'];
 ?>
 <select>
 <?php foreach ($tax_all as $tax ) { ?>

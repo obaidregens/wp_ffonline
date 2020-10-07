@@ -1,16 +1,16 @@
 import Select from 'https://cdn.pika.dev/react-select';
-// window.Select = Select;
 import CreatableSelect from 'https://cdn.pika.dev/react-select/creatable';
-// window.CreatableSelect = CreatableSelect;
 
 "use strict";
 
-// Import Before
-window.tt = api('get_book_data', {
-  data: {
-    book_id: document.querySelector('book').getAttribute('book_id')
-  }
-}).then(response => {
+(async () => {
+  // Import Before
+  window.tt = api('get_book_data', {
+    data: {
+      book_id: document.querySelector('book').getAttribute('book_id')
+    }
+  });
+  const response = await window.tt;
   const tags = response.data;
   window.tags = tags;
   window.selected = tags.selected;
@@ -211,7 +211,7 @@ window.tt = api('get_book_data', {
         }) => value);
         selected.characters = (selected.characters || []).filter(({
           fandom
-        }) => fandom_ids.includes(fandom));
+        }) => fandom_ids.includes(fandom) || parseInt(fandom) === 0);
         charChange(selected.characters || []);
         reRender();
       },
@@ -219,7 +219,7 @@ window.tt = api('get_book_data', {
       className: "select fandom",
       isSearchable: true,
       isMulti: true,
-      options: Object.entries(tags.all.categories).map(([category_id, category]) => {
+      options: Object.entries(tags.all.categories).filter(v => v[0] != 0).map(([category_id, category]) => {
         return {
           label: category.name,
           options: Object.entries(category.fandoms).map(([fandom_id, fandom]) => {
@@ -266,7 +266,11 @@ window.tt = api('get_book_data', {
       isSearchable: true,
       isMulti: true,
       value: selected.characters,
-      options: (selected.fandom || []).map(fandom => {
+      options: [{
+        category: 0,
+        label: "General",
+        value: 0
+      }].concat(selected.fandom || []).map(fandom => {
         return {
           label: fandom.label,
           options: Object.entries(tags.all.categories[fandom.category].fandoms[fandom.value].characters).map(([character_id, character]) => {
@@ -326,4 +330,4 @@ window.tt = api('get_book_data', {
   };
 
   reRender();
-});
+})();

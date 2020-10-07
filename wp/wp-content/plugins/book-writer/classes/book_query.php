@@ -44,7 +44,7 @@ class book_query{
     protected function book_tags(){
         $terms_ = (new WP_Term_Query(array(
             'object_ids'	=> array_column($this->books,'ID'),
-            'taxonomy'      => array('genre','fandom','language','status','character','rating','tag'),
+            'taxonomy'      => array('genre','category','language','status','character','rating','tag'),
             'orderby'		=> 'term_group',
             'fields'        => 'all_with_object_id'
         )))->terms ?: [];
@@ -65,7 +65,7 @@ class book_query{
                     'ID'        => $pairing->pairing_id,
                     'name'      => $name,
                     'link'      => '<a href="/read?pairing_included=' . $pairing->pairing_id . '">' . $name . '</a>',
-                );    
+                );
             }
 
         }

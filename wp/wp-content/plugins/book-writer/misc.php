@@ -41,10 +41,14 @@ function mark_search($in, $search, $trim = null) {
 	return $should_trim ? $full . '...' : $full;
 }
 function print_book_tags($book_id,$book_query) {
+	$ref = &$book_query->book_tags[$book_id];
+	$fandom = $ref['fandom'];
+	unset($ref['fandom']);
+	$ref = array_merge(['fandom'=>$fandom],$ref);
 	?>
 	<tags>
 	<?php
-	foreach ($book_query->book_tags[$book_id] as $taxonomy => $terms){
+	foreach ($ref as $taxonomy => $terms){
 		?>
 		<tag-group name="<?= ucfirst($taxonomy) ?>">
 			<?= implode('',array_column($terms,'link')); ?>
@@ -82,7 +86,7 @@ function timer($logtext,$echo = false){
     global $lastlogtime;
     $now = microtime(true);
     $diff = $now - ($lastlogtime ?? $now);
-	file_put_contents(__DIR__ . '/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+	file_put_contents(MAIN_DIR . '/content/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
 	if ($echo === true){
 		echo $logtext . ": " . $diff . "<br>";
 	}

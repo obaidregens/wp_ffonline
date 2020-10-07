@@ -67,18 +67,17 @@ function reAddChapters() {
         }
     }));
 }
-window.addEventListener('load',() => {
-    window.tt.then(() => {
-        document.querySelector('stepper').addEventListener('click',({target}) => {
-            if (target.tagName.toLowerCase() !== 'step') {
-                return;
-            }
-            const i = Array.prototype.indexOf.call(target.parentElement.children, target)+1;
-            window.setCurrentPage(i);
-        });
-        reAddChapters();
-        window.setCurrentPage(1);    
+window.addEventListener('load',async () => {
+    await window.tt;
+    document.querySelector('stepper').addEventListener('click',({target}) => {
+        if (target.tagName.toLowerCase() !== 'step') {
+            return;
+        }
+        const i = Array.prototype.indexOf.call(target.parentElement.children, target)+1;
+        window.setCurrentPage(i);
     });
+    reAddChapters();
+    window.setCurrentPage(1);    
 });
 function createChapterDraggableLi(chapter) {
     const topLevelAttr = {

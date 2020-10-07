@@ -44,7 +44,7 @@ tags > tag-group > a:not(:last-child):after {
     color: var(--text-color);
 }
 tags > tag-group[name="Fandom"] > a:not(:last-child):after {
-    content: ' /';
+    content: '/';
 }
 tag-group > a {
     color: var(--text-color);

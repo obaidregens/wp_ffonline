@@ -60,7 +60,7 @@
     color: var(--text-color);
     cursor: pointer;
 }
-.select [class$="-option"]:hover {
+.select .css-1n7v3ny-option  {
     background-color: var(--hover);
 }
 .select [class$="-option"].css-9gakcf-option {
