@@ -33,14 +33,22 @@ document.querySelector('chapter > book-options > .book-offline').addEventListene
         chapters: total_chapters,
         time_added: Date.now()
     };
-    for (let i = 0; i < urls.length; i++) {
+    const ofs = DOM.create('offline-notice',{
+        innerText: "Saving story"
+    });
+    document.querySelector('chapter').appendChild(ofs);
+    const chapter_length = urls.length-1;
+    for (let i = 0; i < chapter_length+1; i++) {
         const ur = urls[i];
         await cache.put(ur, await fetch( ur, { credentials: 'omit' } ) );
+        if (i<1){continue;}
+        ofs.innerText = `Saved ${i} of ${chapter_length} chapters`;
     }
     await api('offline_chapter',{
         data: {chapter_id}
     });
     localStorage.setItem('offline_stories',JSON.stringify(existing));
     target.removeAttribute('disabled');
+    ofs.remove();
     target.classList.add('active');
 });

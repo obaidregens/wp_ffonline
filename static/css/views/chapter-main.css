@@ -163,6 +163,14 @@ chapter > book-options > .book-vote.active {
 chapter > book-options > .book-vote.active::after {
 	content: 'Voted';
 }
+/* Offline Notice */
+chapter > offline-notice {
+	background-color: var(--transparent-accent);
+	color: var(--lightblack);
+    display: flex;
+    padding: 15px;
+    margin: 15px 5px;
+}
 /* Reviews */
 reply-to > review, review > review {
 	margin-left: 50px;

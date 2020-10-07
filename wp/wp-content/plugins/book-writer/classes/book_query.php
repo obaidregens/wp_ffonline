@@ -147,7 +147,7 @@ class book_query{
             global $wpdb;
             $search_result = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT ID FROM " . $wpdb->prefix . "posts
+                    "SELECT ID FROM wp_posts
                     WHERE post_title LIKE %s
                     OR post_excerpt LIKE %s",
                     array($search_sql,$search_sql)
@@ -184,8 +184,9 @@ class book_query{
             $fill = implode(',',array_fill(0,count($paged_ids),'%d'));
             $this->books = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT * FROM " . $wpdb->prefix . "posts
+                    "SELECT * FROM wp_posts
                     WHERE ID IN(" . $fill . ")
+                    AND post_status = 'publish'
                     ORDER BY FIELD(ID, " . $fill . ")",
                 array_merge($paged_ids,$paged_ids)
             ));    

@@ -67,6 +67,9 @@ section.ops-section section-description {
     display: block;
     text-align: center;
 }
+section.ops-section > a {
+    color: var(--text-color);
+}
 section.ops-section mini-description {
     margin-top: 1vw;
     font-size: 1.3vw;

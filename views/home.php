@@ -117,3 +117,9 @@ $app->bundle->enqueue();
     <section-description>Have any questions?</section-description>
     <mini-description><a href="/contact">Contact us</a></mini-description>
 </section>
+<section>
+    <section-description>
+    <a href="/read">Get Started</a>
+    </section-description>
+    </mini-description>
+</section>
