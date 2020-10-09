@@ -20,13 +20,13 @@ Fanfiction Online ("we", "us", "our") is a platform for reading & writing fanfic
     <li>
         <p>
             <strong>Anonymized Information</strong>: 
-            To improve the Service for users of Fanfiction Online, we may conduct research & gather anonymized aggregated information on user demographics & interests based on the information collected. This research may be analyzed on an aggregate basis, and may be shared with current or prospective advertisers. 
+            To improve the Services, we may conduct research & gather anonymized aggregated information on user demographics & interests based on the information collected. This research may be analyzed on an aggregate basis, and may be shared with current or prospective advertisers. 
         </p>
     </li>
     <li>
         <p>
             <strong>Cookies</strong>: 
-            Cookies are pieces of data sites can set on your device so they can be read on future visits. We use cookies and similar technologies to keep track of your device's settings, such as the account you have logged into, and your reading customizations.
+            Cookies are pieces of data sites can set on your device so they can be read on future visits. We use cookies and similar technologies to keep track of your device's settings, such as the account you are logged in to, and your reading customizations.
         </p>
     </li>
 </ul>
