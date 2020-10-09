@@ -136,7 +136,7 @@ function api_get_stories() {
     required_login();
     $q = (new WP_Query([
         'post_type'              => array( 'book' ),
-        'post_status'            => array( 'publish','draft' ),
+        'post_status'            => array( 'publish' ),
         'posts_per_page'		 => -1,
         'author__in'             => [get_current_user_id()]
     ]))->posts;
@@ -163,7 +163,12 @@ function api_publish_to_story() {
         return ['code'=>8];
     }
     $title = htmlspecialchars(substr($d['chapter_title'],0,80));
-    $chapter_id = draft_chapters::save($d['draft_id'],$story->ID,substr($d['chapter_title'],0,80));
+    $chapter_id = draft_chapters::save(
+        $d['draft_id'],
+        $story->ID,
+        substr($d['chapter_title'],0,80),
+        ['pre'=>($d['preAN'] ?? ""),'post'=>($d['postAN'] ?? "")]
+    );
     if ($chapter_id === false) {
         return ['code'=>9];
     }

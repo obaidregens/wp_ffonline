@@ -11,9 +11,6 @@ author-main > * {
     padding: 20px;
     box-shadow: var(--shadow-light);
 }
-author-bio {
-    word-break: break-word;
-}
 author-bio > content {
     white-space: break-spaces;
 }

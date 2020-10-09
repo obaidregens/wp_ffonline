@@ -49,7 +49,6 @@ button.search-button + popup > results > a[result] {
     border: 1px solid grey;
     border-radius: 4px;
     padding: 15px;
-    word-break: break-word;
 }
 button.search-button + popup > results > a[result]:hover {
     background-color: var(--hover);

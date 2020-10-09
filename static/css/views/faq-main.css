@@ -14,7 +14,6 @@ question, answer {
     border-left-width: 6px;
     padding-left: 15px;
     white-space: break-spaces;
-    word-break: break-word;
 }
 question::before, answer::before {
     display: flex;

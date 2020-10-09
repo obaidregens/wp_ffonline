@@ -13,8 +13,23 @@ document.querySelector('button[label="Publish"]').addEventListener('click', ({ta
                 create_text_input({
                     label: 'Chapter Title',
                     attributes: {
-                        maxlength: "70"
+                        maxlength: "80"
                     },
+                }),
+                DOM.create('input',{
+                    classes: ['collapsible'],
+                    attributes: {
+                        type: 'checkbox'
+                    },
+                }),
+                DOM.create('label',{
+                    innerText: "Author Notes"
+                }),
+                DOM.create('collapsible',{
+                    children: [
+                        create_text_input({label: "Start of Chapter",type: 'textarea'}),
+                        create_text_input({label: "End of Chapter",type: 'textarea'}),
+                    ]
                 }),
                 DOM.create('stories-list')
             ]
@@ -51,7 +66,9 @@ document.querySelector('button[label="Publish"]').addEventListener('click', ({ta
                                 data: {
                                     chapter_title,
                                     draft_id,
-                                    storyID: story.ID
+                                    storyID: story.ID,
+                                    preAN: pop.querySelector('text-input:nth-of-type(1) > textarea').value,
+                                    postAN: pop.querySelector('text-input:nth-of-type(2) > textarea').value,
                                 }
                             }).then(response => {
                                 if (response.code > 5) {

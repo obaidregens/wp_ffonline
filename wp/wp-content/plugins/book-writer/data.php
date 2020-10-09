@@ -162,11 +162,13 @@ function get_data($book_id = 'new'){
 	if ($book_id !== 'new'){
 		$all_chapters = published_chapters($book->ID);
 		foreach($all_chapters as $k => $chapter){
-			$chapter_arr = array(
+			$chapter_arr = [
 				'ID'				=> $chapter->ID,
 				'title'				=> $chapter->post_title,
-				'num'				=> $k+1
-			);
+				'num'				=> $k+1,
+				'preAN'				=> get_post_meta( $chapter->ID, 'pre_author_note', true ),
+				'postAN'			=> get_post_meta( $chapter->ID, 'post_author_note', true ),
+			];
 			$s['chapters'][] = $chapter_arr;
 		}
 	}

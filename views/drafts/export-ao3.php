@@ -6,7 +6,6 @@ pre {
     padding: 25px;
     border-radius: 5px;
     margin: 20px;
-    word-break: break-word;
     user-select: all;
     color: var(--text-color);
     cursor: pointer;

@@ -59,7 +59,7 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 		<?= $app->template('/subviews/chapter-index'); ?>
 	</popup>
 	<chapter-title><?= $chapter->post_title; ?></chapter-title>
-	<content class="acs-elem"><?= $chapter->post_content; ?></content>
+	<content class="acs-elem"><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'pre_author_note', true )); ?></author-notes><?= $chapter->post_content; ?><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'post_author_note', true )); ?></author-notes></content>
 	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
 	<book-options>
 		<collections_data hidden>

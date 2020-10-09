@@ -741,13 +741,35 @@ $app->listen('/contact',function($self){
     exit();
 });
 // Content Guidlines
+$app->listen('/rules',function($self){
+    $self->type = 'rules';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Rules"),
+    ]);
+    $self->template('/views/rules/rules');
+    $self->footer();
+    exit();
+});
+// Content Guidlines
 $app->listen('/guidelines',function($self){
     $self->type = 'content-guidelines';
     $self->type_id = 0;
     $self->header([
         'title'         => construct_page_title("Content Guidelines"),
     ]);
-    $self->template('/views/content-guidelines');
+    $self->template('/views/rules/content-guidelines');
+    $self->footer();
+    exit();
+});
+// Content Guidlines
+$app->listen('/privacy',function($self){
+    $self->type = 'privacy-policy';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Privacy Policy"),
+    ]);
+    $self->template('/views/rules/privacy');
     $self->footer();
     exit();
 });

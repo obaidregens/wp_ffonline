@@ -50,7 +50,6 @@ main > book > tags {
     margin-bottom: 15px;
 }
 main > book > book-description {
-    word-break: break-word;
     display: block;
     border-bottom: var(--border);
     padding-bottom: 15px;

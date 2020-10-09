@@ -20,6 +20,10 @@ index > * > cell {
     vertical-align: inherit;
     display: table-cell;
 }
+index > * > cell:not(.break) {
+    padding: 0 4px;
+    white-space: pre;
+}
 index > * > cell.counter::before {
     counter-increment: index-counter;
     content: counter(index-counter);

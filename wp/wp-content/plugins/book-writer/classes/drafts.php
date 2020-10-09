@@ -27,7 +27,7 @@ class drafts {
         if ($args['title'] === '') {
             $args['title'] = self::$blank_title;
         }
-        $args['title'] = substr($args['title'],0,70);
+        $args['title'] = substr($args['title'],0,80);
         global $wpdb;
         $wpdb->insert(
             self::$table,
@@ -48,7 +48,7 @@ class drafts {
             $args['title'] = self::$blank_title;
         }
         if (isset($args['title'])) {
-            $args['title'] = substr($args['title'],0,70);
+            $args['title'] = substr($args['title'],0,80);
         }
         global $wpdb;
         $wpdb->update(
@@ -285,7 +285,7 @@ class drafts_json extends drafts {
         ));
         return empty($r) ? false : $r[0]->ID;
     }
-    public static function get($xml) {
+    public static function toJSON($xml) {
         $d = new DOMDocument();
         $r = $d->loadXML('<content>' . $xml . '</content>');
         if (! $r) {
@@ -334,9 +334,12 @@ class drafts_json extends drafts {
             foreach ($node->childNodes as $leaf_el) {
                 BuildLeafsRecursive($leaf_el,[],$block);
             }
+            if ( $block === ['children'=>[]] ){
+                $block['children'][] = ['text'=>""];
+            }
             $json[] = $block;
         }
-        echo (self::read(json_encode($json)));
+        return (json_encode($json));
     }
     public static function read($json) {
         function create_span_draft($leaf) {
@@ -483,23 +486,73 @@ class drafts_json extends drafts {
     }
 }
 class draft_chapters extends drafts {
-    public static function save($draft_id_or_draft,$book_id,$title) {
-        $draft = $draft_id_or_draft;
-        if (is_numeric($draft_id_or_draft)) {
-            $draft = self::get_by('ID', $draft_id_or_draft);
+    static function save($draft_id_or_draft,$book_id,$title,$notes = [],$chapter_id = 'new') {
+        if ($draft_id_or_draft !== null) {
+            // Draft Check
+            $draft = $draft_id_or_draft;
+            if (is_numeric($draft_id_or_draft)) {
+                $draft = self::get_by('ID', $draft_id_or_draft);
+            }
+            if (!$draft || !is_current_user($draft->user_id)){
+                return false;
+            }
         }
-        if (!$draft || !is_current_user($draft->user_id)){
-            return false;
-        }
-        $chapter_id = wp_insert_post([
+        $args = [
             'post_title'    => htmlspecialchars($title),
-            'post_content'  => drafts_json::read($draft->content),
             'post_type'     => 'chapter',
             'post_status'   => 'publish',
             'post_parent'   => $book_id
-        ]);
-        $inst = new notifications_insert;
-        $inst->updateStory($chapter_id);
+        ];
+        if ($chapter_id === "new") {
+            if($draft_id_or_draft === null) {
+                return false;
+            }
+            $args['post_content'] = drafts_json::read($draft->content);
+            $chapter_id = wp_insert_post($args);
+            if (is_wp_error( $chapter_id ) || $chapter_id === 0) {
+                return false;
+            }
+            $words = str_word_count(drafts_json::simpleText($draft->content));
+            update_post_meta( $chapter_id, 'word-count', $words );
+            // Update Book Time
+            wp_update_post(['ID' => $book_id]);
+            $inst = new notifications_insert;
+            $inst->updateStory($chapter_id);    
+        }
+        else {
+            if ($draft_id_or_draft !== null) {
+                $args['post_content'] = drafts_json::read($draft->content);
+            }
+            $args['ID'] = $chapter_id;
+            $chapter_id = wp_update_post( $args );
+            if (is_wp_error( $chapter_id ) || $chapter_id === 0) {
+                return false;
+            }
+            if ($draft_id_or_draft !== null) {
+                $words = str_word_count(drafts_json::simpleText($draft->content));
+                update_post_meta( $chapter_id, 'word-count', $words );    
+            }
+        }
+        foreach (['pre','post'] as $v ) {
+            if (isset($notes[$v])){
+                update_post_meta( $chapter_id, $v.'_author_note', $notes[$v] );
+            }
+        }
         return $chapter_id;
+    }
+    static function edit($chapter_id) {
+        $chapter = get_post($chapter_id);
+        if (!$chapter || $chapter->post_type !== 'chapter' || !is_current_user($chapter->post_author) ) {
+            return false;
+        }
+        $draft_id = drafts::new([
+            'title'     => $chapter->post_title,
+        ]);
+        if (err::is($draft_id)) {
+            return false;
+        }
+        $json = drafts_json::toJSON($chapter->post_content);
+        draft_revision::push($draft_id,$json);
+        return $draft_id;
     }
 }

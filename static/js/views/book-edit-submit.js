@@ -32,12 +32,15 @@ function reAddChapters() {
                     innerText: 'Title'
                 }),
                 DOM.create('cell',{
+                    innerText: 'Edit'
+                }),
+                DOM.create('cell',{
                     innerText: 'View'
                 }),
                 DOM.create('cell',{
                     innerText: 'Delete'
-                })
-            ]
+                }),
+            ],
         })
     ];
     for (let i = 0; i < (selected.chapters || []).length; i++) {
@@ -45,25 +48,33 @@ function reAddChapters() {
         chapters.push(createChapterDraggableLi({
             title: chapter.title,
             ID: chapter.ID,
-            view: '/story/' + selected.book_id + '/' + chapter.num
+            view: '/story/' + selected.book_id + '/' + chapter.num,
+            preAN: chapter.preAN,
+            postAN: chapter.postAN,
         }));
     }
     const index = DOM.create('index',{
         children: chapters
     });
-    const sortable = new Draggable.Sortable(
-        index, {
-            draggable: 'li:not([head])',
-            distance: 10
-        }
-    );
+    const sortable = new Draggable.Sortable(index, {
+        draggable: 'li:not([head])',
+        distance: 10
+    });
     document.querySelector('page[page-num="4"]').innerText = '';
     document.querySelector('page[page-num="4"]').appendChild(index);
     document.querySelector('page[page-num="4"]').appendChild(DOM.create('button',{
         classes: ['new-chapter'],
         innerText: 'New Chapter',
         listeners: {
-            click: () => popup.open(document.querySelector('popup[new_chapter]'))
+            click: () => {
+                const pnc = document.querySelector('popup[new_chapter]');
+                pnc.querySelectorAll('textarea, input').forEach(el => {
+                    el.value = "";
+                    el.dispatchEvent(new Event('change'));
+                    el.dispatchEvent(new Event('input'));
+                });
+                popup.open(pnc);
+            }
         }
     }));
 }
@@ -82,6 +93,8 @@ window.addEventListener('load',async () => {
 function createChapterDraggableLi(chapter) {
     const topLevelAttr = {
         chapter_id: chapter.ID,
+        "pre-an": chapter.preAN || "",
+        "post-an": chapter.postAN || "",
     };
     if (chapter.draft_id){
         topLevelAttr.draft_id = chapter.draft_id;
@@ -93,7 +106,32 @@ function createChapterDraggableLi(chapter) {
                 classes: ['counter'],
             }),
             DOM.create('cell',{
+                classes: ['break'],
                 innerText: _.htmlspecialchars_decode(chapter.title),
+            }),
+            DOM.create('cell',{
+                children: [
+                    DOM.create('a',{
+                        innerText: 'Edit',
+                        listeners: {
+                            click: ({target}) => {
+                                const pnc = document.querySelector('popup[new_chapter]');
+
+                                const row = target.parentElement.parentElement;
+                                pnc.querySelector('text-input > input').value = row.querySelector('cell:nth-child(2)').innerText;
+                                pnc.querySelector('collapsible > text-input:nth-child(1) > textarea').value = row.getAttribute('pre-an');
+                                pnc.querySelector('collapsible > text-input:nth-child(2) > textarea').value = row.getAttribute('post-an');
+
+                                pnc.querySelectorAll('textarea, input').forEach(el => {
+                                    el.dispatchEvent(new Event('change'));
+                                    el.dispatchEvent(new Event('input'));
+                                } );
+                                pnc.setAttribute('edit-chapter',chapter.ID);
+                                popup.open(pnc);
+                            }
+                        }
+                    })
+                ]
             }),
             DOM.create('cell',{
                 children: [
@@ -111,9 +149,7 @@ function createChapterDraggableLi(chapter) {
                     DOM.create('a',{
                         innerText: 'Delete',
                         listeners: {
-                            click: function() {
-                                this.parentElement.parentElement.remove();
-                            }
+                            click: ({target}) => target.parentElement.parentElement.remove()
                         }
                     })
                 ]
@@ -125,15 +161,58 @@ function new_chapter_popup_create() {
     const p = DOM.create('popup',{
         attributes: {
             new_chapter: ''
+        },
+        listeners: {
+            onAfterClose: () => {
+                const chapter_id = p.getAttribute('edit-chapter');
+                if (chapter_id !== null) {
+                    const row = document.querySelector(`page > index > li[chapter_id="${chapter_id}"]`);
+                    row.querySelector('cell:nth-child(2)').innerText = p.querySelector('text-input > input').value;
+                    row.setAttribute('pre-an',p.querySelector('collapsible > text-input:nth-child(1) > textarea').value);
+                    row.setAttribute('post-an',p.querySelector('collapsible > text-input:nth-child(2) > textarea').value);
+                }
+                p.removeAttribute('edit-chapter');
+            }
         }
     });
     const chapter_title = create_text_input({label: 'Chapter Title'});
     const chapter_title_input = chapter_title.querySelector('input');
     chapter_title_input.setAttribute('maxlength','80');
     p.appendChild(chapter_title);
+    p.appendChild(DOM.create('input',{
+        classes: ['collapsible'],
+        attributes: {
+            type: 'checkbox'
+        },
+    }));
+    p.appendChild(DOM.create('label',{
+        innerText: "Author Notes"
+    }));
+    const preAN = create_text_input({label: "Start of Chapter",type: 'textarea'});
+    const postAN = create_text_input({label: "End of Chapter",type: 'textarea'});
+    p.appendChild(DOM.create('collapsible',{
+        children: [
+            p.appendChild(preAN),
+            p.appendChild(postAN),
+        ]
+    }));
+    p.appendChild(DOM.create('a',{
+        classes: ['edit-as-new'],
+        listeners: {
+            click: async () => {
+                const res = await api('edit_chapter',{data: {chapter_id: p.getAttribute('edit-chapter')}});
+                if (res.code > 7) {
+                    new toast("An error occured");
+                    return;
+                }
+                window.location.href = "/drafts/" + res.draft_id + "/edit"
+            }
+        }
+    }));
     p.appendChild(DOM.create('folder-listing',{
         listeners: {
             click: ({target}) => {
+                // Find File
                 let file = null;
                 if (target.tagName.toLowerCase() === 'file') {
                     file = target;
@@ -144,18 +223,28 @@ function new_chapter_popup_create() {
                 if (file === null || file.classList.contains('new-draft-file') ) {
                     return;
                 }
+                // Title
                 const title = chapter_title_input.value;
                 if (title === '') {
                     new toast('What\'s the chapter title?');
                     return;
                 }
                 const draft_id = file.getAttribute('draft_id');
-                document.querySelector('page[page-num="4"] > index').appendChild(createChapterDraggableLi({
+                const chapter_id = p.getAttribute('edit-chapter');
+                const Li = createChapterDraggableLi({
                     title,
-                    ID: 'new',
+                    ID: chapter_id !== null ? chapter_id : 'new',
                     draft_id,
-                    view: '/drafts/' + draft_id + '/preview'
-                }));
+                    view: '/drafts/' + draft_id + '/preview',
+                    preAN: preAN.querySelector('textarea').value,
+                    postAN: postAN.querySelector('textarea').value,
+                });
+                if ( chapter_id === null ) {
+                    document.querySelector('page[page-num="4"] > index').appendChild(Li);
+                }
+                else {
+                    document.querySelector(`page[page-num="4"] > index > li[chapter_id="${chapter_id}"]`).replaceWith(Li);
+                }
                 popup.close();
             }
         }
@@ -177,11 +266,18 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
     const chapter_el = document.querySelectorAll('page[page-num="4"] > index > li:not([head])');
     for (let i = 0; i < chapter_el.length; i++) {
         const el = chapter_el[i];
+        const title = el.children[1].innerText;
+        if (title.trim() === "") {
+            new toast("Chapter title cannot be empty.");
+            return;
+        }
         chapters.push({
             draft_id: el.getAttribute('draft_id'),
             ID: el.getAttribute('chapter_id'),
-            title: el.children[1].innerText,
-            num: i+1
+            title,
+            num: i+1,
+            preAN: el.getAttribute("pre-an"),
+            postAN: el.getAttribute("post-an"),
         });
     }
     selected.chapters = chapters;

@@ -7,6 +7,7 @@ $bundle->enqueue();
 $app->bundle = global_bundle('drafts-edit');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');
+$app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
@@ -53,7 +54,7 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 <load_title hidden><?= $title; ?></load_title>
 <load_content hidden><?= $content; ?></load_content>
 
-<input maxlength="70" placeholder="Title">
+<input maxlength="80" placeholder="Title">
 <editor draft_id="<?= $draft_id; ?>"></editor>
 
 <?php

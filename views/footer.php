@@ -3,7 +3,7 @@
 	<nav>
 		<a href="/faq">FAQ</a>
 		<a href="/news">News</a>
-		<a href="/contact">Contact us</a>
+		<a href="/rules">Rules</a>
 	</nav>
 </footer>
 <script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=init_reCAPTCHA"></script>

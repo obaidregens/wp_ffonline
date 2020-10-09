@@ -68,10 +68,16 @@ a:hover {
 *,
 *::before,
 *::after{
+    word-break: break-word;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+}
+a,button,
+a::before,button::before,
+a::after,button::after{
+    word-break: keep-all;
 }
 *:focus,
 *:focus::before,

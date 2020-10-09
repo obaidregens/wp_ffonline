@@ -1,6 +1,25 @@
 popup[new_chapter] {
     max-width: 800px;
 }
+popup[new_chapter]:not([edit-chapter]) a.edit-as-new {
+    display: none;
+}
+popup[new_chapter] a.edit-as-new {
+    display: flex;
+    margin-left: auto;
+    margin-bottom: 15px;
+}
+popup[new_chapter] a.edit-as-new::before {
+    font-family: 'icons';
+    content: '\e909';
+    display: inline-block;
+    margin-right: 4px;
+    transform: rotate(-7deg) scale(0.9);
+    transform-origin: center;
+}
+popup[new_chapter] a.edit-as-new::after {
+    content: 'Edit as new draft';
+}
 submit {
     margin-top: 50px;
     display: flex;

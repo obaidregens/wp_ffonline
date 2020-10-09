@@ -3,7 +3,6 @@ popup[confirmation] {
 }
 popup[confirmation] > p {
     margin-top: 0;
-    word-break: break-word;
 }
 popup[confirmation] > button[label="Cancel"]:hover {
     background-color: var(--red);

@@ -49,19 +49,35 @@ function api_edit_book() {
 
     // Chapter
     $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
-    $old_chapter_ids = array_map('strval',published_chapters($book->ID,-1,'ids'));
+    $old_chapters = published_chapters($book->ID,-1);
+    $old_chapter_titles = array_column($old_chapters,'post_title','ID');
+    $old_chapter_ids = array_map('strval',array_column($old_chapters,'ID'));
     $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
     $old_chapters_lookup = array_flip($old_chapter_ids);
     $chapter_ids_order = [];
-    foreach (($d['chapters'] ?? []) as $chapter ) {
-        if ($chapter['draft_id']) {
-            $chapter_id = draft_chapters::save($chapter['draft_id'],$book->ID,(substr($chapter['title'],0,80)));
-            if ($chapter_id !== false) {
+    foreach ( ($d['chapters'] ?? []) as $chapter ) {
+        if (
+            $chapter['draft_id'] ||
+            ($chapter['title'] ?? "") !== ($old_chapter_titles[$chapter['ID']] ?? "") ||
+            $chapter['preAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true) ||
+            $chapter['postAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true)
+        ){
+            if (trim($chapter['title'] ?? "") === "") {
+                continue;
+            }
+            $chapter_id = draft_chapters::save(
+                ($chapter['draft_id'] ?? null) ?: null,
+                $book->ID,
+                substr( ($chapter['title'] ?? "") ,0,80),
+                [ 'pre' => $chapter['preAN'], 'post' => $chapter['postAN'] ],
+                $chapter['ID'] ?? 'new',
+            );
+            if ( $chapter_id !== false ) {
                 $chapter_ids_order[] = $chapter_id;
             }
             continue;
         }
-        if (! isset($old_chapters_lookup[$chapter['ID']])) {
+        if (! isset($old_chapters_lookup[$chapter['ID']]) ) {
             continue;
         }
         $chapter_ids_order[] = $chapter['ID'];
@@ -240,4 +256,14 @@ function api_get_book_data() {
        'code'   => 1,
        'data'   => get_data($book->ID)
     ];
+}
+function api_edit_chapter() {
+    required_login();
+    required_params('chapter_id');
+    $c = $_POST['data']['chapter_id'];
+    $d = draft_chapters::edit($c);
+    if ($d === false) {
+        return ['code'=>7];
+    }
+    return ['code'=>1,'draft_id'=>$d];
 }

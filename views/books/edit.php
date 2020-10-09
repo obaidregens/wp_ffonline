@@ -30,6 +30,7 @@ $bundle->print();
 $app->bundle = global_bundle('edit-book');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/select');
+$app->bundle->css('css/components/collapsible');
 $app->bundle->js('external/draggable/draggable.bundle');
 $app->bundle->css('css/js-components/switch');
 $app->bundle->css('css/components/index');

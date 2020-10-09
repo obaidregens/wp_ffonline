@@ -6,7 +6,7 @@ const folder_listing_pop = DOM.create('popup',{
     },
     children:[
         create_text_input({label: 'Draft name',attributes: {
-            maxlength: 70
+            maxlength: 80
         }}),
         DOM.create('folder-listing'),
         DOM.create('button',{

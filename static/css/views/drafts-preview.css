@@ -7,9 +7,6 @@ draft-meta {
 draft-meta > a {
     color: grey;
 }
-draft {
-    word-break: break-word;
-}
 draft-title {
     font-size: 2rem;
 }
@@ -38,6 +35,5 @@ button[label="Compare"] {
 /* Compare */
 next-screen > compare {
     margin-top: 20px;
-    word-break: break-word;
     display: block;
 }

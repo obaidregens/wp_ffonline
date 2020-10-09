@@ -3,7 +3,6 @@ popup[ask] {
 }
 popup[ask] > p {
     margin-top: 0;
-    word-break: break-word;
 }
 popup[ask] > button {
     margin-right: 0;
