@@ -22,7 +22,7 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
-    public static $version = "40";
+    public static $version = "42";
     public static function reset() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
@@ -293,35 +293,9 @@ class bundle {
                 "external/waves/waves",
             ),
         ),
-        'create_search_new' => array(
-            'css'   => array(
-                'css/components/grid',
-                'css/components/loader',
-                'css/components/select',
-                'css/components/tooltips',
-                'css/js-components/checkbox',
-                'css/js-components/switch',
-                'css/views/search-tags',
-                'css/views/search-content',
-                'css/views/search-filters',
-                'css/views/search-options',
-                'external/noUiSlider/nouislider',
-                'css/views/search-updateCollection'      
-            ),
-            'js'    => array(
-                "js/components/checkbox",
-                "js/components/switch",
-                "external/noUiSlider/nouislider",
-                "js/views/search-filters",
-                "js/views/search-content",
-                "js/views/search-options",
-                "js/views/search-updateCollection"
-            ),
-        ),
         'search-content'    => array(
             'css'   => array(
                 'css/components/tooltips',
-                'css/components/grid',
                 'css/views/search-tags',
                 'css/views/search-content',
             ),

@@ -20,7 +20,7 @@
 :root {
     --red: #bd3535;
     --grey: rgb(146 146 146 / 22%);
-    --darkgrey: #999;
+    --darkgrey: rgb(150 150 150);
     --lightred: #ff4f4f;
     --white: #fdfdfd;
     --black: #262828;
@@ -74,9 +74,9 @@ a:hover {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
 }
-a,button,
-a::before,button::before,
-a::after,button::after{
+a,button,div,label,
+a::before,button::before,div::before,label::before,
+a::after,button::after,div::after,label::after{
     word-break: keep-all;
 }
 *:focus,

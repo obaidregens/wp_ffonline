@@ -1,0 +1,30 @@
+input[type="range"] {
+    --transition-thumb: .2s;
+    --thumb: 15px;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--theme-color);
+    outline: none;
+}
+input[type="range"]:active {
+    --thumb: 20px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    transition: width var(--transition-thumb), height var(--transition-thumb);
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 100px;
+    width: var(--thumb);
+    height: var(--thumb);
+    background: var(--theme-color);
+    cursor: pointer;
+} 
+input[type="range"]::-moz-range-thumb {
+    transition: width var(--transition-thumb), height var(--transition-thumb);
+    border-radius: 100px;
+    width: var(--thumb);
+    height: var(--thumb);
+    background: var(--theme-color);
+    cursor: pointer;
+}

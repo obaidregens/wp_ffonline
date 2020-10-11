@@ -1,67 +1,86 @@
+main > book {
+    display: flex;
+    flex-direction: row;
+}
 main > book > book-header {
-    display: block;
-    text-align: center;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 main > book > book-header > book-title {
-    display: block;
-}
-main > book > book-header > book-title {
+    display: flex;
     font-size: 1.7rem;
 }
 main > book > book-header > author {
-    display: block;
+    display: flex;
     margin-top: -6px;
     font-size: 1.1rem;
+    margin-bottom: 1rem;
 }
-main > book > book-header > author > a:first-child {
-    display: block;
-    margin: 0 auto;
-}
-main > book > book-header > author > a:first-child::before {
+main > book > book-header > author > a::before {
+    color: var(--text-color);
     content: 'by ';
 }
-main > book > book-header > author > a:nth-child(2) {
-    margin: 0 auto;
-    font-size: 0.8rem;
-    display: block;
-    color: var(--text-color);
-    opacity: 0.85;
-    text-transform: uppercase;
-    letter-spacing: -0.5px;
-}
-main > book > book-header > author > a:nth-child(2)::before {
-    content: 'From ';
-}
-main > book > book-header > a.button {
+main > book > book-header > book-description {
     display: flex;
-    margin: 0 auto;
+    margin-bottom: 1rem;
 }
-main > book > book-header > book-meta {
-    width: fit-content;
-    width: -moz-fit-content;
-    margin: 0 auto;
-    margin-bottom: 10px;
+/* More */
+book-more {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
 }
-main > book > tags {
-    text-align: center;
-    border-bottom: var(--border);
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+/* Options */
+book-options {
+    display: flex;
+    flex-direction: row;
 }
-main > book > book-description {
-    display: block;
-    border-bottom: var(--border);
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+book-options > a.button:first-child {
+    flex: 1;
 }
-main > book > floater > .book-collections::before {
+book-options > a.button,button {
+    margin-right: 0;
+}
+book-options > *:not(:first-child)::before {
+    font-family: 'icons';
+    display: inline-block;
+}
+book-options > .book-collections::before {
     content: '\e916';
-    transform: scale(1.2);
+    transform: scale(1.55);
 }
-main > book > floater > .book-share::before {
+book-options > .book-share::before {
     content: '\e908';
+    transform: scale(1.4);
 }
-main > book input.collapsible + label {
+book-options > .book-offline::before {
+    content: '\e949';
+    transform: scale(1.4);
+}
+book-options > .book-offline.active::before {
+    content: '\e948';
+}
+chapter-index {
+    margin-top: 10px;
+}
+chapter-index > label {
     justify-content: center;
+}
+/* Mobile */
+@media only screen and (max-width: 800px) {
+    main > book {
+        flex-direction: column;
+    }
+    book-more,
+    book-options > a.button {
+        margin-left: 0;
+    }
+}
+/* Offline Notice */
+offline-notice {
+	background-color: var(--transparent-accent);
+	color: var(--lightblack);
+    display: flex;
+    padding: 15px;
+    margin: 15px 5px;
 }

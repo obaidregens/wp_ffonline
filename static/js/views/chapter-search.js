@@ -1,4 +1,4 @@
-const search_popup = document.querySelector('button.search-button + popup');
+const search_popup = document.querySelector('popup.search-story');
 search_popup.addEventListener('onOpen',() => {
     window.acsSwipeEnabled = false;
     search_popup.querySelector('form > text-input:first-child > input').focus();
@@ -20,20 +20,20 @@ function paraFromHash(){
     if (! paraNum){
         return;
     }
-    const paraTo = document.querySelector(`chapter > content > p:nth-child(${paraNum})`);
+    const paraTo = document.querySelector(`chapter > content > p:nth-of-type(${paraNum})`);
     paraTo.scrollIntoView();
     const ht = document.querySelector('html');
     ht.scrollTop = ht.scrollTop - 55;
 }
 window.addEventListener('hashchange',paraFromHash);
 paraFromHash();
-document.querySelector('button.search-button + popup > form').addEventListener('submit',function(event){
+document.querySelector('popup.search-story > form').addEventListener('submit',function(event){
     event.preventDefault();
 	if (typeof grecaptcha === 'undefined') {
 		new toast("You're offline.");
 		return;
     }
-    const results_elem = document.querySelector('button.search-button + popup > results');
+    const results_elem = document.querySelector('popup.search-story > results');
     results_elem.classList.add('loading');
     api('search_book_contents',{
 		data: {
@@ -69,16 +69,4 @@ document.querySelector('button.search-button + popup > form').addEventListener('
             }
 		}
 	});
-});
-
-window.addEventListener('load',() => {
-    window.acsSwipeEnabled = true;
-    const mc = new Hammer(document.documentElement);
-    mc.on("panright", event => {
-        if (! window.acsSwipeEnabled || ! _.isHammerSwipe(event)) {
-            return;
-        }
-        window.acsSwipeEnabled = false;
-        popup.open(search_popup);
-    });
 });

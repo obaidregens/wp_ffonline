@@ -3,6 +3,7 @@ if (! isset($app->bundle)){
     $app->bundle = new bundle ('collection-single');
 }
 $app->bundle->css('css/components/tooltips');
+$app->bundle->css('css/components/grid');
 $app->bundle->css('css/views/collection-content');
 $app->bundle->js('js/views/collection-options');
 $app->bundle->js('js/views/collection-content');

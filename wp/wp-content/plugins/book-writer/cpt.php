@@ -287,8 +287,7 @@ function bw_register_cpt() {
 		'public'                => true,
 		'menu_icon'             => 'dashicons-book-alt',
 		'supports'              => array('title','editor','excerpt'),
-		'exclude_from_search'   => false,
-		'rewrite'				=> array('ep_mask' => EP_BOOKS),
+		'exclude_from_search'   => false
 	);
 	register_post_type( 'book', $args );
 	$labels = array(

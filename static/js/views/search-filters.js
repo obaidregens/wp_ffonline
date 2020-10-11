@@ -452,6 +452,7 @@ const trigger_search = (page = false) => {
                 }
                 setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
             }
+            reChapterProgress();
         }
     });
 

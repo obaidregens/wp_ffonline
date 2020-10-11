@@ -152,7 +152,8 @@ $app->listen('/',function($self){
     $self->type = 'home';
     $self->type_id = 0;
     $self->header([
-        'description'   => "Read & write fanfiction online."
+        'title'         => construct_page_title("Read & Write Fanfiction"),
+        'description'   => "Discover & read the most popular fanfiction stories in your fandom, with the best app to read & write fanfiction!"
     ]);
     $self->template('/views/home');
     $self->footer();

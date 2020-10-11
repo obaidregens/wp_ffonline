@@ -46,7 +46,7 @@ $description = get_the_author_meta( 'description', $user->ID );
             <?php
             global $book;
             foreach ($book_query->books as $book) {
-                get_template_part( 'template-parts/content' , 'search' );
+                $app->template( '/subviews/story-single' );
             }
             ?>                
         </books-container>

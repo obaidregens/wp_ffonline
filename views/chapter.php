@@ -3,13 +3,13 @@ $app->bundle = new bundle('chapters');
 $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
-$app->bundle->js('external/hammer-js/hammer');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/index');
 $app->bundle->css('css/js-components/confirmation');
 $app->bundle->js('js/components/confirmation');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
+$app->bundle->css('css/components/slider');
 $app->bundle->mix('search-options');
 $app->bundle->css('css/views/chapter-main');
 $app->bundle->css('css/views/chapter-reviews');
@@ -47,7 +47,7 @@ $query = (new WP_Query(array(
 $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 ?>
 <chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
-	<chapter-header tabindex="1" class="popup">
+	<chapter-header tabindex="1" >
 		<book-info book_id="<?= $book->ID; ?>">
 			<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>
 			<author><?= author_href($chapter->post_parent); ?></author>
@@ -55,9 +55,6 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 		</book-info>
 		<div class="down-arrow"></div>
 	</chapter-header>
-	<popup>
-		<?= $app->template('/subviews/chapter-index'); ?>
-	</popup>
 	<chapter-title><?= $chapter->post_title; ?></chapter-title>
 	<content class="acs-elem"><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'pre_author_note', true )); ?></author-notes><?= $chapter->post_content; ?><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'post_author_note', true )); ?></author-notes></content>
 	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
@@ -87,8 +84,10 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 <?php }	else if (! $comments_open) { ?>
 	<text>Reviews are closed.</text>
 <?php } ?>
-<button class="search-button popup"></button>
-<popup>
+<popup class="chapter-index">
+	<?= $app->template('/subviews/chapter-index'); ?>
+</popup>
+<popup class="search-story">
 	<form>
 		<text-input label="Search"></text-input>
 		<button></button>

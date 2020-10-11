@@ -1,13 +1,11 @@
 (() => {
     const existing = JSON.parse(localStorage.getItem('offline_stories')) || {};
     if (existing[book_id]) {
-        document.querySelector('chapter > book-options > .book-offline').classList.add('active');
-        document.querySelector('acs-options > .offline').classList.add('active');
+        document.querySelector('book-options > .book-offline').classList.add('active');
     }
 })();
-document.querySelector('chapter > book-options > .book-offline').addEventListener('click',async ({target}) => {
-    const total_chapters = document.querySelectorAll('popup.chapter-index > index > a').length;
-    const acsOff = document.querySelector('acs-options > .offline');
+document.querySelector('book-options > .book-offline').addEventListener('click',async ({target}) => {
+    const total_chapters = document.querySelectorAll('chapter-index > collapsible > index > a').length;
     const urls = [
         "/story/" + book_id
     ];
@@ -17,7 +15,6 @@ document.querySelector('chapter > book-options > .book-offline').addEventListene
     const existing = JSON.parse(localStorage.getItem('offline_stories')) || {};
     const cache = await caches.open('offline');
     target.setAttribute('disabled',"");
-    acsOff.setAttribute('disabled',"");
     if (existing[book_id]) {
         confirmation("Remove from your offline stories?").then(v => {
             if (!v) {return;}
@@ -25,23 +22,21 @@ document.querySelector('chapter > book-options > .book-offline').addEventListene
             delete existing[book_id];
             localStorage.setItem('offline_stories',JSON.stringify(existing));
             target.classList.remove('active');
-            acsOff.classList.remove('active');
         });
         target.removeAttribute('disabled');
-        acsOff.removeAttribute('disabled');
         return;
     }
     existing[book_id] = {
         ID: book_id,
-        title: document.querySelector('book-info > a.title').innerText,
-        author: document.querySelector('book-info > author > a').innerText,
+        title: document.querySelector('book-header > book-title').innerText,
+        author: document.querySelector('book-header > author > a').innerText,
         chapters: total_chapters,
         time_added: Date.now()
     };
     const ofs = DOM.create('offline-notice',{
         innerText: "Saving story"
     });
-    document.querySelector('chapter').appendChild(ofs);
+    document.querySelector('book-more').prepend(ofs);
     const chapter_length = urls.length-1;
     for (let i = 0; i < chapter_length+1; i++) {
         const ur = urls[i];
@@ -52,8 +47,6 @@ document.querySelector('chapter > book-options > .book-offline').addEventListene
     await api('offline_chapter',{ data: {book_id} });
     localStorage.setItem('offline_stories',JSON.stringify(existing));
     target.removeAttribute('disabled');
-    acsOff.removeAttribute('disabled');
     ofs.remove();
     target.classList.add('active');
-    acsOff.classList.add('active');
 });

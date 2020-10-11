@@ -4,11 +4,88 @@ document.documentElement.appendChild(DOM.create('link',{
         rel: "stylesheet"
     }
 }));
-const acs_button = DOM.create('button',{
-    classes: ['acs-button','popup']
-});
-document.documentElement.appendChild(acs_button);
+(() => {
+    const cex = typeof chapter_id !== 'undefined';
+    const htmlEl = document.querySelector('html');
+    if (cex) {
+        const acs_top = htmlEl.appendChild(DOM.create('acs-options',{
+            children: [
+                DOM.create('button',{
+                    classes: ['search'],
+                    listeners: {
+                        click: () => {
+                            htmlEl.classList.remove('show-acs');
+                            popup.open(document.querySelector('popup.search-story'));
+                        }
+                    }
+                }),
+                DOM.create('button',{
+                    classes: ['offline'],
+                    listeners: {
+                        click: () => {
+                            htmlEl.classList.remove('show-acs');
+                            document.querySelector('.book-offline').dispatchEvent(new Event('click'));
+                        }
+                    }
+                }),
+            ]
+        }));
+    }
+    const acs_bottom = htmlEl.appendChild(DOM.create('acs-options',{
+        children: [
+            !cex ? null : DOM.create('button',{
+                classes: ['index'],
+                listeners: {
+                    click: () => {
+                        htmlEl.classList.remove('show-acs');
+                        popup.open(document.querySelector('popup.chapter-index'));
+                    }
+                }
+            }),
+            DOM.create('button',{
+                classes: ['themes'],
+                listeners: {
+                    click: () => {
+                        htmlEl.classList.remove('show-acs');
+                        popup.open(acs_popup);
+                    }
+                }
+            }),
+            DOM.create('button',{
+                classes: ['text'],
+                listeners: {
+                    click: () => {
+                        htmlEl.classList.remove('show-acs');
+                        popup.open(acs_popup);
+                    }
+                }
+            }),
+            !cex ? null : DOM.create('button',{
+                classes: ['reviews'],
+                listeners: {
+                    click: () => {
+                        document.querySelector('reviews-wrapper').scrollIntoView();
+                        document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
+                        document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
+                    }
+                }
+            }),
+        ]
+    }));
+    const acs_elem = document.querySelector('.acs-elem');
+    let timeLastClicked = Date.now();
+    acs_elem.addEventListener('click',() => {
+        if ( (Date.now() - timeLastClicked) < 300 ) {
+            htmlEl.classList.remove('show-acs');
+            popup.open(acs_popup);
+            return;
+        }
+        timeLastClicked = Date.now();
+        htmlEl.classList.toggle('show-acs');
+    });    
+})();
 const acs_popup = DOM.create('popup',{
+    classes: ['acs-popup'],
    children: [
        DOM.create('change-options',{
            attributes: {
@@ -125,10 +202,6 @@ const acs_popup = DOM.create('popup',{
             ]
         })
    ],
-    listeners: {
-        onOpen: () => window.acsSwipeEnabled = false,
-        onAfterClose: () => window.acsSwipeEnabled = true
-    }
 });
 popup.create(acs_popup);
 
@@ -165,12 +238,12 @@ for (let i = 0; i < acs_entries.length; i++) {
     }
     else if (['fontSize','lineHeight','paragraphHeight','width'].includes(acs_.key)){
         const new_style = parseInt(acs_.value);
-        _.prop(document.querySelector('.acs-button + popup change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
-        _.prop(document.querySelector('.acs-button + popup change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
+        _.prop(document.querySelector('.acs-popup change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
+        _.prop(document.querySelector('.acs-popup change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
         chapter_content.style.setProperty('--' + acs_.key,new_style);
     }
 }
-document.querySelector('.acs-button + popup').addEventListener('click',function(event){
+document.querySelector('.acs-popup').addEventListener('click',function(event){
     const closest_change_options = event.target.closest('change-options');
     if (! closest_change_options) {
         return;
@@ -208,15 +281,4 @@ document.querySelector('.acs-button + popup').addEventListener('click',function(
         acs.set('font',fontName);
     }
 });
-document.querySelector('dark-mode').addEventListener('click',() => acs.set('theme',themes.current) );
-window.addEventListener('load',() => {
-    window.acsSwipeEnabled = true;
-    const mc = new Hammer(document.documentElement);
-    mc.on("panleft", event => {
-        if (! window.acsSwipeEnabled || ! _.isHammerSwipe(event)) {
-            return;
-        }
-        window.acsSwipeEnabled = false;
-        popup.open(acs_popup);
-    });
-});
+document.querySelector('dark-mode').remove();

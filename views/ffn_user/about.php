@@ -17,7 +17,7 @@ $book_query = $app->author_books;
             <?php
             global $book;
             foreach ($book_query->books as $book) {
-                get_template_part( 'template-parts/content' , 'search' );
+                $app->template( '/subviews/story-single' );
             }
             ?>
         </books-container>

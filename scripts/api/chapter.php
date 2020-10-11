@@ -78,19 +78,18 @@ function api_vote_chapter() {
     return ['code'=>2];
 }
 function api_offline_chapter() {
-    required_params('chapter_id');
+    required_params('book_id');
     $d = &$_POST['data'];
-    $chapter = get_post($d['chapter_id']);
-    if (!$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish' ) {
+    $book = get_post($d['book_id']);
+    if (!$book || $book->post_type !== 'book' || $book->post_status !== 'publish' ) {
         return ['code'=>10];
     }
-    $chapter_num = get_post_meta( $chapter->ID, 'chapter_order', true );
     offline_stats::new([
         'type'          => 'offline',
         'landing_id'    => $_POST['landing_id'],
-        'story_id'      => $chapter->post_parent,
-        'chapter_id'    => $chapter->ID,
-        'chapter_num'   => $chapter_num,
+        'story_id'      => $book->ID,
+        'chapter_id'    => 0,
+        'chapter_num'   => 0,
         'stat_millitime'=> millitime(),
     ]);
     return ['code'=>1];

@@ -1,6 +1,5 @@
 <?php
 $app->bundle = global_bundle('drafts-preview');
-$app->bundle->js('external/hammer-js/hammer');
 $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
 $app->bundle->css('css/views/drafts-index');

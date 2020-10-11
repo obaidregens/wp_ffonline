@@ -1,16 +1,24 @@
 window.addEventListener('load',() => {
     let Track = JSON.parse(localStorage.getItem('chapter_track-' + book_id));
-    if ( Track !== null && (Date.now() - parseInt(Track.timestamp)) > 1000*60*60*1 ){
-        localStorage.setItem('chapter_track_follow',0);
-    }
+    // HasBeenLeft => 10 min
+    let cStory = {};
+    try {
+        cStory = JSON.parse(localStorage.getItem('chapter_track_follow')) || {};
+    } catch { cStory = {}; }
     const chapter_num = document.querySelector('chapter').getAttribute('num');
-    if (Track !== null && localStorage.getItem('chapter_track_follow') !== book_id.toString() ){
-        confirmation("Do you want to continue reading where you left of?").then(v => {
-            if (!v){return;}
-            window.location.href = "/story/" + book_id + "/" + Track.chapter_num + "#" + Track.paragraph
-        });
+    if (Track !== null) {
+        const hasBeenLeft = (Date.now() - Math.max(parseInt(cStory.timestamp || 0),parseInt(Track.timestamp)) ) > 1000*60*10;
+        if (  ( hasBeenLeft || (cStory.book_id || 0).toString() !== book_id.toString() ) ){
+            confirmation("Do you want to continue reading where you left of?").then(v => {
+                if (!v){return;}
+                window.location.href = "/story/" + book_id + "/" + Track.chapter_num + "#" + Track.paragraph
+            });
+        }    
     }
-    localStorage.setItem('chapter_track_follow',book_id);
+    localStorage.setItem('chapter_track_follow',JSON.stringify({
+        book_id,
+        timestamp: Date.now()
+    }));
     setTimeout(() => {
         _.scrollEnd(() => {
             const paras = document.querySelectorAll('chapter > content > p');
@@ -22,10 +30,15 @@ window.addEventListener('load',() => {
                     break;
                 }
             }
+            localStorage.setItem('chapter_track_follow',JSON.stringify({
+                book_id,
+                timestamp: Date.now()
+            }));        
             localStorage.setItem('chapter_track-' + book_id,JSON.stringify({
                 chapter_num,
                 paragraph: paraI,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                chapterProgress: parseFloat(( (chapter_num/document.querySelectorAll('chapter-header + popup > index > a').length)*100 ).toFixed(1))
             }));
         });    
     },10000);

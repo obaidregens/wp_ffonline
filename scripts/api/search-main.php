@@ -27,16 +27,16 @@ function api_search() {
 	if ( $book_query->has() ){
         global $book;
         foreach ($book_query->books as $book) {
-            get_template_part( 'template-parts/content' , 'search' );
+            $app->template( '/subviews/story-single' );
         }
 	}
 	else {
-		get_template_part( 'template-parts/content', 'noresult' );
+        $app->template('/subviews/no-books');
     }
 	$response['output'] = ob_get_contents();
     ob_end_clean();
 	ob_start();
-	get_template_part( 'template-parts/content', 'bookpaginate' );
+    $app->template( '/subviews/paginate-stories' );
 	$response['paginate'] = ob_get_contents();
     ob_end_clean();
     $response['query'] = $book_query;

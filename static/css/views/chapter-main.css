@@ -4,44 +4,14 @@ chapter {
 }
 chapter > chapter-header {
 	user-select: none;
-	cursor: pointer;
 	display: flex;
 	margin-bottom: 20px;
 	padding: 10px;
 	transition: background-color 0.2s;
 	will-change: background-color;
 }
-chapter > chapter-header:hover {
-	background-color: var(--hover);
-}
 chapter > chapter-header:focus {
 	outline: none;
-}
-chapter > chapter-header.dropdown > dropdown {
-	counter-reset: chapter-num;
-	width: 100%;
-}
-chapter > chapter-header.dropdown > dropdown > *::before{
-	counter-increment: chapter-num;
-	content: counter(chapter-num) ". \00a0";
-}
-chapter > chapter-header.dropdown > dropdown > *[selected]{
-	border-left: .25rem solid var(--theme-color);
-    padding-left: 0.5rem;
-    color: var(--theme-color);
-	font-weight: bold;
-	cursor: default;
-}
-chapter > chapter-header > .down-arrow {
-	pointer-events: none;
-	display: flex;
-	align-items: center;
-	margin-left: auto;
-	font-size: 25px;
-}
-chapter > chapter-header > .down-arrow::after {
-	font-family: 'icons';
-	content: '\e904';
 }
 chapter > chapter-header > book-info {
 	display: block;

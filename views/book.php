@@ -12,6 +12,7 @@ $app->bundle->css('css/components/index');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('/css/components/floater');
 $app->bundle->css('css/views/search-tags');
+$app->bundle->js('js/views/book-offline');
 $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
 $app->bundle->enqueue();
@@ -29,26 +30,31 @@ $is_user_logged_in = is_user_logged_in(  );
     <book-header>
         <book-title><?= $book->post_title; ?></book-title>
         <author><?= author_href($book); ?></author>
+        <book-description><?= $book->post_excerpt; ?></book-description>
         <?php print_book_meta($book->ID); ?>
-        <a class="button" theme href="<?= get_permalink( $all_chapters[0]->ID ); ?>">Start Reading</a>
+        <?php print_book_tags($book->ID,$book_query); ?>
     </book-header>
-    <?php print_book_tags($book->ID,$book_query); ?>
-    <book-description><?= $book->post_excerpt; ?></book-description>
-    <floater>
-        <collections_data hidden>
-            <?= json_encode(collection_helpers::js_data()) ?>
-        </collections_data>
-        <book_collections hidden>
-            <?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
-        </book_collections>
-        <button class="book-collections"></button>
-        <button class="book-share"></button>
-    </floater>
-    <input class="collapsible" type="checkbox">
-    <label>Chapter Index</label>
-    <collapsible>
-        <?php
-        $app->template('subviews/chapter-index');
-        ?>
-    </collapsible>
+    <book-more>
+        <book-options>
+            <a class="button" href="<?= get_permalink( $all_chapters[0]->ID ); ?>">Read</a>
+            <button class="book-collections"></button>
+            <button class="book-share"></button>
+            <button class="book-offline"></button>
+        </book-options>
+        <chapter-index>
+            <input class="collapsible" type="checkbox">
+            <label>Chapter Index</label>
+            <collapsible>
+                <?php
+                $app->template('subviews/chapter-index');
+                ?>
+            </collapsible>
+        </chapter-index>
+    </book-more>
+    <collections_data hidden>
+        <?= json_encode(collection_helpers::js_data()) ?>
+    </collections_data>
+    <book_collections hidden>
+        <?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
+    </book_collections>
 </book>

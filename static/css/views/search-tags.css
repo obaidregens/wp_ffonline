@@ -1,6 +1,12 @@
 /* Book Meta */
 book-meta {
     display: flex;
+    margin-bottom: 10px;
+}
+@media only screen and (max-width: 400px) {
+    book-meta{
+        font-size: 0.8rem;
+    }
 }
 book-meta > span {
     margin-right: 10px;
@@ -11,7 +17,6 @@ book-meta > span::after {
     float: left;
     margin-right: 5px;
 }
-
 book-meta > span[tooltip-top="Words"]::after{
     content: '\e915';
 }
@@ -28,16 +33,26 @@ book-meta > span[tooltip-top="Votes"]::after{
 tags {
     display: block;
     cursor: text;
+    margin-bottom: 15px;
 }
 tags > tag-group {
-    content: attr(before);
+    color: var(--darkgrey);
+    background-color: var(--background-accent);
+    margin: 4px 2px;
+    padding: 0 8px;
+    border-radius: 50px;
+    display: inline-block;
+    font-size: 0.9rem;
 }
-tags > tag-group:not([name="Fandom"]):before {
+@media only screen and (max-width: 400px) {
+    tags > tag-group {
+        font-size: 0.8rem;
+    }
+}
+tags > tag-group:not([name="Fandom"]):not([name="Language"]):not([name="Rating"]):before {
+    cursor: pointer;
     font-weight: bold;
     content: attr(name) ": ";
-}
-tags > tag-group:not(:last-child):after {
-    content: ' - ';
 }
 tags > tag-group > a:not(:last-child):after {
     content: ', ';
@@ -47,6 +62,12 @@ tags > tag-group[name="Fandom"] > a:not(:last-child):after {
     content: '/';
 }
 tag-group > a {
-    color: var(--text-color);
-    opacity: 0.85;
+    color: var(--darkgrey);
+    margin: 0 0px;
+    padding: 4px;
+    display: inline-block;
+}
+/* Collapse Tags */
+book:not(.show) > tags > tag-group:not([name="Language"]):not([name="Rating"]) {
+    display: none;
 }

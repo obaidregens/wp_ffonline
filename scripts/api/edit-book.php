@@ -70,7 +70,7 @@ function api_edit_book() {
                 $book->ID,
                 substr( ($chapter['title'] ?? "") ,0,80),
                 [ 'pre' => $chapter['preAN'], 'post' => $chapter['postAN'] ],
-                $chapter['ID'] ?? 'new',
+                $chapter['ID'] ?? 'new'
             );
             if ( $chapter_id !== false ) {
                 $chapter_ids_order[] = $chapter_id;

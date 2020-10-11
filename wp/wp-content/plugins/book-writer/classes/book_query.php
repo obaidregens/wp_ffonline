@@ -67,7 +67,6 @@ class book_query{
                     'link'      => '<a href="/read?pairing_included=' . $pairing->pairing_id . '">' . $name . '</a>',
                 );
             }
-
         }
         return $tax;
     }

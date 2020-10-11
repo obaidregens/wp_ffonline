@@ -47,13 +47,13 @@ $book_query = $query;
 
 <loader xl></loader>
 
-<books-container class="grid">
+<books-container>
 <book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
 <?php
 if ( $book_query->has() ){
     global $book;
     foreach ($book_query->books as $book) {
-        get_template_part( 'template-parts/content' , 'search' );
+        $app->template( '/subviews/story-single' );
     }
 }
 else {
@@ -62,7 +62,7 @@ else {
 ?>
 </books-container>
 <pagination>
-<?php get_template_part( 'template-parts/content', 'bookpaginate' ); ?>
+<?php $app->template( '/subviews/paginate-stories' ); ?>
 </pagination>
 <?php
 if (! isset($app->bundle)){
@@ -72,5 +72,25 @@ $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->mix('glide_js');
-$app->bundle->mix('create_search_new');
+$app->bundle->css('css/js-components/confirmation');
+$app->bundle->js('js/components/confirmation');
+$app->bundle->css('css/components/loader');
+$app->bundle->css('css/components/select');
+$app->bundle->css('css/components/tooltips');
+$app->bundle->css('css/js-components/checkbox');
+$app->bundle->js("js/components/checkbox");
+$app->bundle->css('css/js-components/switch');
+$app->bundle->js("js/components/switch");
+$app->bundle->js("external/noUiSlider/nouislider");
+$app->bundle->css('external/noUiSlider/nouislider');
+$app->bundle->css('css/views/search-tags');
+$app->bundle->css('css/views/search-content');
+$app->bundle->js("js/views/search-content");
+$app->bundle->css('css/views/search-filters');
+$app->bundle->js("js/views/search-filters");
+$app->bundle->css('css/views/search-options');
+$app->bundle->js("js/views/search-options");
+$app->bundle->css('css/views/search-updateCollection');
+$app->bundle->js("js/views/search-updateCollection");
+$app->bundle->js("js/views/search-offline");
 $app->bundle->enqueue();

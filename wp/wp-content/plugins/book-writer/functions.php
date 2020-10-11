@@ -362,10 +362,7 @@ function run_at_activation(){
 register_activation_hook(__FILE__, 'run_at_activation' );
 
 $includes = array(
-	'survey_query',
-	'endpoints',
 	'misc',
-	'chapter-navigator',
 	'cpt',
 	'chapter-fields',
 	'custom-login',
