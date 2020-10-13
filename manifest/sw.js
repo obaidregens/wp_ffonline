@@ -11,10 +11,10 @@ const permCaching = [
   "https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2",
   "https://fonts.gstatic.com/s/pangolin/v6/cY9GfjGcW0FPpi-tWMfN79w.woff2",
   "https://fonts.gstatic.com/s/raleway/v18/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrE.woff2",
-  "/content/static/bundles/chapters.css",
-  "/content/static/bundles/chapters.js",
-  "/content/static/bundles/book.css",
-  "/content/static/bundles/book.js",
+  "/content/static/chapters.css",
+  "/content/static/chapters.js",
+  "/content/static/book.css",
+  "/content/static/book.js",
   "/content/static/css/fonts/icons.woff",
   OFFLINE_URL
 ];

@@ -75,9 +75,7 @@ class bundle {
             mkdir($this->bundles_dir);
         }
         if (! file_exists($this->index_file)){
-            file_put_contents($this->index_file,json_encode(
-                array()
-            ));
+            file_put_contents($this->index_file,json_encode([]));
         }
         $this->get_bundle();
     }
@@ -203,10 +201,10 @@ class bundle {
         return self::raw_urls($this->bundle);
     }
     protected static function raw_urls($bundle) {
-        $raw_urls = array(
-            'css'   => array(),
-            'js'    => array()
-        );
+        $raw_urls = [
+            'css'   => [],
+            'js'    => []
+        ];
         foreach ($bundle['mix'] as $mix_name) {
             $raw_urls['css'] = array_merge($raw_urls['css'], self::$mix[$mix_name]['css']);
             $raw_urls['js'] = array_merge($raw_urls['js'], self::$mix[$mix_name]['js']);

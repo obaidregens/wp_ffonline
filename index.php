@@ -165,7 +165,7 @@ $app->listen('/',function($self){
 });
 $app->listen('/logout',function($self){
     if (! is_user_logged_in()) {
-        $self->redirect('login');
+        $self->redirect('/login');
     }
     $self->type = 'logout';
     $self->type_id = 0;
@@ -543,7 +543,7 @@ $app->listen('/import-stories',function($self){
 });
 $app->listen('/login',function($self) {
     $self->login();
-    $self->redirect('my-stories');
+    $self->redirect('/my-stories');
 });
 // Write
 $app->listen('/my-stories',function($self){
@@ -818,6 +818,19 @@ $app->listen('/offline',function($self) {
 // Robots
 $app->listen('/robots.txt',function($self){
     $self->static('/content/robots.txt');
+});
+// Temp Resources
+$app->listen('/content/static/:filename',function($self){
+    $f = $self->params['filename'];
+    if (! in_array($f,['chapters.css','chapters.js','book.css','book.js'])){
+        return;
+    }
+    $a = explode('.',$f);
+    $name = $a[0];
+    $type = $a[1];
+    $b = new bundle("O");
+    $filename = $name . '-' . $b->index[$name][$type . '_hash'] . "." . $type;
+    $self->redirect('/content/static/bundles/' . $filename);
 });
 // 404
 $app->listen('&*',function($self){
