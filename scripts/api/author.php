@@ -9,7 +9,7 @@ function api_add_update(){
     }
     $update_id = wp_insert_post(array(
         'post_title'    	=> 'None',
-        'post_content'  	=> htmlspecialchars($update),
+        'post_content'  	=> $update,
         'post_status'   	=> 'publish',
     ));
     $inst = new notifications_insert;
@@ -60,7 +60,7 @@ function api_update_bio() {
     if(! $is_current_author ){
         return ['code'=>6];
     }
-    update_user_meta( $user, 'description', htmlspecialchars($bio));
+    update_user_meta( $user, 'description', $bio);
     return ['code'=>1];
 }
 function api_change_password () {

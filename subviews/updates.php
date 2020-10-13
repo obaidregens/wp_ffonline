@@ -23,7 +23,7 @@ $updates = $updates_query->updates;
                     </button>
                 <?php } ?>
                 <content>
-                    <?= $update->post_content; ?>
+                    <?= htmlspecialchars($update->post_content); ?>
                 </content>
             </update>
         <?php } ?>

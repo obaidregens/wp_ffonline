@@ -11,8 +11,11 @@ $query->query();
 global $book_query;
 $book_query = $query;
 ?>
-<collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
-<tags_data hidden><?= json_encode(tags_data($query)); ?></tags_data>
+<script>
+    window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+    window.tags_data = <?= script_json(json_encode(tags_data($query))); ?>;
+    window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+</script>
 <prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
 
 <filter-books>
@@ -48,7 +51,6 @@ $book_query = $query;
 <loader xl></loader>
 
 <books-container>
-<book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
 <?php
 if ( $book_query->has() ){
     global $book;
@@ -92,5 +94,6 @@ $app->bundle->css('css/views/search-options');
 $app->bundle->js("js/views/search-options");
 $app->bundle->css('css/views/search-updateCollection');
 $app->bundle->js("js/views/search-updateCollection");
+$app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js("js/views/search-offline");
 $app->bundle->enqueue();

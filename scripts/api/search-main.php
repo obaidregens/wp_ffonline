@@ -1,6 +1,7 @@
 <?php
 function api_search() {
     global $book_query;
+    global $app;
     $book_query = new book_query;
     if (
         isset($_POST['data']['page'])
@@ -15,15 +16,11 @@ function api_search() {
     }
     $book_query->query();
     $response = array(
-        'prev'      => ctrk_encrypt($book_query->args),
-        'tags_data' => tags_data($book_query),
+        'prev'              => ctrk_encrypt($book_query->args),
+        'tags_data'         => tags_data($book_query),
+        'book_collections'  => collection_helpers::query_by_book(array_column($book_query->books,'ID'))
     );
     ob_start();
-    ?>
-    <book_collections hidden>
-        <?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?>
-    </book_collections>
-    <?php
 	if ( $book_query->has() ){
         global $book;
         foreach ($book_query->books as $book) {

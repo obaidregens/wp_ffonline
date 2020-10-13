@@ -22,8 +22,8 @@ if ($book_id !== 'new' && $book->post_status === 'publish') {
 <button theme label="Save"></button>
 </submit>
 <?php
-$bundle = new bundle('react-ps');
-$bundle->mix('react');
+$bundle = new bundle('react-select-ps');
+$bundle->js('external/react-select/react-select');
 $bundle->enqueue();
 $bundle->print();
 
@@ -43,10 +43,5 @@ $app->bundle->css('css/views/drafts-index');
 $app->bundle->css('css/views/book-edit');
 $app->bundle->js('js/views/book-edit-submit');
 $app->bundle->css('css/views/book-edit-submit');
-$app->bundle->enqueue();
-$app->bundle->print();
-$app->bundle = new bundle('edit-book-react');
-$app->bundle->script_type = 'module';
 $app->bundle->js('js/views/book-edit');
 $app->bundle->enqueue();
-?>

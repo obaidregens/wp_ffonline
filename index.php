@@ -92,6 +92,10 @@ class Router {
         $this->header_options = array_replace([
             'title'         => 'Fanfiction Online'
         ],$options);
+        $this->header_options['title'] = htmlspecialchars($this->header_options['title']);
+        if (isset($this->header_options['description'])) {
+            $this->header_options['description'] = htmlspecialchars($this->header_options['description']);
+        }
         $this->template('/views/header',true);
     }
     function footer(){
@@ -153,7 +157,7 @@ $app->listen('/',function($self){
     $self->type_id = 0;
     $self->header([
         'title'         => construct_page_title("Read & Write Fanfiction"),
-        'description'   => "Discover & read the most popular fanfiction stories in your fandom, with the best app to read & write fanfiction!"
+        'description'   => "Discover and read the most popular fanfiction stories in your fandom, with the best app to read and write fanfiction!"
     ]);
     $self->template('/views/home');
     $self->footer();

@@ -1,5 +1,5 @@
 const setSelectedTags = (tag_name,selected) => {
-    let tags_data = JSON.parse(document.querySelector('tags_data').innerText)[tag_name] || {};
+    let tags_data = _.clone(window.tags_data)[tag_name] || {};
     const frag = document.createDocumentFragment();
     const select_tag = document.querySelector(`select-tag[name="${tag_name}"]`);
     select_tag.setAttribute('selected',JSON.stringify(selected));
@@ -68,7 +68,7 @@ const replaceTags = (sort = 'count') => {
     if (! current_popup ){
         return;
     }
-    const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
+    const tags_data = _.clone(window.tags_data);
     const tag_name = current_popup.getAttribute('tag-name');
     const this_tags = tags_data[tag_name] || {};
     const this_tag_ids = sort_tags(this_tags, sort);
@@ -135,7 +135,7 @@ const async_tags = () => {
             return;
         }
         current_popup.classList.remove('no-results');
-        const tags_data = JSON.parse(document.querySelector('tags_data').innerText);
+        const tags_data = _.clone(window.tags_data);
         const tag_name = current_popup.getAttribute('tag-name');
         const this_tags = tags_data[tag_name] || {};
         const s = current_popup.querySelector('wrap > text-input > input').value;
@@ -430,7 +430,8 @@ const trigger_search = (page = false) => {
         callback: function(response){
             // New Data
             prev_ss.innerText = response.prev;
-            document.querySelector('tags_data').innerText = JSON.stringify( response.tags_data );
+            window.tags_data = _.clone( response.tags_data );
+            window.book_collections = _.clone( response.book_collections );
             document.querySelector('pagination').innerHTML = response.paginate;
             document.querySelector('books-container').innerHTML = response.output;
             window.history.pushState("object or string", document.querySelector("title").innerText,'?' + construct);
@@ -453,6 +454,7 @@ const trigger_search = (page = false) => {
                 setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
             }
             reChapterProgress();
+            reHookOffline();
         }
     });
 

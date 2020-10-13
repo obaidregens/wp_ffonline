@@ -5,7 +5,7 @@ $follows = count(collection_follow::query_by('type_id',$collection->ID));
 ?>
 <collection class="grid-item" collection_id="<?= $collection->ID ?>">
     <button class="follow-collection options <?= collection_follow::exists($collection->ID,get_current_user_id()) ? 'followed' : '' ?>"></button>
-    <a href="<?= collection_helpers::link($collection->ID); ?>" class="title"><?= $collection->title; ?></a>
+    <a href="<?= collection_helpers::link($collection->ID); ?>" class="title"><?= htmlspecialchars($collection->title); ?></a>
     <a href="<?= get_author_posts_url( $author->ID ); ?>" class="author">@<?= $author->user_login; ?></a>
     <collection-meta>
         <span tooltip-top="Created"><?= human_time_diff( $collection->created, time() ); ?></span>

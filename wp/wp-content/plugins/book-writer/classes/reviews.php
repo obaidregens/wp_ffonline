@@ -26,7 +26,7 @@ class reviews {
             'user_id'           => get_current_user_id(),
             'comment_post_ID'   => $args['chapter_id'],
 			'comment_parent'	=> $args['reply_to'] ?? 0,
-            'comment_content'   => htmlspecialchars($args['review']),
+            'comment_content'   => $args['review'],
             'comment_author_IP' => $_SERVER['REMOTE_ADDR']
         ));
         $inst = new notifications_insert;

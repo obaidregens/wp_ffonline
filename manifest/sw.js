@@ -1,4 +1,4 @@
-const OFFLINE_VERSION = 1;
+const OFFLINE_VERSION = 2;
 const CACHE_NAME = 'offline';
 const OFFLINE_URL = '/offline';
 const permCaching = [
@@ -74,3 +74,4 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
+// Re

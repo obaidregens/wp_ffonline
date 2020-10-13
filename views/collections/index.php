@@ -36,7 +36,9 @@ $collections = collection::query($args);
 <button label="Create New"></button>
 <button label="My Collections"></button>
 </collection-bar>
-<collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
+<script>
+    window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+</script>
 <collections-container class="grid"><?php
 foreach ($collections as $collection) {
     $app->collection = $collection;

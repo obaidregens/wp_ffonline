@@ -226,7 +226,7 @@ class notifications_insert extends notifications {
         $args = [
             'notification_type' => $parent_0 ? 'chapter_review' : 'review_reply',
             'type_of'           => 'review',
-            'type_of_id'        => $review,
+            'type_of_id'        => $review->comment_ID,
             'type_by'           => $parent_0 ? 'chapter' : 'review',
             'type_by_id'        => $parent_0 ? $chapter->ID : $review->comment_parent,
             'user_id'           => $parent_0 ? $chapter->post_author : $parent_review->user_id

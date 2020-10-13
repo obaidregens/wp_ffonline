@@ -8,3 +8,5 @@
 <li>Click on Submit Document.</li>
 <li>Your Draft should get uploaded.</li>
 </ol>
+<p><strong>Note:</strong> Some stuff, like angle brackets (<,>) and text between them may be lost when exporting to FFN. This isn't the exporter's fault, as FFN doesn't allow such characters in it's chapters.</p>
+<p>If there are other issues when uploading the file, please <a href="/contact">contact us</a> with details of your issue and we'll look into it.</p>

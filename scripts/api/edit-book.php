@@ -5,6 +5,12 @@ function api_edit_book() {
         if ($exists !== null){
             return $exists['term_id'];
         }
+        // This reverses the wp_unslash before it happens in wp_insert_term
+        // Add Slash to single quotes
+        $term = str_replace("\'","\\\'",$term);
+        // Add Slash to double quotes
+        $term = str_replace('\"','\\\"',$term);
+        
         $i = wp_insert_term($term,$taxonomy,array(
             'parent'      => $parent,
         ));
@@ -46,7 +52,6 @@ function api_edit_book() {
     if (trim($d['description']) === '') {
         $publish = false;
     }
-
     // Chapter
     $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
     $old_chapters = published_chapters($book->ID,-1);
@@ -55,7 +60,7 @@ function api_edit_book() {
     $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
     $old_chapters_lookup = array_flip($old_chapter_ids);
     $chapter_ids_order = [];
-    foreach ( ($d['chapters'] ?? []) as $chapter ) {
+    foreach ( ($d['chapters'] ?? []) as $k => $chapter ) {
         if (
             $chapter['draft_id'] ||
             ($chapter['title'] ?? "") !== ($old_chapter_titles[$chapter['ID']] ?? "") ||
@@ -132,7 +137,9 @@ function api_edit_book() {
             if ( !in_array($f,$selectedFandomIds) ) {
                 continue;
             }
-            $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));    
+            if (trim($character_obj['label']) === "") {continue;}
+            if (strlen($character_obj['label']) > 100) {continue;}
+            $char_id = intval(term_replace( 'character', $character_obj['label'], $f ));
         }
         else {
             $exists = term_exists($character_obj['label'],'character',$f );
@@ -167,6 +174,8 @@ function api_edit_book() {
     $max_tags=5;
     $tag = [];
     foreach ( (empty($d['tag']) ? [] : array_slice($d['tag'],0,$max_tags) ) as $k => $tag_obj) {
+        if (trim($tag_obj['label']) === "") {continue;}
+        if (strlen($tag_obj['label']) > 100) {continue;}
         $tag_id = intval(term_replace( 'tag', $tag_obj['label'], 0 ));
         $tag[] = $tag_id;
     }
@@ -177,8 +186,8 @@ function api_edit_book() {
     $wpdb->update(
         'wp_posts',
         [
-            'post_title'        => htmlspecialchars(substr($d['title'],0,80)),
-            'post_excerpt'      => htmlspecialchars(substr($d['description'],0,400)),
+            'post_title'        => substr($d['title'],0,80),
+            'post_excerpt'      => substr($d['description'],0,400),
             'comment_status'    => $reviews ? 'open' : 'closed',
             'post_status'       => $publish ? 'publish' : 'draft' 
         ],

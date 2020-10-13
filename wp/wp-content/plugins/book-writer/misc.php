@@ -1,4 +1,15 @@
 <?php
+remove_filter( 'pre_term_name', 'sanitize_text_field' );
+remove_filter( 'pre_term_name', 'wp_filter_kses' );
+remove_filter( 'pre_term_name', '_wp_specialchars', 30 );
+
+function script_string($str) {
+	return "'" . str_replace('/','\/',addslashes($str)) . "'";
+}
+function script_json($json) {
+	$json = json_encode(json_decode($json));
+	return $json;
+}
 function sqlPlaceholder($a,$type = '%s') {
 	return implode(',',array_fill(0,count($a),$type));
 }

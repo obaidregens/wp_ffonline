@@ -11,9 +11,11 @@ $book_query = $app->author_books;
 <author-main>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">
-        <collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
+        <script>
+            window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+            window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+        </script>
         <books-container class="grid">
-            <book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
             <?php
             global $book;
             foreach ($book_query->books as $book) {

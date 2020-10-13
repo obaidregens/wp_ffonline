@@ -18,7 +18,7 @@ $book_stat_instances = book_stats::multiple(array_column($books,'ID'));
 <?php foreach ($books as $book) { ?>
 <?php $stat = $book_stat_instances[$book->ID]; ?>
 <a href="/my-stories/<?= $book->ID; ?>" class="book">
-<book-title><?= $book->post_title; ?></book-title>
+<book-title><?= htmlspecialchars($book->post_title); ?></book-title>
 <book-status><?= $book->post_status === 'publish' ? 'Published' : 'Unpublished'; ?></book-status>
 <book-views>
     <stat timespan="Last Week"><?= $stat->view_count(new DateTime('last week')); ?></stat>

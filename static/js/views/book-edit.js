@@ -1,6 +1,3 @@
-import Select from 'https://cdn.pika.dev/react-select';
-import CreatableSelect from 'https://cdn.pika.dev/react-select/creatable';
-
 "use strict";
 
 (async () => {

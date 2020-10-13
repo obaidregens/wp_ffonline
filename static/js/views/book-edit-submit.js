@@ -107,7 +107,7 @@ function createChapterDraggableLi(chapter) {
             }),
             DOM.create('cell',{
                 classes: ['break'],
-                innerText: _.htmlspecialchars_decode(chapter.title),
+                innerText: chapter.title,
             }),
             DOM.create('cell',{
                 children: [

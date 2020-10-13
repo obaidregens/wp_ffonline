@@ -5,6 +5,7 @@ main > book {
 main > book > book-header {
     display: flex;
     flex-direction: column;
+    flex: 1;
 }
 main > book > book-header > book-title {
     display: flex;

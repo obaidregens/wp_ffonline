@@ -1,4 +1,12 @@
 class _ {
+    static clone (obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
+    static san (str) {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
     static debounce (func, wait = 600) {
         let timeout;
         return function executedFunction(...args) {
@@ -34,7 +42,8 @@ class _ {
         const tagsToReplace = {
             "&amp": "&",
             '&lt;': '<',
-            '&gt;': '>'
+            '&gt;': '>',
+            "&quot;": '\''
         };
         return str.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>');
     }

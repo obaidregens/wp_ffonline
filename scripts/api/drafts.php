@@ -5,6 +5,7 @@ function api_save_draft() {
     required_login();
     required_params('title','draft_id','content','perm');
 
+    $d['content'] = json_encode($d['content']);
     // Prepared Data
     $insert = [
         'title'     => $d['title'],
@@ -162,7 +163,6 @@ function api_publish_to_story() {
     if (trim($d['chapter_title']) === "") {
         return ['code'=>8];
     }
-    $title = htmlspecialchars(substr($d['chapter_title'],0,80));
     $chapter_id = draft_chapters::save(
         $d['draft_id'],
         $story->ID,

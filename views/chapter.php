@@ -20,6 +20,7 @@ $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
 $app->bundle->js('js/views/reviews-list');
 $app->bundle->js('js/views/chapter-tracking');
+$app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/chapter-offline');
 $app->bundle->enqueue();
 
@@ -49,22 +50,20 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 <chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
 	<chapter-header tabindex="1" >
 		<book-info book_id="<?= $book->ID; ?>">
-			<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= $book->post_title; ?></a>
+			<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= htmlspecialchars($book->post_title); ?></a>
 			<author><?= author_href($chapter->post_parent); ?></author>
-			<book-description hidden><?= $book->post_excerpt; ?></book-description>
+			<book-description hidden><?= htmlspecialchars($book->post_excerpt); ?></book-description>
 		</book-info>
 		<div class="down-arrow"></div>
 	</chapter-header>
-	<chapter-title><?= $chapter->post_title; ?></chapter-title>
+	<chapter-title><?= htmlspecialchars($chapter->post_title); ?></chapter-title>
 	<content class="acs-elem"><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'pre_author_note', true )); ?></author-notes><?= $chapter->post_content; ?><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'post_author_note', true )); ?></author-notes></content>
 	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
 	<book-options>
-		<collections_data hidden>
-			<?= json_encode(collection_helpers::js_data()) ?>
-		</collections_data>
-		<book_collections hidden>
-			<?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
-		</book_collections>
+		<script>
+			window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+			window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+		</script>
 		<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
 		<button class="book-collections"></button>
 		<button class="book-share"></button>

@@ -15,7 +15,7 @@ $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 global $book_query;
 $href = rtrim(get_author_posts_url($user->ID),'/') . '/';
 $book_query = $app->author_stories_query;
-$description = get_the_author_meta( 'description', $user->ID );
+$description = htmlspecialchars(get_the_author_meta( 'description', $user->ID ));
 ?>
 <author-main user_id="<?= $user->ID; ?>">
     <?php if ($description !== '' && $is_current_author){ ?>
@@ -40,9 +40,11 @@ $description = get_the_author_meta( 'description', $user->ID );
     <?php } ?>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">
-        <collections_data hidden><?= json_encode(collection_helpers::js_data()) ?></collections_data>
+        <script>
+        window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+        window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+        </script>
         <books-container class="grid">
-            <book_collections hidden><?= json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID'))); ?></book_collections>
             <?php
             global $book;
             foreach ($book_query->books as $book) {

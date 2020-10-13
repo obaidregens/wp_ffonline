@@ -3,6 +3,9 @@
     --selectLight: var(--grey);
     margin: 20px 0;
 }
+.css-1g6gooi {
+    color: var(--text-color);
+}
 .select:focus,.select:focus * {
     outline: none;
 }

@@ -61,10 +61,9 @@ function update_collections(collection_data){
                 if (collection_name === "Hidden (Private)" && add) {
                     new toast("Story will be hidden in your next search.");
                 }
-                const el = document.querySelector('book_collections');
-                const prev = JSON.parse(el.innerText);
+                const prev = _.clone(window.book_collections);
                 prev[book_id] = response.book_collections[book_id];
-                el.innerText = JSON.stringify(prev);
+                window.book_collections = prev;
                 collections_open(book_id);
             }
         });
@@ -79,8 +78,8 @@ function update_collections(collection_data){
     init_switch();
     return _popup;
 }
-if (document.querySelector('collections_data')){
-    update_collections(JSON.parse(document.querySelector('collections_data').innerText));
+if (_.clone(window.collections_data)){
+    update_collections(_.clone(window.collections_data));
 }
 
 function collections_open(book_id) {
@@ -91,7 +90,7 @@ function collections_open(book_id) {
     }
     const
         collections_popup = document.querySelector('popup.collections'),
-        book_collections = JSON.parse(document.querySelector('book_collections').innerText)[book_id] || [];
+        book_collections = _.clone(window.book_collections)[book_id] || [];
     collections_popup.setAttribute('book_id',book_id);
     const switches = collections_popup.querySelectorAll('input');
     for (let i = 0; i < switches.length; i++) {

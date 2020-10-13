@@ -51,11 +51,12 @@ class book_query{
         $tax = [];
         foreach ($terms_ as $term ) {
             $term->taxonomy = $term->taxonomy === 'category' ? 'fandom' : $term->taxonomy;
-            $tax[$term->object_id][$term->taxonomy][] = array(
+            $esc_name = htmlspecialchars($term->name);
+            $tax[$term->object_id][$term->taxonomy][] = [
                 'ID'        => $term->term_id,
-                'name'      => $term->name,
-                'link'      => '<a href="/read?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $term->name . '</a>',
-            );
+                'name'      => $esc_name,
+                'link'      => '<a href="/read?' . $term->taxonomy . '_included=' . $term->term_id . '">' . $esc_name . '</a>',
+            ];
         }
         $book_pairings = pairing::for_books(array_column($this->books,'ID'));
         foreach ($book_pairings as $book_pairing) {

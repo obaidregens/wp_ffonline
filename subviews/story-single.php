@@ -5,9 +5,9 @@ $search = $book_query->args['search'];
 $chapters_count = count(published_chapters($book->ID,-1,'ids'));
 ?>
 <book class="waves-effect" book_id="<?= $book->ID; ?>" chapters="<?= $chapters_count; ?>" >
-	<a href="<?= get_permalink($book->ID); ?>" class="title"><?= mark_search($book->post_title, $search); ?></a>
+	<a href="<?= get_permalink($book->ID); ?>" class="title"><?= mark_search(htmlspecialchars($book->post_title), $search); ?></a>
 	<span class="author"><?= author_href($book->ID); ?></span>
-    <div class="description"><?= mark_search($book->post_excerpt, $search); ?></div>
+    <div class="description"><?= mark_search(htmlspecialchars($book->post_excerpt), $search); ?></div>
 	<?php print_book_meta($book->ID); ?>
     <?php print_book_tags($book->ID,$book_query); ?>
     <reading-progress></reading-progress>

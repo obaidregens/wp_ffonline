@@ -28,6 +28,10 @@ const reChapterProgress = () => {
             if (item !== null) {
                 appending = item.chapter_num + "#" + item.paragraph;
             }
+            localStorage.setItem('chapter_track_follow',JSON.stringify({
+                sid,
+                timestamp: Date.now()
+            }));
             window.location.href = "/story/" + sid + "/" + appending;
         }
         else if (['Collections','Favorite','Hide'].includes(label) ){

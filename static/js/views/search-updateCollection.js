@@ -14,7 +14,7 @@ function create_collection_open(collection_id = 'new'){
             privacy: 'Public'
         };
         if (collection_id !== 'new'){
-            const collections_o = JSON.parse(document.querySelector('collections_data').innerText);
+            const collections_o = _.clone(window.collections_data);
             for (let i = 0; i < collections_o.length; i++) {
                 const collection_obj = collections_o[i];
                 if (collection_obj.ID === collection_id){
@@ -58,12 +58,11 @@ function create_collection_open(collection_id = 'new'){
     function on_collection_submit(event){
         const to_delete = event.target.getAttribute('label') === 'Delete';
         const c_id = cc_popup.getAttribute('collection_id') || 'new';
-        const book_collections_elem = document.querySelector('book_collections');
         api('update_collection',{
             data: {
                 delete: to_delete,
                 collection_id: cc_popup.getAttribute('collection_id') || 'new',
-                book_ids: typeof OPT_BOOK_IN_COLLECTIONS === 'undefined' ? Object.keys(JSON.parse(book_collections_elem.innerText)) : [],
+                book_ids: typeof OPT_BOOK_IN_COLLECTIONS === 'undefined' ? Object.keys(_.clone(window.book_collections)) : [],
                 title: cc_popup.querySelector('text-input > input').value,
                 privacy: privacySelect.value
             },
@@ -81,12 +80,12 @@ function create_collection_open(collection_id = 'new'){
                     }
                     if (typeof OPT_BOOK_IN_COLLECTIONS === 'undefined') {
                         update_collections(response.collections_data);
-                        book_collections_elem.innerText = JSON.stringify(response.book_collections);
+                        window.book_collections = _.clone(response.book_collections);
                     }
                     else {
                         window.location.href = '/@me/collections';
                     }
-                    document.querySelector('collections_data').innerText = JSON.stringify(response.collections_data);    
+                    window.collections_data = _.clone(response.collections_data);    
                 }
                 else {
                     new toast('An error occured');

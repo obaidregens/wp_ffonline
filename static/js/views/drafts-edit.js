@@ -22,7 +22,7 @@ window.autosaveDraft = (val,perm) => {
     }
     deBounce = setTimeout(() => {
         const title = window.draftTitle.value === '' ? 'Untitled' : window.draftTitle.value;
-        const content = JSON.stringify(val);
+        const content = val ;
         api('save_draft',{
             dataType: 'JSON',
             data: {
@@ -76,11 +76,10 @@ document.querySelector('input[placeholder="Title"]').addEventListener('change',(
 });
 // Initial Loading
 const loadDraft = () => {
-    const originalContent = document.querySelector('load_content').innerText;
-    if (originalContent !== '') {
-        window.draftContent.set(JSON.parse(originalContent));
+    if ( load_content.length > 0) {
+        window.draftContent.set(load_content);
     }
-    window.draftTitle.set(document.querySelector('load_title').innerText,true);
+    window.draftTitle.set(load_title,true);
     window.editedAtAll = false;
     window.refreshRevisions = true;
 };

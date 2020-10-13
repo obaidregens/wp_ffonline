@@ -9,6 +9,8 @@ $app->bundle->enqueue();
 $logged_in = is_user_logged_in(  );
 $connected = c_user::current();
 $pending = c_user::pending();
+if (is_string($pending)){ $pending = htmlspecialchars($pending); }
+if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 ?>
 <?php if ($pending !== false && $connected === false) { ?>
 <important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account.<br>If you've already sent the code, don't worry! It sometimes takes up to an hour to process the verification.</important>

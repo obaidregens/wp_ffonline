@@ -12,9 +12,10 @@ $app->bundle->css('css/components/index');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('/css/components/floater');
 $app->bundle->css('css/views/search-tags');
-$app->bundle->js('js/views/book-offline');
 $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
+$app->bundle->js('js/views/story-offlineAPI');
+$app->bundle->js('js/views/book-offline');
 $app->bundle->enqueue();
 
 $book = $app->story;
@@ -28,9 +29,9 @@ $is_user_logged_in = is_user_logged_in(  );
 ?>
 <book book_id="<?= $book->ID; ?>">
     <book-header>
-        <book-title><?= $book->post_title; ?></book-title>
+        <book-title><?= htmlspecialchars($book->post_title); ?></book-title>
         <author><?= author_href($book); ?></author>
-        <book-description><?= $book->post_excerpt; ?></book-description>
+        <book-description><?= htmlspecialchars($book->post_excerpt); ?></book-description>
         <?php print_book_meta($book->ID); ?>
         <?php print_book_tags($book->ID,$book_query); ?>
     </book-header>
@@ -51,10 +52,8 @@ $is_user_logged_in = is_user_logged_in(  );
             </collapsible>
         </chapter-index>
     </book-more>
-    <collections_data hidden>
-        <?= json_encode(collection_helpers::js_data()) ?>
-    </collections_data>
-    <book_collections hidden>
-        <?= json_encode( collection_helpers::query_by_book( array($book->ID) ) ); ?>
-    </book_collections>
+    <script>
+        window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
+        window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+    </script>
 </book>

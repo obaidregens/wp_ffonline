@@ -51,9 +51,11 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 </button>
 </drafts-header>
 <share-is hidden><?=  $share_link ?></share-is>
-<load_title hidden><?= $title; ?></load_title>
-<load_content hidden><?= $content; ?></load_content>
-
+<script>
+<?php $load_content = script_json($content); ?>
+const load_title = <?= script_string($title); ?>;
+const load_content = <?= $load_content === "" ? '[]' : $load_content; ?>;
+</script>
 <input maxlength="80" placeholder="Title">
 <editor draft_id="<?= $draft_id; ?>"></editor>
 

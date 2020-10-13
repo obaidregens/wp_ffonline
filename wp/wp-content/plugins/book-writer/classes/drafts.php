@@ -342,7 +342,7 @@ class drafts_json extends drafts {
         return (json_encode($json));
     }
     public static function read($json) {
-        function create_span_draft($leaf) {
+        $create_span_draft = function($leaf) {
             $leaf_attr = [
                 'bold'      => 'font-weight: bold;',
                 'italic'    => 'font-style: italic;'
@@ -360,7 +360,7 @@ class drafts_json extends drafts {
             $span = "<span $span_style>" . htmlspecialchars($leaf['text']);
             $span .= "</span>";
             return $span;
-        }
+        };
         $html = "";
         $array = json_decode($json,true);
         foreach ($array as $k => $para) {
@@ -370,7 +370,7 @@ class drafts_json extends drafts {
             }
             $html .= "<p $para_style>";
             foreach ($para['children'] as $kk => $leaf) {
-                $html .= create_span_draft($leaf);
+                $html .= $create_span_draft($leaf);
             }
             $html .= '</p>'; 
         }
@@ -409,7 +409,7 @@ class drafts_json extends drafts {
         return $style . nl2br(FineDiff::renderDiffToHTMLFromOpcodes($old_text, $opcodes));
     }
     public static function output_odt($json,$dump) {
-        function create_span_draft($leaf) {
+        $create_span_draft = function($leaf) {
             $leaf_attr = [
                 'bold'      => 'B',
                 'italic'    => 'I'
@@ -421,10 +421,10 @@ class drafts_json extends drafts {
                 }
                 $span_style .= $leaf_attr[$attr];
             }
-            $span = "<text:span text:style-name=\"T$span_style\">" . $leaf['text'];
+            $span = "<text:span text:style-name=\"T$span_style\">" . htmlspecialchars($leaf['text']);
             $span .= "</text:span>";
             return $span;
-        }
+        };
         $html = '';
         $array = json_decode($json,true);
         foreach ($array as $k => $para) {
@@ -434,7 +434,7 @@ class drafts_json extends drafts {
             }
             $html .= "<text:p text:style-name=\"P$para_style\">";
             foreach ($para['children'] as $kk => $leaf) {
-                $html .= create_span_draft($leaf);
+                $html .= $create_span_draft($leaf);
             }
             $html .= '</text:p>'; 
         }
@@ -455,12 +455,12 @@ class drafts_json extends drafts {
         return $html;
     }
     public static function output_html($json) {
-        function create_span_draft($leaf) {
+        $create_span_draft = function($leaf) {
             $leaf_tagNames = [
                 'bold'      => 'strong',
                 'italic'    => 'em'
             ];
-            $span_text = $leaf['text'];
+            $span_text = htmlspecialchars($leaf['text']);
             foreach ($leaf_tagNames as $attr => $attr_tag) {
                 if (! isset($leaf[$attr])){
                     continue;
@@ -468,7 +468,7 @@ class drafts_json extends drafts {
                 $span_text = "<$attr_tag>" . $span_text . "</$attr_tag>";
             }
             return $span_text;
-        }
+        };
         $html = '';
         $array = json_decode($json,true);
         foreach ($array as $k => $para) {
@@ -478,7 +478,7 @@ class drafts_json extends drafts {
             }
             $html .= "<p$para_style>";
             foreach ($para['children'] as $kk => $leaf) {
-                $html .= create_span_draft($leaf);
+                $html .= $create_span_draft($leaf);
             }
             $html .= '</p>'; 
         }
@@ -498,7 +498,7 @@ class draft_chapters extends drafts {
             }
         }
         $args = [
-            'post_title'    => htmlspecialchars($title),
+            'post_title'    => $title,
             'post_type'     => 'chapter',
             'post_status'   => 'publish',
             'post_parent'   => $book_id

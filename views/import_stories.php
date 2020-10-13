@@ -7,6 +7,8 @@ $app->bundle->js('js/views/import-main');
 $app->bundle->enqueue();
 $connected = c_user::current();
 $pending = c_user::pending();
+if (is_string($pending)){ $pending = htmlspecialchars($pending); }
+if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 
 if ($pending !== false) {
     ?><important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account. After verification, you'll be able to import all your stories with a single tap.<br>Forgot your verification code? <a href="/verify">Get new</a>.</important><?php
@@ -25,13 +27,13 @@ $remote_stories = import_stories::view_all($connected);
 <?php foreach($remote_stories as $story) { ?>
 <?php if ($story['status'] === 'imported') { ?>
 <label class="imported">
-    <text><?= $story['title']; ?></text>
+    <text><?= htmlspecialchars($story['title']); ?></text>
     <a href="/story/<?= $story['storyID']; ?>">Read</a>
 </label>
 <?php } else { ?>
 <label class="checkbox">
     <input <?= $story['status'] === 'pending' ? 'checked' : ''; ?> type="checkbox" value="<?= $story['ID'] ?>">
-    <text><?= $story['title'] ?></text>
+    <text><?= htmlspecialchars($story['title']) ?></text>
     <status><?= $story['status'] === 'pending' ? '(Pending)' : ''; ?></status>
 </label>
 <?php } ?>
