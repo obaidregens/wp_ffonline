@@ -15,7 +15,7 @@ $questions = questions::query([
 <questions>
 <?php foreach ($questions as $q) { ?>
     <question-wrapper question-id="<?= $q->ID ?>">
-        <question><?= $q->question; ?></question>
+        <question><?= htmlspecialchars($q->question); ?></question>
         <a>Reply</a>
     </question-wrapper>
 <?php } ?>
@@ -23,6 +23,7 @@ $questions = questions::query([
 <reply>
     <blockquote></blockquote>
     <a>Edit</a>
+    <text-input label="Category">General</text-input>
     <text-input type="multi" label="Reply"></text-input>
     <button label="Reply"></button>
 </reply>

@@ -1,19 +1,26 @@
 <?php
 $app->bundle = global_bundle('faq');
+$app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/views/faq-main');
 $app->bundle->js('js/views/faq-main');
 $app->bundle->enqueue();
-$questions = questions::query([
+$questions = questions::by_category([
     'users' => [get_current_user_id()]
 ]);
 ?>
 <faq-header>Frequently Asked Questions</faq-header>
 <?php
-foreach ($questions as $question) {
-    ?>
-    <question><?= $question->question; ?></question>
-    <answer><?= $question->answer; ?></answer>
-    <?php
+foreach ($questions as $cat => $qs ) {
+    ?><question-category label="<?= $cat; ?>"><?php
+    foreach ($qs as $question) {
+        ?>
+        <question-wrapper class="waves-effect">
+        <question><?= htmlspecialchars($question->question); ?></question>
+        <answer><?= htmlspecialchars($question->answer); ?></answer>
+        </question-wrapper>
+        <?php
+    }
+    ?></question-category><?php
 }
 if (empty($questions)) {
     ?><text>No questions yet. If you have a question, you can ask below.</text><?php

@@ -9,7 +9,7 @@ function api_ask_question() {
     if(strlen(trim($d['question'])) <= 10){
         return ['code'=>8];
     }
-    $e =questions::new([
+    $e = questions::new([
         'email'         => $email,
         'landing_id'    => $_POST['landing_id'],
         'for_user'      => 12,

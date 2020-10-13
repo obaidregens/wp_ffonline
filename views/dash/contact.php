@@ -19,14 +19,14 @@ foreach ($r as $message ) {
     $k = &$re[htmlspecialchars($conv)];
     $k = $k ?? [];
     $k[] = [
-        'message'   => htmlspecialchars( ($message->subject === "" ? "" : "<h3>" . $message->subject . "</h3><br>") . $message->message),
+        'message'   => ($message->subject === "" ? "" : "<h3>" . $message->subject . "</h3><br>") . htmlspecialchars( $message->message),
         'time'      => intval(floatval($message->received_time) * 1000),
         'from'      => htmlspecialchars($message->from),
         'user_id'   => $message->user_id
     ];
 }
 ?>
-<json-data data="<?= htmlspecialchars(json_encode($re)); ?>" hidden></json-data>
+<script>const all = <?= script_json(json_encode($re)); ?>;</script>
 <with class="show">
 <?php foreach ($re as $user => $conv ) { ?>
     <single <?= is_current_user($conv[count($conv)-1]['user_id']) ? "hidden" : "" ?> ><?= $user; ?></single>

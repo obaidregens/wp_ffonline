@@ -53,7 +53,7 @@ self.addEventListener('fetch', (event) => {
         if (preloadResponse) {
           return preloadResponse;
         }
-        const networkResponse = await fetch(event.request);
+      const networkResponse = await fetch(event.request);
         return networkResponse;
       } catch (error) {
         // catch is only triggered if an exception is thrown, which is likely

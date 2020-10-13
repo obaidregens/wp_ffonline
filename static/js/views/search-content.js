@@ -18,8 +18,10 @@ const reChapterProgress = () => {
     books_container.addEventListener('click',({target}) => {
         const book = target.closest('book');
         if (!book){return;}
-        books_container.querySelectorAll(`book`).forEach(el => el.classList.remove('show'));
-        book.classList.add('show');
+        if (! book.classList.contains('show')) {
+            books_container.querySelectorAll(`book`).forEach(el => el.classList.remove('show'));
+            book.classList.add('show');    
+        }
         const label = target.getAttribute('label');
         if (['Read'].includes(label) ){
             const sid = book.getAttribute('book_id');

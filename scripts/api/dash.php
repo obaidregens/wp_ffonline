@@ -72,8 +72,13 @@ function api_reply_to_contact() {
 }
 function api_reply_to_question() {
     required_admin();
-    required_params('question_id','question','answer');
+    required_params('question_id','question','answer','category');
     $d = &$_POST['data'];
-    questions::answer($d['question_id'],$d['answer'],$d['question']);
+    questions::answer(
+        $d['question_id'],
+        $d['answer'],
+        $d['question'],
+        $d['category']
+    );
     return ['code'=>1];
 }

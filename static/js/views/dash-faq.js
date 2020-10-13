@@ -35,6 +35,7 @@ document.querySelector('reply > a').addEventListener('click',({target}) => {
 document.querySelector('button[label="Reply"]').addEventListener('click',({target}) => {
     api('reply_to_question',{
         data: {
+            category: document.querySelector('text-input > input').value,
             question_id: target.parentElement.getAttribute('question-id'),
             question: target.parentElement.querySelector('blockquote').innerText,
             answer: target.parentElement.querySelector('text-input > textarea').value,

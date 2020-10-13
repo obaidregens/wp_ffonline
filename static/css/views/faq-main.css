@@ -6,40 +6,53 @@ faq-header {
     font-size: 1.9rem;
     margin-bottom: 30px;
 }
+question-category {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+question-category::before {
+    content: attr(label);
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+question-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+question-wrapper:not(.show) > answer {
+    display: none;
+}
 question, answer {
     display: flex;
-    align-items: center;
-    border-style: solid;
-    border-width: 0;
-    border-left-width: 6px;
-    padding-left: 15px;
+    align-items: stretch;
     white-space: break-spaces;
 }
 question::before, answer::before {
+    font-size: 2.5rem;
     display: flex;
     margin-right: 20px;
+    margin-top: -15px;
 }
 question {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: bold;
-    padding-bottom: 20px;
-    border-color: var(--theme-color);
 }
 question::before {
-    font-size: 3rem;
     content: "Q";
     color: var(--theme-color);
 }
 answer {
+    margin-top: 25px;
     font-size: 0.9rem;
     color: grey;
-    margin-bottom: 50px;
-    border-color: grey;
 }
 answer::before {
-    font-size: 3rem;
     content: "A";
 }
+/* Ask */
 button[label="Ask"] {
     display: block;
     margin-left: auto;

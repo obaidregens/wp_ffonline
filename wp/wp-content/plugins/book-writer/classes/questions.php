@@ -45,12 +45,13 @@ class questions {
             $args
         );
     }
-    static function answer($question_id,$answer,$altered_question = "") {
+    static function answer($question_id,$answer,$altered_question = "",$category = "General") {
         global $wpdb;
         $prev = [
             'answer'                => $answer,
             'replied_millitime'     => millitime(),
-            'status'                => 'public'
+            'status'                => 'public',
+            'category'              => $category
         ];
         if ($altered_question !== "") {
             $prev['question'] = $altered_question;
@@ -113,5 +114,15 @@ class questions {
         
         global $wpdb;
         return $wpdb->get_results($wpdb->prepare($sql,$prep));
+    }
+    static function by_category($args) {
+        $r = self::query($args);
+        $n = [];
+        foreach ($r as $k => $v) {
+            $p = &$n[$v->category];
+            $p = $p ?? [];
+            $p[] = $v;
+        }
+        return $n;
     }
 }

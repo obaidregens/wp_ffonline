@@ -1,3 +1,12 @@
+// Ask
+const all_questions = document.querySelectorAll('question-wrapper');
+document.querySelector('main').addEventListener('click',({target}) => {
+    const qs = target.closest('question-wrapper');
+    if (!qs) {return;}
+    if (qs.classList.contains('show')) {return;}
+    all_questions.forEach(ell => ell.classList.remove('show'));
+    qs.classList.add('show');
+});
 document.querySelector('button[label="Ask"]').addEventListener('click',() => {
     const Widget = (document.querySelector('recaptcha').getAttribute('widget-id'));
     const email = document.querySelector('text-input:nth-of-type(1) > input');

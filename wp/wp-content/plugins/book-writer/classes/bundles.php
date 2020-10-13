@@ -22,15 +22,14 @@ function curl_minify($post,$url){
     return $minified;
 }
 class bundle {
-    public static $version = "43";
     public static function reset() {
-        $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
+        $static_dir = MAIN_DIR . 'content/static/';
         $bundles_dir = $static_dir . 'bundles/';
         $f = scandir($bundles_dir);
         $t = time() - 10000;
         foreach ($f as $b) {
             if (in_array($b,['.','..'])){continue;}
-            touch(MAIN_DIR . 'content/static/bundles/' . $b,$t);
+            touch($bundles_dir . $b,$t);
         }
     }
     public static function reWrite() {
@@ -38,8 +37,10 @@ class bundle {
         $bundles_dir = $static_dir . 'bundles/';
         $index = json_decode(file_get_contents($bundles_dir . 'index.idn'),true);
         foreach ($index as $bundle_name => $bundle) {
+            $css_file = $bundles_dir . $bundle_name . "-" . $bundle['css_hash'] . ".css";
+            $js_file = $bundles_dir . $bundle_name . "-" . $bundle['js_hash'] . ".js";
             $bundle_wo_suffix = $bundles_dir . $bundle_name;
-            $last_edited = max(array(filemtime($bundle_wo_suffix . '.css'),filemtime($bundle_wo_suffix . '.js')));
+            $last_edited = max(array(filemtime($css_file),filemtime($js_file)));
             $raw_files = self::raw_urls($bundle);
             foreach ($raw_files as $extension => $files) {
                 foreach ($files as $file) {
@@ -101,6 +102,9 @@ class bundle {
         }
         $this->bundle['mix'][] = $mix;
     }
+    protected function hash($type) {
+        return $this->name . "-" . $this->bundle[$type . "_hash"] . "." . $type;
+    }
     function write(){
         $raw_urls = $this->get_raw_urls();
         $total_css = '';
@@ -127,13 +131,21 @@ class bundle {
         }
         $minified_js = curl_minify( $total_js, 'https://javascript-minifier.com/raw' );
 
-        file_put_contents ($this->bundles_dir . $this->name . '.css', $minified_css);
-        file_put_contents ($this->bundles_dir . $this->name . '.js', $minified_js);
+        // Put
+        unlink($this->bundles_dir . $this->hash('css'));
+        unlink($this->bundles_dir . $this->hash('js'));
         
+        $this->bundle['css_hash'] = sha1($minified_css);
+        $this->bundle['js_hash'] = sha1($minified_js);
+
+        file_put_contents ($this->bundles_dir . $this->hash('css'), $minified_css);
+        file_put_contents ($this->bundles_dir . $this->hash('js'), $minified_js);
+
         $this->index[$this->name] = $this->bundle;
         file_put_contents($this->bundles_dir . 'index.idn', json_encode($this->index) );
-        $this->css_file = $this->bundles_url . $this->name . '.css';
-        $this->js_file = $this->bundles_url . $this->name . '.js';
+
+        $this->css_file = $this->bundles_url . $this->hash('css');
+        $this->js_file = $this->bundles_url . $this->hash('js');
     }
     function enqueue($mode = 'production'){
         if (
@@ -165,7 +177,7 @@ class bundle {
                 'bundle_' . $this->name . '_css'    => $this->css_file,
             ];    
         }
-        if (! empty($raw_urls['js'])) {
+        if (!empty($raw_urls['js'])) {
             $this->enqueued_js = [
                 'bundle_' . $this->name . '_js'     => $this->js_file
             ];    
@@ -173,21 +185,18 @@ class bundle {
     }
     function print(){
         $type = isset($this->script_type) ? 'type="' . $this->script_type . '"' : "";
-        $addon = (self::$version ?? null) === null ? "" : '?v=' . self::$version;
         foreach ($this->enqueued_css ?? [] as $name => $url) {
-            $l = $url . (substr($url,strlen($url)-7) === "-ps.css" ? "" : $addon);
-            ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $l; ?>"><?php
+            ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $url; ?>"><?php
         }
         foreach ($this->enqueued_js ?? [] as $name => $url) {
-            $l = $url . (substr($url,strlen($url)-6) === "-ps.js" ? "" : $addon);
-            ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $l; ?>"></script><?php
+            ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $url; ?>"></script><?php
         }
     }
     protected function get_bundle(){
         $this->index = json_decode(file_get_contents($this->index_file),true);
         $this->bundle = $this->index[$this->name] ?? self::$default_index;
-        $this->css_file = $this->bundles_url . $this->name . '.css';
-        $this->js_file = $this->bundles_url . $this->name . '.js';
+        $this->css_file = $this->bundles_url . $this->hash('css');
+        $this->js_file = $this->bundles_url . $this->hash('js');
         return true;
     }
     public function get_raw_urls(){
