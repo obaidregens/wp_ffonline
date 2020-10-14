@@ -9,17 +9,20 @@ popup.share > book-title {
     font-size: 1.5rem;
     line-height: 1;
 }
+popup.share > book-author:empty {
+    display: none;
+}
 popup.share > book-author::before {
     content: 'by ';
 }
 popup.share > book-author {
     display: block;
     font-size: 1rem;
-    margin-bottom: 1rem;
 }
 popup.share > book-description {
     display: block;
     font-size: 1rem;
+    margin-top: 1rem;
     margin-bottom: 1rem;
 }
 popup.share > share-options {

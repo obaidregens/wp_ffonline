@@ -1,6 +1,6 @@
 <?php
 function construct_page_title(... $parts) {
-    return 'Fanfiction Online - ' . implode(" - ",$parts);
+    return implode(" - ",$parts) . " - Fanfiction Online";
 }
 define('MAIN_DIR',dirname(__DIR__) . '/');
 require_once(__DIR__ . '/php_includes/helpers.php');
@@ -156,7 +156,7 @@ $app->listen('/',function($self){
     $self->type = 'home';
     $self->type_id = 0;
     $self->header([
-        'title'         => construct_page_title("Read & Write Fanfiction"),
+        'title'         => "Fanfiction Online - Read & Write Fanfiction",
         'description'   => "Discover & read the most popular fanfiction stories in your fandom, with the best app to read and write fanfiction!"
     ]);
     $self->template('/views/home');
@@ -350,11 +350,12 @@ $app->listen('/collections',function($self){
 });
 $app->listen('/collections/:collection',function($self){
     $collection = collection::get_by('slug',$self->params['collection']);
-    if (! $collection) {
+    if ($collection && $collection->type === "Unlisted") {}
+    else {
         $collection = collection::get_by('ID',$self->params['collection']);
-    }
-    if (! $collection ) {
-        return;
+        if ( !$collection || $collection->type !== 'Public' ) {
+            return;
+        }
     }
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
@@ -378,27 +379,29 @@ $app->listen('/@ffonline/&*',function($self) {
     }
 });
 $app->listen('/@:user/collections/:collection',function($self){
-    $user = get_user_by( 'login', $self->params['user'] );
+    $user = (get_user_by( 'login', $self->params['user'] ))->data;
     if ($user === false){
         return;
     }
-    if (strtolower($self->params['collection']) === 'favorites') {
-        $collection = collection::query([
-            'author_included'  => [$user->ID],
-            'types'             => ['Favorites']
-        ]);
-        if (empty($collection)) {return;}
-        $collection = $collection[0];
+    $str_proper = ucfirst(strtolower($self->params['collection']));
+    $special_titles = ['Favorites','Hidden'];
+    $args = [ 'author_included' => [$user->ID] ];
+    if (in_array($str_proper,$special_titles)) {
+        $args['title'] = $str_proper;
     }
     else {
-        $collection = collection::get_by('ID',$self->params['collection']);
-        if (! $collection) {return;}
+        $args['id_included'] = [$self->params['collection']];
+        $args['types'] = ['Private'];
     }
+    $collection = collection::query($args);
+    if (empty($collection)) {return;}
+    $collection = $collection[0];
+
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
     $self->collection = $collection;
     $self->header([
-        'title'         => construct_page_title($collection->title,"Collection")
+        'title'         => $defined_title ?? construct_page_title($collection->title,"Collection")
     ]);
     $self->template('/views/collections/single');
     $self->footer();

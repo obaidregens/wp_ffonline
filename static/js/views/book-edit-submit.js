@@ -317,7 +317,8 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
                 newPublishNotice.innerText = '';
                 const shareData = {
                     title: selected.title,
-                    href: '/story/' + selected.book_id,
+                    share_title: `I found a great fanfiction by ${selected.username} '${selected.title}'!`,
+                    url: '/story/' + selected.book_id,
                     author: selected.username,
                     desc: selected.description,
                     callOnCopy: () => new toast('Copied!')

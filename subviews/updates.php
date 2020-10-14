@@ -22,7 +22,7 @@ $updates = $updates_query->updates;
                         </dropdown>
                     </button>
                 <?php } ?>
-                <content><?= $user->login === "ffonline" ? htmlspecialchars($update->post_content) : strip_tags($update->post_content,['p','span','a','ul','li','ol','h1','h2','h3','h4','h5','h6']); ?></content>
+                <content><?= $user->login === "ffonline" ? htmlspecialchars($update->post_content) : strip_tags($update->post_content,'<p><span><a><ul><li><ol><h1><h2><h3><h4><h5><h6>'); ?></content>
             </update>
         <?php } ?>
         <?php if ($updates_query->total > $app->updates_count ){ ?>

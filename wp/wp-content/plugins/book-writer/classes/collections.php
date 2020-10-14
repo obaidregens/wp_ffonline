@@ -1,7 +1,7 @@
 <?php
 class collection {
     public static $table = 'collections';
-    static function update($args) {
+    static function update(array $args) {
         $e = new err;
         if (! isset($args['ID'])) {
             $args = array_replace([
@@ -18,7 +18,7 @@ class collection {
             return $e->add('title','Title is required');
         }
         if (isset($args['type']) && $args['type'] === 'Unlisted'){
-            $args['slug'] = bin2hex(random_bytes(49));
+            $args['slug'] = sha1(bin2hex(random_bytes(49)));
         }
         if ( isset($args['ID']) ) {
             $prev = collection::get_by('ID',$args['ID']);
@@ -66,7 +66,7 @@ class collection {
             ]
         );
     }
-    static function get_by($field, $value) {
+    static function get_by(string $field, $value) {
         if ( is_object($value) && isset($value->author) && isset($value->type) ) {
             return $value;
         }
@@ -88,7 +88,7 @@ class collection {
             'author_included'   => $author
         ]);
     }
-    static function query ($a) {
+    static function query (array $a) {
         // Fields
         // id_included, id_excluded
         // author_included, author_excluded
@@ -265,6 +265,7 @@ class collection_follow extends collection {
         return follow::new([
             'type'      => 'collection',
             'type_id'   => $collection,
+            'user_id'   => get_current_user_id(),
             'landing_id'=> $landing_id
         ]);
     }
@@ -290,8 +291,8 @@ class collection_helpers extends collection {
         else if ( $collection->type === 'Public') {
             return rtrim(home_url(),'/') . '/collections/' . $collection->ID;
         }
-        else if ( $collection->type === 'Favorites' ) {
-            return rtrim(get_author_posts_url( $collection->author ),'/') . '/collections/favorites';
+        else if ( in_array($collection->title,['Favorites','Hidden']) ) {
+            return rtrim(get_author_posts_url( $collection->author ),'/') . '/collections/' . strtolower($collection->title);
         }
         else if ( $collection->type === 'Private' ){
             return rtrim(get_author_posts_url( $collection->author ),'/') . '/collections/' . $collection->ID;
