@@ -212,8 +212,6 @@ step:not(.active):hover::after {
 stepper {
     display: flex;
 }
-@media only screen and (max-width: 500px) {
-    step {
-        font-size: 0.8rem;
-    }
+footer {
+    display: none;
 }

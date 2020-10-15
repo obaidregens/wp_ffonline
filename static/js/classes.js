@@ -68,6 +68,12 @@ themes.all = {
         backgroundAccent: "#ececec"
     },
     dark: {
+        themeColor: "#1f63a7",
+        textColor: "#b7bfc4",
+        backgroundColor: "#1f1f1f",
+        backgroundAccent: "#292929"
+    },
+    black: {
         themeColor: "#265f86",
         textColor: "#b7bfc4",
         backgroundColor: "#121212",
@@ -77,8 +83,8 @@ themes.all = {
         themeColor: "#007ACC",
         textColor: "#262828",
         backgroundColor: "#edd1b0",
-        backgroundAccent: "#ececec"
-    }
+        backgroundAccent: "#f1e1d0"
+    },
 }
 var frewfrewgfre = (function(){
     let currentTheme = themes.current;

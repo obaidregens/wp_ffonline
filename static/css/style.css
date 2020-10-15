@@ -167,6 +167,9 @@ main {
         max-width: 960px;
         padding: 20px 5px;
     }
+    footer {
+        padding-bottom: 50px;
+    }
 }
 /* Dark Mode */
 dark-mode {
@@ -246,9 +249,6 @@ dark-mode::before {
         top: unset;
         bottom: -1px;
         transform-origin: bottom right !important;
-    }
-    footer {
-        display: none;
     }
     main {
         margin-bottom: 60px;

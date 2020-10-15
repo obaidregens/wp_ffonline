@@ -32,7 +32,7 @@ $description = htmlspecialchars(get_the_author_meta( 'description', $user->ID ))
     </author-bio>
     <?php } else if ($is_current_author) { ?>
     <author-bio>
-        <a class="edit-about">Tell your readers something about yourself.</a>
+        <a class="edit-about">Tell others something about yourself.</a>
         <text-input type="multi" label="About you"></text-input>
         <button label="Save"></button>
         <button label="Cancel"></button>

@@ -1,5 +1,8 @@
 const reChapterProgress = () => {
     const books_container = document.querySelector('books-container');
+    if (!books_container){
+        return;
+    }
     books_container.querySelectorAll(`book`).forEach(el => {
         const sid = el.getAttribute('book_id');
         const item = JSON.parse(localStorage.getItem('chapter_track-' + sid));

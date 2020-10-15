@@ -4,3 +4,6 @@ file.new-draft-file > file-meta::before {
     transform: scale(1.5) translateX(-1px);
     color: var(--lightblack);
 }
+footer {
+    display: none;
+}

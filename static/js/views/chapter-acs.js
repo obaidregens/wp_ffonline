@@ -199,6 +199,11 @@ const acs_popup = DOM.create('popup',{
                         color: 'peach'
                     }
                 }),
+                DOM.create('div',{
+                    attributes: {
+                        color: 'black'
+                    }
+                }),
             ]
         })
    ],
@@ -270,7 +275,7 @@ document.querySelector('.acs-popup').addEventListener('click',function(event){
     else if (action === 'theme'){
         const theme = event.target.getAttribute('color');
         acs.set('theme',theme);
-        themes.set(theme,{temp: ['peach'].includes(theme) });
+        themes.set(theme,{temp: ['peach','pitchblack'].includes(theme) });
     }
     else if (action === 'font') {
         if (event.target.parentElement.tagName.toLowerCase() !== 'dropdown'){

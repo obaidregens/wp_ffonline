@@ -378,6 +378,13 @@ $app->listen('/@ffonline/&*',function($self) {
         $self->_404();
     }
 });
+$app->listen('/@me/&*',function($self) {
+    if (!is_user_logged_in()) {
+        return;
+    }
+    $u = get_userdata( get_current_user_id() );
+    $self->redirect("/@" . $u->user_login . substr($self->request,4));
+});
 $app->listen('/@:user/collections/:collection',function($self){
     $user = (get_user_by( 'login', $self->params['user'] ))->data;
     if ($user === false){
@@ -411,12 +418,6 @@ $app->listen('/@:user/collections/:collection',function($self){
 function author_template_load($template){
     global $app;
     $user = get_user_by( 'login', $app->params['user'] );
-    if ($app->params['user'] === 'me'){
-        $current_user_id = get_current_user_id();
-        if ($current_user_id === 0) {return;}
-        $user = get_userdata($current_user_id );
-        $app->redirect('/@' . $user->user_login . '/' . ($template === 'about' ? '' : $template) );
-    }
     if ( $template === 'settings' && ! is_current_user($user->ID) ){
         $app->_404();
     }
@@ -794,7 +795,7 @@ $app->listen('/faq',function($self){
 });
 $app->listen('/faq/:q',function($self){
     $q = questions::get($self->params["q"]);
-    if ($q === false) {
+    if ($q === false || $q->status !== 'public') {
         return;
     }
     $self->faq_question = $q;
