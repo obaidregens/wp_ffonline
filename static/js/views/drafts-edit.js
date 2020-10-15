@@ -76,7 +76,7 @@ document.querySelector('input[placeholder="Title"]').addEventListener('change',(
 });
 // Initial Loading
 const loadDraft = () => {
-    if ( load_content.length > 0) {
+    if ( load_content !== null && load_content.length > 0) {
         window.draftContent.set(load_content);
     }
     window.draftTitle.set(load_title,true);

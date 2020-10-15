@@ -200,6 +200,7 @@ step::after {
     width: 100%;
     position: absolute;
     bottom: 0;
+    left: 0;
     transition: transform .2s;
 }
 step:not(.active)::after {

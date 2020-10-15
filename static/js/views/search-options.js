@@ -78,7 +78,7 @@ function update_collections(collection_data){
     init_switch();
     return _popup;
 }
-if (_.clone(window.collections_data)){
+if (window.collections_data){
     update_collections(_.clone(window.collections_data));
 }
 
