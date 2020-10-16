@@ -62,38 +62,6 @@ class c_user {
         $this->ID = $wpdb->insert_id;
         $this->code = $verification->code;
     }
-    protected static function verify($connection_user,$code,$connection_from = 'ffn'){
-        $table = self::$table;
-        $error = new err();
-        global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $table
-                WHERE connection_user = %s
-                AND connection_from = %s
-                AND status = %s",
-            array($connection_user,$connection_from,'unverified')
-        ));
-        if (empty($results)){
-            return $error->add('Connection','None Exists');
-        }
-        if (! $results[0]->verification_ID){
-            return $error->add('Verification Code','None exists');
-        }
-        $is_valid = v_code::is($results[0]->verification_ID,$code);
-        if (! $is_valid){
-            return $error->add('Verification Code','Invalid');
-        }
-        v_code::delete($results[0]->verification_ID);
-        $wpdb->update(
-            $table,
-            array(
-                'status'   => 'verified'
-            ),
-            array(
-                'ID'    => $results[0]->ID
-            )
-        );
-    }
     public static function get($connection_user, $connection_from = 'ffn') {
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare(
@@ -134,5 +102,19 @@ class c_user {
         ));
         return empty($r) ? false : $r[0]->connection_user;
     }
-
+    static function cancel_pending($connection_from = 'ffn') {
+        global $wpdb;
+        $wpdb->update(
+            self::$table,
+            [
+                'status'            => 'cancelled',
+                'unlink_timestamp'  => time()
+            ],
+            [
+                'connection_from'   => $connection_from,
+                'status'            => 'unverified',
+                'user_id'           => get_current_user_id()
+            ]
+        );
+    }
 }

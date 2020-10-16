@@ -719,22 +719,16 @@ $app->listen('/drafts/:draft_id/export/ao3',function($self){
 });
 // Verify Account
 $app->listen('/verify',function($self){
-    $self->type = 'verify';
+    $self->redirect('/connections');
+});
+$app->listen('/connections',function($self){
+    $self->login();
+    $self->type = 'connections';
     $self->type_id = 0;
     $self->header([
-        'title'         => construct_page_title("Verify"),
+        'title'         => construct_page_title("Connections"),
     ]);
-    $self->template('/views/verify');
-    $self->footer();
-    exit();
-});
-$app->listen('/verify/:author_id',function($self){
-    $self->type = 'verify';
-    $self->type_id = $self->params['author_id'];
-    $self->header([
-        'title'         => construct_page_title("Verify"),
-    ]);
-    $self->template('/views/verify');
+    $self->template('/views/connections/home');
     $self->footer();
     exit();
 });

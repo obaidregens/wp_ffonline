@@ -7,7 +7,7 @@ function init_text_input(){
         }
         const type = elem.getAttribute('type') === 'multi' ? 'textarea' : 'input';
         let input_type = elem.getAttribute('input_type');
-        if (! ['email','password'].includes(input_type)){
+        if (! ['email','password','number'].includes(input_type)){
             input_type = 'text';
         }
         const Val = elem.innerText;

@@ -53,6 +53,7 @@ if(! headers_sent() && ! isset($_SESSION) ){
 function required_params(...$params){
     foreach($params as $param){
         if (! isset($_POST['data'][$param])){
+            spam::add("required_params",$_POST['landing_id'],"Action: " . $_POST['action'] . " - Param: " . $param);
             echo json_encode(array(
                 'code'      => 996
             ));
@@ -62,6 +63,7 @@ function required_params(...$params){
 }
 function required_login(){
     if (! is_user_logged_in()){
+        spam::add("required_login",$_POST['landing_id'],$_POST['action']);
         echo json_encode(array(
             'code'  => 995
         ));
@@ -70,11 +72,29 @@ function required_login(){
 }
 function required_admin(){
     if (! current_user_can('administrator')){
+        spam::add("required_admin",$_POST['landing_id'],$_POST['action']);
         echo json_encode(array(
             'code'  => 994
         ));
         exit();
     }
+}
+if (empty($_COOKIE)) {
+    spam::add("no_cookies","",json_encode($_COOKIE));
+}
+if (!isset($_COOKIE["vfs"])) {
+    spam::add("no_vfs","",json_encode($_COOKIE));
+}
+$placeholder = ctrk_decrypt($_POST['placeholder']);
+if ( trim($_POST['placeholder'] ?? '') === "" || !$placeholder ) {
+    spam::add("invalid_placeholder","",$placeholder);
+    echo json_encode(array(
+        'code'      => 993
+    ));
+    exit();
+}
+else {
+    $_POST['landing_id'] = $placeholder->landing_id;
 }
 $reCAPTCHA_apis = [
     'login',
@@ -100,23 +120,15 @@ else if (
     && in_array($_POST['nonce'],$_SESSION['nonce'])
     ){}
 else{
+    spam::add("invalid_nonce",$_POST['landing_id']);
     echo json_encode(array(
         'code'  => 998
     ));
     exit();
 }
-$placeholder = ctrk_decrypt($_POST['placeholder']);
-if ( trim($_POST['placeholder'] ?? '') === "" || !$placeholder ) {
-    echo json_encode(array(
-        'code'      => 993
-    ));
-    exit();
-}
-else {
-    $_POST['landing_id'] = $placeholder->landing_id;
-}
 //Call User Functions
 if (! function_exists('api_' . $_POST['action'])){
+    spam::add("invalid_action",$_POST['landing_id'],$_POST['action']);
     echo json_encode(array(
         'code'      => 999
     ));

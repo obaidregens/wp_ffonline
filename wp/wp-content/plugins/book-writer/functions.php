@@ -304,6 +304,17 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
+	$spam_log_table = "CREATE TABLE spam_log (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`reason`			VARCHAR(100) NOT NULL ,
+		`user_id`			BIGINT NOT NULL ,
+		`IP`				VARCHAR(100) NOT NULL ,
+		`landing_id`		BIGINT NOT NULL ,
+		`description`		TEXT NOT NULL ,
+		`logged_millitime`	BIGINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	// ob_start();
@@ -348,6 +359,9 @@ function run_at_activation(){
 	dbDelta( $poll_votes_table );
 	// Offline
 	dbDelta( $offline_stats_table );
+	// Spam
+	dbDelta( $spam_log_table );
+
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -393,6 +407,7 @@ $includes = array(
 	'classes/questions',
 	'classes/poll',
 	'classes/offline_stats',
+	'classes/spam',
 );
 foreach($includes as $include){
 	require ($include . '.php');

@@ -43,6 +43,7 @@ If your account doesn't get connected within an hour of sending the message, you
 <verification-code></verification-code>
 <select>
 <option>FFN</option>
+<option>AO3</option>
 </select>
 <text-input maxlength="10" label="User ID"><?= $app->params['author_id'] ?? ''; ?></text-input>
 <button label="Submit"></button>

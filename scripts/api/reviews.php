@@ -5,20 +5,27 @@ function api_publish_review(){
     if (! reviews::can_review($d['chapter_id'])) {
         return ['code'=>8];
     }
+    required_params('content');
+    $len = strlen($d['content']);
+    if ($len > 5) {
+        return ['code'=>10];
+    }
+    if ( strlen(strip_tags($d['content'])) < $len ) {
+        spam::add("html_tags_in_review",$_POST['landing_id'],$d['content']);
+    }
     if ($d['action'] === 'insert'){
-        required_params('content');
-        reviews::new(array(
+        reviews::new([
             'chapter_id'    => $d['chapter_id'],
             'review'        => $d['content']
-        ));
+        ]);
     }
     else if ($d['action'] == 'reply'){
-        required_params('content','review_id');
-        reviews::new(array(
+        required_params('review_id');
+        reviews::new([
             'chapter_id'    => $d['chapter_id'],
             'reply_to'      => $d['review_id'],
             'review'        => $d['content']
-        ));
+        ]);
     }
     return ['code'=>1];
 }

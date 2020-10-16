@@ -11,10 +11,16 @@ if (is_string($pending)){ $pending = htmlspecialchars($pending); }
 if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 
 if ($pending !== false) {
-    ?><important>Verification is pending for access to <a rel="nofollow" href="https://www.fanfiction.net/u/<?= $pending; ?>">this</a> FFN account. After verification, you'll be able to import all your stories with a single tap.<br>Forgot your verification code? <a href="/verify">Get new</a>.</important><?php
+    ?>
+    <important>
+        Verification is pending. After linking, you'll be able to import all your stories with a single tap.
+        <br>
+        Forgot verification code? <a href="/connections">Request new</a>.
+    </important>
+    <?php
 }
 else if ($connected === false) {
-    ?><important>Your account hasn't been connected to an FFN account yet. Please <a href="/verify">complete the verification</a> to import your stories.</important><?php
+    ?><important><a href="/connections">Link</a> your FFN account to import your stories.</important><?php
 }
 else {
 $remote_stories = import_stories::view_all($connected);

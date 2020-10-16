@@ -1,0 +1,72 @@
+connections {
+    display: flex;
+    flex-direction: column;
+}
+connections > a {
+    cursor: default !important;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    color: var(--text-color);
+}
+connections > a:hover {
+    color: var(--text-color);
+}
+connections > a > text {
+    display: flex;
+}
+connections > a > img {
+    width: 35px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+connections > a[source="ffn"] > img {
+    transform: scale(0.65);
+}
+connections > a > button {
+    margin-left: auto;
+    padding: 0 10px;
+    font-size: 10px;
+}
+connections > a > button::before {
+    content: "Link";
+}
+connections > a > button.pending::before {
+    content: "Pending";
+}
+connections > a > button.linked::before {
+    content: "Linked";
+}
+
+/* Enter Input */
+enter-input:not(.show) {
+    display: none;
+}
+enter-input button[label="Submit"] {
+    margin-left: auto;
+    display: block;
+}
+completed {
+    display: block;
+    text-align: center;
+    font-size: 0.95rem;
+}
+verification-code::after {
+    font-family: 'icons';
+    content: '\e931';
+    margin-left: 10px;
+    display: inline-block;
+    transform: scale(0.9) translateY(1px);
+}
+verification-code {
+    position: relative;
+    display: table;
+    font-size: 2rem;
+    cursor: pointer;
+    margin: 40px auto;
+    margin-top: 0;
+}
+verification-code:empty {
+    display: none;
+}
