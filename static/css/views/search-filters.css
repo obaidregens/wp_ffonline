@@ -170,6 +170,9 @@ tag_list > label.checkbox:hover {
     background-color: var(--hover);
 }
 /* Async popup */
+popup[tag-name="fandom"].async tag_list:empty::before {
+    content: "Start typing to see fandoms";
+}
 popup[tag-name="character"].async tag_list:empty::before {
     content: "Start typing to see characters";
 }

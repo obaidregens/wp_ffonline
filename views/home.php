@@ -94,6 +94,17 @@ $app->bundle->enqueue();
     <a href="/read">Start Reading</a>
     </mini-description>
 </section>
+<!-- Customize Reading -->
+<section>
+    <section-description>
+    Read Offline
+    </section-description>
+    <mini-description>
+    Save your favorite stories and read them without internet!
+    <br>
+    <a href="/read">Start Reading</a>
+    </mini-description>
+</section>
 <!-- Collections -->
 <section>
     <section-description>
@@ -115,7 +126,7 @@ $app->bundle->enqueue();
 <!-- Contact -->
 <section>
     <section-description>Have any questions?</section-description>
-    <mini-description><a href="/contact">Contact us</a></mini-description>
+    <mini-description><a href="/faq">Check out our FAQ's</a></mini-description>
 </section>
 <section>
     <section-description>
