@@ -5,37 +5,46 @@ function prompt_login() {
 	}
 	let login_popup = document.querySelector('popup[login]');
 	if (login_popup) {
-		popup.close();
 		popup.open(login_popup);
 		return;
 	}
-	login_popup =  document.createElement('popup');
-	login_popup.setAttribute('login','');
-	const form = document.createElement('form');
-	const login_input = DOM.update(create_text_input({
-		label: 'Username or Email',
-	}),{
+	login_popup = DOM.create('popup',{
 		attributes: {
-			name: 'username'
+			login: ""
 		}
 	});
-	const password_input = DOM.update(create_text_input({
+	const form = DOM.create('form');
+	const login_input = create_text_input({
+		label: 'Username or Email',
+		attributes: {
+			name: "username"
+		}
+	});
+	const password_input = create_text_input({
 		label: 'Password',
-		input_type: 'password'
-	}),{
+		input_type: 'password',
 		attributes: {
 			name: 'password'
 		}
 	});
-	const reCAPTCHA_elem = document.createElement('recaptcha');
-	const submit_btn = document.createElement('button');
-	submit_btn.setAttribute('label','Login');
-	const signup_btn = document.createElement('a');
-	signup_btn.setAttribute('label','Signup');
-	signup_btn.setAttribute('onclick','prompt_signup()');
-	const forgot_btn = document.createElement('a');
-	forgot_btn.setAttribute('label','Send OTP');
-	forgot_btn.setAttribute('onclick','prompt_forgot()');
+	const reCAPTCHA_elem = DOM.create('recaptcha');
+	const submit_btn = DOM.create('button',{
+		attributes: {
+			label: "Login"
+		}
+	});
+	const signup_btn = DOM.create('a',{
+		attributes: {
+			label: "Signup",
+			onclick: "prompt_signup()"
+		},
+	});
+	const forgot_btn = DOM.create('a',{
+		attributes: {
+			"label": "Send OTP",
+			"onclick": "prompt_forgot()"
+		}
+	});
 
 	submit_btn.addEventListener('click',function(event){
 		event.preventDefault();
@@ -47,9 +56,8 @@ function prompt_login() {
 		submit_btn.setAttribute('disabled','');
 		api('login',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
-			dataType: 'JSON',
 			data: data_submit,
-			callback: function(response){
+			callback: response => {
 				submit_btn.removeAttribute('disabled');
 				grecaptcha.reset(widgetID);
 				if (response.code === 7){
@@ -88,9 +96,9 @@ function prompt_signup() {
 		popup.open(signup_popup);
 		return;
 	}
-	signup_popup =  document.createElement('popup');
+	signup_popup =  DOM.create('popup');
 	signup_popup.setAttribute('signup','');
-	const form = document.createElement('form');
+	const form = DOM.create('form');
 
 	const username_input = DOM.update(create_text_input({
 		prefix: "@",
@@ -108,10 +116,10 @@ function prompt_signup() {
 			name: 'email'
 		}
 	});
-	const reCAPTCHA_elem = document.createElement('recaptcha');
-	const submit_btn = document.createElement('button');
+	const reCAPTCHA_elem = DOM.create('recaptcha');
+	const submit_btn = DOM.create('button');
 	submit_btn.setAttribute('label','Signup');
-	const login_btn = document.createElement('a');
+	const login_btn = DOM.create('a');
 	login_btn.setAttribute('label','Back to Login.');
 	login_btn.setAttribute('onclick','prompt_login()');
 
@@ -169,9 +177,9 @@ function prompt_forgot() {
 		popup.open(forgot_popup);
 		return;
 	}
-	forgot_popup = document.createElement('popup');
+	forgot_popup = DOM.create('popup');
 	forgot_popup.setAttribute('forgot','');
-	const form = document.createElement('form');
+	const form = DOM.create('form');
 	const login_input = DOM.update(create_text_input({
 		label: 'Username or Email',
 	}),{
@@ -179,10 +187,10 @@ function prompt_forgot() {
 			name: 'username'
 		}
 	});
-	const reCAPTCHA_elem = document.createElement('recaptcha');
-	const submit_btn = document.createElement('button');
+	const reCAPTCHA_elem = DOM.create('recaptcha');
+	const submit_btn = DOM.create('button');
 	submit_btn.setAttribute('label','Send OTP');
-	const login_btn = document.createElement('a');
+	const login_btn = DOM.create('a');
 	login_btn.setAttribute('label','Back to Login');
 	login_btn.setAttribute('onclick','prompt_login()');
 
@@ -241,7 +249,7 @@ function prompt_email_code(existing_data) {
 			name: 'code'
 		}
 	});
-	const reCAPTCHA_elem = document.createElement('recaptcha');
+	const reCAPTCHA_elem = DOM.create('recaptcha');
 	const submit_button = DOM.create('button',{
 		attributes: {
 			label: 'Verify'

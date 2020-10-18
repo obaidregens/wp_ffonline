@@ -5,7 +5,7 @@ search_popup.addEventListener('onOpen',() => {
 });
 search_popup.addEventListener('onAfterClose',() => window.acsSwipeEnabled = true );
 window.addEventListener('keydown',function(event){
-    if (event.key.toLowerCase() !== 'f' || (! event.ctrlKey && !event.metaKey) ){
+    if (event.key.toLowerCase() !== 'f' || !_.cmd(event) ){
         return;
     }
     event.preventDefault();

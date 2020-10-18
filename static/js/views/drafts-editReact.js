@@ -163,7 +163,7 @@ const App = () => {
     renderElement: renderElement,
     renderLeaf: renderLeaf,
     onKeyDown: event => {
-      if (!event.ctrlKey && !event.metaKey) {
+      if (!_.cmd(event)) {
         return;
       }
 

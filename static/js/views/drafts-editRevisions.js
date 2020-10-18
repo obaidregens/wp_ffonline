@@ -48,7 +48,7 @@ document.querySelector('save-time').addEventListener('click',() => {
 });
 next_screen.create(DOM.create('next-screen',{
     attributes: {
-        "compare-revisions": ""
+        "compare-revisions": "",
     },
     listeners: {
         onClose: () => {
@@ -57,6 +57,18 @@ next_screen.create(DOM.create('next-screen',{
             if (li) {
                 li.removeAttribute('selected');
             }
+        },
+        keydown: function(event) {
+            if (!_.cmd(event) || !["ArrowUp","ArrowDown"].includes(event.key) ){
+                return;
+            }
+            const cm = this.querySelector('compare');
+            cm.scrollTop = cm.scrollTop + (event.key === "ArrowUp" ? -40 : 40);
+            const revEl = document.querySelector('sidenav[revisions] > li[selected]')[event.key === "ArrowUp" ? "previousElementSibling" : "nextElementSibling"];
+            if (!revEl) {
+                return;
+            }
+            getSingleRevision(revEl.getAttribute('revision_id'));
         }
     },
     children: [
@@ -74,7 +86,11 @@ next_screen.create(DOM.create('next-screen',{
                 })
             ]
         }),
-        document.createElement('compare'),
+        DOM.create('compare',{
+            attributes: {
+                tabindex: "0"
+            }
+        }),
         DOM.create('revision-footer',{
             children: [
                 DOM.create('button',{

@@ -20,7 +20,7 @@ document.querySelector('editor').addEventListener('keydown',event => {
     if (['Escape','ArrowRight','ArrowLeft'].includes(event.key) && thesaurus.classList.contains('open') ) {
         thesaurus.classList.remove('open');
     }
-    if ( (! event.ctrlKey && ! event.metaKey) || event.key !== 'd') {
+    if ( !_.cmd(event) || event.key !== 'd') {
         return;
     }
     event.preventDefault();

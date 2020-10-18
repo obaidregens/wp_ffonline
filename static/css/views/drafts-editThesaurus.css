@@ -30,6 +30,7 @@ thesaurus > loader::before {
     font-size: 0.75rem;
     position: absolute;
     left: 27px;
+    word-break: keep-all;
 }
 thesaurus.loading > words {
     display: none;

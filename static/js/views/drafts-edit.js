@@ -31,9 +31,19 @@ window.autosaveDraft = (val,perm) => {
                 content,
                 perm
             },
+            reject: response => {
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                }
+                new toast('You\'ve lost connection to the internet, draft not saved.');
+                return;
+            },
             callback: response => {
                 if (response.code > 5) {
-                    new toast('An error occured while saving your draft. You might need to refresh the page.')
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                    new toast('An error occured while saving your draft. You might need to refresh the page.');
                     return;
                 }
                 // Flags

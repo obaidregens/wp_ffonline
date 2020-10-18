@@ -21,9 +21,12 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     },
     listeners: {
         click: () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
             const draft_id = document.querySelector('editor').getAttribute('draft_id');
             if (draft_id === 'new') {
-                new toast('This draft hasn\'t been saved.')
+                new toast('This draft hasn\'t been saved.');
                 return;
             }
             confirmation('Are you sure you want to delete this draft?').then((v) => {
@@ -55,9 +58,12 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     },
     listeners: {
         click: () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
             const draft_id = document.querySelector('editor').getAttribute('draft_id');
             if (draft_id === 'new') {
-                new toast('Your draft is');
+                new toast('This draft hasn\'t been saved.');
                 return;
             }
             window.open('/drafts/' + draft_id + '/preview', '_blank');        
@@ -71,6 +77,9 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     },
     listeners: {
         click: function(event) {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
             if (document.querySelector('editor').getAttribute('draft_id') === 'new') {
                 new toast("This draft hasn't been saved.");             
                 return;

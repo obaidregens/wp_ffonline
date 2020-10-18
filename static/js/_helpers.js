@@ -18,6 +18,9 @@ class _ {
             timeout = setTimeout(later, wait);
         };
     }
+    static cmd(event) {
+        return event.ctrlKey || event.metaKey;
+    }
     static isHammerSwipe(event){
         const angle = event.type === "panright" ? Math.abs(event.angle) : 180 - Math.abs(event.angle);
         return angle < 20 && event.isFinal && event.distance > 20;
