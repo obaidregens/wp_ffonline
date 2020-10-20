@@ -1,7 +1,5 @@
 <?php
 $app->bundle = global_bundle('home');
-$app->bundle->css('external/onepagescroll/onepagescroll');
-$app->bundle->js('external/onepagescroll/onepagescroll');
 $app->bundle->mix('glide_js');
 $app->bundle->css('css/views/home-main');
 $app->bundle->js('js/views/home-main');

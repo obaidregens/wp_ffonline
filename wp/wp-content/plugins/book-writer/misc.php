@@ -1,4 +1,45 @@
 <?php
+function number_abbr($num) {
+	if ($num < 1000) {
+		return strval($num);
+	}
+	$defs = [
+		[
+			"abbr"		=> "K",
+			"num"		=> 1000,
+			"till"		=> 100,
+			"decimals"	=> 1,
+		],
+		[
+			"abbr"		=> "K",
+			"num"		=> 1000,
+			"till"		=> 1000,
+			"decimals"	=> 0,
+		],
+		[
+			"abbr"		=> "M",
+			"num"		=> 1000000,
+			"till"		=> 100,
+			"decimals"	=> 1,
+		],
+		[
+			"abbr"		=> "M",
+			"num"		=> 1000000,
+			"till"		=> INF,
+			"decimals"	=> 0,
+		],
+	];
+	foreach ($defs as $def) {
+		if ( $num < ($def['till']*$def['num']) ) {
+			$vals = explode(".",strval(round($num/$def['num'],$def['decimals'])));
+			$dec = $def['decimals'] > 0 ? "." : "";
+			$vals[1] = $vals[1] ?? "0";
+			return $vals[0].$dec.substr($vals[1],0,$def['decimals']).$def['abbr'];
+		}
+	}
+	return false;
+}
+
 remove_filter( 'pre_term_name', 'sanitize_text_field' );
 remove_filter( 'pre_term_name', 'wp_filter_kses' );
 remove_filter( 'pre_term_name', '_wp_specialchars', 30 );
@@ -76,10 +117,11 @@ function print_book_meta($book_id) {
 		'id_included'	=> array_column($collections,'collection_id'),
 		'types'			=> ['Favorites','Public'],
 	]);
+	$words = get_post_meta($book_id,'word-count',true);
 	?>
 	<book-meta>
 		<span tooltip-top="Updated"><?= get_the_time('',$book_id); ?></span>
-		<span tooltip-top="Words"><?= get_post_meta($book_id,'word-count',true); ?></span>
+		<span tooltip-top="<?= number_format($words) ?> Words"><?= number_abbr($words); ?></span>
 		<span tooltip-top="Collections"><?= count($collections); ?></span>
 		<span tooltip-top="Votes"><?= count(vote::query_by('story','type_id',$book_id)); ?></span>
 	</book-meta>

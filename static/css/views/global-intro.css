@@ -31,7 +31,7 @@ header.introjs-fixParent {
 }
 .introjs-button:hover, .introjs-button:focus, .introjs-button:active {
     color: var(--white);
-    background-color: var(--theme-color);
+    background-color: var(--red);
 }
 .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {
     pointer-events: none;

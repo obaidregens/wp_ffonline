@@ -16,7 +16,15 @@ window.addEventListener('keydown',function(event){
     popup.open(search_popup);
 });
 function paraFromHash(){
-    const paraNum = parseInt(window.location.hash.substr(1));
+    const rawHash = window.location.hash.substr(1);
+    if (rawHash === "progress") {
+        const Track = JSON.parse(localStorage.getItem('chapter_track-' + book_id));
+        if (Track === null) {
+            return;
+        }
+        window.location.href = `/story/${book_id}/${Track.chapter_num}#${Track.paragraph}`;
+    }
+    const paraNum = parseInt(rawHash);
     if (! paraNum){
         return;
     }

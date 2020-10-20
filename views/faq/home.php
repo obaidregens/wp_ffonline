@@ -4,9 +4,7 @@ $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/views/faq-main');
 $app->bundle->js('js/views/faq-main');
 $app->bundle->enqueue();
-$questions = questions::by_category([
-    'users' => [get_current_user_id()]
-]);
+$questions = questions::by_category();
 ?>
 <faq-header>Frequently Asked Questions</faq-header>
 <?php

@@ -92,7 +92,7 @@ class questions {
             ]
         );
     }
-    static function query($args) {
+    static function query(array $args = []) {
         $table = self::$table;
         $sql = "SELECT * FROM $table WHERE 1";
         $prep = [];
@@ -115,7 +115,7 @@ class questions {
         global $wpdb;
         return $wpdb->get_results($wpdb->prepare($sql,$prep));
     }
-    static function by_category($args) {
+    static function by_category(array $args = []) {
         $r = self::query($args);
         $n = [];
         foreach ($r as $k => $v) {

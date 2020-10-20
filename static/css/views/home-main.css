@@ -1,3 +1,4 @@
+/* Header */
 header {
     background: transparent;
     border-bottom: none;
@@ -25,98 +26,93 @@ dark-mode {
 footer {
     display: none;
 }
+/* Main */
 main {
     max-width: unset;
-}
-.onepage-pagination {
-    top: calc(50% - 70px);
-}
-.onepage-pagination li a::before {
-    width: 6px;
-    height: 6px;
-    background: var(--theme-color);
-}
-.onepage-pagination li a.active:before {
-    background-color: var(--theme-color);
-    border: none;
-}
-main.onepage-wrapper {
+    padding: 0;
     --small-part: 30%;
     --large-part: 70%;
     user-select: none;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    -ms-scroll-snap-type: y mandatory;
+    -webkit-scroll-snap-type: y mandatory;
 }
-section.ops-section {
+main > section {
+    cursor: default;
     color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     background: var(--background-color) !important;
-}
-section.ops-section {
-    cursor: default;
+    height: 100vh;
+    scroll-snap-align: start;
+    -ms-scroll-snap-align: start;
+    -webkit-scroll-snap-align: start;
 }
 /* Content */
-section.ops-section section-header {
+main > section section-header {
     font-size: 20vw;
     display: block;
     line-height: 1;
 }
-section.ops-section section-description {
+main > section section-description {
     font-size: 2.6vw;
     display: block;
     text-align: center;
 }
-section.ops-section section-description > a {
+main > section section-description > a {
     color: var(--text-color);
 }
-section.ops-section mini-description {
+main > section mini-description {
     margin-top: 1vw;
     font-size: 1.3vw;
     text-align: center;
     max-width: 500px;
 }
 @media only screen and (max-width: 1000px) {
-    section.ops-section section-description {
+    main > section section-description {
         font-size: 2.3vw;
     }
-    section.ops-section mini-description {
+    main > section mini-description {
         font-size: 1.6vw;
     }
 }
 @media only screen and (max-width: 800px) {
-    section.ops-section section-description {
+    main > section section-description {
         font-size: 3vw;
     }
-    section.ops-section mini-description {
+    main > section mini-description {
         font-size: 2.1vw;
     }
 }
 @media only screen and (max-width: 600px) {
-    section.ops-section section-description {
+    main > section section-description {
         font-size: 4.5vw;
     }
-    section.ops-section mini-description {
+    main > section mini-description {
         max-width: 80vw;
         font-size: 2.8vw;
     }
 }
 @media only screen and (max-width: 400px) {
-    section.ops-section section-header {
+    main > section section-header {
         font-size: 40vw;
     }
-    section.ops-section section-description {
+    main > section section-description {
         font-size: 6vw;
     }
-    section.ops-section mini-description {
+    main > section mini-description {
         font-size: 3.5vw;
     }
 }
 @media only screen and (max-width: 320px) {
-    section.ops-section section-description {
+    main > section section-description {
         font-size: 6.5vw;
     }
-    section.ops-section mini-description {
+    main > section mini-description {
         font-size: 4vw;
     }
 }

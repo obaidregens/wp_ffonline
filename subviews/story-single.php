@@ -12,7 +12,7 @@ $chapters_count = count(published_chapters($book->ID,-1,'ids'));
     <?php print_book_tags($book->ID,$book_query); ?>
     <reading-progress></reading-progress>
     <options>
-        <li class="waves-effect" tabindex="0" label="Read"></li>
+        <a href="/story/<?= $book->ID; ?>/1#progress" class="waves-effect" tabindex="0" label="Read"></a>
         <li class="waves-effect" tabindex="0" label="Favorite"></li>
         <li class="waves-effect" tabindex="0" label="Hide"></li>
         <li class="waves-effect" tabindex="0" label="Share"></li>

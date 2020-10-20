@@ -24,7 +24,6 @@ document.documentElement.appendChild(DOM.create('link',{
                     listeners: {
                         click: () => {
                             htmlEl.classList.remove('show-acs');
-                            document.querySelector('.book-offline').dispatchEvent(new Event('click'));
                         }
                     }
                 }),

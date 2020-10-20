@@ -26,20 +26,7 @@ const reChapterProgress = () => {
             book.classList.add('show');    
         }
         const label = target.getAttribute('label');
-        if (['Read'].includes(label) ){
-            const sid = book.getAttribute('book_id');
-            const item = JSON.parse(localStorage.getItem('chapter_track-' + sid));
-            let appending = "1";
-            if (item !== null) {
-                appending = item.chapter_num + "#" + item.paragraph;
-            }
-            localStorage.setItem('chapter_track_follow',JSON.stringify({
-                sid,
-                timestamp: Date.now()
-            }));
-            window.location.href = "/story/" + sid + "/" + appending;
-        }
-        else if (['Collections','Favorite','Hide'].includes(label) ){
+        if (['Collections','Favorite','Hide'].includes(label) ){
             const book_id = book.getAttribute('book_id');
             collections_open(book_id);
         }

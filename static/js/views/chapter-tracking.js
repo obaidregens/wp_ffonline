@@ -33,12 +33,12 @@ window.addEventListener('load',() => {
             localStorage.setItem('chapter_track_follow',JSON.stringify({
                 book_id,
                 timestamp: Date.now()
-            }));        
+            }));
             localStorage.setItem('chapter_track-' + book_id,JSON.stringify({
                 chapter_num,
                 paragraph: paraI,
                 timestamp: Date.now(),
-                chapterProgress: parseFloat(( (chapter_num/document.querySelectorAll('popup.chapter-index').length)*100 ).toFixed(1))
+                chapterProgress: parseFloat(( (chapter_num/document.querySelectorAll('popup.chapter-index > index > a').length)*100 ).toFixed(1))
             }));
         });    
     },10000);

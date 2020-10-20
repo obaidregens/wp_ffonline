@@ -20,11 +20,12 @@
 :root {
     --red: #bd3535;
     --grey: rgb(146 146 146 / 22%);
-    --darkgrey: rgb(150 150 150);
+    --darkgrey: #969696;
     --lightred: #ff4f4f;
     --white: #fdfdfd;
     --black: #262828;
     --lightblack: #5f6368;
+    --normalgrey: rgb(147 147 147 / 60%);
 }
 ::-moz-selection {
     color: var(--white);
@@ -131,6 +132,9 @@ header > nav > * {
     width: fit-content;
     width: -moz-fit-content;
 }
+header > nav > *.active {
+    color: var(--theme-color);
+}
 /* Waves */
 .waves-effect .waves-ripple {
     background-color: var(--transparent-accent) !important;
@@ -213,7 +217,7 @@ dark-mode::before {
     header > .logo, header > nav > * {
         padding: 20px;
     }
-    header > .logo.active, header > nav > *.active {
+    header > .logo.active {
         color: var(--theme-color);
     }
     header > .logo {
@@ -289,6 +293,10 @@ dark-mode::before {
     }
     header > nav > [onclick="prompt_login();"]::after {
         content: 'Login';
+    }
+    /* Collapse Tags */
+    book:not(.show) > tags > tag-group:not([name="Language"]):not([name="Rating"]):not([name="Fandom"]) {
+        display: none;
     }
 }
 /* Tags Default */

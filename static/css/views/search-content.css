@@ -70,53 +70,54 @@ books-container > book > options {
         font-size: 0.80rem;
     }
 }
-books-container > book > options > li {
+books-container > book > options > * {
+    color: var(--lightblack);
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
     flex: 1;
 }
-books-container > book > options > li:active {
+books-container > book > options > *:active {
     color: var(--theme-color);
 }
-books-container > book > options > li::before {
+books-container > book > options > *::before {
     font-family: 'icons';
     display: inline-block;
 }
-books-container > book > options > li[label="Read"]::before {
+books-container > book > options > *[label="Read"]::before {
     content: '\e915';
 }
-books-container > book > options > li[label="Collections"]::before {
+books-container > book > options > *[label="Collections"]::before {
     content: '\e907';
 }
-books-container > book > options > li[label="Hide"]::before {
+books-container > book > options > *[label="Hide"]::before {
     content: '\e906';
     transform: scale(1.6);
 }
-books-container > book > options > li[label="Share"]::before {
+books-container > book > options > *[label="Share"]::before {
     content: '\e908';
     transform: scale(1.3);
 }
-books-container > book > options > li[label="Favorite"]::before {
+books-container > book > options > *[label="Favorite"]::before {
     content: '\e905';
     transform: scale(1.2);
 }
-books-container > book > options > li[label="Offline"]::before {
+books-container > book > options > *[label="Offline"]::before {
     content: '\e949';
     transform: scale(1.5);
 }
-books-container > book > options > li[label="Edit"]::before {
+books-container > book > options > *[label="Edit"]::before {
     content: '\e909';
 }
 /* Active Offline */
-books-container > book > options > li[label="Offline"].active {
+books-container > book > options > *[label="Offline"].active {
     color: var(--theme-color);
 }
-books-container > book > options > li[label="Offline"].active::before {
+books-container > book > options > *[label="Offline"].active::before {
     content: '\e948';
 }
-books-container > book > options > li::after {
+books-container > book > options > *::after {
     content: attr(label);
 }
 

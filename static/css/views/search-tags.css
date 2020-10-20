@@ -17,7 +17,7 @@ book-meta > span::after {
     float: left;
     margin-right: 5px;
 }
-book-meta > span[tooltip-top="Words"]::after{
+book-meta > span[tooltip-top$="Words"]::after{
     content: '\e915';
 }
 book-meta > span[tooltip-top="Updated"]::after{
@@ -66,8 +66,4 @@ tag-group > a {
     margin: 0 0px;
     padding: 4px;
     display: inline-block;
-}
-/* Collapse Tags */
-book:not(.show) > tags > tag-group:not([name="Language"]):not([name="Rating"]) {
-    display: none;
 }

@@ -51,6 +51,7 @@ _.interact(function(event){
 						onOpen: () => {
 							document.querySelector('.notification-pulse').classList.remove('show');
 							lastOpen = Date.now();
+							lastSend = lastSend - 20000;
 						},
 						onClose: () => {
 							document.querySelector('.notification-pulse').classList.remove('show');
