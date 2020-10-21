@@ -90,4 +90,22 @@ class import_stories {
         }
         return $stories;
     }
+    static function get_status ($storyId) {
+        $table = self::$table;
+        global $wpdb;
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE story_id = %d",[$storyId]);
+        $r = $wpdb->get_results($sql);
+        return (empty($r) ? "not_imported" : $r[0]->import_status);
+    }
+    static function cancel_auto_update($story_id) {
+        global $wpdb;
+        $wpdb->update(
+            self::$table,
+            [ "import_status" => "imported" ],
+            [
+                "story_id"      => $story_id,
+                "import_status" => "live"
+            ],
+        );
+    }
 }

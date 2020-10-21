@@ -56,14 +56,25 @@ function reAddChapters() {
     const index = DOM.create('index',{
         children: chapters
     });
-    const sortable = new Draggable.Sortable(index, {
-        draggable: 'li:not([head])',
-        distance: 10
-    });
-    document.querySelector('page[page-num="4"]').innerText = '';
-    document.querySelector('page[page-num="4"]').appendChild(index);
-    document.querySelector('page[page-num="4"]').appendChild(DOM.create('button',{
+    if (!selected.updating) {
+        const sortable = new Draggable.Sortable(index, {
+            draggable: 'li:not([head])',
+            distance: 10
+        });    
+    }
+    const chapPage = document.querySelector('page[page-num="4"]');
+    chapPage.innerText = '';
+    if (selected.updating) {
+        chapPage.appendChild(DOM.create('important',{
+            innerHTML: "You can't edit or add new chapters because this story is being auto updated. <a href='/import-stories'>Disable auto update</a>."
+        }));
+    }
+    chapPage.appendChild(index);
+    chapPage.appendChild(DOM.create('button',{
         classes: ['new-chapter'],
+        attributes: {
+            disabled: selected.updating ? "" : null
+        },
         innerText: 'New Chapter',
         listeners: {
             click: () => {
@@ -113,6 +124,9 @@ function createChapterDraggableLi(chapter) {
                 children: [
                     DOM.create('a',{
                         innerText: 'Edit',
+                        attributes: {
+                            disabled: selected.updating ? "" : null 
+                        },
                         listeners: {
                             click: ({target}) => {
                                 const pnc = document.querySelector('popup[new_chapter]');
@@ -148,6 +162,9 @@ function createChapterDraggableLi(chapter) {
                 children: [
                     DOM.create('a',{
                         innerText: 'Delete',
+                        attributes: {
+                            disabled: selected.updating ? "" : null 
+                        },
                         listeners: {
                             click: ({target}) => target.parentElement.parentElement.remove()
                         }

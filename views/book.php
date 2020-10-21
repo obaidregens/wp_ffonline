@@ -5,8 +5,7 @@ $app->bundle->mix('jquery');
 $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->mix('search-options');
-$app->bundle->css('css/js-components/confirmation');
-$app->bundle->js('js/components/confirmation');
+$app->bundle->mix('confirmation');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/index');
 $app->bundle->css('css/components/tooltips');
@@ -22,7 +21,6 @@ $book = $app->story;
 $book_query = new book_query(array(
     'include_ids'   => array($book->ID)
 ));
-$author = get_user_by( 'ID', $book->post_author );
 $all_chapters = published_chapters($book->ID);;
 $is_user_logged_in = is_user_logged_in(  );
 

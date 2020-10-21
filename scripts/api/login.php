@@ -18,14 +18,17 @@ function api_login_with_code(){
     if (substr($username,0,1) === "@"){
         $username = substr($username,1);
     }
+    $start = microtime(true);
     $return = user::send_code($username);
-    if ($return === false){
-        return ['code'=>7];
+    $sleep = 7 - (microtime(true) - $start);
+    $tok = anon_token($return);
+    if ($sleep > 0) {
+        usleep($sleep*1000000);
     }
     return [
         'code' => 1,
         'token'     => ctrk_encrypt(array(
-            'token'     => $return
+            'token'     => $tok
         ))
     ];
 }
@@ -38,17 +41,23 @@ function api_signup(){
             'errors'    => array_column($return->errors,'error','name')
         ];
     }
+    $tok = anon_token($return);
     return [
         'code'      => 1,
         'token'     => ctrk_encrypt(array(
-            'token'     => $return
+            'token'     => $tok
         ))
     ];
 }
 function api_verify_code(){
-    $datal = &$_POST['data'];
     required_params('action','token','code');
-    $datal['token'] = ctrk_decrypt($datal['token'])->token;
+    $datal = &$_POST['data'];
+    $decrypt = ctrk_decrypt($datal['token']);
+    if (! $decrypt) {
+        return ['code'=>12];
+    }
+    $datal['token'] = get_anon_token($decrypt->token);
+    $datal['code'] = strtolower($datal['code']);
     if ($_POST['data']['action'] === 'signup'){
         required_params('email','username');
         $return = user::verify( $datal['code'],$datal['token'],$datal['email'], $datal['username'] );

@@ -70,7 +70,7 @@ function prompt_login() {
 					new toast('An error occured.');
 				}
 				else if (response.code <= 5){
-					location.reload();
+					window.location.reload();
 				}
 			}
 		});
@@ -211,11 +211,8 @@ function prompt_forgot() {
 				if (response.code === 997){
 					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
 				}
-				else if (response.code === 7) {
-					new toast("No account with this username or email exists.")
-				}
 				else if (response.code === 1){
-					new toast('The verification code has been sent to your email.');
+					new toast('If email/username exists, you\'ll be sent a code.');
 					data_submit.token = response.token;
 					data_submit.action = 'login_with_code';
 					prompt_email_code(data_submit);
@@ -242,12 +239,53 @@ function prompt_email_code(existing_data) {
 		popup.open(code_popup);
 		return;
 	}
-	const code_input = DOM.update(create_text_input({
-		label: 'Code',
-	}),{
-		attributes: {
-			name: 'code'
-		}
+	const code_singles = [];
+	for (let i = 0; i < 8; i++) {
+		code_singles.push(DOM.create('input',{
+			attributes: {
+				maxlength: 1
+			},
+			listeners: {
+				keydown: (event) => {
+					const inp = event.target;
+					if ( ["ArrowRight"].includes(event.key) ) {
+						if (inp.nextElementSibling) {
+							inp.nextElementSibling.focus();
+						}	
+					}
+					else if ( ["ArrowLeft"].includes(event.key) ) {
+						if (inp.previousElementSibling) {
+							inp.previousElementSibling.focus();
+						}
+					}
+					else if ( ["Backspace"].includes(event.key) ) {
+						if (event.target.value !== "") {
+							event.target.value = "";
+							event.preventDefault();
+							return;
+						}
+						if (inp.previousElementSibling) {
+							inp.previousElementSibling.focus();
+						}
+					}
+				},
+				paste: event => {
+					const txt = event.clipboardData.getData('Text').substr(0,8);
+					for (let i = 0; i < txt.length; i++) {
+						code_singles[i].value = txt[i];
+					}
+				},
+				input: event => {
+					if (event.inputType === "insertText" && event.target.nextElementSibling) {
+						event.target.nextElementSibling.focus();
+					}
+				}
+			}
+		}));
+	}
+	window.cc = code_singles;
+	const code_input = DOM.create('code-input',{
+		children: code_singles
 	});
 	const reCAPTCHA_elem = DOM.create('recaptcha');
 	const submit_button = DOM.create('button',{
@@ -257,7 +295,7 @@ function prompt_email_code(existing_data) {
 		listeners: {
 			click: function(event) {
 				event.preventDefault();
-				existing_data.code = code_input.querySelector('input').value;
+				existing_data.code = code_singles.map(elin => elin.value).join("");
 				const widgetID = reCAPTCHA_elem.getAttribute('widget-id');
 				this.setAttribute('disabled','');
 				api('verify_code',{

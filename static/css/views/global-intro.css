@@ -29,8 +29,15 @@ header.introjs-fixParent {
     margin: 5px;
     transition: .2s background-color;
 }
-.introjs-button:hover, .introjs-button:focus, .introjs-button:active {
+.introjs-button:hover,
+.introjs-button:focus,
+.introjs-button:active {
     color: var(--white);
+    background-color: var(--theme-color);
+}
+.introjs-skipbutton:hover,
+.introjs-skipbutton:focus,
+.introjs-skipbutton:active {
     background-color: var(--red);
 }
 .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {

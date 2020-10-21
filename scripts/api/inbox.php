@@ -3,7 +3,7 @@ function api_get_chat(){
     required_login();
     required_params('username');
 
-    $user = get_user_by( 'login', $_POST['data']['username'] );
+    $user = user::get_by( 'login', $_POST['data']['username'] );
     if ($user === false) {
         return ['code'=>8];
     }
@@ -55,7 +55,7 @@ function api_get_chat(){
 function api_send_message(){
     required_login();
     required_params('message','to');
-    $user = get_user_by( 'login', $_POST['data']['to'] );
+    $user = user::get_by( 'login', $_POST['data']['to'] );
     if ($user === false){
         return ['sent'=>false];
     }
@@ -70,7 +70,7 @@ function api_send_message(){
 function api_block () {
     required_login();
     required_params('block','username');
-    $user = get_user_by( 'login', $_POST['data']['username'] );
+    $user = user::get_by( 'login', $_POST['data']['username'] );
     $_POST['data']['block'] === "true" ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
     return ['code'  => 1];
 }

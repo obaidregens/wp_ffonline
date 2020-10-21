@@ -386,8 +386,8 @@ $app->listen('/@me/&*',function($self) {
     $self->redirect("/@" . $u->user_login . substr($self->request,4));
 });
 $app->listen('/@:user/collections/:collection',function($self){
-    $user = (get_user_by( 'login', $self->params['user'] ))->data;
-    if ($user === false){
+    $user = user::get_by( 'login', $self->params['user'] );
+    if (!$user){
         return;
     }
     $str_proper = ucfirst(strtolower($self->params['collection']));
@@ -417,7 +417,7 @@ $app->listen('/@:user/collections/:collection',function($self){
 // Author
 function author_template_load($template){
     global $app;
-    $user = get_user_by( 'login', $app->params['user'] );
+    $user = user::get_by( 'login', $app->params['user'] );
     if ( $template === 'settings' && ! is_current_user($user->ID) ){
         $app->_404();
     }
@@ -426,7 +426,7 @@ function author_template_load($template){
     }
     $app->type = $template === 'about' ? 'author' : 'author-' . $template;
     $app->type_id = intval($user->ID);
-    $app->user = $user->data;
+    $app->user = $user;
     $title = $template === 'about' ?
         construct_page_title('@' . $user->user_login) :
         construct_page_title('@' . $user->user_login,ucfirst($template));
@@ -473,7 +473,7 @@ function ffn_author_template_load($template){
     global $app;
     $self_user = c_user::get($app->params['ffn_author']);
     if ($self_user !== false){
-        $user = get_user_by( 'ID', $self_user );
+        $user = user::get_by( 'ID', $self_user );
         $app->_301('/@' . $user->user_login);
     }
     $author_books = new book_query([
@@ -520,8 +520,8 @@ $app->listen('/inbox',function($self){
 });
 $app->listen('/inbox/@:username',function($self){
     $self->login();
-    $user = get_user_by( 'login', $self->params['username'] );
-    if ($user === false || intval($user->ID) === intval(get_current_user_id()) ){
+    $user = user::get_by( 'login', $self->params['username'] );
+    if ($user === false || is_current_user($user->ID) ){
         $self->_404();
     }
     $self->type = 'inbox';

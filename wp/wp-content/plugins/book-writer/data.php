@@ -94,6 +94,8 @@ function get_data($book_id = 'new'){
 	$data['selected']['anonymous_reviews']	  = false;
 	$data['selected']['publish'] 			  = false;
 	$data['selected']['book_id']			  = $book_id;
+	$data['selected']['updating']			  = import_stories::get_status($book_id) === "live";
+
 	if ($book_id != 'new'){
 		$data['selected']['book_id']		  = (int) $book_id;
 	}

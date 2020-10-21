@@ -11,7 +11,7 @@ class chats {
         if ($to === $from){
             return $this->error->add('to','User cannot message himself.');
         }
-        $user = get_user_by( 'ID', $to );
+        $user = user::get_by( 'ID', $to );
         if ($user === false) {
             return $this->error->add('to','Invalid User ID passed.');
         }
@@ -135,7 +135,7 @@ class chats {
 class chats_blocking extends chats {
     public static function block($login){
         $error = new err();
-        $user = get_user_by( 'login', $login );
+        $user = user::get_by( 'login', $login );
         if ($user === false){
             $error->add('login','Invalid Username passed.');
             return $error;
@@ -153,7 +153,7 @@ class chats_blocking extends chats {
     }
     public static function unblock($login){
         $error = new err();
-        $user = get_user_by( 'login', $login );
+        $user = user::get_by( 'login', $login );
         if ($user === false){
             $error->add('login','Invalid Username passed.');
             return $error;
@@ -180,12 +180,12 @@ class chats_blocking extends chats {
         $user_id = (int) $user_id;
         $by_user_id = (int) $by_user_id;
 
-        $by_user = get_user_by( 'ID', $by_user_id );
+        $by_user = user::get_by( 'ID', $by_user_id );
 
         if ($by_user === false){
             $error->add('by_user_id(1)','Invalid User ID passed: ' . $by_user_id);
         }
-        $user = get_user_by( 'ID', $user_id );
+        $user = user::get_by( 'ID', $user_id );
         if ($user === false){
             $error->add('user_id(0)','Invalid Username passed: ' . $user_id);
         }

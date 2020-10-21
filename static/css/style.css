@@ -66,6 +66,10 @@ a:hover {
     text-decoration: none;
     cursor: pointer;
 }
+a[disabled] {
+    color: var(--grey);
+    pointer-events: none;
+}
 *,
 *::before,
 *::after{

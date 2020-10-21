@@ -7,7 +7,7 @@ function print_comment($comment) {
 	$can_reply = get_current_user_id() === intval($post->post_author) && intval($comment->user_id) !== get_current_user_id();
 	$can_delete = get_current_user_id() === intval($comment->user_id);
 	?>
-	<?php $comment_author = get_user_by( 'ID', $comment->user_id ); ?>
+	<?php $comment_author = user::get_by( 'ID', $comment->user_id ); ?>
 	<review review_id="<?= $comment->comment_ID; ?>">
 		<a <?= $is_book_author ? 'tooltip-top="Book Author"' : ''; ?> class="author <?= $is_book_author ? 'book-author' : ''; ?>"><?= $comment_author->display_name; ?></a>
 		<review-time><?= human_time_diff(get_comment_time('U')) . ' ago'; ?></review-time>

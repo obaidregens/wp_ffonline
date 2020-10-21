@@ -1,5 +1,6 @@
 <?php
 $app->bundle = global_bundle('import-stories');
+$app->bundle->mix('confirmation');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/views/import-main');
@@ -31,10 +32,14 @@ $remote_stories = import_stories::view_all($connected);
     <text>Select All</text>
 </label>
 <?php foreach($remote_stories as $story) { ?>
-<?php if ($story['status'] === 'imported') { ?>
+<?php if ( in_array($story['status'],['imported','live']) ) { ?>
 <label class="imported">
     <text><?= htmlspecialchars($story['title']); ?></text>
     <a href="/story/<?= $story['storyID']; ?>">Read</a>
+    <?php if ($story['status'] === "live") { ?>
+        <a story_id="<?= $story['storyID']; ?>" class="disable-update">Disable auto update</a>
+    <?php } else { ?>
+    <?php } ?>
 </label>
 <?php } else { ?>
 <label class="checkbox">

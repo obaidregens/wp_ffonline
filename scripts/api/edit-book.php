@@ -52,52 +52,55 @@ function api_edit_book() {
     if (trim($d['description']) === '') {
         $publish = false;
     }
-    // Chapter
-    $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
-    $old_chapters = published_chapters($book->ID,-1);
-    $old_chapter_titles = array_column($old_chapters,'post_title','ID');
-    $old_chapter_ids = array_map('strval',array_column($old_chapters,'ID'));
-    $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
-    $old_chapters_lookup = array_flip($old_chapter_ids);
-    $chapter_ids_order = [];
-    foreach ( ($d['chapters'] ?? []) as $k => $chapter ) {
-        if (
-            $chapter['draft_id'] ||
-            ($chapter['title'] ?? "") !== ($old_chapter_titles[$chapter['ID']] ?? "") ||
-            $chapter['preAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true) ||
-            $chapter['postAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true)
-        ){
-            if (trim($chapter['title'] ?? "") === "") {
+    $chapter_disabled = import_stories::get_status($book->ID) === 'live';
+    if (!$chapter_disabled) {
+        // Chapter
+        $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
+        $old_chapters = published_chapters($book->ID,-1);
+        $old_chapter_titles = array_column($old_chapters,'post_title','ID');
+        $old_chapter_ids = array_map('strval',array_column($old_chapters,'ID'));
+        $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
+        $old_chapters_lookup = array_flip($old_chapter_ids);
+        $chapter_ids_order = [];
+        foreach ( ($d['chapters'] ?? []) as $k => $chapter ) {
+            if (
+                $chapter['draft_id'] ||
+                ($chapter['title'] ?? "") !== ($old_chapter_titles[$chapter['ID']] ?? "") ||
+                $chapter['preAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true) ||
+                $chapter['postAN'] !== get_post_meta($chapter['ID'],'pre_author_note',true)
+            ){
+                if (trim($chapter['title'] ?? "") === "") {
+                    continue;
+                }
+                $chapter_id = draft_chapters::save(
+                    ($chapter['draft_id'] ?? null) ?: null,
+                    $book->ID,
+                    substr( ($chapter['title'] ?? "") ,0,80),
+                    [ 'pre' => $chapter['preAN'], 'post' => $chapter['postAN'] ],
+                    $chapter['ID'] ?? 'new'
+                );
+                if ( $chapter_id !== false ) {
+                    $chapter_ids_order[] = $chapter_id;
+                }
                 continue;
             }
-            $chapter_id = draft_chapters::save(
-                ($chapter['draft_id'] ?? null) ?: null,
-                $book->ID,
-                substr( ($chapter['title'] ?? "") ,0,80),
-                [ 'pre' => $chapter['preAN'], 'post' => $chapter['postAN'] ],
-                $chapter['ID'] ?? 'new'
-            );
-            if ( $chapter_id !== false ) {
-                $chapter_ids_order[] = $chapter_id;
+            if (! isset($old_chapters_lookup[$chapter['ID']]) ) {
+                continue;
             }
-            continue;
+            $chapter_ids_order[] = $chapter['ID'];
         }
-        if (! isset($old_chapters_lookup[$chapter['ID']]) ) {
-            continue;
+        if (empty($chapter_ids_order)) {
+            if ($d['publish'] === 'true') {
+                $success = 2;
+            }
+            $publish = false;
         }
-        $chapter_ids_order[] = $chapter['ID'];
-    }
-    if (empty($chapter_ids_order)) {
-        if ($d['publish'] === 'true') {
-            $success = 2;
+        foreach ($to_remove as $chapter_id ) {
+            wp_delete_post( $chapter_id, true );
         }
-        $publish = false;
-    }
-    foreach ($to_remove as $chapter_id ) {
-        wp_delete_post( $chapter_id, true );
-    }
-    foreach ($chapter_ids_order as $k => $chapter_id) {
-        update_post_meta( $chapter_id, 'chapter_order', $k+1 );
+        foreach ($chapter_ids_order as $k => $chapter_id) {
+            update_post_meta( $chapter_id, 'chapter_order', $k+1 );
+        }
     }
 
     // Tags

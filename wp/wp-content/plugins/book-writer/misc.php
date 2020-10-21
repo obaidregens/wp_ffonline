@@ -1,4 +1,17 @@
 <?php
+function get_anon_token($tok) {
+	return explode('-',$tok,2)[1];
+}
+function anon_token($token,$len = 30) {
+	if (!$token){
+		// b so token can never be int and actually confused
+        $token = "b" . bin2hex(random_bytes(4));
+    }
+    $addLen = ($len-1) - strlen(strval($token));
+    $prepend = substr(bin2hex(random_bytes($addLen)),0,$addLen);
+	$tok = $prepend . "-" . $token;
+	return $tok;
+}
 function number_abbr($num) {
 	if ($num < 1000) {
 		return strval($num);

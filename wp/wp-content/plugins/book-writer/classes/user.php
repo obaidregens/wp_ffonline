@@ -4,6 +4,7 @@ add_action( 'pre_user_query', function( $uqi ) {
     $uqi->query_where .= ' AND user_status != 1';
 });
 class user {
+    // Signup
     public static function signup ($email,$username) {
         $username = strtolower($username);
         $validation = (new v_user([
@@ -76,6 +77,7 @@ class user {
         self::internal_login($results[0]->ID);
         return true;
     }
+    // Login
     public static function login($username, $password){
         $return = wp_authenticate( $username, $password );
         if (is_wp_error( $return )){
@@ -88,22 +90,18 @@ class user {
         self::internal_login($user->ID);
         return $return->data;
     }
+    // OTP
     public static function send_code($username_or_email){
         $user = v_user::get_by_username_or_email($username_or_email);
         if ($user === false){
             return false;
         }
-
         $code = new v_code;
         global $wpdb;
         $wpdb->update(
             'wp_users',
-            array(
-                'user_activation_key'   => $code->ID
-            ),
-            array(
-                'ID'        => $user->ID
-            )
+            [ 'user_activation_key'   => $code->ID ],
+            [ 'ID'        => $user->ID ]
         );
         mail_user::login_code_mail($user,$code->code);
         return $code->ID;
@@ -128,11 +126,29 @@ class user {
         self::internal_login($return[0]->ID);
         return true;
     }
+    // Internal
     public static function internal_login($user_id){
         wp_cache_delete($user_id, 'users');
         wp_clear_auth_cookie();
         wp_set_current_user ( $user_id );
         wp_set_auth_cookie  ( $user_id, true );
+    }
+    // Get
+    // Duplicates WP get_user_by
+    static function get_by(string $field,$value,bool $unverified = false) {
+        $f = in_array($field,["id","ID"]) ? "ID" : "";
+        $f = in_array($field,["email"]) ? "user_email" : $f;
+        $f = in_array($field,["login"]) ? "user_login" : $f;
+        if ($f === "") {
+            return false;
+        }
+        $sql = "SELECT * FROM wp_users WHERE $f = " . ($f === "ID" ? "%d" : "%s");
+        if (!$unverified) {
+            $sql .= " AND user_status != 1";
+        }
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare($sql,[$value]));
+        return empty($r) ? false : $r[0];
     }
 }
 class user_settings extends user {
@@ -180,38 +196,8 @@ class user_settings extends user {
     }
 }
 class mail_user extends user {
-    public static function change_email($new_email){
-        $current_user = (get_user_by('ID', get_current_user_id() ))->data;
-
-        $hash           = md5( $new_email . time() . wp_rand() );
-        $new_user_email = array(
-            'hash'     => $hash,
-            'newemail' => $new_email,
-        );
-        update_user_meta( $current_user->ID, '_new_email', $new_user_email );
-        
-        $email_text = __(
-'Hi ###USERNAME###,
-
-You recently requested a change in the email address associated with your account.
-
-To confirm the change, click on the link below:
-###ADMIN_URL###
-
-Fanfiction Online'
-        );
-
-        $email_text = str_replace  ( '###USERNAME###', $current_user->user_login, $email_text );
-        $email_text = str_replace  ( '###ADMIN_URL###', esc_url( admin_url( 'profile.php?newuseremail=' . $hash ) ), $email_text );
-    
-        // email( [
-        //     'to'        => $new_email,
-        //     'subject'   => 'Email Change Request',
-        //     'plaintext' => $email_text
-        // ]);
-    }
     protected static function signup_mail($user_id,$code){
-        $user = get_user_by( 'ID', $user_id )->data;
+        $user = user::get_by( 'ID', $user_id , true );
         email( [
             'to'        => $user->user_email,
             'template'  => 'signup',
@@ -260,7 +246,7 @@ class v_user extends user {
         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false){
             $error->add('email','Invalid Format.');
         }
-        $user = get_user_by( 'email', $value );
+        $user = user::get_by( 'email', $value );
         if ( self::exists($user) ){
             $error->add('email','User with email exists.');
         }
@@ -274,7 +260,7 @@ class v_user extends user {
         if (strlen (preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$value) ) > 0){
             $error->add('username','Must only contain dots(.), underscores(_), english alphabets, or numbers.');
         }
-        $user = get_user_by( 'login', $value );
+        $user = user::get_by( 'login', $value );
         if ( self::exists($user) ){
             $error->add('username','User with username exists.');
         }
@@ -294,21 +280,29 @@ class v_user extends user {
         return $error;
     }
     protected static function exists($user_obj){
+        if ($user_obj->data) {
+            $user_obj = $user_obj->data;
+        }
         return 
             $user_obj !== false &&
-            intval($user_obj->ID) !== intval(get_current_user_id()) &&
-            intval($user_obj->data->user_status) !== 1;
+            !is_current_user($user_obj->ID) &&
+            intval($user_obj->user_status) !== 1;
     }
     protected static function get_by_username_or_email($username_or_email){
-        $byusername = get_user_by( 'login' , $username_or_email );
-        $byemail = get_user_by( 'email' , $username_or_email );
+        $byusername = user::get_by( 'login' , $username_or_email );
+        $byemail = user::get_by( 'email' , $username_or_email );
         if ($byusername === false && $byemail === false ){
             return false;
         }
-        $user = $byusername !== false ? $byusername->data : $byemail->data;
-        if (intval($user->user_status) === 1){
-            return false;
-        }
+        $user = $byusername !== false ? $byusername : $byemail;
         return $user;
     }
+}
+function get_user_by(string $field,$value,bool $unverified = false) {
+    $user = user::get_by($field,$value,$unverified);
+    if ($user === false) {
+        return false;
+    }
+    $user->data = $user;
+    return $user;
 }

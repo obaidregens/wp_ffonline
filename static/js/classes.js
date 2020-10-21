@@ -130,10 +130,12 @@ const DOM = class {
         }
         const attr_entries = Object.entries(attributes);
         for (let i = 0; i < attr_entries.length; i++) {
+            if (attr_entries[i][1] === null) {continue;}
             the_elem.setAttribute(attr_entries[i][0],attr_entries[i][1]);
         }
         const listener_entries = Object.entries(listeners);
         for (let i = 0; i < listener_entries.length; i++) {
+            if (listener_entries[i][1] === null) {continue;}
             the_elem.addEventListener(listener_entries[i][0],listener_entries[i][1]);
         }
         the_elem = DOM.append(the_elem,children);

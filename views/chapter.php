@@ -5,8 +5,7 @@ $app->bundle->mix('global_new');
 $app->bundle->mix('intro');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/index');
-$app->bundle->css('css/js-components/confirmation');
-$app->bundle->js('js/components/confirmation');
+$app->bundle->mix('confirmation');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/components/slider');
@@ -25,7 +24,6 @@ $app->bundle->js('js/views/chapter-offline');
 $app->bundle->enqueue();
 
 $chapter = $app->chapter;
-$author = get_user_by( 'ID', $chapter->post_author );
 $book = $app->story;
 $all_chapters = published_chapters($book->ID);
 $comments_open = comments_open( $book->ID );

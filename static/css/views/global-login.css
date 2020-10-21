@@ -56,3 +56,30 @@ popup[forgot] > form::before {
     font-size: 0.8rem;
     color: grey;
 }
+/* Code */
+code-input {
+    display: flex;
+    width: 100%;
+    padding: 0px 10px;
+}
+
+code-input > input {
+    display: inline-flex;
+    background: transparent;
+    width: 100%;
+    text-transform: uppercase;
+    height: 40px;
+    border: none;
+    text-align: center;
+    color: var(--text-color);
+    border-radius: 3px;
+}
+code-input > input {
+    border: 1px solid var(--lightblack);
+}
+code-input > input:not(:last-child) {
+    margin-right: 4px;
+}
+code-input > input:focus {
+    box-shadow: var(--shadow-light);
+}

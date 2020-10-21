@@ -1,6 +1,6 @@
 <?php
 $collection = $app->collection;
-$author = get_user_by( 'ID', $collection->author )->data;
+$author = user::get_by( 'ID', $collection->author );
 $follows = count(collection_follow::query_by('type_id',$collection->ID));
 ?>
 <collection class="grid-item" collection_id="<?= $collection->ID ?>">

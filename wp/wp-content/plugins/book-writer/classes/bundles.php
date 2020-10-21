@@ -360,6 +360,10 @@ class bundle {
             ],
             'css'   => []
         ],
+        'confirmation'  => [
+            'css'   => ['css/js-components/confirmation'],
+            'js'    => ['js/components/confirmation'],
+        ],
         'intro'    => [
             'js'    => [
                 'external/intro-js/intro.min',
