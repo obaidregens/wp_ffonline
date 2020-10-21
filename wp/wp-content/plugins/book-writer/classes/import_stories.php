@@ -105,7 +105,7 @@ class import_stories {
             [
                 "story_id"      => $story_id,
                 "import_status" => "live"
-            ],
+            ]
         );
     }
 }

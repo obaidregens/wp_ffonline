@@ -14,7 +14,7 @@ foreach ($questions as $cat => $qs ) {
         ?>
         <question-wrapper class="waves-effect">
         <question><?= htmlspecialchars($question->question); ?></question>
-        <answer><?= strip_tags($question->answer,'<a>'); ?></answer>
+        <answer><?= strip_tags($question->answer,'<a><strong>'); ?></answer>
         </question-wrapper>
         <?php
     }
