@@ -303,6 +303,5 @@ function get_user_by(string $field,$value,bool $unverified = false) {
     if ($user === false) {
         return false;
     }
-    $user->data = $user;
-    return $user;
+    return new WP_User($user);
 }
