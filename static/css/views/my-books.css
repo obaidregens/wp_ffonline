@@ -1,3 +1,4 @@
+/* Buttons */
 .button[label="Drafts"]::after {
     font-family: 'icons';
     content: '\e909';
@@ -23,15 +24,17 @@ a.new-book::before {
     transform: scale(1.4) translateX(-1px);
     margin-right: 5px;
 }
+/* Book */
+book {
+    display: flex;
+}
 a.book {
     width: 100%;
     display: block;
     color: var(--text-color);
     padding: 10px;
     transition: background-color .2s;
-}
-a.book:hover {
-    background-color: var(--transparent-accent);
+    position: relative;
 }
 book-title {
     font-size: 1.2rem;
@@ -39,40 +42,32 @@ book-title {
 book-status {
     font-size: 0.85rem;
     float: right;
-    color: grey;
+    color: var(--darkgrey);
 }
-book-views {
+/* Stat */
+book > a.book-stats {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 50px;
+    color: var(--darkgrey);
 }
-book-views > stat {
-    display: block;
-    text-align: center;
-    padding: 15px;
-    font-size: 2.5rem;
-    position: relative;
+book > a.book-stats::before {
+    font-family: 'icons';
+    content: "\e953";
+    display: inline-block;
+    transform: scale(1.3);
 }
-book-views > stat::after {
-    margin-top: -8px;
-    display: block;
-    content: attr(timespan);
+book > a.book-stats::after {
+    content: "Stats";
     font-size: 0.8rem;
-    text-transform: uppercase;
 }
-/* Zoom in */
-a.book book-title,a.book book-status {
-    transition: opacity .2s;
+book > a.book-stats:hover,
+book > a.book:hover {
+    background-color: var(--transparent-accent);
 }
-a.book stat {
-    transform-origin: bottom;
-    transition: transform .2s;
-}
-a.book:hover stat {
-    transform:scale(1.5);
-}
-a.book:hover book-title,a.book:hover book-status {
-    opacity: 0;
-}
+/* Mobile Actions */
 @media only screen and (max-width: 500px) {
     actions > .button {
         font-size: 0.6rem;

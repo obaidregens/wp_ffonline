@@ -1,0 +1,14 @@
+a.back-to-stories {
+    display: flex;
+    margin-bottom: 20px;
+}
+a.back-to-stories::before {
+    font-family: icons;
+    content: '\e902';
+    display: inline-block;
+    transform: scale(1.2) translateY(-0.5px);
+    margin-right: 8px;
+}
+a.back-to-stories::after {
+    content: "Back to Stories";
+}

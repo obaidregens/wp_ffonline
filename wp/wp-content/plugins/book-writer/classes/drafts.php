@@ -102,7 +102,6 @@ class drafts {
             [
                 'ID'        => $draft->ID,
                 'user_id'   => $current_user_id,
-
             ]
         );
         return true;
@@ -259,10 +258,22 @@ class drafts_dir extends drafts {
     }
     static function delete($folder) {
         $e = new err;
-        $table = self::$table;
         $arrs = arr::non_empty(explode('/',$folder));
         $path = implode('/',$arrs);
+        array_pop($arrs);
+        $move_to = implode('/',$arrs);
         global $wpdb;
+        $wpdb->update(
+            self::$table,
+            [
+                'path'          => $move_to
+            ],
+            [
+                'user_id'       => get_current_user_id(),
+                'branch_type'   => null,
+                'path'          => $path
+            ],
+        );
         $wpdb->delete(
             self::$table,
             [

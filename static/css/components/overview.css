@@ -1,0 +1,28 @@
+overview {
+    display: flex;
+    position: relative
+}
+
+overview > block {
+    flex: 1;
+    display: flex;
+    height: 120px;
+    flex-direction: column-reverse;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    transition: background-color .2s;
+}
+
+overview > block::before {
+    content: attr(label)
+}
+
+overview > block::after {
+    content: attr(count);
+    font-size: 2rem
+}
+
+overview > block:hover {
+    background-color: var(--hover)
+}

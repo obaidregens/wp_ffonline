@@ -562,14 +562,14 @@ $app->listen('/my-stories',function($self){
     exit();
 });
 $app->listen('/my-stories/:id',function($self){
+    $self->_301("/my-stories/".$self->params['id']."/edit");
+});
+$app->listen('/my-stories/:id/edit',function($self){
     $self->login();
     $story = get_post( $self->params['id'] );
     if (
         $self->params['id'] !== 'new' &&
-        (
-            ! $story
-            || ! is_current_user($story->post_author)
-        )
+        ( !$story || ! is_current_user($story->post_author) )
     ) {
         return;
     }
@@ -580,6 +580,22 @@ $app->listen('/my-stories/:id',function($self){
         'title'         => construct_page_title("Edit Story"),
     ]);
     $self->template('/views/books/edit');
+    $self->footer();
+    exit();
+});
+$app->listen('/my-stories/:id/stats',function($self){
+    $self->login();
+    $story = get_post( $self->params['id'] );
+    if ( !$story || !is_current_user($story->post_author) ) {
+        return;
+    }
+    $self->type = 'story-stats';
+    $self->type_id = intval($story->ID);
+    $self->story = $story;
+    $self->header([
+        'title'         => construct_page_title("Story Stats"),
+    ]);
+    $self->template('/views/books/stats');
     $self->footer();
     exit();
 });
@@ -628,7 +644,7 @@ $app->listen('/drafts/:draft_share',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_id',function($self){
-    $self->redirect( '/drafts/' . $self->params['draft_id'] . '/edit' );
+    $self->_301( '/drafts/' . $self->params['draft_id'] . '/edit' );
 });
 $app->listen('/drafts/:draft_id/preview',function($self){
     $self->login();
@@ -719,7 +735,7 @@ $app->listen('/drafts/:draft_id/export/ao3',function($self){
 });
 // Verify Account
 $app->listen('/verify',function($self){
-    $self->redirect('/connections');
+    $self->_301('/connections');
 });
 $app->listen('/connections',function($self){
     $self->login();

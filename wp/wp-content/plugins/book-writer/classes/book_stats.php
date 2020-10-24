@@ -1,123 +1,76 @@
 <?php
 class book_stats extends stats {
-    function __construct($book_id,$da = false) {
-        if ($da === false) {
-            global $wpdb;
-            // Landings
-            $landing_table = self::$landing_table;
-            $landing_query = $wpdb->prepare("SELECT * FROM $landing_table WHERE type = %s AND type_id = %s ORDER BY ID DESC",['story',$book_id]);
-            $landings = $wpdb->get_results($landing_query,ARRAY_A);
-            if (empty($landings)) {
-                $this->by_vfs = [];
-                $this->landings = []; 
-                return;
-            }
-    
-            $landing_ids = array_column($landings,'ID');
-    
-            // Actions
-            $actions_table = self::$actions_table;
-            $actions = $wpdb->get_results("SELECT * FROM stats_actions WHERE landing_id IN(" . implode(',',$landing_ids) . ")",ARRAY_A);
-            $gactions = [];
-            foreach ($actions as $action ) {
-                $landing_id = $action['landing_id'];
-                if (! isset($gactions[$landing_id])){
-                    $gactions[$landing_id] = [];
-                }
-                $action['timestamp'] = (int) $action['timestamp'];
-                $gactions[$landing_id][] = $action;
-            }    
-        }
-        else {
-            $landings = $da['landings'];
-            $gactions = $da['gactions'];
-        }
+    function __construct($story_id) {
+        // Tables
+        $landings_table = stats::$landing_table;
+        $actions_table = stats::$actions_table;
 
-        $real_landings = [];
-        $by_vfs = [];
-        foreach ($landings as $key => $landing ) {
-            if ( $da !== false && intval($landing['type_id']) !== intval($book_id) ) {
-                continue;
-            }
-            $landing_id = $landing['ID'];
-            if (! isset($gactions[$landing_id])){
-                continue;
-            }
-            $landing['actions'] = $gactions[$landing_id];
-            $real_landings[$landing_id] = $landing;
-            // VFS
-            $vfs = $landing['vfs'];
-            if (! isset($by_vfs[$vfs])){
-                $by_vfs[$vfs] = [];
-            }
-            $by_vfs[$vfs][] = $landing;
-        }
-        $this->by_vfs = $by_vfs;
-        $this->landings = $real_landings; 
-    }
-    function views($from = 'all') {
-        if (!$from instanceof DateTime && $from !== 'all') {
-            return false;
-        }
-        $t = $from === 'all' ? 0 : $from->getTimestamp();
-        if ($from === 'all' ) {
-            return ($this->landings);
-        }
-        $filtered = [];
-        foreach ($this->landings as $landing_id => $landing) {
-            if ($landing['timestamp'] < $t) {
-            break;
-            }
-            $filtered[$landing_id] = $landing;
-        }
-        return ($filtered);
-    }
-    function view_count($from = 'all'){
-        $r = $this->views($from);
-        return $r === false ? false : count($r);
-    }
-    static function multiple($book_ids) {
+        // Consts
+        $this_week_start = strtotime('-1 week monday 00:00:00');
+        $min30 = 60*30;
+
+        // Sql
+        $sql =
+        "SELECT wp_posts.ID as ID,wp_postmeta.meta_value as num,$landings_table.vfs,$actions_table.timestamp FROM $landings_table
+        INNER JOIN $actions_table ON $landings_table.ID = $actions_table.landing_id
+        INNER JOIN wp_posts ON wp_posts.ID = $landings_table.type_id
+        INNER JOIN wp_postmeta ON wp_postmeta.post_id = wp_posts.ID
+        WHERE wp_postmeta.meta_key = 'chapter_order'
+        AND wp_posts.post_parent = %d
+        AND $landings_table.type = 'chapter'
+        ORDER BY $actions_table.timestamp ASC";
         global $wpdb;
-        // Landings
-        $landing_table = self::$landing_table;
-        $landings = [];
-        if (!empty($book_ids)) {
-            $landing_query = $wpdb->prepare("SELECT * FROM $landing_table WHERE type = 'story' AND type_id IN(" . implode(',',array_fill(0,count($book_ids),'%s')) . ") ORDER BY ID DESC",$book_ids);
-            $landings = $wpdb->get_results($landing_query,ARRAY_A);    
-        }
-        if (empty($landings)) {
-            $instances = [];
-            foreach ( $book_ids as $book_id ) {
-                $instances[$book_id] = new book_stats($book_id, [
-                    'landings'  => [],
-                    'gactions'  => [],
-                ]);
+        $r = $wpdb->get_results($wpdb->prepare($sql,[$story_id]));
+
+        // Loop
+        $this->chapters = [];
+        $thisweek_sessions = 0;
+        $alltime_sessions = 0;
+        $last_actions = [];
+        foreach ($r as $action ) {
+            // Prep
+            $prev = &$last_actions['story'][$action->vfs];
+            $prev_chap = &$last_actions[$action->ID][$action->vfs];
+            $action->timestamp = (int) $action->timestamp;
+            // Logic
+            // Story Logic
+            if ( ($action->timestamp - ($prev->timestamp ?? 0)) > $min30 ) {
+                $alltime_sessions += 1;
+                if ($action->timestamp >= $this_week_start){
+                    $thisweek_sessions += 1;
+                }
             }
-            return $instances;
-        }
-
-        $landing_ids = array_column($landings,'ID');
-
-        // Actions
-        $actions_table = self::$actions_table;
-        $actions = $wpdb->get_results("SELECT * FROM stats_actions WHERE landing_id IN(" . implode(',',$landing_ids) . ")",ARRAY_A);
-        $gactions = [];
-        foreach ($actions as $action ) {
-            $landing_id = $action['landing_id'];
-            if (! isset($gactions[$landing_id])){
-                $gactions[$landing_id] = [];
+            // Chapter Logic
+            if ( ($action->timestamp - ($prev_chap->timestamp ?? 0)) > $min30 ) {
+                $chap = &$this->chapters[$action->ID];
+                $chap->alltime = ($chap->alltime ?? 0) + 1;
+                if ($action->timestamp >= $this_week_start){
+                    $chap->thisweek = ($chap->thisweek ?? 0) + 1;
+                }
             }
-            $action['timestamp'] = (int) $action['timestamp'];
-            $gactions[$landing_id][] = $action;
-        }    
-
-        $instances = [];
-        foreach ( $book_ids as $book_id ) {
-            $instances[$book_id] = new book_stats($book_id, [
-                'landings'  => $landings,
-                'gactions'  => $gactions,
-            ]);
+            // Finalize
+            $prev = $action;
+            $prev_chap = $action;
         }
-        return $instances;
+        $this->story->thisweek = $thisweek_sessions;
+        $this->story->alltime = $alltime_sessions;
+    }
+    static function cached($story_id) {
+        $cache_time = 60*60*6; // 6 Hours
+
+        $fname = MAIN_DIR . "/reports/story-" . $story_id;
+        if (file_exists($fname) && (time() - filemtime($fname)) <= $cache_time ) {
+            return unserialize(file_get_contents($fname));
+        }
+
+        $inst = new book_stats($story_id);
+
+        $dir = dirname($fname);
+        if (!is_dir($dir)) {
+            mkdir($dir,0777,true);
+        }
+        file_put_contents($fname,serialize($inst));
+
+        return $inst;
     }
 }

@@ -250,3 +250,10 @@ function api_move_draft () {
     }
     return ['code' => 1];
 }
+function api_delete_draft_dir () {
+    required_login();
+    required_params('path');
+    // Validation for this is being done inside the class
+    drafts_dir::delete($_POST['data']['path']);
+    return [ 'code'  => 1 ];
+}
