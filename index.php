@@ -770,6 +770,16 @@ $app->listen('/rules',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/licenses',function($self){
+    $self->type = 'licenses';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Licenses"),
+    ]);
+    $self->template('/views/rules/licenses');
+    $self->footer();
+    exit();
+});
 // Content Guidlines
 $app->listen('/guidelines',function($self){
     $self->type = 'content-guidelines';

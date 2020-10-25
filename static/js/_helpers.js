@@ -1,4 +1,9 @@
 class _ {
+    static scrollTo (el) {
+        const ht = document.querySelector('html');
+        el.scrollIntoView();
+        ht.scrollTop = ht.scrollTop - 55;
+    }
     static clone (obj) {
         return JSON.parse(JSON.stringify(obj));
     }

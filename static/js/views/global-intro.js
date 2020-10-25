@@ -1,5 +1,4 @@
 (() => {
-    const lastUpdatedIntro = 1;
     const getViewId = () => {
         const current_view_parts = window.location.pathname.split('/').filter((v) => v !== '');
         const current_full = current_view_parts.join('/');
@@ -40,7 +39,7 @@
         return false;
     }
     const introSteps = {
-        1: [
+        1: {v: 1,steps: [
             {
                 intro: "Hi! We'll help you get started so you can quickly get to reading fanfiction.",
             },
@@ -56,8 +55,8 @@
                 element: 'book',
                 intro: "Click on story to see more!",
             },
-        ],
-        2: [
+        ]},
+        2: {v: 1,steps: [
             {
                 element: 'a.button[label="Drafts"]',
                 intro: "Click on drafts to start writing."
@@ -70,8 +69,8 @@
                 element: 'a.new-book',
                 intro: "Ready to publish your first story?"
             },
-        ],
-        3: [
+        ]},
+        3: {v: 2,steps: [
             {
                 element: 'button[label="Export"]',
                 intro: "Export your draft to other fanfiction sites."
@@ -79,6 +78,10 @@
             {
                 element: 'toolbar > [action="share"]',
                 intro: "Collaborate on draft with others."
+            },
+            {
+                element: 'toolbar > [action="preview"]',
+                intro: "Listen & preview draft."
             },
             {
                 element: 'button[label="Publish"]',
@@ -98,17 +101,20 @@
             {
                 intro: 'Start writing :)'
             }
-        ],
-        4: [
+        ]},
+        4: {v: 2,steps: [
             {
                 element: 'button.edit-draft',
                 intro: "Add your changes to draft."
             },
             {
+                intro: "To listen to your draft or customize reading, tap twice."
+            },
+            {
                 intro: "To change the font, theme, or text size, tap twice."
             },
-        ],
-        5: [
+        ]},
+        5: {v: 1,steps: [
             {
                 element: 'input.collapsible',
                 intro: "See all chapters this story has."
@@ -125,10 +131,10 @@
                 element: '.book-share',
                 intro: "Save offline to read without internet!"
             },
-        ],
-        6: [
+        ]},
+        6: {v: 2,steps: [
             {
-                intro: "Search story, customize reading, view chapters, or save offline to read without internet! Tap to open options."
+                intro: "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet! Tap to open options."
             },
             {
                 intro: "To change the font, theme, or text size, tap twice."
@@ -145,14 +151,14 @@
                 element: 'reviews-wrapper',
                 intro: "What do you think about this chapter? Leave a review for the author."
             },
-        ],
-        7: [
+        ]},
+        7: {v: 1,steps: [
             {
                 element: 'floater > button.new',
                 intro: 'Create a new draft.'
             }
-        ],
-        8: [
+        ]},
+        8: {v: 1,steps: [
             {
                 element: 'page:first-of-type',
                 intro: 'Enter some basic details about your story.'
@@ -169,19 +175,20 @@
                 element: 'step:nth-of-type(4)',
                 intro: 'Add & edit chapter(s) to story.'
             },
-        ]
+        ]},
     }
     function startIntro(){
         setTimeout(() => {
             const viewID = getViewId();
             const visited = JSON.parse(localStorage.getItem('intro')) || {};
+            const lastUpdatedIntro = introSteps[viewID].v;
             if ( (visited[viewID] || 0) <= lastUpdatedIntro*-1 ){
                 return;
             }
             visited[viewID] = lastUpdatedIntro*-1;
             localStorage.setItem('intro',JSON.stringify(visited));
     
-            const steps = introSteps[viewID] || [];
+            const steps = introSteps[viewID].steps || [];
             if (steps.length === 0) {
                 return;
             }

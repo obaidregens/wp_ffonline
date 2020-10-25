@@ -62,12 +62,6 @@ author-notes:nth-of-type(2) {
 author-notes:empty {
 	display: none;
 }
-chapter > content {
-	min-width: 130px;
-	max-width: 100%;
-	display: block;
-	margin: 0 auto;
-}
 chapter > .next-chapter {
 	width: 100%;
 	margin: 0;

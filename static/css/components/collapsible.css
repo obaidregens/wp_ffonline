@@ -23,28 +23,18 @@ input.collapsible + label::after {
 input:checked.collapsible + label::after {
     content: '\e922';
 }
-input.collapsible + label + collapsible {
+input.collapsible+label+collapsible {
     padding-right: 10px;
     padding-left: 10px;
-    padding-top: 0;
-    padding-bottom: 0;
-
     margin-bottom: 10px;
     width: 100%;
     display: block;
     max-height: 0;
-    opacity: 0;
-    transition:
-        max-height .2s,
-        padding-top .2s,
-        padding-bottom .2s,
-        opacity .05s;
-    will-change: max-height, opacity, padding-top, padding-bottom;
     overflow: hidden;
+    transition: max-height .7s;
+    will-change: max-height;
 }
-input.collapsible:checked + label + collapsible {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    max-height: 100%;
-    opacity: 1;
+
+input.collapsible:checked+label+collapsible {
+    max-height: 5000px;
 }

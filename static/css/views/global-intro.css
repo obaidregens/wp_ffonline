@@ -35,9 +35,9 @@ header.introjs-fixParent {
     color: var(--white);
     background-color: var(--theme-color);
 }
-.introjs-skipbutton:hover,
-.introjs-skipbutton:focus,
-.introjs-skipbutton:active {
+.introjs-skipbutton:not(.introjs-donebutton):hover,
+.introjs-skipbutton:not(.introjs-donebutton):focus,
+.introjs-skipbutton:not(.introjs-donebutton):active {
     background-color: var(--red);
 }
 .introjs-disabled, .introjs-disabled:focus, .introjs-disabled:hover {

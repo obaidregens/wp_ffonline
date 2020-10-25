@@ -6,6 +6,13 @@
     font-size: calc( var(--fontSize) * 2px );
     width: calc(10% * var(--width));
 	line-height: calc( var(--lineHeight) * 0.5em);
+	/* Attr */
+	min-width: 130px;
+	-moz-min-width: 130px;
+	max-width: 100%;
+    -moz-max-width: 100%;
+    display: block;
+    margin: 0 auto;
 }
 .acs-elem > p {
 	min-height: calc(1.5em);

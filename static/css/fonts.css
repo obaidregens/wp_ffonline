@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'icons';
-    src: url('/content/static/css/fonts/icons.woff') format('woff');
+    src: url('/content/static/css/fonts/icons.woff?u=1') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;

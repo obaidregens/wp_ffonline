@@ -147,8 +147,7 @@ class bundle {
     }
     function enqueue($mode = 'production'){
         if (
-            ! isset($this->css_file) || ! isset($this->css_file) ||
-            ! $this->css_file || ! $this->js_file ||
+            ! ($this->css_file ?? false) || ! ($this->js_file ?? false) ||
             ! isset($this->index[$this->name]) ||
             $this->index[$this->name] !== $this->bundle
         ){
@@ -372,7 +371,16 @@ class bundle {
             'css'   => [
                 'external/intro-js/introjs.min',
                 'css/views/global-intro'
-            ]
-        ]
+            ],
+        ],
+        'speak'    => [
+            'css'   => [
+                "css/views/global-speak"
+            ],
+            'js'    => [
+                "js/api/speak",
+                "js/views/global-speak"
+            ],
+        ],
     ];
 }

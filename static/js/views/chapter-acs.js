@@ -27,7 +27,7 @@ document.documentElement.appendChild(DOM.create('link',{
                         }
                     }
                 }),
-            ]
+            ],
         }));
     }
     const acs_bottom = htmlEl.appendChild(DOM.create('acs-options',{
@@ -71,9 +71,8 @@ document.documentElement.appendChild(DOM.create('link',{
             }),
         ]
     }));
-    const acs_elem = document.querySelector('.acs-elem');
     let timeLastClicked = Date.now();
-    acs_elem.addEventListener('click',() => {
+    document.querySelector('main').addEventListener('click',() => {
         if ( (Date.now() - timeLastClicked) < 300 ) {
             htmlEl.classList.remove('show-acs');
             popup.open(acs_popup);

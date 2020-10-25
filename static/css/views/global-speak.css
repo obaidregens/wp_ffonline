@@ -1,0 +1,54 @@
+speak-panel {
+    display: flex;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: fit-content;
+    width: -moz-fit-content;
+    background-color: var(--background-accent);
+    padding: 2px 15px;
+    border-radius: 200px;
+    transform: scale(1.5);
+    transform-origin: bottom;
+}
+speak-panel:not(.show) {
+    display: none;
+}
+@media only screen and (max-width: 500px) {
+    speak-panel {
+        bottom: 60px;
+    }
+}
+speak-panel > button {
+    background-color: transparent;
+    margin: 0;
+}
+speak-panel > button::before {
+    font-family: 'icons';
+    display: inline-block;
+    transform: scale(1.3);
+}
+speak-panel > .pause::before {
+    content: "\e954";
+    transform: scale(1.7);
+}
+speak-panel > .playing.pause::before {
+    content: "\e955";
+}
+speak-panel > .prev::before {
+    content: "\e902";
+}
+speak-panel > .next::before {
+    content: "\e903";
+}
+/* Acs */
+acs-options > .listen::before {
+    content: "\e956";
+    transform: scale(1.5);
+}
+acs-options > .listen.active::before {
+    content: "\e957";
+    transform: scale(1.6);
+}
