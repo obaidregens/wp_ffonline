@@ -71,6 +71,6 @@ function api_block () {
     required_login();
     required_params('block','username');
     $user = user::get_by( 'login', $_POST['data']['username'] );
-    $_POST['data']['block'] === "true" ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
+    $_POST['data']['block'] === true ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
     return ['code'  => 1];
 }

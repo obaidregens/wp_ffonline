@@ -26,13 +26,13 @@ document.querySelector('button[label="Reply"]').addEventListener('click',() => {
         data: {
             to,
             message: document.querySelector('message-box > text-input > textarea').value
-        },
-        callback: response => {
-            if (response.code > 5) {
-                new toast("An error occured");
-                return;
-            }
-            window.location.reload();
         }
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast("An error occured");
+            return;
+        }
+        window.location.reload();
     });
 });

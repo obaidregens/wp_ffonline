@@ -16,34 +16,34 @@ document.querySelector('save-time').addEventListener('click',() => {
         api('get_draft_revisions',{
             data: {
                 draft_id: document.querySelector('editor').getAttribute('draft_id')
-            },
-            callback: (response) => {
-                if (response.code > 5) {
-                    new toast('An error occured');
-                    window.refreshRevisions = true;
-                    sidenav.close();
-                    return;
-                }
-                s.innerText = '';
-                for (let j = 0; j < response.revisions.length; j++) {
-                    const revision = response.revisions[j];
-                    const attr = {
-                        datetime: parseInt(revision.edited)*1000,
-                        revision_id: revision.ID
-                    };
-                    s.appendChild(DOM.create('li',{
-                        listeners: {
-                            click: getSingleRevision.bind(null,revision.ID)
-                        },
-                        attributes: attr
-                    }));
-                }
-                if (response.revisions.length > 0) {
-                    timeago.render(s.querySelectorAll('li'), 'en_US', { minInterval: 5 });
-                }
-                window.refreshRevisions = false;
             }
-        });    
+        })
+        .then(response => {
+            if (response.code > 5) {
+                new toast('An error occured');
+                window.refreshRevisions = true;
+                sidenav.close();
+                return;
+            }
+            s.innerText = '';
+            for (let j = 0; j < response.revisions.length; j++) {
+                const revision = response.revisions[j];
+                const attr = {
+                    datetime: parseInt(revision.edited)*1000,
+                    revision_id: revision.ID
+                };
+                s.appendChild(DOM.create('li',{
+                    listeners: {
+                        click: getSingleRevision.bind(null,revision.ID)
+                    },
+                    attributes: attr
+                }));
+            }
+            if (response.revisions.length > 0) {
+                timeago.render(s.querySelectorAll('li'), 'en_US', { minInterval: 5 });
+            }
+            window.refreshRevisions = false;
+        });
     }
 });
 next_screen.create(DOM.create('next-screen',{
@@ -141,14 +141,14 @@ const getSingleRevision = revision_id => {
         data: {
             draft_id: document.querySelector('editor').getAttribute('draft_id'),
             revision_id
-        },
-        callback: response => {
-            if (response.code > 5) {
-                new toast('An error occured');
-                return;
-            }
-            currentCompareRevision = response.revision;
-            n.innerHTML = response.compare;
         }
-    });    
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast('An error occured');
+            return;
+        }
+        currentCompareRevision = response.revision;
+        n.innerHTML = response.compare;
+    });
 }

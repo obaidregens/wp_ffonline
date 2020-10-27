@@ -1,5 +1,5 @@
 function prompt_login() {
-	if (typeof grecaptcha === 'undefined') {
+	if (window.is_online === false) {
 		new toast("You're offline.");
 		return;
 	}
@@ -56,22 +56,22 @@ function prompt_login() {
 		submit_btn.setAttribute('disabled','');
 		api('login',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
-			data: data_submit,
-			callback: response => {
-				submit_btn.removeAttribute('disabled');
-				grecaptcha.reset(widgetID);
-				if (response.code === 7){
-					new toast('Your username and/or password is incorrect.');
-				}
-				else if (response.code === 997){
-					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
-				}
-				else if (response.code > 5) {
-					new toast('An error occured.');
-				}
-				else if (response.code <= 5){
-					window.location.reload();
-				}
+			data: data_submit
+		})
+		.then(response => {
+			submit_btn.removeAttribute('disabled');
+			grecaptcha.reset(widgetID);
+			if (response.code === 7){
+				new toast('Your username and/or password is incorrect.');
+			}
+			else if (response.code === 997){
+				new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
+			}
+			else if (response.code > 5) {
+				new toast('An error occured.');
+			}
+			else if (response.code <= 5){
+				window.location.reload();
 			}
 		});
 	});
@@ -133,26 +133,25 @@ function prompt_signup() {
 		submit_btn.setAttribute('disabled','');
 		api('signup',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
-			dataType: 'JSON',
-			data: data_submit,
-			callback: function(response){
-				submit_btn.removeAttribute('disabled');
-				grecaptcha.reset(widgetID);
-				if (response.code === 997){
-					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
+			data: data_submit
+		})
+		.then(response => {
+			submit_btn.removeAttribute('disabled');
+			grecaptcha.reset(widgetID);
+			if (response.code === 997){
+				new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
+			}
+			else if (response.code === 7){
+				const error_keys = Object.keys(response.errors);
+				for (let i = 0; i < error_keys.length; i++) {
+					new toast(_.ucfirst(error_keys[i]) + ' - ' + response.errors[error_keys[i]]);
 				}
-				else if (response.code === 7){
-					const error_keys = Object.keys(response.errors);
-					for (let i = 0; i < error_keys.length; i++) {
-						new toast(_.ucfirst(error_keys[i]) + ' - ' + response.errors[error_keys[i]]);
-					}
-				}
-				else if (response.code === 1){
-					new toast('The verification code has been sent to your email.');
-					data_submit.token = response.token;
-					data_submit.action = 'signup';
-					prompt_email_code(data_submit);
-				}
+			}
+			else if (response.code === 1){
+				new toast('The verification code has been sent to your email.');
+				data_submit.token = response.token;
+				data_submit.action = 'signup';
+				prompt_email_code(data_submit);
 			}
 		});
 	});
@@ -203,20 +202,19 @@ function prompt_forgot() {
 		submit_btn.setAttribute('disabled','');
 		api('login_with_code',{
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
-			dataType: 'JSON',
-			data: data_submit,
-			callback: function(response){
-				submit_btn.removeAttribute('disabled');
-				grecaptcha.reset(widgetID);
-				if (response.code === 997){
-					new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
-				}
-				else if (response.code === 1){
-					new toast('If email/username exists, you\'ll be sent a code.');
-					data_submit.token = response.token;
-					data_submit.action = 'login_with_code';
-					prompt_email_code(data_submit);
-				}
+			data: data_submit
+		})
+		.then(response => {
+			submit_btn.removeAttribute('disabled');
+			grecaptcha.reset(widgetID);
+			if (response.code === 997){
+				new toast('Please verify yourself by clicking on the \"I\'m not a robot\" checkbox.');
+			}
+			else if (response.code === 1){
+				new toast('If email/username exists, you\'ll be sent a code.');
+				data_submit.token = response.token;
+				data_submit.action = 'login_with_code';
+				prompt_email_code(data_submit);
 			}
 		});
 	});
@@ -300,22 +298,21 @@ function prompt_email_code(existing_data) {
 				this.setAttribute('disabled','');
 				api('verify_code',{
 					reCAPTCHA: grecaptcha.getResponse(widgetID),
-					data: existing_data,
-					dataType: 'JSON',
-					callback: (response) => {
-						this.removeAttribute('disabled');
-						grecaptcha.reset(widgetID);
-						if (response.code === 1){
-							window.location.reload();
-						}
-						else if (response.code === 7){
-							new toast('Invalid Code');
-						}
-						else if (response.code > 5){
-							new toast('An error occured.');
-						}
-					}
+					data: existing_data
 				})
+				.then(response => {
+					this.removeAttribute('disabled');
+					grecaptcha.reset(widgetID);
+					if (response.code === 1){
+						window.location.reload();
+					}
+					else if (response.code === 7){
+						new toast('Invalid Code');
+					}
+					else if (response.code > 5){
+						new toast('An error occured.');
+					}
+				});
 			}
 		}
 	});

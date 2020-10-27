@@ -1,9 +1,9 @@
-window.addEventListener('load',() => {
-    let Track = JSON.parse(localStorage.getItem('chapter_track-' + book_id));
+window.addEventListener('load',async () => {
+    let Track = JSON.parse(await idbKeyval.get('chapter_track-' + book_id));
     // HasBeenLeft => 10 min
     let cStory = {};
     try {
-        cStory = JSON.parse(localStorage.getItem('chapter_track_follow')) || {};
+        cStory = JSON.parse(await idbKeyval.get('chapter_track_follow')) || {};
     } catch { cStory = {}; }
     const chapter_num = document.querySelector('chapter').getAttribute('num');
     if (Track !== null) {
@@ -15,12 +15,12 @@ window.addEventListener('load',() => {
             });
         }    
     }
-    localStorage.setItem('chapter_track_follow',JSON.stringify({
+    await idbKeyval.set('chapter_track_follow',JSON.stringify({
         book_id,
         timestamp: Date.now()
     }));
     setTimeout(() => {
-        _.scrollEnd(() => {
+        _.scrollEnd(async () => {
             const paras = document.querySelectorAll('chapter > content > p');
             let paraI = null;
             for (let i = 0; i < paras.length; i++) {
@@ -30,11 +30,11 @@ window.addEventListener('load',() => {
                     break;
                 }
             }
-            localStorage.setItem('chapter_track_follow',JSON.stringify({
+            await idbKeyval.set('chapter_track_follow',JSON.stringify({
                 book_id,
                 timestamp: Date.now()
             }));
-            localStorage.setItem('chapter_track-' + book_id,JSON.stringify({
+            await idbKeyval.set('chapter_track-' + book_id,JSON.stringify({
                 chapter_num,
                 paragraph: paraI,
                 timestamp: Date.now(),

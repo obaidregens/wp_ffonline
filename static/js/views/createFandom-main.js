@@ -50,18 +50,18 @@ document.querySelector('button[label="Create"]').addEventListener('click',({targ
         data: {
             category,
             fandom
-        },
-        callback: response => {
-            if (response.code === 11) {
-                new toast("Fandom with similar name exists.");
-                return;
-            }
-            else if (response.code > 5) {
-                new toast("An error occured");
-                return;
-            }
-            target.setAttribute('disabled','');
-            new toast('Fandom created.');
         }
+    })
+    .then(response => {
+        if (response.code === 11) {
+            new toast("Fandom with similar name exists.");
+            return;
+        }
+        else if (response.code > 5) {
+            new toast("An error occured");
+            return;
+        }
+        target.setAttribute('disabled','');
+        new toast('Fandom created.');
     });
 });

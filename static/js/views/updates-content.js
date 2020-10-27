@@ -6,18 +6,17 @@ if (document.querySelector('author-updates')){
         const update_id = event.target.parentElement.parentElement.parentElement.getAttribute('update_id');
         const action = event.target.getAttribute('label').toLowerCase();
         api('update_action',{
-            dataType: 'JSON',
             data: {
                 update_id,
                 action
-            },
-            callback: function(response){
-                if (response.code > 5){
-                    new toast('An error occured.');
-                    return;
-                }
-                window.location.reload();
             }
+        })
+        .then(response => {
+            if (response.code > 5){
+                new toast('An error occured.');
+                return;
+            }
+            window.location.reload();
         });
     });
 }

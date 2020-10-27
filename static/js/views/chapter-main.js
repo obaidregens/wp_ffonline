@@ -1,7 +1,7 @@
 const chapter_id = document.querySelector('chapter').getAttribute('chapter_id');
 // Reviews
 window.addEventListener('load',() => {
-    if (typeof grecaptcha === 'undefined'){
+    if (window.is_online === false){
         document.querySelector('write-review').style.setProperty('display','none');
     }    
 });
@@ -49,26 +49,25 @@ if (review_submit_btn){
         const gre = grecaptcha.getResponse();
         api('publish_review',{
             data: data,
-            dataType: 'JSON',
-            reCAPTCHA: gre,
-            callback: (response) => {
-                this.removeAttribute('disabled');
-                if (response.code === 997){
-                    new toast('Verify reCAPTCHA.');
-                }
-                else if (response.code > 5){
-                    new toast('An error occured.');
-                }
-                else if (response.code === 1) {
-                    updateReviews();
-                }
-                comment_elem.value = '';
-                comment_elem.dispatchEvent( new Event('input') );
-                comment_elem.dispatchEvent( new Event('change') );
-                reply_elem.setAttribute('hidden','');
-                reply_elem.setAttribute('review_id',0);
-                grecaptcha.reset();
+            reCAPTCHA: gre
+        })
+        .then(response => {
+            this.removeAttribute('disabled');
+            if (response.code === 997){
+                new toast('Verify reCAPTCHA.');
             }
+            else if (response.code > 5){
+                new toast('An error occured.');
+            }
+            else if (response.code === 1) {
+                updateReviews();
+            }
+            comment_elem.value = '';
+            comment_elem.dispatchEvent( new Event('input') );
+            comment_elem.dispatchEvent( new Event('change') );
+            reply_elem.setAttribute('hidden','');
+            reply_elem.setAttribute('review_id',0);
+            grecaptcha.reset();
         });
     });
 }
@@ -96,22 +95,22 @@ document.querySelector('.book-vote').addEventListener('click',({target}) => {
     api('vote_chapter',{
         data: {
             chapter_id
-        },
-        callback: response => {
-            if (response.code === 11) {
-                new toast("You can't vote on your story");
-                return;
-            }
-            if (response.code > 5) {
-                new toast("An error occured");
-                return;
-            }
-            if (response.code === 2) {
-                target.classList.remove('active');
-            }
-            else if (response.code === 1){
-                target.classList.add('active');
-            }
+        }
+    })
+    .then(response => {
+        if (response.code === 11) {
+            new toast("You can't vote on your story");
+            return;
+        }
+        if (response.code > 5) {
+            new toast("An error occured");
+            return;
+        }
+        if (response.code === 2) {
+            target.classList.remove('active');
+        }
+        else if (response.code === 1){
+            target.classList.add('active');
         }
     });
 });

@@ -39,14 +39,14 @@ document.querySelector('button[label="Reply"]').addEventListener('click',({targe
             question_id: target.parentElement.getAttribute('question-id'),
             question: target.parentElement.querySelector('blockquote').innerText,
             answer: target.parentElement.querySelector('text-input > textarea').value,
-        },
-        callback: response => {
-            if (response.code > 5) {
-                new toast('An error occured');
-                return;
-            }
-            new toast("Replied");
-            setTimeout(() => window.location.reload(),1000);
         }
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast('An error occured');
+            return;
+        }
+        new toast("Replied");
+        setTimeout(() => window.location.reload(),1000);
     });
 });

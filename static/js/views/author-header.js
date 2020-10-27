@@ -9,19 +9,19 @@ if (document.querySelector('.author-follow')) {
             data: {
                 user_id: document.querySelector('author-main').getAttribute('user_id')
             },
-            callback: response => {
-                if (response.code > 5) {
-                    new toast("An error occured");
-                    return;
-                }
-                if (response.code === 2) {
-                    target.classList.remove('followed');
-                    new toast('Author unfollowed');
-                }
-                else if (response.code === 1){
-                    target.classList.add('followed');
-                    new toast('Author followed');
-                }
+        })
+        .then(response => {
+            if (response.code > 5) {
+                new toast("An error occured");
+                return;
+            }
+            if (response.code === 2) {
+                target.classList.remove('followed');
+                new toast('Author unfollowed');
+            }
+            else if (response.code === 1){
+                target.classList.add('followed');
+                new toast('Author followed');
             }
         });
     });

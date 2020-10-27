@@ -37,15 +37,15 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     dataType: 'JSON',
                     data: {
                         draft_id
-                    },
-                    callback: response => {
-                        if (response.code > 5) {
-                            new toast('An error occured.');
-                            return;
-                        }
-                        new toast('Draft Deleted');
-                        window.location.href = '/drafts';
                     }
+                })
+                .then(response => {
+                    if (response.code > 5) {
+                        new toast('An error occured.');
+                        return;
+                    }
+                    new toast('Draft Deleted');
+                    window.location.href = '/drafts';
                 });
             });
         }
@@ -134,26 +134,25 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                                 const a_el = share_el.querySelector('a.share-link');
                                 const share = ! share_el.classList.contains('copy');
                                 api('share_draft',{
-                                    dataType: 'JSON',
                                     data: {
                                         draft_id,
                                         share
-                                    },
-                                    callback: (response) => {
-                                        this.removeAttribute('disabled');
-                                        if (response.code > 5) {
-                                            new toast('An error occured');
-                                            return;
-                                        }
-                                        if (response.code === 2 ) {
-                                            share_el.classList.remove('copy');
-                                            a_el.setAttribute('href','');
-                                            new toast('Disabled Sharing.');
-                                            return;
-                                        }
-                                        share_el.classList.add('copy');
-                                        a_el.setAttribute('href',response.link);
                                     }
+                                })
+                                .then(response => {
+                                    this.removeAttribute('disabled');
+                                    if (response.code > 5) {
+                                        new toast('An error occured');
+                                        return;
+                                    }
+                                    if (response.code === 2 ) {
+                                        share_el.classList.remove('copy');
+                                        a_el.setAttribute('href','');
+                                        new toast('Disabled Sharing.');
+                                        return;
+                                    }
+                                    share_el.classList.add('copy');
+                                    a_el.setAttribute('href',response.link);
                                 });
                             }
                             this.setAttribute('disabled','');

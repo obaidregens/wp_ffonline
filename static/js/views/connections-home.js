@@ -7,23 +7,22 @@ document.querySelectorAll('enter-input [label="Submit"]').forEach(el => el.addEv
     const cont = el.closest('enter-input');
     const source = cont.getAttribute('source');
     api('verify_user',{
-        dataType: 'JSON',
         data: {
             source,
             id: cont.querySelector('text-input > input').value
-        },
-        callback: (response) => {
-            if (response.code === 8) {
-                new toast("Which user do you want to link?");
-                return;
-            }
-            if (response.code > 5) {
-                new toast("An error occured");
-                return;
-            }
-            document.querySelector('completed').innerHTML = `Send this code <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/pm2/post.php?uid=${response.account}&subject=Fanfiction+Online+Verification">here</a>`;
-            document.querySelector('verification-code').innerText = response.verification_code;
         }
+    })
+    .then(response => {
+        if (response.code === 8) {
+            new toast("Which user do you want to link?");
+            return;
+        }
+        if (response.code > 5) {
+            new toast("An error occured");
+            return;
+        }
+        document.querySelector('completed').innerHTML = `Send this code <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/pm2/post.php?uid=${response.account}&subject=Fanfiction+Online+Verification">here</a>`;
+        document.querySelector('verification-code').innerText = response.verification_code;
     });
 }));
 document.querySelectorAll('verification-code').forEach(cel => cel.addEventListener('click',() => {
@@ -34,17 +33,16 @@ document.querySelectorAll('enter-input .cancel-verification').forEach(el => el.a
     const cont = el.closest('enter-input');
     const source = cont.getAttribute('source');
     api('cancel_pending_verification',{
-        dataType: 'JSON',
         data: {
             source,
-        },
-        callback: (response) => {
-            if (response.code > 5) {
-                new toast("An error occured");
-                return;
-            }
-            new toast("Canceled Linking.");
-            window.location.reload();
         }
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast("An error occured");
+            return;
+        }
+        new toast("Canceled Linking.");
+        window.location.reload();
     });
 }));

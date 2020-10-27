@@ -11,20 +11,17 @@ if (document.querySelector('.edit-about')) {
     document.querySelector('.edit-about ~ button[label="Cancel"]').addEventListener('click',function(){
         document.querySelector('.edit-about').classList.remove('edit');
     });
-    document.querySelector('.edit-about ~ button[label="Save"]').addEventListener('click',function(){
-        api('update_bio',{
-            dataType: 'JSON',
+    document.querySelector('.edit-about ~ button[label="Save"]').addEventListener('click',async function(){
+        const response = await api('update_bio',{
             data: {
                 user: document.querySelector('author-main').getAttribute('user_id'),
                 bio: document.querySelector('.edit-about ~ text-input > textarea').value
-            },
-            callback: function(response){
-                if (response.code > 5){
-                    new toast('An error occured.');
-                    return;
-                }
-                window.location.reload();
             }
         });
+        if (response.code > 5){
+            new toast('An error occured.');
+            return;
+        }
+        window.location.reload();
     });
 }

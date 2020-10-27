@@ -7,20 +7,19 @@ document.querySelector('[label="Folder"]').addEventListener('click',() => {
     ask('New folder',null,true,'Name',40)
     .then(name => {
         api('create_drafts_folder',{
-            dataType: 'JSON',
             data: {
                 name,
                 path: current_path
-            },
-            callback: response => {
-                if ( response.code > 5 ) {
-                    new toast(response.error_message);
-                    return;
-                }
-                new toast('Folder Created');
-                all_files = response.drafts;
-                loadFolder(current_path);
             }
         })
+        .then(response => {
+            if ( response.code > 5 ) {
+                new toast(response.error_message);
+                return;
+            }
+            new toast('Folder Created');
+            all_files = response.drafts;
+            loadFolder(current_path);
+        });
     });
 });

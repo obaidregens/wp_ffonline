@@ -31,74 +31,73 @@ _.interact(function(event){
 	}
 	lastSend = Date.now();
 	api('poll',{
-		dataType: 'JSON',
 		data: {
 			im_books,
 			im_collections,
 			lastOpen
-		},
-		callback: response => {
-			let notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
-			if (! notificationsWrapper) {
-				const ns = DOM.create('next-screen',{
-					attributes: {
-						notifications: ""
-					},
-					children: [
-						DOM.create('notifications')
-					],
-					listeners: {
-						onOpen: () => {
-							document.querySelector('.notification-pulse').classList.remove('show');
-							lastOpen = Date.now();
-							lastSend = lastSend - 20000;
-						},
-						onClose: () => {
-							document.querySelector('.notification-pulse').classList.remove('show');
-							lastOpen = Date.now();
-						},
-					}
-				});
-				next_screen.create(ns);
-				document.querySelector('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
-				document.documentElement.appendChild(DOM.create('button',{
-					classes: ['notification-pulse'],
-					listeners: {
-						click: () => next_screen.open(ns)
-					}
-				}));
-			}
-			notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
-			if (notificationsWrapper.querySelector('.new-messages')) {
-				notificationsWrapper.querySelector('.new-messages').remove();
-			}
-			for (let i = notificationsWrapper.children.length; i < response.notifications.length; i++) {
-				const n = response.notifications[i];
-				notificationsWrapper.appendChild(DOM.create('a',{
-					innerText: n.message,
-					attributes: {
-						href: n.link,
-						time: _t.local(new Date(n.time)),
-					}
-				}));
-			}
-			if (response.unread > 0) {
-				document.querySelector('.notification-pulse').classList.add('show')
-			}
-			if (response.new_messages.unread > 0) {
-				notificationsWrapper.appendChild(DOM.create('a',{
-					classes: ['new-messages'],
-					innerText: `You have ${response.new_messages.unread} unread message${response.new_messages.unread > 1 ? "s" : ""}.`,
-					attributes: {
-						href: '/inbox',
-						time: "",
-					}
-				}));
-				if (response.new_messages.last >= lastOpen){
-					document.querySelector('.notification-pulse').classList.add('show');
-				}
-			}
-			lastOpen = 0;
 		}
+	})
+	.then(response => {
+		let notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+		if (! notificationsWrapper) {
+			const ns = DOM.create('next-screen',{
+				attributes: {
+					notifications: ""
+				},
+				children: [
+					DOM.create('notifications')
+				],
+				listeners: {
+					onOpen: () => {
+						document.querySelector('.notification-pulse').classList.remove('show');
+						lastOpen = Date.now();
+						lastSend = lastSend - 20000;
+					},
+					onClose: () => {
+						document.querySelector('.notification-pulse').classList.remove('show');
+						lastOpen = Date.now();
+					},
+				}
+			});
+			next_screen.create(ns);
+			document.querySelector('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
+			document.documentElement.appendChild(DOM.create('button',{
+				classes: ['notification-pulse'],
+				listeners: {
+					click: () => next_screen.open(ns)
+				}
+			}));
+		}
+		notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+		if (notificationsWrapper.querySelector('.new-messages')) {
+			notificationsWrapper.querySelector('.new-messages').remove();
+		}
+		for (let i = notificationsWrapper.children.length; i < response.notifications.length; i++) {
+			const n = response.notifications[i];
+			notificationsWrapper.appendChild(DOM.create('a',{
+				innerText: n.message,
+				attributes: {
+					href: n.link,
+					time: _t.local(new Date(n.time)),
+				}
+			}));
+		}
+		if (response.unread > 0) {
+			document.querySelector('.notification-pulse').classList.add('show')
+		}
+		if (response.new_messages.unread > 0) {
+			notificationsWrapper.appendChild(DOM.create('a',{
+				classes: ['new-messages'],
+				innerText: `You have ${response.new_messages.unread} unread message${response.new_messages.unread > 1 ? "s" : ""}.`,
+				attributes: {
+					href: '/inbox',
+					time: "",
+				}
+			}));
+			if (response.new_messages.last >= lastOpen){
+				document.querySelector('.notification-pulse').classList.add('show');
+			}
+		}
+		lastOpen = 0;
 	});
 });

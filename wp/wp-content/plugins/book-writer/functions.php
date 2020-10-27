@@ -295,6 +295,7 @@ function run_at_activation(){
 	$offline_stats_table = "CREATE TABLE offline_stats (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`type`				VARCHAR(20) NOT NULL ,
+		`key`				VARCHAR(100) NOT NULL ,
 		`landing_id`		BIGINT NOT NULL ,
 		`story_id`			BIGINT NOT NULL ,
 		`chapter_id`		BIGINT NOT NULL ,
@@ -317,7 +318,6 @@ function run_at_activation(){
 
     //RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	// ob_start();
 
 	// Stats
 	dbDelta( $stats_landings_table );
@@ -369,10 +369,7 @@ function run_at_activation(){
 	));
 	foreach ($users as $user ) {
 		collection_helpers::create_default($user->ID);
-	}
-	// file_put_contents( __DIR__ . '/this.err',ob_get_contents() );
-	// ob_end_clean();
-}
+	}}
 register_activation_hook(__FILE__, 'run_at_activation' );
 
 $includes = array(
@@ -408,6 +405,7 @@ $includes = array(
 	'classes/poll',
 	'classes/offline_stats',
 	'classes/spam',
+	'classes/db',
 );
 foreach($includes as $include){
 	require ($include . '.php');

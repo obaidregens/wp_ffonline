@@ -1,8 +1,5 @@
 <?php
-$app->bundle = new bundle('chapters');
-$app->bundle->mix('jquery');
-$app->bundle->mix('global_new');
-$app->bundle->mix('intro');
+$app->bundle = global_bundle('chapters');
 $app->bundle->mix('speak');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/index');

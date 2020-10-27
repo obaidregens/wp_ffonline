@@ -10,7 +10,7 @@ function init_reCAPTCHA(){
         captcha.classList.add('g-recaptcha');
         captcha.setAttribute('data-sitekey',reCAPTCHA_sitekey);
         wrapper.appendChild(captcha);
-        if (typeof grecaptcha !== 'undefined'){
+        if (window.is_online === false){
             const widgetID = grecaptcha.render(captcha, {
                 sitekey: reCAPTCHA_sitekey,
             });

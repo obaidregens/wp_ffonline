@@ -28,14 +28,13 @@ function deleteReview(review_id) {
             data: {
                 chapter_id,
                 review_id
-            },
-            dataType: 'JSON',
-            callback: response => {
-                if (response.code > 5) {
-                    new toast('An error occured.');
-                }
-                updateReviews();
             }
+        })
+        .then(response => {
+            if (response.code > 5) {
+                new toast('An error occured.');
+            }
+            updateReviews();
         });
     });
 }
@@ -87,28 +86,27 @@ let filters = {
 function callReviews(opts) {
     return new Promise((resolve, reject) => {
         api('get_reviews',{
-            dataType: 'JSON',
             data: Object.assign(opts,{
                 chapter_id
-            }),
-            callback: response => {
-                if (response.code && response.code > 5) {
-                    resolve([],[]);
-                    return;
-                }
-                const reviewItems = response.reviews.map(map_reviews);
-                const userItems = response.users.map((user) => 
-                    <Checkbox
-                    tabindex="0"
-                    key={user.ID}
-                    checked={user.checked}
-                    onChange={filterUsers}
-                    value={user.ID}
-                    label={user.name}
-                    />
-                );            
-                resolve([reviewItems,userItems]);
+            })
+        })
+        .then(response => {
+            if (response.code && response.code > 5) {
+                resolve([],[]);
+                return;
             }
+            const reviewItems = response.reviews.map(map_reviews);
+            const userItems = response.users.map((user) => 
+                <Checkbox
+                tabindex="0"
+                key={user.ID}
+                checked={user.checked}
+                onChange={filterUsers}
+                value={user.ID}
+                label={user.name}
+                />
+            );            
+            resolve([reviewItems,userItems]);
         });
     });
 }

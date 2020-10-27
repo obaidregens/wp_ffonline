@@ -6,18 +6,17 @@ if (document.querySelector('button[label="Post"]')) {
             return;
         }
         api('post_news',{
-            dataType: 'JSON',
             data: {
                 draft_id: dr
-            },
-            callback: response => {
-                if (response.code > 5) {
-                    new toast('An error occured.');
-                    return;
-                }
-                new toast('Posted');
-                target.setAttribute('disabled','');
             }
+        })
+        .then(response => {
+            if (response.code > 5) {
+                new toast('An error occured.');
+                return;
+            }
+            new toast('Posted');
+            target.setAttribute('disabled','');
         });
     })
 }

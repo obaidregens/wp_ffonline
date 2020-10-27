@@ -27,9 +27,9 @@ function api_edit_book() {
     );
     $d = &$_POST['data'];
 
-    $publish = $d['publish'] === "true";
-    $reviews = $d['reviews'] === "true";
-    $anon_review = $d['anonymous_reviews'] === "true";    
+    $publish = $d['publish'] === true;
+    $reviews = $d['reviews'] === true;
+    $anon_review = $d['anonymous_reviews'] === true;    
 
     if (trim($d['title']) === '') {
         return ['code'=>14];
@@ -84,13 +84,13 @@ function api_edit_book() {
                 }
                 continue;
             }
-            if (! isset($old_chapters_lookup[$chapter['ID']]) ) {
+            if (! isset($old_chapters_lookup[strval($chapter['ID'])]) ) {
                 continue;
             }
             $chapter_ids_order[] = $chapter['ID'];
         }
         if (empty($chapter_ids_order)) {
-            if ($d['publish'] === 'true') {
+            if ($d['publish'] === true) {
                 $success = 2;
             }
             $publish = false;
@@ -201,7 +201,7 @@ function api_edit_book() {
     // Anonymous Reviews
     update_post_meta( $d['book_id'], 'anon_review', $anon_review ? 'true' : 'false' );
 
-    if ($d['publish'] === "true" && $publish === false) {
+    if ($d['publish'] === true && $publish === false) {
         $success = $success ?? 3;
     }
     wp_cache_flush();

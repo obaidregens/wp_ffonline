@@ -24,44 +24,43 @@ window.autosaveDraft = (val,perm) => {
         const title = window.draftTitle.value === '' ? 'Untitled' : window.draftTitle.value;
         const content = val ;
         api('save_draft',{
-            dataType: 'JSON',
             data: {
                 draft_id: document.querySelector('editor').getAttribute('draft_id'),
                 title,
                 content,
                 perm
-            },
-            reject: response => {
+            }
+        })
+        .then(response => {
+            if (response.code > 5) {
                 if (document.fullscreenElement) {
                     document.exitFullscreen();
                 }
-                new toast('You\'ve lost connection to the internet, draft not saved.');
+                new toast('An error occured while saving your draft. You might need to refresh the page.');
                 return;
-            },
-            callback: response => {
-                if (response.code > 5) {
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                    }
-                    new toast('An error occured while saving your draft. You might need to refresh the page.');
-                    return;
-                }
-                // Flags
-                if (response.perm) {
-                    window.refreshRevisions = true;
-                }
-                window.editedAtAll = false;
-                // Time
-                document.querySelector('save-time').setAttribute('datetime',response.time*1000);
-                reRenderSaveTime();
-                // Draft ID
-                document.querySelector('editor').setAttribute('draft_id',response.draft_id);
-                window.history.pushState(
-                    "object or string",
-                    document.querySelector("title").innerText,
-                    '/drafts/' + response.draft_id + '/edit'
-                );
             }
+            // Flags
+            if (response.perm) {
+                window.refreshRevisions = true;
+            }
+            window.editedAtAll = false;
+            // Time
+            document.querySelector('save-time').setAttribute('datetime',response.time*1000);
+            reRenderSaveTime();
+            // Draft ID
+            document.querySelector('editor').setAttribute('draft_id',response.draft_id);
+            window.history.pushState(
+                "object or string",
+                document.querySelector("title").innerText,
+                '/drafts/' + response.draft_id + '/edit'
+            );
+        })
+        .catch(response => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            new toast('You\'ve lost connection to the internet, draft not saved.');
+            return;
         });
     },600);
 }

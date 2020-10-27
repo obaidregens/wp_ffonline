@@ -320,14 +320,13 @@ class _landing extends stats {
 }
 class _action extends stats {
     function __construct($landing_id){
-       $error = new err();
+       $this->error = new err();
        $unprepared = "SELECT ID FROM " . self::$landing_table . " WHERE ID = %d LIMIT 1";
        global $wpdb;
        $sql = $wpdb->prepare( $unprepared, array(intval($landing_id)) );
        $results = $wpdb->get_results( $sql ,ARRAY_A );
        if (empty($results)){
-           $error->add('landing_id','does not exists');
-           return $error;
+           return $this->error->add('landing_id','does not exists');
        }
        $this->landing_id = $landing_id;
     }

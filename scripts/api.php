@@ -1,5 +1,11 @@
 <?php
 ignore_user_abort(true);
+
+$json_raw = json_decode(file_get_contents('php://input'),true);
+if (!is_array($json_raw)) {
+    $json_raw = [];
+}
+$_POST = $json_raw;
 function api_poll(){
     $types = _landing::decrypt($_POST['placeholder']);
     $d = &$_POST['data'];
@@ -7,6 +13,9 @@ function api_poll(){
     $d['im_collections'] = isset($d['im_collections']) ? $d['im_collections'] : array();
     
     $instance = new _action($types->landing_id);
+    if ($instance->error->has()) {
+        return ['code'=>993];
+    }
     foreach ($d['im_books'] as $key => $book_id) {
         $instance->log_impression('story',$book_id);
     }
@@ -43,6 +52,7 @@ $import = [
     'dash',
     'faq',
     'poll',
+    'offline',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
@@ -85,7 +95,7 @@ if (empty($_COOKIE)) {
 if (!isset($_COOKIE["vfs"])) {
     spam::add("no_vfs","",json_encode($_COOKIE));
 }
-$placeholder = ctrk_decrypt($_POST['placeholder']);
+$placeholder = ctrk_decrypt($_POST['placeholder'] ?? "");
 if ( trim($_POST['placeholder'] ?? '') === "" || !$placeholder ) {
     spam::add("invalid_placeholder","",$placeholder);
     echo json_encode(array(

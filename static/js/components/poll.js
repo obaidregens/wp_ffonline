@@ -25,20 +25,18 @@ class poll {
             innerText: response.poll_data.expire_in
         }));
     }
-    static refresh(poll_id,el,voteOn = 0) {
-        api('get_poll',{
+    static async refresh(poll_id,el,voteOn = 0) {
+        const response = await api('get_poll',{
             data: {
                 poll_id,
                 voteOn
             }
-        })
-        .then(response => {
-            poll.updateMeta(el,response);
-            if (response.has_voted) {
-                poll.updateResults(el,response.options);
-            }
-            poll.logged_in = response.logged_in;
         });
+        poll.updateMeta(el,response);
+        if (response.has_voted) {
+            poll.updateResults(el,response.options);
+        }
+        poll.logged_in = response.logged_in;
     }
     static root(el,poll_id) {
         api('get_poll',{

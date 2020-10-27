@@ -9,6 +9,6 @@ RewriteBase /
 RewriteCond %{REQUEST_URI} !^/sitemap/
 RewriteCond %{REQUEST_URI} !^/content/static/bundles
 RewriteCond %{REQUEST_URI} !^/content/static/images
-RewriteCond %{REQUEST_URI} !^/content/manifest
 RewriteCond %{REQUEST_URI} !^/content/static/css/fonts/icons.woff
+RewriteCond %{REQUEST_URI} !^/content/manifest
 RewriteRule ^(.+)$ index.php [QSA,L]

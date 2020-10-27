@@ -425,37 +425,36 @@ const trigger_search = (page = false) => {
             search: construct,
             page,
             prev: prev_ss.innerText
-        },
-        dataType: 'JSON',
-        callback: function(response){
-            // New Data
-            prev_ss.innerText = response.prev;
-            window.tags_data = _.clone( response.tags_data );
-            window.book_collections = _.clone( response.book_collections );
-            document.querySelector('pagination').innerHTML = response.paginate;
-            document.querySelector('books-container').innerHTML = response.output;
-            window.history.pushState("object or string", document.querySelector("title").innerText,'?' + construct);
-            
-            // Styling
-            clearInterval(search_progress_interval);
-            loader.classList.remove('show');
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-
-            // Re add tags count
-            for (let j = 0; j < select_tags.length; j++) {
-                const raw_selected = select_tags[j].getAttribute('selected');
-                if (! raw_selected){
-                    continue;
-                }
-                if (raw_selected === '{"included":[],"excluded":[]}'){
-                    continue;
-                }
-                setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
-            }
-            reChapterProgress();
-            reHookOffline();
         }
+    })
+    .then(response => {
+        // New Data
+        prev_ss.innerText = response.prev;
+        window.tags_data = _.clone( response.tags_data );
+        window.book_collections = _.clone( response.book_collections );
+        document.querySelector('pagination').innerHTML = response.paginate;
+        document.querySelector('books-container').innerHTML = response.output;
+        window.history.pushState("object or string", document.querySelector("title").innerText,'?' + construct);
+        
+        // Styling
+        clearInterval(search_progress_interval);
+        loader.classList.remove('show');
+        document.body.scrollTop = 0; // For Safari
+        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+        // Re add tags count
+        for (let j = 0; j < select_tags.length; j++) {
+            const raw_selected = select_tags[j].getAttribute('selected');
+            if (! raw_selected){
+                continue;
+            }
+            if (raw_selected === '{"included":[],"excluded":[]}'){
+                continue;
+            }
+            setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
+        }
+        reChapterProgress();
+        reHookOffline();
     });
 
 }

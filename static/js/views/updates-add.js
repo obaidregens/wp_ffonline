@@ -22,17 +22,16 @@ if (document.querySelector('.add-update')){
                     listeners: {
                         click: function(){
                             api('add_update',{
-                                dataType: 'JSON',
                                 data: {
                                     update: txt_update.querySelector('textarea').value,
-                                },
-                                callback: function(response){
-                                    if (response.code > 5){
-                                        new toast('An error occured.');
-                                        return;
-                                    }
-                                    window.location.reload();
                                 }
+                            })
+                            .then(response => {
+                                if (response.code > 5){
+                                    new toast('An error occured.');
+                                    return;
+                                }
+                                window.location.reload();
                             });
                         }
                     }

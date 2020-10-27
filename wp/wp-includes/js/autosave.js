@@ -158,7 +158,7 @@ window.autosave = function() {
 		}
 
 		/**
-		 * Autosave in localStorage.
+		 * Autosave in 
 		 *
 		 * @since 3.9.0
 		 *

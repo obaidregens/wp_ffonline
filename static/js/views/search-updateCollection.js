@@ -65,35 +65,34 @@ function create_collection_open(collection_id = 'new'){
                 book_ids: typeof OPT_BOOK_IN_COLLECTIONS === 'undefined' ? Object.keys(_.clone(window.book_collections)) : [],
                 title: cc_popup.querySelector('text-input > input').value,
                 privacy: privacySelect.value
-            },
-            dataType: 'JSON',
-            callback: function(response) {
-                if (response.code === 1 || response.code === 2){
-                    if (response.code === 2){
-                        new toast('Collection Deleted');
-                    }
-                    else if (c_id === 'new'){
-                        new toast('Collection Created');
-                    }
-                    else {
-                        new toast('Collection Updated');
-                    }
-                    if (typeof OPT_BOOK_IN_COLLECTIONS === 'undefined') {
-                        update_collections(response.collections_data);
-                        window.book_collections = _.clone(response.book_collections);
-                    }
-                    else {
-                        window.location.href = '/@me/collections';
-                    }
-                    window.collections_data = _.clone(response.collections_data);    
+            }
+        })
+        .then(response => {
+            if (response.code === 1 || response.code === 2){
+                if (response.code === 2){
+                    new toast('Collection Deleted');
+                }
+                else if (c_id === 'new'){
+                    new toast('Collection Created');
                 }
                 else {
-                    new toast('An error occured');
+                    new toast('Collection Updated');
                 }
                 if (typeof OPT_BOOK_IN_COLLECTIONS === 'undefined') {
-                    collections_open(cc_popup.getAttribute('prev_book_id'));
-
+                    update_collections(response.collections_data);
+                    window.book_collections = _.clone(response.book_collections);
                 }
+                else {
+                    window.location.href = '/@me/collections';
+                }
+                window.collections_data = _.clone(response.collections_data);    
+            }
+            else {
+                new toast('An error occured');
+            }
+            if (typeof OPT_BOOK_IN_COLLECTIONS === 'undefined') {
+                collections_open(cc_popup.getAttribute('prev_book_id'));
+
             }
         });
     }

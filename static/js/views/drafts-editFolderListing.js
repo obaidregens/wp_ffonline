@@ -47,9 +47,9 @@ window.addEventListener('load',event => {
                 data: {
                     Path,
                     Name
-                },
-                callback: response => document.querySelector('editor').setAttribute('draft_id',response.draft_id)
-            });
+                }
+            })
+            .then(response => document.querySelector('editor').setAttribute('draft_id',response.draft_id));
         });
     }
 });

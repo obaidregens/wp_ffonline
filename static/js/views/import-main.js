@@ -15,14 +15,14 @@ document.querySelector('button[label="Import"]').addEventListener('click',event 
     api('import_stories',{
         data: {
             storyIds
-        },
-        callback: response => {
-            if (response.code > 5) {
-                new toast('An error occured.');
-                return;
-            }
-            new toast('Selected stories will be uploaded.');
         }
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast('An error occured.');
+            return;
+        }
+        new toast('Selected stories will be uploaded.');
     });
 });
 document.querySelectorAll(".disable-update").forEach(el => el.addEventListener('click',async () => {

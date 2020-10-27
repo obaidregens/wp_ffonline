@@ -56,16 +56,16 @@ function update_collections(collection_data){
                 collection_id,
                 book_id,
                 add
-            },
-            callback: response => {
-                if (collection_name === "Hidden (Private)" && add) {
-                    new toast("Story will be hidden in your next search.");
-                }
-                const prev = _.clone(window.book_collections);
-                prev[book_id] = response.book_collections[book_id];
-                window.book_collections = prev;
-                collections_open(book_id);
             }
+        })
+        .then(response => {
+            if (collection_name === "Hidden (Private)" && add) {
+                new toast("Story will be hidden in your next search.");
+            }
+            const prev = _.clone(window.book_collections);
+            prev[book_id] = response.book_collections[book_id];
+            window.book_collections = prev;
+            collections_open(book_id);
         });
     });
     const existing = document.querySelector('popup.collections');

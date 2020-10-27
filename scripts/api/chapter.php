@@ -77,20 +77,3 @@ function api_vote_chapter() {
     vote::unvote('chapter',$chapter->ID);
     return ['code'=>2];
 }
-function api_offline_chapter() {
-    required_params('book_id');
-    $d = &$_POST['data'];
-    $book = get_post($d['book_id']);
-    if (!$book || $book->post_type !== 'book' || $book->post_status !== 'publish' ) {
-        return ['code'=>10];
-    }
-    offline_stats::new([
-        'type'          => 'offline',
-        'landing_id'    => $_POST['landing_id'],
-        'story_id'      => $book->ID,
-        'chapter_id'    => 0,
-        'chapter_num'   => 0,
-        'stat_millitime'=> millitime(),
-    ]);
-    return ['code'=>1];
-}

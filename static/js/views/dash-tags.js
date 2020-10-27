@@ -8,13 +8,13 @@ document.querySelector('button[label="Create"]').addEventListener('click',() => 
         data: {
             tax: document.querySelector('select').value.toLowerCase(),
             name:document.querySelector('text-input > input').value
-        },
-        callback: response => {
-            if (response.code > 5) {
-                new toast('An error occured.');
-                return;
-            }
-            window.location.reload();
         }
+    })
+    .then(response => {
+        if (response.code > 5) {
+            new toast('An error occured.');
+            return;
+        }
+        window.location.reload();
     });
 });

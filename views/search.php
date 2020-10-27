@@ -68,11 +68,8 @@ else {
 </pagination>
 <?php
 if (! isset($app->bundle)){
-    $app->bundle = new bundle('search');
+    $app->bundle = global_bundle('search');
 }
-$app->bundle->mix('jquery');
-$app->bundle->mix('global_new');
-$app->bundle->mix('intro');
 $app->bundle->mix('glide_js');
 $app->bundle->mix('confirmation');
 $app->bundle->css('css/components/loader');

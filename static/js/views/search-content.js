@@ -3,9 +3,9 @@ const reChapterProgress = () => {
     if (!books_container){
         return;
     }
-    books_container.querySelectorAll(`book`).forEach(el => {
+    books_container.querySelectorAll(`book`).forEach(async el => {
         const sid = el.getAttribute('book_id');
-        const item = JSON.parse(localStorage.getItem('chapter_track-' + sid));
+        const item = JSON.parse(await idbKeyval.get('chapter_track-' + sid));
         if (item === null || !item.chapterProgress) {
             return;
         }

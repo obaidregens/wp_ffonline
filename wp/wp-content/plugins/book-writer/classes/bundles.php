@@ -1,7 +1,8 @@
 <?php
 function global_bundle($name){
     $_bundle = new bundle($name);
-    $_bundle->mix('jquery');
+    $_bundle->js("service");
+    $_bundle->mix('idb');
     $_bundle->mix('global_new');
     $_bundle->mix('intro');
     return $_bundle;
@@ -35,7 +36,7 @@ class bundle {
     public static function reWrite() {
         $static_dir = explode('wp',__FILE__,2)[0] . 'static/';
         $bundles_dir = $static_dir . 'bundles/';
-        $index = json_decode(file_get_contents($bundles_dir . 'index.idn'),true);
+        $index = json_decode(file_get_contents($static_dir . 'index.idn'),true);
         foreach ($index as $bundle_name => $bundle) {
             $css_file = $bundles_dir . $bundle_name . "-" . $bundle['css_hash'] . ".css";
             $js_file = $bundles_dir . $bundle_name . "-" . $bundle['js_hash'] . ".js";
@@ -68,7 +69,7 @@ class bundle {
         $this->static_dir     = explode('wp',__FILE__,2)[0] . 'static/';
         $this->bundles_url   = $this->static_url . 'bundles/';
         $this->bundles_dir   = $this->static_dir . 'bundles/';
-        $this->index_file    = $this->bundles_dir . 'index.idn';
+        $this->index_file    = $this->static_dir . 'index.idn';
 
         $this->name = $name;
         if (! file_exists($this->bundles_dir)){
@@ -140,7 +141,7 @@ class bundle {
         file_put_contents ($this->bundles_dir . $this->hash('js'), $minified_js);
 
         $this->index[$this->name] = $this->bundle;
-        file_put_contents($this->bundles_dir . 'index.idn', json_encode($this->index) );
+        file_put_contents($this->static_dir . 'index.idn', json_encode($this->index) );
 
         $this->css_file = $this->bundles_url . $this->hash('css');
         $this->js_file = $this->bundles_url . $this->hash('js');
@@ -219,6 +220,12 @@ class bundle {
                 'external/jquery/jquery',
             )
         ),
+        'idb'    => [
+            'css'   => [],
+            'js'    => [
+                'external/idbKeyval/idb-keyval',
+            ],
+        ],
         'materialize' => array(
             'css'   => array(
                 'external/materialize/extras/nouislider',

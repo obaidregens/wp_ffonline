@@ -5,45 +5,46 @@ function timestamp_duration(timestamp){
   
     var formatted = hours.toString().padStart(2, '0') + ':' + minutes.toString().padStart(2, '0') + ':' + seconds.toString().padStart(2, '0');
     return formatted;
-  }
-function api(action,{data,callback,async = true,reCAPTCHA = null,reject} = {}){
+}
+function api(action,{data,reCAPTCHA = null} = {}){
     return new Promise((res,rej) => {
-        const options = {
-            dataType: 'JSON',
-            url: '/api',
-            type: 'post',
-            data: {
-                action,
-                placeholder: document.querySelector('placeholder_data').innerText
-            },
-            async
+        const submission = {
+            action,
+            placeholder: document.querySelector('placeholder_data').innerText
         };
         if (reCAPTCHA === null){
-            options.data.nonce = document.querySelector('nonce').innerHTML;
+            submission.nonce = document.querySelector('nonce').innerHTML;
         }
         else{
-            options.data.reCAPTCHA = reCAPTCHA;
+            submission.reCAPTCHA = reCAPTCHA;
         }
         if (typeof data === 'object'){
-            options.data.data = data;
+            submission.data = data;
         }
-        options.success = response => {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", '/api');
+        xhr.responseType = "json";
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+        xhr.setRequestHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+        xhr.send(JSON.stringify(submission));
+        xhr.onload = () => {
+            if (xhr.getResponseHeader("x-is-serving-offline") === "true") {
+                window.is_online = false;
+                return;
+            }
             window.is_online = true;
-            if (response.code === 993) {
+            if (xhr.status !== 200) {
+                rej(xhr.response);
+                return;
+            }
+            if (xhr.response.code === 993) {
                 window.location.reload();
             }
-            res(response);
-            if (callback instanceof Function){
-                callback(response);
-            }
+            res(xhr.response);
         };
-        options.error = response => {
+        xhr.onerror = () => {
             window.is_online = false;
-            rej(response);
-            if (reject instanceof Function){
-                reject(response);
-            }    
+            rej({code: 1000});
         };
-        jQuery.ajax(options);
     });
 }

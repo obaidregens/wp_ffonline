@@ -1,6 +1,6 @@
 <?php
 if (! isset($app->bundle)){
-    $app->bundle = new bundle ('collection-single');
+    $app->bundle = global_bundle ('collection-single');
 }
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/components/grid');

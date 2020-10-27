@@ -1,10 +1,9 @@
 function rootDraftsIndex(root,{OPT_HIDE_DISPLAY_FILES,OPT_REMOVE_FILES_CLICK,OPT_NO_NEW_DRAFT} = {}) {
     const listing = typeof root === 'string' ? document.querySelector(root) : root;
-    api('get_drafts',{
-        callback: response => {
-            window.all_files = response.path;
-            loadFolder(window.current_path);
-        }
+    api('get_drafts')
+    .then(response => {
+        window.all_files = response.path;
+        loadFolder(window.current_path);
     });
     window.current_path = '';
     const loadFolder = (p) => {

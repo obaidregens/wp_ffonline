@@ -15,10 +15,10 @@ window.addEventListener('keydown',function(event){
     }
     popup.open(search_popup);
 });
-function paraFromHash(){
+async function paraFromHash(){
     const rawHash = window.location.hash.substr(1);
     if (rawHash === "progress") {
-        const Track = JSON.parse(localStorage.getItem('chapter_track-' + book_id));
+        const Track = JSON.parse(await idbKeyval.get('chapter_track-' + book_id));
         if (Track === null) {
             return;
         }
@@ -37,7 +37,7 @@ window.addEventListener('hashchange',paraFromHash);
 paraFromHash();
 document.querySelector('popup.search-story > form').addEventListener('submit',function(event){
     event.preventDefault();
-	if (typeof grecaptcha === 'undefined') {
+	if (window.is_online === false) {
 		new toast("You're offline.");
 		return;
     }
@@ -47,34 +47,33 @@ document.querySelector('popup.search-story > form').addEventListener('submit',fu
 		data: {
             chapter_id,
             s: this.querySelector('text-input > input').value
-        },
-        dataType: 'JSON',
-		callback: function(response){
-            const all_results = document.createDocumentFragment();
-            for (let i = 0; i < response.results.length; i++) {
-                const result = response.results[i];
-                const result_wrapper = document.createElement('a');
-                result_wrapper.href = result.link;
-                result_wrapper.setAttribute('result','');
+        }
+    })
+    .then(response => {
+        const all_results = document.createDocumentFragment();
+        for (let i = 0; i < response.results.length; i++) {
+            const result = response.results[i];
+            const result_wrapper = document.createElement('a');
+            result_wrapper.href = result.link;
+            result_wrapper.setAttribute('result','');
 
-                const result_title = document.createElement('result-title');
-                result_title.innerText = result.title;
-                result_wrapper.appendChild(result_title);
-                
-                const result_excerpt = document.createElement('result-excerpt');
-                result_excerpt.innerHTML = result.excerpt;
-                result_wrapper.appendChild(result_excerpt);
-                all_results.appendChild(result_wrapper);
-            }
-            results_elem.innerText = '';
-            results_elem.appendChild(all_results);
-            results_elem.classList.remove('loading');
-            if (response.exceeded){
-                results_elem.classList.add('exceeded');
-            }
-            else{
-                results_elem.classList.remove('exceeded');
-            }
-		}
-	});
+            const result_title = document.createElement('result-title');
+            result_title.innerText = result.title;
+            result_wrapper.appendChild(result_title);
+            
+            const result_excerpt = document.createElement('result-excerpt');
+            result_excerpt.innerHTML = result.excerpt;
+            result_wrapper.appendChild(result_excerpt);
+            all_results.appendChild(result_wrapper);
+        }
+        results_elem.innerText = '';
+        results_elem.appendChild(all_results);
+        results_elem.classList.remove('loading');
+        if (response.exceeded){
+            results_elem.classList.add('exceeded');
+        }
+        else{
+            results_elem.classList.remove('exceeded');
+        }
+    });
 });

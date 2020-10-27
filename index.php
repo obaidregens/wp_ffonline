@@ -193,6 +193,9 @@ $app->listen('/read',function($self){
     exit();
 });
 $app->listen('/api',function($self){
+    if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+        return;
+    }
     include('scripts/api.php');
     exit();
 });
@@ -819,8 +822,8 @@ $app->listen('/faq/:q',function($self){
         return;
     }
     $self->faq_question = $q;
-    $self->type = 'faq-' . $q->ID;
-    $self->type_id = 0;
+    $self->type = 'faq-single';
+    $self->type_id = intval($q->ID);
     $self->header([
         'title'         => construct_page_title("FAQ"),
     ]);

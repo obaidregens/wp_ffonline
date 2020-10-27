@@ -50,21 +50,18 @@ drag.on('droppable:stop', async event => {
             path = path_parts.join('/');
         }
         api('move_draft',{
-            dataType: 'JSON',
             data: {
                 draft_id,
                 path
-            },
-            callback: response => {
-                api('get_drafts',{
-                    dataType: 'JSON',
-                    callback: response => {
-                        all_files = response.path;
-                        loadFolder(current_path);
-                        new toast('Your draft was moved.');
-                    }
-                });
             }
+        })
+        .then(() => {
+            api('get_drafts')
+            .then(response => {
+                all_files = response.path;
+                loadFolder(current_path);
+                new toast('Your draft was moved.');
+            });
         });
     }
 });

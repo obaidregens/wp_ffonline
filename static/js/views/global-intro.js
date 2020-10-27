@@ -178,15 +178,18 @@
         ]},
     }
     function startIntro(){
-        setTimeout(() => {
+        setTimeout(async () => {
             const viewID = getViewId();
-            const visited = JSON.parse(localStorage.getItem('intro')) || {};
+            if (viewID === false){
+                return;
+            }
+            const visited = JSON.parse(await idbKeyval.get('intro')) || {};
             const lastUpdatedIntro = introSteps[viewID].v;
             if ( (visited[viewID] || 0) <= lastUpdatedIntro*-1 ){
                 return;
             }
             visited[viewID] = lastUpdatedIntro*-1;
-            localStorage.setItem('intro',JSON.stringify(visited));
+            await idbKeyval.set('intro',JSON.stringify(visited));
     
             const steps = introSteps[viewID].steps || [];
             if (steps.length === 0) {

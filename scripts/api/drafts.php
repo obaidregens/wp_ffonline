@@ -38,7 +38,7 @@ function api_save_draft() {
     // The next send will be push
     $session_perm = &$_SESSION['drafts'][$d['draft_id']]['prev_perm'];
     $flag = ($session_perm ?? false) ? 'push' : 'update';
-    $session_perm = $d['perm'] === 'true';
+    $session_perm = $d['perm'] === true;
     $time = draft_revision::push($draft_id,$d['content'],$flag );
     if (err::is($time)) {
         return ['code' => 13];
@@ -62,11 +62,11 @@ function api_share_draft() {
     if (! is_current_user($draft->user_id)){
         return ['code'=>10];
     }
-    $share = $d['share'] === 'true' ? bin2hex(random_bytes(11)) : null;
+    $share = $d['share'] === true ? sha1(bin2hex(random_bytes(11))) : null;
     $valid = drafts::update($draft->ID,[
         'share' => $share
     ]);
-    if ($d['share'] === 'true'){
+    if ($d['share'] === true){
         return ['code'=>1,'link'=>home_url( '/drafts/' . $share )];
     }
     return ['code'=>2];

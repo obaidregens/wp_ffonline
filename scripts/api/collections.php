@@ -4,7 +4,7 @@ function api_update_collection(){
     required_params('delete','collection_id','title','privacy');
     $d = &$_POST['data'];
     $collection_id = $d['collection_id'];
-    if ($d['delete'] === "true"){
+    if ($d['delete'] === true){
         collection::delete($collection_id);
         if ($collection_id === 'new'){
             return ['code'=>10];
@@ -43,9 +43,9 @@ function api_update_collection(){
 }
 function api_add_to_collection(){
     required_login();
-    required_params('book_id','collection_id');
+    required_params('book_id','collection_id','add');
     $d = &$_POST['data'];
-    $add = $d['add'] === 'true';
+    $add = $d['add'] === true;
     $return = $add ?
         collection_books::add($d['collection_id'],$d['book_id']) :
         collection_books::remove($d['collection_id'],$d['book_id']);
@@ -57,7 +57,7 @@ function api_add_to_collection(){
 function api_follow_collection(){
     required_login();
     required_params('collection_id','follow');
-    $follow = $_POST['data']['follow'] === "true";
+    $follow = $_POST['data']['follow'] === true;
     $collection_id = $_POST['data']['collection_id'];
     if ($follow) {
         collection_follow::follow( $collection_id, get_current_user_id(),$_POST['landing_id'] );

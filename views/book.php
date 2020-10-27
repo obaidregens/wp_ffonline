@@ -1,9 +1,6 @@
 <?php
 
-$app->bundle = new bundle('book');
-$app->bundle->mix('jquery');	
-$app->bundle->mix('global_new');
-$app->bundle->mix('intro');
+$app->bundle = global_bundle('book');
 $app->bundle->mix('search-options');
 $app->bundle->mix('confirmation');
 $app->bundle->css('css/components/collapsible');

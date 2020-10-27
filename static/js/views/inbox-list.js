@@ -43,7 +43,6 @@ else {
     document.querySelector('user-info > button.block').addEventListener('click',function(){
         this.classList.toggle('blocked');
         api('block',{
-            dataType: 'JSON',
             data: {
                 block: document.querySelector('user-info > button.block').classList.contains('blocked'),
                 username: document.querySelector('messages').getAttribute('username').substr(1),
@@ -80,7 +79,6 @@ else {
                     messages_wrapper.scrollTop = messages_wrapper.scrollTop - 30;
                 }
                 else {
-                    console.log(messages_wrapper.scrollTop,messages_wrapper.scrollHeight);
                     messages_wrapper.scrollTop = messages_wrapper.scrollHeight;
                 }    
             });
@@ -122,7 +120,6 @@ else {
         }));
         messages_wrapper.scrollTop = messages_wrapper.scrollHeight;
         api('send_message',{
-            dataType: 'JSON',
             data: {
                 to: messages_wrapper.getAttribute('username').substr(1),
                 message: messages_content
@@ -136,44 +133,43 @@ else {
         }
         new Promise(function(resolve, reject){
             api('get_chat',{
-                dataType: 'JSON',
                 data: {
                     username
-                },
-                callback: (response) => {
-                    const messages_wrapper = document.querySelector('messages');
-                    if (messages_wrapper.getAttribute('username').substr(1) !== username){
-                        reject('Changed Username');
-                        return;
-                    }
-                    // Add Messages
-                    const frag = document.createDocumentFragment();
-                    for (let i = 0; i < response.messages.length; i++) {
-                        const msg = response.messages[i];
-                        if (msg.new){
-                            frag.appendChild(DOM.create('new-messages'));
-                        }
-                        const attr = {
-                            time: _t.local(new Date(parseInt(msg.time))),
-                        };
-                        attr[msg.from] = '';
-                        frag.appendChild(DOM.create('message',{
-                            innerText: msg.message,
-                            attributes: attr
-                        }));
-                    }
-                    messages_wrapper.innerText = '';
-                    messages_wrapper.appendChild(frag);
-                    messages_wrapper.classList.remove('loading');
-
-                    // Blocking
-                    const blocked_button = document.querySelector('user-info > button.block');
-                    const message_input = document.querySelector('send-message > text-input > input');
-                    _.prop(message_input,'disabled',response.chat_blocked);
-                    response.blocked ? blocked_button.classList.add('blocked') : blocked_button.classList.remove('blocked');
-                    resolve('Loaded');
                 }
             })
+            .then(response => {
+                const messages_wrapper = document.querySelector('messages');
+                if (messages_wrapper.getAttribute('username').substr(1) !== username){
+                    reject('Changed Username');
+                    return;
+                }
+                // Add Messages
+                const frag = document.createDocumentFragment();
+                for (let i = 0; i < response.messages.length; i++) {
+                    const msg = response.messages[i];
+                    if (msg.new){
+                        frag.appendChild(DOM.create('new-messages'));
+                    }
+                    const attr = {
+                        time: _t.local(new Date(parseInt(msg.time))),
+                    };
+                    attr[msg.from] = '';
+                    frag.appendChild(DOM.create('message',{
+                        innerText: msg.message,
+                        attributes: attr
+                    }));
+                }
+                messages_wrapper.innerText = '';
+                messages_wrapper.appendChild(frag);
+                messages_wrapper.classList.remove('loading');
+
+                // Blocking
+                const blocked_button = document.querySelector('user-info > button.block');
+                const message_input = document.querySelector('send-message > text-input > input');
+                _.prop(message_input,'disabled',response.chat_blocked);
+                response.blocked ? blocked_button.classList.add('blocked') : blocked_button.classList.remove('blocked');
+                resolve('Loaded');
+            });
         })
         .then(callback,function(){});
     }
