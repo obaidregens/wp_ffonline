@@ -1,7 +1,7 @@
 const setSelectedTags = (tag_name,selected) => {
     let tags_data = _.clone(window.tags_data)[tag_name] || {};
     const frag = document.createDocumentFragment();
-    const select_tag = document.querySelector(`select-tag[name="${tag_name}"]`);
+    const select_tag = DOM.q(`select-tag[name="${tag_name}"]`);
     select_tag.setAttribute('selected',JSON.stringify(selected));
     const url_mixed = selected.included.concat(selected.excluded);
     for (let yb = 0; yb < url_mixed.length; yb++) {
@@ -64,7 +64,7 @@ const replaceTags = (sort = 'count') => {
         }
         return fragment;
     }
-    const current_popup = document.querySelector('popup[tag-name].show');
+    const current_popup = DOM.q('popup[tag-name].show');
     if (! current_popup ){
         return;
     }
@@ -74,7 +74,7 @@ const replaceTags = (sort = 'count') => {
     const this_tag_ids = sort_tags(this_tags, sort);
     const chkbx = async_tag_names.includes(tag_name) ? document.createDocumentFragment() : tags_checkboxes_fragment(this_tags,this_tag_ids);
     // Selection
-    const selected_raw = document.querySelector(`select-tag[name="${tag_name}"]`).getAttribute('selected');
+    const selected_raw = DOM.q(`select-tag[name="${tag_name}"]`).getAttribute('selected');
     const selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
     const _mixed = selected.included.concat(selected.excluded);
     for (let m = 0; m < _mixed.length; m++) {
@@ -105,12 +105,12 @@ const replaceTags = (sort = 'count') => {
             elem_.classList.add('cross');
         }
     }
-    let insert_into = document.querySelector(`popup[tag-name="${tag_name}"] > tag_list`);
+    let insert_into = DOM.q(`popup[tag-name="${tag_name}"] > tag_list`);
     insert_into.innerText = '';
     insert_into.appendChild(chkbx);
 }
 const saveSelectedTags = () => {
-    const _pop_ = document.querySelector('popup[tag-name].show');
+    const _pop_ = DOM.q('popup[tag-name].show');
     if (! _pop_){
         return;
     }
@@ -130,7 +130,7 @@ const saveSelectedTags = () => {
 const async_tag_names = ['pairing','character','fandom'];
 const async_tags = () => {
     return new Promise( async (resolve,reject) => {
-        const current_popup = document.querySelector('popup[tag-name].show');
+        const current_popup = DOM.q('popup[tag-name].show');
         if (! current_popup ){
             return;
         }
@@ -306,7 +306,7 @@ const create_tags_popup = (tag_name) => {
     return _popup;
 }
 const words = (action = 'set',words) => {
-    const slider = document.querySelector('words-slider');
+    const slider = DOM.q('words-slider');
     if (slider.noUiSlider){
         if (action === 'reset'){
             slider.noUiSlider.reset();
@@ -350,17 +350,17 @@ const words = (action = 'set',words) => {
 words();
 const urlParams = new URLSearchParams(window.location.search);
 const urlParamsWords = (urlParams.get('words') || '0,3000000').split(',');
-document.querySelector('words-slider').noUiSlider.set([urlParamsWords[0], urlParamsWords[1]]);
-const filters_search_elem = document.querySelector('filter-books > next-screen > div > text-input:first-child > input');
+DOM.q('words-slider').noUiSlider.set([urlParamsWords[0], urlParamsWords[1]]);
+const filters_search_elem = DOM.q('filter-books > next-screen > div > text-input:first-child > input');
 filters_search_elem.value = urlParams.get('search') || '';
 filters_search_elem.dispatchEvent(new Event('change'));
-const filters_sort_elem = document.querySelector('filter-books > next-screen > div > select');
+const filters_sort_elem = DOM.q('filter-books > next-screen > div > select');
 const sort_options = [];
 for (let k = 0; k < filters_sort_elem.children.length; k++) {
     sort_options.push(filters_sort_elem.children[k].getAttribute('value'));
 }
 filters_sort_elem.value = sort_options.includes(urlParams.get('sort')) ? urlParams.get('sort') : sort_options[0];
-const select_tags = document.querySelectorAll('select-tag');
+const select_tags = DOM.qa('select-tag');
 for (let i = 0; i < select_tags.length; i++) {
     const elem = select_tags[i];
     const tag_name = elem.getAttribute('name');
@@ -377,7 +377,7 @@ for (let i = 0; i < select_tags.length; i++) {
     });
 }
 // Reset
-document.querySelector('filter-books > next-screen > div > button[label="Reset"]').addEventListener('click',function(){
+DOM.q('filter-books > next-screen > div > button[label="Reset"]').addEventListener('click',function(){
     words('reset');
     for (let i = 0; i < select_tags.length; i++) {
         const select_tag = select_tags[i];
@@ -389,7 +389,7 @@ document.querySelector('filter-books > next-screen > div > button[label="Reset"]
 const trigger_search = (page = false) => {
     next_screen.close();
     let search_progress_interval = 0;
-    const loader = document.querySelector('loader');
+    const loader = DOM.q('loader');
     function progress_spinner(){
         loader.classList.add('show');
         loader.setAttribute('progress', '0%');
@@ -408,7 +408,7 @@ const trigger_search = (page = false) => {
     construct += '&sort=' + filters_sort_elem.value;
     const search = filters_search_elem.value;
     construct += search === '' ? '' : '&search=' + search;
-    const select_tags = document.querySelectorAll('select-tag');
+    const select_tags = DOM.qa('select-tag');
     for (let i = 0; i < select_tags.length; i++) {
         const raw_selected = select_tags[i].getAttribute('selected');
         if (! raw_selected){
@@ -419,7 +419,7 @@ const trigger_search = (page = false) => {
         construct += selected.included.length === 0 ? '' : ('&' + name + '_included=' + selected.included.join(','));
         construct += selected.excluded.length === 0 ? '' : ('&' + name + '_excluded=' + selected.excluded.join(','));
     }
-    const prev_ss = document.querySelector('prev_ss');
+    const prev_ss = DOM.q('prev_ss');
     api('search',{
         data: {
             search: construct,
@@ -432,9 +432,9 @@ const trigger_search = (page = false) => {
         prev_ss.innerText = response.prev;
         window.tags_data = _.clone( response.tags_data );
         window.book_collections = _.clone( response.book_collections );
-        document.querySelector('pagination').innerHTML = response.paginate;
-        document.querySelector('books-container').innerHTML = response.output;
-        window.history.pushState("object or string", document.querySelector("title").innerText,'?' + construct);
+        DOM.q('pagination').innerHTML = response.paginate;
+        DOM.q('books-container').innerHTML = response.output;
+        window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct);
         
         // Styling
         clearInterval(search_progress_interval);
@@ -458,11 +458,11 @@ const trigger_search = (page = false) => {
     });
 
 }
-document.querySelector('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',function(event){
+DOM.q('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',function(event){
     event.preventDefault();
     trigger_search();
 });
-document.querySelector('pagination').addEventListener('click',function(event){
+DOM.q('pagination').addEventListener('click',function(event){
     event.preventDefault();
     const to = parseInt(event.target.getAttribute('paginate'));
     if (to){

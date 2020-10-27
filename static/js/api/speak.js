@@ -15,7 +15,7 @@ const speak = class {
             mark_el.remove();    
         }
         style_string += "}";
-        document.querySelector('head').appendChild(DOM.create('style',{
+        DOM.q('head').appendChild(DOM.create('style',{
             innerText: style_string
         }));
     }

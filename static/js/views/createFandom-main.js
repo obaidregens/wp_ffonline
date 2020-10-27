@@ -1,6 +1,6 @@
-const fandoms = JSON.parse(document.querySelector('fandoms').innerText);
+const fandoms = JSON.parse(DOM.q('fandoms').innerText);
 const onEnterInput = ({target}) => {
-    const btn = document.querySelector('button[label="Create"]');
+    const btn = DOM.q('button[label="Create"]');
     btn.removeAttribute('disabled');
     removeFandomOptions();
     const s = target.value.toLowerCase().trim();
@@ -34,18 +34,18 @@ const onEnterInput = ({target}) => {
     el.style.left = rect.left + "px";
 };
 const removeFandomOptions = () => {
-    if (document.querySelector('ul.fandom-options')) {
-        document.querySelector('ul.fandom-options').remove();
+    if (DOM.q('ul.fandom-options')) {
+        DOM.q('ul.fandom-options').remove();
     }
 }
-document.querySelector('text-input > input').addEventListener('focus',onEnterInput);
-document.querySelector('text-input > input').addEventListener('input',onEnterInput);
-document.querySelector('text-input > input').addEventListener('blur',removeFandomOptions);
+DOM.q('text-input > input').addEventListener('focus',onEnterInput);
+DOM.q('text-input > input').addEventListener('input',onEnterInput);
+DOM.q('text-input > input').addEventListener('blur',removeFandomOptions);
 window.addEventListener('resize',removeFandomOptions);
 
-document.querySelector('button[label="Create"]').addEventListener('click',({target}) => {
-    const fandom = document.querySelector('text-input > input').value;
-    const category = document.querySelector('select').value;
+DOM.q('button[label="Create"]').addEventListener('click',({target}) => {
+    const fandom = DOM.q('text-input > input').value;
+    const category = DOM.q('select').value;
     api('create_fandom',{
         data: {
             category,

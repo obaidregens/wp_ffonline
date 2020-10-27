@@ -6,7 +6,7 @@ document.documentElement.appendChild(DOM.create('link',{
 }));
 (() => {
     const cex = typeof chapter_id !== 'undefined';
-    const htmlEl = document.querySelector('html');
+    const htmlEl = DOM.q('html');
     if (cex) {
         const acs_top = htmlEl.appendChild(DOM.create('acs-options',{
             children: [
@@ -15,7 +15,7 @@ document.documentElement.appendChild(DOM.create('link',{
                     listeners: {
                         click: () => {
                             htmlEl.classList.remove('show-acs');
-                            popup.open(document.querySelector('popup.search-story'));
+                            popup.open(DOM.q('popup.search-story'));
                         }
                     }
                 }),
@@ -37,7 +37,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 listeners: {
                     click: () => {
                         htmlEl.classList.remove('show-acs');
-                        popup.open(document.querySelector('popup.chapter-index'));
+                        popup.open(DOM.q('popup.chapter-index'));
                     }
                 }
             }),
@@ -63,7 +63,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 classes: ['reviews'],
                 listeners: {
                     click: () => {
-                        document.querySelector('reviews-wrapper').scrollIntoView();
+                        DOM.q('reviews-wrapper').scrollIntoView();
                         document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
                         document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
                     }
@@ -72,7 +72,7 @@ document.documentElement.appendChild(DOM.create('link',{
         ]
     }));
     let timeLastClicked = Date.now();
-    document.querySelector('main').addEventListener('click',() => {
+    DOM.q('main').addEventListener('click',() => {
         if ( (Date.now() - timeLastClicked) < 300 ) {
             htmlEl.classList.remove('show-acs');
             popup.open(acs_popup);
@@ -228,7 +228,7 @@ const min_max_acs = {
 };
 const acs_entries = Object.entries(acs.all);
 for (let i = 0; i < acs_entries.length; i++) {
-    const chapter_content = document.querySelector('.acs-elem');
+    const chapter_content = DOM.q('.acs-elem');
     const acs_ = {
         key: acs_entries[i][0],
         value: acs_entries[i][1]
@@ -241,18 +241,18 @@ for (let i = 0; i < acs_entries.length; i++) {
     }
     else if (['fontSize','lineHeight','paragraphHeight','width'].includes(acs_.key)){
         const new_style = parseInt(acs_.value);
-        _.prop(document.querySelector('.acs-popup change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
-        _.prop(document.querySelector('.acs-popup change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
+        _.prop(DOM.q('.acs-popup change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
+        _.prop(DOM.q('.acs-popup change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
         chapter_content.style.setProperty('--' + acs_.key,new_style);
     }
 }
-document.querySelector('.acs-popup').addEventListener('click',function(event){
+DOM.q('.acs-popup').addEventListener('click',function(event){
     const closest_change_options = event.target.closest('change-options');
     if (! closest_change_options) {
         return;
     }
     const action = closest_change_options.getAttribute('action');
-    const chapter_content = document.querySelector('.acs-elem');
+    const chapter_content = DOM.q('.acs-elem');
     if (
         ['fontSize','lineHeight','paragraphHeight','width'].includes(action) &&
         event.target.tagName.toLowerCase() === 'button'
@@ -284,4 +284,4 @@ document.querySelector('.acs-popup').addEventListener('click',function(event){
         acs.set('font',fontName);
     }
 });
-document.querySelector('dark-mode').remove();
+DOM.q('dark-mode').remove();

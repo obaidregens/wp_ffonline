@@ -5,7 +5,7 @@ window.addEventListener('load',async () => {
     try {
         cStory = JSON.parse(await idbKeyval.get('chapter_track_follow')) || {};
     } catch { cStory = {}; }
-    const chapter_num = document.querySelector('chapter').getAttribute('num');
+    const chapter_num = DOM.q('chapter').getAttribute('num');
     if (Track !== null) {
         const hasBeenLeft = (Date.now() - Math.max(parseInt(cStory.timestamp || 0),parseInt(Track.timestamp)) ) > 1000*60*10;
         if (  ( hasBeenLeft || (cStory.book_id || 0).toString() !== book_id.toString() ) ){
@@ -21,7 +21,7 @@ window.addEventListener('load',async () => {
     }));
     setTimeout(() => {
         _.scrollEnd(async () => {
-            const paras = document.querySelectorAll('chapter > content > p');
+            const paras = DOM.qa('chapter > content > p');
             let paraI = null;
             for (let i = 0; i < paras.length; i++) {
                 const co = paras[i].getBoundingClientRect().y+100;
@@ -38,7 +38,7 @@ window.addEventListener('load',async () => {
                 chapter_num,
                 paragraph: paraI,
                 timestamp: Date.now(),
-                chapterProgress: parseFloat(( (chapter_num/document.querySelectorAll('popup.chapter-index > index > a').length)*100 ).toFixed(1))
+                chapterProgress: parseFloat(( (chapter_num/DOM.qa('popup.chapter-index > index > a').length)*100 ).toFixed(1))
             }));
         });    
     },10000);

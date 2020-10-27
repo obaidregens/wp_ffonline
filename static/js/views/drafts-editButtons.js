@@ -1,6 +1,6 @@
 // Toolbar Buttons
 // Fullscreen Button
-document.querySelector('toolbar').appendChild(DOM.create('button',{
+DOM.q('toolbar').appendChild(DOM.create('button',{
     attributes: {
         action: 'fullscreen'
     },
@@ -10,12 +10,12 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                 document.exitFullscreen();
                 return;
             }
-            document.querySelector('editor').requestFullscreen();
+            DOM.q('editor').requestFullscreen();
         }
     }
 }));
 // Delete Button
-document.querySelector('toolbar').appendChild(DOM.create('button',{
+DOM.q('toolbar').appendChild(DOM.create('button',{
     attributes: {
         action: 'delete'
     },
@@ -24,7 +24,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             }
-            const draft_id = document.querySelector('editor').getAttribute('draft_id');
+            const draft_id = DOM.q('editor').getAttribute('draft_id');
             if (draft_id === 'new') {
                 new toast('This draft hasn\'t been saved.');
                 return;
@@ -52,7 +52,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     }
 }));
 // Preview Button
-document.querySelector('toolbar').appendChild(DOM.create('button',{
+DOM.q('toolbar').appendChild(DOM.create('button',{
     attributes: {
         action: 'preview'
     },
@@ -61,7 +61,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             }
-            const draft_id = document.querySelector('editor').getAttribute('draft_id');
+            const draft_id = DOM.q('editor').getAttribute('draft_id');
             if (draft_id === 'new') {
                 new toast('This draft hasn\'t been saved.');
                 return;
@@ -71,7 +71,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     }
 }));
 // Share Button
-document.querySelector('toolbar').appendChild(DOM.create('button',{
+DOM.q('toolbar').appendChild(DOM.create('button',{
     attributes: {
         action: 'share'
     },
@@ -80,16 +80,16 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
             if (document.fullscreenElement) {
                 document.exitFullscreen();
             }
-            if (document.querySelector('editor').getAttribute('draft_id') === 'new') {
+            if (DOM.q('editor').getAttribute('draft_id') === 'new') {
                 new toast("This draft hasn't been saved.");             
                 return;
             }
-            let _p = document.querySelector('popup[share_draft]');
+            let _p = DOM.q('popup[share_draft]');
             if (_p) {
                 popup.open(_p);
                 return;
             }
-            const share_is = document.querySelector('share-is').innerText;
+            const share_is = DOM.q('share-is').innerText;
             const children = [
                 DOM.create('p',{
                     innerText: 'Let anyone with the link see this draft and propose edits.'
@@ -124,7 +124,7 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
                     },
                     listeners: {
                         click: function() {
-                            const _id = document.querySelector('editor').getAttribute('draft_id');
+                            const _id = DOM.q('editor').getAttribute('draft_id');
                             if (_id === 'new') {
                                 new toast("This draft hasn't been saved.");                               
                                 return;
@@ -180,12 +180,12 @@ document.querySelector('toolbar').appendChild(DOM.create('button',{
     }
 }));
 // Export Button
-document.querySelector('button[label="Export"] > dropdown').addEventListener('click', ({target}) => {
+DOM.q('button[label="Export"] > dropdown').addEventListener('click', ({target}) => {
     const inner = target.innerText;
     if (! ['FFN','AO3'].includes(inner)){
         return;
     }
-    const draft_id = document.querySelector('editor').getAttribute('draft_id');
+    const draft_id = DOM.q('editor').getAttribute('draft_id');
     if (draft_id === 'new') {
         new toast('This draft hasn\'t been saved.');
         return;

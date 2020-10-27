@@ -1,6 +1,6 @@
-if (document.querySelector('.add-update')){
-    document.querySelector('.add-update').addEventListener('click',function(){
-        let __pop = document.querySelector('popup[add-update]');
+if (DOM.q('.add-update')){
+    DOM.q('.add-update').addEventListener('click',function(){
+        let __pop = DOM.q('popup[add-update]');
         if (__pop){
             popup.open(__pop);
             return;

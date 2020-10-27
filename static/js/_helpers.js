@@ -1,6 +1,7 @@
+
 class _ {
     static scrollTo (el) {
-        const ht = document.querySelector('html');
+        const ht = DOM.q('html');
         el.scrollIntoView();
         ht.scrollTop = ht.scrollTop - 55;
     }

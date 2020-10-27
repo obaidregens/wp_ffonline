@@ -1,8 +1,8 @@
 const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
-if (document.querySelector('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
+if (DOM.q('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
     window.addEventListener('load',() => {
-        document.querySelector('user-info').remove();
-        document.querySelector('send-message').remove();
+        DOM.q('user-info').remove();
+        DOM.q('send-message').remove();
         const pp = DOM.create('popup',{
             children: [
                 DOM.create('h3',{
@@ -23,7 +23,7 @@ if (document.querySelector('chat-list').children.length === 0 && full_url_parts[
 else {
     if (full_url_parts[full_url_parts.length-1] !== 'inbox'){
         const username = full_url_parts[full_url_parts.length-1];
-        const existing_user_elem = document.querySelector(`chat-list > [username="${username}"]`);
+        const existing_user_elem = DOM.q(`chat-list > [username="${username}"]`);
         if (existing_user_elem){
             existing_user_elem.remove();
         }
@@ -33,24 +33,24 @@ else {
                 unread: "0"
             }
         });
-        document.querySelector('chat-list').prepend(chat_elem);
+        DOM.q('chat-list').prepend(chat_elem);
     }
     // Back Button
-    document.querySelector('user-info > button.back').addEventListener('click',() => {
-        document.querySelector('chat-list').classList.add('show');
+    DOM.q('user-info > button.back').addEventListener('click',() => {
+        DOM.q('chat-list').classList.add('show');
     })
     // Block Button
-    document.querySelector('user-info > button.block').addEventListener('click',function(){
+    DOM.q('user-info > button.block').addEventListener('click',function(){
         this.classList.toggle('blocked');
         api('block',{
             data: {
-                block: document.querySelector('user-info > button.block').classList.contains('blocked'),
-                username: document.querySelector('messages').getAttribute('username').substr(1),
+                block: DOM.q('user-info > button.block').classList.contains('blocked'),
+                username: DOM.q('messages').getAttribute('username').substr(1),
             }
         });
     });
 
-    document.querySelector('chat-list').addEventListener('click',function(event){
+    DOM.q('chat-list').addEventListener('click',function(event){
         if (event.target.tagName.toLowerCase() !== 'chat'){
             return;
         }
@@ -61,17 +61,17 @@ else {
         event.target.setAttribute('active','');
         event.target.setAttribute('unread','0');
 
-        const messages_wrapper = document.querySelector('messages');
+        const messages_wrapper = DOM.q('messages');
         messages_wrapper.classList.add('loading');
         messages_wrapper.setAttribute('username','@' + username);
-        DOM.update(document.querySelector('user-info > a'),{
+        DOM.update(DOM.q('user-info > a'),{
             innerText: '@' + username,
             attributes: {
                 href: '/@' + username,
             }
         });
         load_chat(username,function(){
-            document.querySelector('chat-list').classList.remove('show');
+            DOM.q('chat-list').classList.remove('show');
             setTimeout(() => {
                 const new_messages_tab = messages_wrapper.querySelector('new-messages');
                 if (new_messages_tab){
@@ -84,25 +84,25 @@ else {
             });
         });
     });
-    // document.querySelector('chat-list > chat:first-child').dispatchEvent(new Event('click', {bubbles: true}));
+    // DOM.q('chat-list > chat:first-child').dispatchEvent(new Event('click', {bubbles: true}));
 
     // Message Validation
-    document.querySelector('send-message > text-input > input').addEventListener('input',function(){
+    DOM.q('send-message > text-input > input').addEventListener('input',function(){
         if (this.value.length > 150){
             this.value = this.value.substr(0,150);
         }
-        _.prop(document.querySelector('send-message > button'),'disabled',this.value === '');
+        _.prop(DOM.q('send-message > button'),'disabled',this.value === '');
     });  
 
     // Submit Messages with enter key shortcut
-    document.querySelector('send-message > text-input > input').addEventListener('keyup',function(event){
+    DOM.q('send-message > text-input > input').addEventListener('keyup',function(event){
         if (event.keyCode !== 13){
             return;
         }
-        document.querySelector('send-message > button').dispatchEvent(new Event('click'));
+        DOM.q('send-message > button').dispatchEvent(new Event('click'));
     });
-    document.querySelector('send-message > button').addEventListener('click',function(){
-        const messages_wrapper = document.querySelector('messages');
+    DOM.q('send-message > button').addEventListener('click',function(){
+        const messages_wrapper = DOM.q('messages');
         const messages_input = this.previousElementSibling.querySelector('input');
         const messages_content = messages_input.value;
         if (messages_content === ''){
@@ -129,7 +129,7 @@ else {
     // Retrieve Messages.
     function load_chat(username,callback = function(){}){
         if (username === true) {
-            username = document.querySelector('messages').getAttribute('username').substr(1);
+            username = DOM.q('messages').getAttribute('username').substr(1);
         }
         new Promise(function(resolve, reject){
             api('get_chat',{
@@ -138,7 +138,7 @@ else {
                 }
             })
             .then(response => {
-                const messages_wrapper = document.querySelector('messages');
+                const messages_wrapper = DOM.q('messages');
                 if (messages_wrapper.getAttribute('username').substr(1) !== username){
                     reject('Changed Username');
                     return;
@@ -164,8 +164,8 @@ else {
                 messages_wrapper.classList.remove('loading');
 
                 // Blocking
-                const blocked_button = document.querySelector('user-info > button.block');
-                const message_input = document.querySelector('send-message > text-input > input');
+                const blocked_button = DOM.q('user-info > button.block');
+                const message_input = DOM.q('send-message > text-input > input');
                 _.prop(message_input,'disabled',response.chat_blocked);
                 response.blocked ? blocked_button.classList.add('blocked') : blocked_button.classList.remove('blocked');
                 resolve('Loaded');
@@ -176,7 +176,7 @@ else {
     // Interval to refresh chat
     const lfg = setInterval(load_chat,8000,
         true,() => {
-            const messages_wrapper = document.querySelector('messages');
+            const messages_wrapper = DOM.q('messages');
             const messagesHeight = parseInt(getComputedStyle(messages_wrapper).getPropertyValue('height'));
             const new_messages_tab = messages_wrapper.querySelector('new-messages');
             if (! new_messages_tab || messages_wrapper.scrollTop >= (new_messages_tab.offsetTop - messagesHeight) ){
@@ -197,7 +197,7 @@ else {
             });
         }
     );
-    document.querySelector('messages').addEventListener('scroll',function(){
+    DOM.q('messages').addEventListener('scroll',function(){
         const new_messages_prompt = this.querySelector("new-messages-prompt");
         if (! new_messages_prompt){
             return;

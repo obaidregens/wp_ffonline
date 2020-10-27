@@ -1,4 +1,4 @@
-document.querySelector('collections-container').addEventListener('click',function(event){
+DOM.q('collections-container').addEventListener('click',function(event){
     if ( event.target.classList.contains('follow-collection') ){
         event.target.classList.toggle('followed');
         const collection_id = event.target.parentElement.getAttribute('collection_id');

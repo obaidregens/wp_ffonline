@@ -1,5 +1,5 @@
 const loadFolder = rootDraftsIndex('folder-listing');
-const drag = new Draggable.Droppable(document.querySelectorAll('folder-listing'), {
+const drag = new Draggable.Droppable(DOM.qa('folder-listing'), {
     draggable: 'file > file-meta, folder > folder-meta',
     dropzone: 'folder, file:not(.new-draft-file), delete-container',
     distance: 10

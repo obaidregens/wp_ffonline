@@ -85,7 +85,7 @@ header("x-is-serving-offline: true");
             `;
             stories_list.appendChild(el);
         });
-        document.querySelector('body').appendChild(stories_list);
+        DOM.q('body').appendChild(stories_list);
     });
     </script>
 </head>

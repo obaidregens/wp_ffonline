@@ -203,7 +203,7 @@ function Reviews(props) {
   })));
 }
 
-ReactDOM.render( /*#__PURE__*/React.createElement(Reviews, null), document.querySelector('reviews-wrapper')); // User Review Filter from hash
+ReactDOM.render( /*#__PURE__*/React.createElement(Reviews, null), DOM.q('reviews-wrapper')); // User Review Filter from hash
 
 function userReviewsFromHash() {
   const hash = window.location.hash;
@@ -218,7 +218,7 @@ function userReviewsFromHash() {
     return false;
   }
 
-  document.querySelector(`reviews-wrapper`).scrollIntoView();
+  DOM.q(`reviews-wrapper`).scrollIntoView();
   const excl_users = [];
   ReviewStates.userItems[0].forEach(v => {
     if (parseInt(v.key) !== userId) {

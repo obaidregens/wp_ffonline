@@ -4,7 +4,7 @@
   // Import Before
   window.tt = api('get_book_data', {
     data: {
-      book_id: document.querySelector('book').getAttribute('book_id')
+      book_id: DOM.q('book').getAttribute('book_id')
     }
   });
   const response = await window.tt;
@@ -75,7 +75,7 @@
   }
 
   const reRender = () => {
-    ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('book'));
+    ReactDOM.render( /*#__PURE__*/React.createElement(App, null), DOM.q('book'));
   };
 
   window.reRender = reRender;

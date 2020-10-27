@@ -313,3 +313,6 @@ blockquote {
     border-left: 4px solid var(--theme-color);
     padding: 20px;
 }
+pre {
+    white-space: pre-line;
+}

@@ -1,5 +1,5 @@
-document.querySelector('save-time').addEventListener('click',() => {
-    let s = document.querySelector('sidenav[revisions]');
+DOM.q('save-time').addEventListener('click',() => {
+    let s = DOM.q('sidenav[revisions]');
     if (s){
         sidenav.open(s);
     }
@@ -15,7 +15,7 @@ document.querySelector('save-time').addEventListener('click',() => {
     if (window.refreshRevisions) {
         api('get_draft_revisions',{
             data: {
-                draft_id: document.querySelector('editor').getAttribute('draft_id')
+                draft_id: DOM.q('editor').getAttribute('draft_id')
             }
         })
         .then(response => {
@@ -53,7 +53,7 @@ next_screen.create(DOM.create('next-screen',{
     listeners: {
         onClose: () => {
             currentCompareRevision = null;
-            const li = document.querySelector('sidenav[revisions] > li[selected]');
+            const li = DOM.q('sidenav[revisions] > li[selected]');
             if (li) {
                 li.removeAttribute('selected');
             }
@@ -64,7 +64,7 @@ next_screen.create(DOM.create('next-screen',{
             }
             const cm = this.querySelector('compare');
             cm.scrollTop = cm.scrollTop + (event.key === "ArrowUp" ? -40 : 40);
-            const revEl = document.querySelector('sidenav[revisions] > li[selected]')[event.key === "ArrowUp" ? "previousElementSibling" : "nextElementSibling"];
+            const revEl = DOM.q('sidenav[revisions] > li[selected]')[event.key === "ArrowUp" ? "previousElementSibling" : "nextElementSibling"];
             if (!revEl) {
                 return;
             }
@@ -81,7 +81,7 @@ next_screen.create(DOM.create('next-screen',{
                 DOM.create('button',{
                     classes: ['select-revision'],
                     listeners: {
-                        click: () => document.querySelector('save-time').dispatchEvent(new Event('click'))
+                        click: () => DOM.q('save-time').dispatchEvent(new Event('click'))
                     }
                 })
             ]
@@ -112,9 +112,9 @@ next_screen.create(DOM.create('next-screen',{
     ]
 }));
 let currentCompareRevision = null;
-nScreen = document.querySelector('next-screen[compare-revisions] > cross-button').remove();
+nScreen = DOM.q('next-screen[compare-revisions] > cross-button').remove();
 const getSingleRevision = revision_id => {
-    const s = document.querySelector('sidenav[revisions]');
+    const s = DOM.q('sidenav[revisions]');
     if (! s) {
         return;
     }
@@ -122,7 +122,7 @@ const getSingleRevision = revision_id => {
         s.querySelector('li[selected]').removeAttribute('selected');
     }
     const isLi = s.querySelector('li[revision_id="' + revision_id + '"]');
-    const nScreen = document.querySelector('next-screen[compare-revisions]');
+    const nScreen = DOM.q('next-screen[compare-revisions]');
     const titleNode = nScreen.querySelectorAll('revision-title');
     timeago.cancel(titleNode[0]);
     titleNode[0].setAttribute('datetime',isLi.getAttribute('datetime'));
@@ -139,7 +139,7 @@ const getSingleRevision = revision_id => {
     isLi.setAttribute('selected','');
     api('compare_single_revision',{
         data: {
-            draft_id: document.querySelector('editor').getAttribute('draft_id'),
+            draft_id: DOM.q('editor').getAttribute('draft_id'),
             revision_id
         }
     })

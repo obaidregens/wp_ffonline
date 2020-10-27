@@ -1,6 +1,6 @@
-if (document.querySelector('button[label="Post"]')) {
-    document.querySelector('button[label="Post"]').addEventListener('click',({target}) => {
-        const dr = document.querySelector('editor').getAttribute('draft_id');
+if (DOM.q('button[label="Post"]')) {
+    DOM.q('button[label="Post"]').addEventListener('click',({target}) => {
+        const dr = DOM.q('editor').getAttribute('draft_id');
         if (dr === 'new') {
             new toast('This draft hasn\'t been saved.');
             return;

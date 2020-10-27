@@ -1,23 +1,23 @@
 offlineAPI({
     book_id,
-    title: document.querySelector('book-info > a.title').innerText,
-    author: document.querySelector('book-info > author > a').innerText,
-    total_chapters: document.querySelectorAll('popup.chapter-index > index > a').length,
+    title: DOM.q('book-info > a.title').innerText,
+    author: DOM.q('book-info > author > a').innerText,
+    total_chapters: DOM.qa('popup.chapter-index > index > a').length,
     elems: [
-        document.querySelector('acs-options > .offline'),
-        document.querySelector('chapter > book-options > .book-offline')
+        DOM.q('acs-options > .offline'),
+        DOM.q('chapter > book-options > .book-offline')
     ],
     hooks: {
         started_saving: () => {
-            document.querySelector('chapter').appendChild(DOM.create('offline-notice',{
+            DOM.q('chapter').appendChild(DOM.create('offline-notice',{
                 innerText: "Saving story"
             }));
         },
         save_chapter: (chapter_num,total_chapters) => {
-            document.querySelector('chapter > offline-notice').innerText = `Saved ${chapter_num} of ${total_chapters} chapters`;
+            DOM.q('chapter > offline-notice').innerText = `Saved ${chapter_num} of ${total_chapters} chapters`;
         },
         finished_saving: () => {
-            document.querySelector('chapter > offline-notice').remove();
+            DOM.q('chapter > offline-notice').remove();
         }
     }
 });

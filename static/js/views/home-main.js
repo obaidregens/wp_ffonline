@@ -1,4 +1,4 @@
-const slide = new Glide(document.querySelector('div.glide'),{
+const slide = new Glide(DOM.q('div.glide'),{
     type: 'slider',
     perView: 1,
 });

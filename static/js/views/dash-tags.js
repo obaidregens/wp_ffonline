@@ -1,13 +1,13 @@
-document.querySelector("select").addEventListener('change',({target}) => {
+DOM.q("select").addEventListener('change',({target}) => {
     const url = new URL(window.location.href);
     const newUrl = url.pathname + '?tax=' + target.value.toLowerCase();
     window.location.href = newUrl; 
 });
-document.querySelector('button[label="Create"]').addEventListener('click',() => {
+DOM.q('button[label="Create"]').addEventListener('click',() => {
     api('new_tax',{
         data: {
-            tax: document.querySelector('select').value.toLowerCase(),
-            name:document.querySelector('text-input > input').value
+            tax: DOM.q('select').value.toLowerCase(),
+            name:DOM.q('text-input > input').value
         }
     })
     .then(response => {

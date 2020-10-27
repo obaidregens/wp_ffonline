@@ -1,6 +1,6 @@
 window.addEventListener('load',() => {
     if (!'speechSynthesis' in window) {
-        document.querySelector('acs-options').appendChild(DOM.create('button',{
+        DOM.q('acs-options').appendChild(DOM.create('button',{
             classes: ['listen'],
             listeners: {
                 click: () => new toast("Read aloud isn't supported on your device.")
@@ -8,7 +8,7 @@ window.addEventListener('load',() => {
         }));
         return;
     }
-    const speak_inst = new speak(document.querySelector('.acs-elem'),false);
+    const speak_inst = new speak(DOM.q('.acs-elem'),false);
     const cs = 'playing';
     const pause_button = DOM.create('button',{
         classes: ['pause'],
@@ -46,8 +46,8 @@ window.addEventListener('load',() => {
     });
     document.documentElement.appendChild(panel);
     // MMMMMMMMMM
-    const htmlEl = document.querySelector('html');
-    document.querySelector('acs-options').appendChild(DOM.create('button',{
+    const htmlEl = DOM.q('html');
+    DOM.q('acs-options').appendChild(DOM.create('button',{
         classes: ['listen'],
         listeners: {
             click: ({target}) => {

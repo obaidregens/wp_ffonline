@@ -1,5 +1,5 @@
 function init_text_input(){
-    const input_fields_text = document.querySelectorAll('text-input');
+    const input_fields_text = DOM.qa('text-input');
     for (let i = 0; i < input_fields_text.length; i++) {
         const elem = input_fields_text[i];
         if (elem.children.length !== 0){

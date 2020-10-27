@@ -23,8 +23,8 @@ function follow_collection(collection_id,follow = true){
         }
     });
 }
-if (document.querySelector('collection-bar > button[label="Create New"]')) {
-    document.querySelector('collection-bar > button[label="Create New"]').addEventListener('click',event => {
+if (DOM.q('collection-bar > button[label="Create New"]')) {
+    DOM.q('collection-bar > button[label="Create New"]').addEventListener('click',event => {
         if (! logged_in) {
             prompt_login();
             new toast('Login to create collection.');
@@ -33,8 +33,8 @@ if (document.querySelector('collection-bar > button[label="Create New"]')) {
         create_collection_open('new');
     });    
 }
-if (document.querySelector('collection-bar > button[label="My Collections"]')) {
-    document.querySelector('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
+if (DOM.q('collection-bar > button[label="My Collections"]')) {
+    DOM.q('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
         if (! logged_in) {
             prompt_login();
             new toast('Login to create and add books to your collections.');

@@ -10,7 +10,7 @@ const pi = DOM.create('popup',{
             },
             listeners: {
                 click: ({target}) => {
-                    document.querySelector('reply > blockquote').innerText =
+                    DOM.q('reply > blockquote').innerText =
                     target.previousElementSibling.querySelector('textarea').value;
                     target.previousElementSibling.querySelector('textarea').dispatchEvent(new Event('change'));
                     popup.close();
@@ -20,22 +20,22 @@ const pi = DOM.create('popup',{
     ]
 });
 popup.create(pi);
-document.querySelectorAll('question-wrapper > a').forEach(el => {
+DOM.qa('question-wrapper > a').forEach(el => {
     el.addEventListener('click',({target}) => {
-        document.querySelector('reply').classList.add('show');
-        document.querySelector('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
-        document.querySelector('reply > blockquote').innerText = target.previousElementSibling.innerText;
+        DOM.q('reply').classList.add('show');
+        DOM.q('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
+        DOM.q('reply > blockquote').innerText = target.previousElementSibling.innerText;
     });
 });
-document.querySelector('reply > a').addEventListener('click',({target}) => {
+DOM.q('reply > a').addEventListener('click',({target}) => {
     popup.open(pi);
     pi.querySelector('textarea').value = target.previousElementSibling.innerText;
     pi.querySelector('textarea').dispatchEvent(new Event('change'));
 });
-document.querySelector('button[label="Reply"]').addEventListener('click',({target}) => {
+DOM.q('button[label="Reply"]').addEventListener('click',({target}) => {
     api('reply_to_question',{
         data: {
-            category: document.querySelector('text-input > input').value,
+            category: DOM.q('text-input > input').value,
             question_id: target.parentElement.getAttribute('question-id'),
             question: target.parentElement.querySelector('blockquote').innerText,
             answer: target.parentElement.querySelector('text-input > textarea').value,

@@ -1,5 +1,5 @@
 function init_checkbox(){
-    const input_checkbox = document.querySelectorAll('checkbox');
+    const input_checkbox = DOM.qa('checkbox');
     for (let i = 0; i < input_checkbox.length; i++) {
         const elem = input_checkbox[i];
         const input_e = document.createElement('input');

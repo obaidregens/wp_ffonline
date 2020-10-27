@@ -1,5 +1,5 @@
-if (document.querySelector('.author-follow')) {
-    document.querySelector('.author-follow').addEventListener('click',({target}) => {
+if (DOM.q('.author-follow')) {
+    DOM.q('.author-follow').addEventListener('click',({target}) => {
         if (! logged_in) {
             new toast('Login to follow author');
             prompt_login();
@@ -7,7 +7,7 @@ if (document.querySelector('.author-follow')) {
         }
         api('follow_user',{
             data: {
-                user_id: document.querySelector('author-main').getAttribute('user_id')
+                user_id: DOM.q('author-main').getAttribute('user_id')
             },
         })
         .then(response => {

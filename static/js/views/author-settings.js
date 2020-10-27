@@ -1,4 +1,4 @@
-document.querySelector('h2[label="Account"] ~ collapsible:nth-of-type(1) > button').addEventListener('click',function(){
+DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(1) > button').addEventListener('click',function(){
     const pass = this.previousElementSibling.previousElementSibling.querySelector('input').value;
     const confirm_pass = this.previousElementSibling.querySelector('input').value;
     api('change_password',{
@@ -22,7 +22,7 @@ document.querySelector('h2[label="Account"] ~ collapsible:nth-of-type(1) > butto
         }
     });
 });
-document.querySelector('h2[label="Account"] ~ collapsible:nth-of-type(2) > button').addEventListener('click',function(){
+DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(2) > button').addEventListener('click',function(){
     const new_username = this.previousElementSibling.previousElementSibling.querySelector('input').value;
     api('change_username',{
         data: {

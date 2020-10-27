@@ -1,5 +1,5 @@
-if (document.querySelector('author-updates')){
-    document.querySelector('author-updates').addEventListener('click',function(event){
+if (DOM.q('author-updates')){
+    DOM.q('author-updates').addEventListener('click',function(event){
         if (event.target.parentElement.tagName.toLowerCase() !== 'dropdown'){
             return;
         }

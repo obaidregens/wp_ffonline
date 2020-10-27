@@ -1,17 +1,17 @@
 // Ask
-const all_questions = document.querySelectorAll('question-wrapper');
-document.querySelector('main').addEventListener('click',({target}) => {
+const all_questions = DOM.qa('question-wrapper');
+DOM.q('main').addEventListener('click',({target}) => {
     const qs = target.closest('question-wrapper');
     if (!qs) {return;}
     if (qs.classList.contains('show')) {return;}
     all_questions.forEach(ell => ell.classList.remove('show'));
     qs.classList.add('show');
 });
-document.querySelector('button[label="Ask"]').addEventListener('click',() => {
-    const Widget = (document.querySelector('recaptcha').getAttribute('widget-id'));
-    const email = document.querySelector('text-input:nth-of-type(1) > input');
-    const question = document.querySelector('text-input:nth-of-type(2) > textarea');
-    document.querySelector('notice').innerText = "";
+DOM.q('button[label="Ask"]').addEventListener('click',() => {
+    const Widget = (DOM.q('recaptcha').getAttribute('widget-id'));
+    const email = DOM.q('text-input:nth-of-type(1) > input');
+    const question = DOM.q('text-input:nth-of-type(2) > textarea');
+    DOM.q('notice').innerText = "";
     api('ask_question',{
         data: {
             email: email.value,
@@ -45,7 +45,7 @@ document.querySelector('button[label="Ask"]').addEventListener('click',() => {
             msg += "You'll be notified by email when your question is answered.";
         }
         msg += "\n\nFeel free to keep reading & writing on Fanfiction Online, and if you have any more questions, ask away!";
-        document.querySelector('notice').innerText = msg;
+        DOM.q('notice').innerText = msg;
         email.value = "";
         question.value = "";
     });

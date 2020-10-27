@@ -201,4 +201,4 @@ const Leaf = props => {
   }), props.children);
 };
 
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), document.querySelector('editor'));
+ReactDOM.render( /*#__PURE__*/React.createElement(App, null), DOM.q('editor'));

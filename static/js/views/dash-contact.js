@@ -1,8 +1,8 @@
-document.querySelector('toggle').addEventListener('click',() => {
-    document.querySelector('with').classList.toggle('show')
+DOM.q('toggle').addEventListener('click',() => {
+    DOM.q('with').classList.toggle('show')
 });
-const msg_elem = document.querySelector('messages');
-document.querySelector('with').addEventListener('click',({target}) => {
+const msg_elem = DOM.q('messages');
+DOM.q('with').addEventListener('click',({target}) => {
     if (target.tagName.toLowerCase() !== "single"){return;}
     const msgs = all[target.innerText];
     msg_elem.parentElement.setAttribute('from',target.innerText);
@@ -17,15 +17,15 @@ document.querySelector('with').addEventListener('click',({target}) => {
             }
         }));
     }
-    document.querySelector('with').classList.remove('show');
+    DOM.q('with').classList.remove('show');
     window.scrollTo(0,document.body.scrollHeight);
 });
-document.querySelector('button[label="Reply"]').addEventListener('click',() => {
-    const to = document.querySelector('message-box').getAttribute('from');
+DOM.q('button[label="Reply"]').addEventListener('click',() => {
+    const to = DOM.q('message-box').getAttribute('from');
     api('reply_to_contact',{
         data: {
             to,
-            message: document.querySelector('message-box > text-input > textarea').value
+            message: DOM.q('message-box > text-input > textarea').value
         }
     })
     .then(response => {

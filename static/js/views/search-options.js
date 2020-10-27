@@ -68,7 +68,7 @@ function update_collections(collection_data){
             collections_open(book_id);
         });
     });
-    const existing = document.querySelector('popup.collections');
+    const existing = DOM.q('popup.collections');
     if (existing){
         existing.replaceWith(_popup);
         init_switch();
@@ -89,7 +89,7 @@ function collections_open(book_id) {
         return;
     }
     const
-        collections_popup = document.querySelector('popup.collections'),
+        collections_popup = DOM.q('popup.collections'),
         book_collections = _.clone(window.book_collections)[book_id] || [];
     collections_popup.setAttribute('book_id',book_id);
     const switches = collections_popup.querySelectorAll('input');

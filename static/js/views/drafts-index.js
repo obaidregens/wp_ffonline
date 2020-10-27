@@ -1,5 +1,5 @@
 function rootDraftsIndex(root,{OPT_HIDE_DISPLAY_FILES,OPT_REMOVE_FILES_CLICK,OPT_NO_NEW_DRAFT} = {}) {
-    const listing = typeof root === 'string' ? document.querySelector(root) : root;
+    const listing = typeof root === 'string' ? DOM.q(root) : root;
     api('get_drafts')
     .then(response => {
         window.all_files = response.path;

@@ -291,6 +291,7 @@ class bundle {
                 "external/waves/waves",
             ),
             'js'    => array(
+                'js/DOM',
                 'js/normalize',
                 'js/_helpers',
                 'js/helpers',

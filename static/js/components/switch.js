@@ -1,5 +1,5 @@
 function init_switch(){
-    const input_switch = document.querySelectorAll('switch');
+    const input_switch = DOM.qa('switch');
     for (let i = 0; i < input_switch.length; i++) {
         const elem = input_switch[i];
         const input_e = document.createElement('input');

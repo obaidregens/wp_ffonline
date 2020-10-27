@@ -1,9 +1,9 @@
-const logged_in = document.querySelector('logged_in').getAttribute('value') === 'true';
+const logged_in = DOM.q('logged_in').getAttribute('value') === 'true';
 function im(type){
 	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container > book';
 	const attr = type === 'collections' ? 'collection_id' : 'book_id';
 	const height = window.innerHeight;
-	const objs = document.querySelectorAll(selector);
+	const objs = DOM.qa(selector);
 	let im__ = [];
 	for (let i = 0; i < objs.length; i++) {
 		const id = objs[i].getAttribute(attr);
@@ -38,7 +38,7 @@ _.interact(function(event){
 		}
 	})
 	.then(response => {
-		let notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+		let notificationsWrapper = DOM.q('next-screen[notifications] > notifications');
 		if (! notificationsWrapper) {
 			const ns = DOM.create('next-screen',{
 				attributes: {
@@ -49,18 +49,18 @@ _.interact(function(event){
 				],
 				listeners: {
 					onOpen: () => {
-						document.querySelector('.notification-pulse').classList.remove('show');
+						DOM.q('.notification-pulse').classList.remove('show');
 						lastOpen = Date.now();
 						lastSend = lastSend - 20000;
 					},
 					onClose: () => {
-						document.querySelector('.notification-pulse').classList.remove('show');
+						DOM.q('.notification-pulse').classList.remove('show');
 						lastOpen = Date.now();
 					},
 				}
 			});
 			next_screen.create(ns);
-			document.querySelector('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
+			DOM.q('nav > drop > dropdown > .notifications').addEventListener('click',() => next_screen.open(ns));
 			document.documentElement.appendChild(DOM.create('button',{
 				classes: ['notification-pulse'],
 				listeners: {
@@ -68,7 +68,7 @@ _.interact(function(event){
 				}
 			}));
 		}
-		notificationsWrapper = document.querySelector('next-screen[notifications] > notifications');
+		notificationsWrapper = DOM.q('next-screen[notifications] > notifications');
 		if (notificationsWrapper.querySelector('.new-messages')) {
 			notificationsWrapper.querySelector('.new-messages').remove();
 		}
@@ -83,7 +83,7 @@ _.interact(function(event){
 			}));
 		}
 		if (response.unread > 0) {
-			document.querySelector('.notification-pulse').classList.add('show')
+			DOM.q('.notification-pulse').classList.add('show')
 		}
 		if (response.new_messages.unread > 0) {
 			notificationsWrapper.appendChild(DOM.create('a',{
@@ -95,7 +95,7 @@ _.interact(function(event){
 				}
 			}));
 			if (response.new_messages.last >= lastOpen){
-				document.querySelector('.notification-pulse').classList.add('show');
+				DOM.q('.notification-pulse').classList.add('show');
 			}
 		}
 		lastOpen = 0;

@@ -1,6 +1,6 @@
-document.querySelector('button').addEventListener('click',function(){
-    const rcp = document.querySelector('main > recaptcha');
-    const message = document.querySelector('text-input > textarea').value;
+DOM.q('button').addEventListener('click',function(){
+    const rcp = DOM.q('main > recaptcha');
+    const message = DOM.q('text-input > textarea').value;
     if (message === ''){
         new toast("What's your message?")
         return;
@@ -9,7 +9,7 @@ document.querySelector('button').addEventListener('click',function(){
     api('contact',{
         reCAPTCHA: grecaptcha.getResponse(rcp.getAttribute('widget-id')),
         data: {
-            email: document.querySelector('text-input > input').value,
+            email: DOM.q('text-input > input').value,
             message
         }
     })

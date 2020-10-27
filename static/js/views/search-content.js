@@ -1,5 +1,5 @@
 const reChapterProgress = () => {
-    const books_container = document.querySelector('books-container');
+    const books_container = DOM.q('books-container');
     if (!books_container){
         return;
     }
@@ -14,7 +14,7 @@ const reChapterProgress = () => {
 }
 (() => {
     reChapterProgress();
-    const books_container = document.querySelector('books-container');
+    const books_container = DOM.q('books-container');
     if (!books_container){
         return;
     }

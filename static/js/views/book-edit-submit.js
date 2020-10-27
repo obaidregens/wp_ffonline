@@ -9,14 +9,14 @@ window.setCurrentPage = num => {
         return;
     }
     currentPage = num;
-    if (document.querySelector('page.active')) {
-        document.querySelector('page.active').classList.remove('active');
+    if (DOM.q('page.active')) {
+        DOM.q('page.active').classList.remove('active');
     }
-    if (document.querySelector('stepper > step.active')) {
-        document.querySelector('stepper > step.active').classList.remove('active');
+    if (DOM.q('stepper > step.active')) {
+        DOM.q('stepper > step.active').classList.remove('active');
     }
-    document.querySelector('app > page:nth-child(' + currentPage + '), page[page-num="' + currentPage + '"]').classList.add('active');
-    document.querySelector('stepper > step:nth-child(' + currentPage + ')').classList.add('active');
+    DOM.q('app > page:nth-child(' + currentPage + '), page[page-num="' + currentPage + '"]').classList.add('active');
+    DOM.q('stepper > step:nth-child(' + currentPage + ')').classList.add('active');
 }
 function reAddChapters() {
     const chapters = [
@@ -62,7 +62,7 @@ function reAddChapters() {
             distance: 10
         });    
     }
-    const chapPage = document.querySelector('page[page-num="4"]');
+    const chapPage = DOM.q('page[page-num="4"]');
     chapPage.innerText = '';
     if (selected.updating) {
         chapPage.appendChild(DOM.create('important',{
@@ -78,7 +78,7 @@ function reAddChapters() {
         innerText: 'New Chapter',
         listeners: {
             click: () => {
-                const pnc = document.querySelector('popup[new_chapter]');
+                const pnc = DOM.q('popup[new_chapter]');
                 pnc.querySelectorAll('textarea, input').forEach(el => {
                     el.value = "";
                     el.dispatchEvent(new Event('change'));
@@ -91,7 +91,7 @@ function reAddChapters() {
 }
 window.addEventListener('load',async () => {
     await window.tt;
-    document.querySelector('stepper').addEventListener('click',({target}) => {
+    DOM.q('stepper').addEventListener('click',({target}) => {
         if (target.tagName.toLowerCase() !== 'step') {
             return;
         }
@@ -129,7 +129,7 @@ function createChapterDraggableLi(chapter) {
                         },
                         listeners: {
                             click: ({target}) => {
-                                const pnc = document.querySelector('popup[new_chapter]');
+                                const pnc = DOM.q('popup[new_chapter]');
 
                                 const row = target.parentElement.parentElement;
                                 pnc.querySelector('text-input > input').value = row.querySelector('cell:nth-child(2)').innerText;
@@ -183,7 +183,7 @@ function new_chapter_popup_create() {
             onAfterClose: () => {
                 const chapter_id = p.getAttribute('edit-chapter');
                 if (chapter_id !== null) {
-                    const row = document.querySelector(`page > index > li[chapter_id="${chapter_id}"]`);
+                    const row = DOM.q(`page > index > li[chapter_id="${chapter_id}"]`);
                     row.querySelector('cell:nth-child(2)').innerText = p.querySelector('text-input > input').value;
                     row.setAttribute('pre-an',p.querySelector('collapsible > text-input:nth-child(1) > textarea').value);
                     row.setAttribute('post-an',p.querySelector('collapsible > text-input:nth-child(2) > textarea').value);
@@ -257,10 +257,10 @@ function new_chapter_popup_create() {
                     postAN: postAN.querySelector('textarea').value,
                 });
                 if ( chapter_id === null ) {
-                    document.querySelector('page[page-num="4"] > index').appendChild(Li);
+                    DOM.q('page[page-num="4"] > index').appendChild(Li);
                 }
                 else {
-                    document.querySelector(`page[page-num="4"] > index > li[chapter_id="${chapter_id}"]`).replaceWith(Li);
+                    DOM.q(`page[page-num="4"] > index > li[chapter_id="${chapter_id}"]`).replaceWith(Li);
                 }
                 popup.close();
             }
@@ -270,7 +270,7 @@ function new_chapter_popup_create() {
     rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NEW_DRAFT_IN_NEW_TAB: true});
 }
 new_chapter_popup_create();
-document.querySelector('submit > [label="Save"]').addEventListener('click',({target}) => {
+DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
     for (let i = 0; i < selected.pairing.length; i++) {
         const pairing = selected.pairing[i];
         if (pairing.length < 2) {
@@ -280,7 +280,7 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
     }
     target.setAttribute('disabled','');
     const chapters = [];
-    const chapter_el = document.querySelectorAll('page[page-num="4"] > index > li:not([head])');
+    const chapter_el = DOM.qa('page[page-num="4"] > index > li:not([head])');
     for (let i = 0; i < chapter_el.length; i++) {
         const el = chapter_el[i];
         const title = el.children[1].innerText;
@@ -313,13 +313,13 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
         }
         prev_status = selected.publish;
         selected = response.selected;
-        if (document.querySelector('popup[new_chapter]')) {
-            document.querySelector('popup[new_chapter]').remove();
+        if (DOM.q('popup[new_chapter]')) {
+            DOM.q('popup[new_chapter]').remove();
             new_chapter_popup_create();
         }
         reAddChapters();
         reRender();
-        window.history.pushState("object or string", document.querySelector("title").innerText,'/my-stories/' + selected.book_id);
+        window.history.pushState("object or string", DOM.q("title").innerText,'/my-stories/' + selected.book_id);
         if (response.code === 1) {}
         else if (response.code === 2) {
             window.setCurrentPage(4);
@@ -329,7 +329,7 @@ document.querySelector('submit > [label="Save"]').addEventListener('click',({tar
             new toast('Story Title, Story Summary, Rating, Language and Status are required to publish story.')
         }
         new toast('Story Updated');
-        const newPublishNotice = document.querySelector('exciting');
+        const newPublishNotice = DOM.q('exciting');
         if (prev_status === false && selected.publish === true) {
             newPublishNotice.innerText = '';
             const shareData = {

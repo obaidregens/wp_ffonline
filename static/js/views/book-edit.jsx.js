@@ -2,7 +2,7 @@
 // Import Before
 window.tt = api('get_book_data',{
     data: {
-        book_id: document.querySelector('book').getAttribute('book_id')
+        book_id: DOM.q('book').getAttribute('book_id')
     }
 });
 const response = await window.tt;
@@ -70,7 +70,7 @@ function Switch(props) {
 const reRender = () => {
     ReactDOM.render(
         <App/>,
-        document.querySelector('book')
+        DOM.q('book')
     );
 }
 window.reRender = reRender;

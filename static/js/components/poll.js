@@ -72,7 +72,7 @@ class poll {
         setInterval(poll.refresh.bind(null,poll_id,el),15000);
     }
     static init() {
-        document.querySelectorAll('poll[poll-id]').forEach(el => {
+        DOM.qa('poll[poll-id]').forEach(el => {
             poll.root(el,el.getAttribute('poll-id'));
         });
     }

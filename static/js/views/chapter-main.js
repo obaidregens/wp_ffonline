@@ -1,11 +1,11 @@
-const chapter_id = document.querySelector('chapter').getAttribute('chapter_id');
+const chapter_id = DOM.q('chapter').getAttribute('chapter_id');
 // Reviews
 window.addEventListener('load',() => {
     if (window.is_online === false){
-        document.querySelector('write-review').style.setProperty('display','none');
+        DOM.q('write-review').style.setProperty('display','none');
     }    
 });
-document.querySelector('reviews-wrapper').addEventListener('click',function(event){
+DOM.q('reviews-wrapper').addEventListener('click',function(event){
     if (event.target.parentNode.tagName.toLowerCase() !== 'dropdown'){
         return;
     }
@@ -18,7 +18,7 @@ document.querySelector('reviews-wrapper').addEventListener('click',function(even
         review_clone.querySelectorAll('review').forEach(elem => {
             elem.remove();
         });;
-        const reply_elem = document.querySelector('write-review > reply-to');
+        const reply_elem = DOM.q('write-review > reply-to');
         reply_elem.setAttribute('review_id',review_id);
         reply_elem.removeAttribute('hidden');
         reply_elem.innerHTML = review_clone.innerHTML;
@@ -30,17 +30,17 @@ document.querySelector('reviews-wrapper').addEventListener('click',function(even
         reply_elem.appendChild(cancel);
     }
 });
-const review_submit_btn = document.querySelector('write-review > button[label="Submit"]');
+const review_submit_btn = DOM.q('write-review > button[label="Submit"]');
 if (review_submit_btn){
     review_submit_btn.addEventListener('click',function(){
-        const comment_elem = document.querySelector('write-review > text-input > textarea');
+        const comment_elem = DOM.q('write-review > text-input > textarea');
         this.setAttribute('disabled','');
         const data = {
             chapter_id,
             content: comment_elem.value,
             action: 'insert'
         };
-        const reply_elem = document.querySelector('write-review > reply-to');
+        const reply_elem = DOM.q('write-review > reply-to');
         const reply = parseInt(reply_elem.getAttribute('review_id'));
         if (reply !== 0){
             data.review_id = reply;
@@ -72,12 +72,12 @@ if (review_submit_btn){
     });
 }
 // Book Options
-const book_info = document.querySelector('book-info');
+const book_info = DOM.q('book-info');
 const book_id = book_info.getAttribute('book_id');
-document.querySelector('.book-collections').addEventListener('click',function(){
+DOM.q('.book-collections').addEventListener('click',function(){
     collections_open(book_id);
 });
-document.querySelector('.book-share').addEventListener('click',function(){
+DOM.q('.book-share').addEventListener('click',function(){
     const book_title = book_info.querySelector('a.title');
     share_open({
         title: book_title.innerText,
@@ -86,7 +86,7 @@ document.querySelector('.book-share').addEventListener('click',function(){
         desc: book_info.querySelector('book-description').innerText
     });
 });
-document.querySelector('.book-vote').addEventListener('click',({target}) => {
+DOM.q('.book-vote').addEventListener('click',({target}) => {
     if (! logged_in) {
         new toast('Login to vote for chapter');
         prompt_login();

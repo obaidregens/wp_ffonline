@@ -1,4 +1,17 @@
 <?php
+function fuzz($num) {
+	$num = intval($num);
+	if ($num === 0) {
+		return 0;
+	}
+	if ($num <= 4) {
+		$fuzz = 2;
+	} else {
+		$fuzz = ceil(sqrt($num));
+	}
+	$rand = mt_rand($fuzz*-1,$fuzz);
+	return $num + $rand;
+}
 function get_anon_token($tok) {
 	return explode('-',$tok,2)[1];
 }

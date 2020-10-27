@@ -185,7 +185,7 @@ function Reviews(props) {
 }
 ReactDOM.render(
     <Reviews/>,
-    document.querySelector('reviews-wrapper')
+    DOM.q('reviews-wrapper')
 );
 // User Review Filter from hash
 function userReviewsFromHash(){
@@ -197,7 +197,7 @@ function userReviewsFromHash(){
     if (! userId) {
         return false;
     }
-    document.querySelector(`reviews-wrapper`).scrollIntoView();
+    DOM.q(`reviews-wrapper`).scrollIntoView();
     const excl_users = [];
     ReviewStates.userItems[0].forEach(v => {
         if (parseInt(v.key) !== userId){

@@ -1,13 +1,13 @@
-document.querySelector('input[check-all]').addEventListener('change',event => {
+DOM.q('input[check-all]').addEventListener('change',event => {
     const cBool = event.target.checked;
-    const chks = document.querySelectorAll('label.checkbox > input:not([check-all])');
+    const chks = DOM.qa('label.checkbox > input:not([check-all])');
     for (let i = 0; i < chks.length; i++) {
         chks[i].checked = cBool;
         
     }
 });
-document.querySelector('button[label="Import"]').addEventListener('click',event => {
-    const inputChecked = document.querySelectorAll('label.checkbox > input:checked:not([check-all])');
+DOM.q('button[label="Import"]').addEventListener('click',event => {
+    const inputChecked = DOM.qa('label.checkbox > input:checked:not([check-all])');
     storyIds = [];
     for (let i = 0; i < inputChecked.length; i++) {
         storyIds.push(inputChecked[i].value);
@@ -25,7 +25,7 @@ document.querySelector('button[label="Import"]').addEventListener('click',event 
         new toast('Selected stories will be uploaded.');
     });
 });
-document.querySelectorAll(".disable-update").forEach(el => el.addEventListener('click',async () => {
+DOM.qa(".disable-update").forEach(el => el.addEventListener('click',async () => {
     if (!await confirmation("Story will no longer be updated automatically.") ) {
         return;
     }

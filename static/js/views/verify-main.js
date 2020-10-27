@@ -1,21 +1,21 @@
-if (document.querySelector('button')) {
-    document.querySelector('button').addEventListener('click',function(){
+if (DOM.q('button')) {
+    DOM.q('button').addEventListener('click',function(){
         api('verify_user',{
             data: {
-                id: document.querySelector('text-input > input').value
+                id: DOM.q('text-input > input').value
             }
         })
         .then(response => {
             if (response.code > 5) {
                 return;
             }
-            document.querySelector('verification-account').innerHTML = `Send this code <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/pm2/post.php?uid=${response.account}">here</a>`;
-            document.querySelector('verification-code').innerText = response.verification_code;
+            DOM.q('verification-account').innerHTML = `Send this code <a rel="nofollow" target="_blank" href="https://www.fanfiction.net/pm2/post.php?uid=${response.account}">here</a>`;
+            DOM.q('verification-code').innerText = response.verification_code;
         });
     });
 }
-if (document.querySelector('verification-code')) { 
-    document.querySelector('verification-code').addEventListener('click',function(){
+if (DOM.q('verification-code')) { 
+    DOM.q('verification-code').addEventListener('click',function(){
         _.copyText(this.innerText);
         new toast('Copied');
     });

@@ -1,6 +1,6 @@
 // Publish Button
-document.querySelector('button[label="Publish"]').addEventListener('click', ({target}) => {
-    let pop = document.querySelector('popup[publish_to_story]');
+DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
+    let pop = DOM.q('popup[publish_to_story]');
     if (! pop){
         pop = DOM.create('popup',{
             attributes: {
@@ -37,7 +37,7 @@ document.querySelector('button[label="Publish"]').addEventListener('click', ({ta
         popup.create(pop);    
     }
     api('get_stories').then(response => {
-        const story_pop = document.querySelector('popup[publish_to_story] > stories-list');
+        const story_pop = DOM.q('popup[publish_to_story] > stories-list');
         story_pop.innerText = "";
         for (let i = 0; i < response.stories.length; i++) {
             const story = response.stories[i];
@@ -47,8 +47,8 @@ document.querySelector('button[label="Publish"]').addEventListener('click', ({ta
                 attributes: story,
                 listeners: {
                     click: ({target}) => {
-                        const draft_id = document.querySelector('editor').getAttribute('draft_id');
-                        const chapter_title = document.querySelector('popup[publish_to_story] > text-input > input').value;
+                        const draft_id = DOM.q('editor').getAttribute('draft_id');
+                        const chapter_title = DOM.q('popup[publish_to_story] > text-input > input').value;
                         if (draft_id === 'new'){
                             new toast('This draft hasn\'t been saved.');
                             return;

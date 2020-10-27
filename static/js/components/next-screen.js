@@ -19,7 +19,7 @@ const next_screen = class {
         }
     }
     static init () {
-        const all_next_screens = document.querySelectorAll('next-screen');
+        const all_next_screens = DOM.qa('next-screen');
         for (let i = 0; i < all_next_screens.length; i++) {
             const trig = all_next_screens[i].previousElementSibling;
             if (trig.classList.contains('next-screen')){
@@ -46,13 +46,13 @@ const next_screen = class {
         _next.dispatchEvent(new Event('onOpen'));
     }
     static close () {
-        const _next = document.querySelector('next-screen.show');
+        const _next = DOM.q('next-screen.show');
         if ( ! _next ){
             return;
         }
         _next.dispatchEvent(new Event('onClose'));
         _next.classList.remove('show');
-        if (document.querySelectorAll('popup.show, next-screen.show, sidenav.show').length === 0){
+        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
     }

@@ -40,7 +40,7 @@ function newFileSavePopup() {
     });
 }
 window.addEventListener('load',event => {
-    if (document.querySelector('editor').getAttribute('draft_id') === 'new'){
+    if (DOM.q('editor').getAttribute('draft_id') === 'new'){
         newFileSavePopup()
         .then(([Path, Name]) => {
             api('create_draft',{
@@ -49,7 +49,7 @@ window.addEventListener('load',event => {
                     Name
                 }
             })
-            .then(response => document.querySelector('editor').setAttribute('draft_id',response.draft_id));
+            .then(response => DOM.q('editor').setAttribute('draft_id',response.draft_id));
         });
     }
 });

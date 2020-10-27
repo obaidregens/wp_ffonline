@@ -16,7 +16,7 @@ document.documentElement.addEventListener('click',({target}) => {
 function isWordBreak(st) {
     return [' ',',','.',':',';','?','(',')'].includes(st);
 }
-document.querySelector('editor').addEventListener('keydown',event => {
+DOM.q('editor').addEventListener('keydown',event => {
     if (['Escape','ArrowRight','ArrowLeft'].includes(event.key) && thesaurus.classList.contains('open') ) {
         thesaurus.classList.remove('open');
     }

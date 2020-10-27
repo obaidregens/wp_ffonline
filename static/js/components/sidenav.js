@@ -1,6 +1,6 @@
 const sidenav = class {
     static get overlay () {
-        let sidenav_overlay = document.querySelector('sidenav-overlay');
+        let sidenav_overlay = DOM.q('sidenav-overlay');
         if (! sidenav_overlay){
             sidenav_overlay = document.createElement("sidenav-overlay");
             document.documentElement.appendChild(sidenav_overlay);            
@@ -33,12 +33,12 @@ const sidenav = class {
         _sidenav.classList.add('show');
         const sidenav_overlay = sidenav.overlay;
         sidenav_overlay.classList.add('show');
-        document.querySelector('body').classList.add('sidenav-collapse');
+        DOM.q('body').classList.add('sidenav-collapse');
         document.documentElement.style.overflow = 'hidden';    
         _sidenav.dispatchEvent(new Event('onOpen'));
     }
     static close () {
-        const _sidenav = document.querySelector('sidenav.show');
+        const _sidenav = DOM.q('sidenav.show');
         if ( ! _sidenav ){
             return;
         }
@@ -47,8 +47,8 @@ const sidenav = class {
 
         _sidenav.dispatchEvent(new Event('onClose'));
         _sidenav.classList.remove('show');
-        document.querySelector('body').classList.remove('sidenav-collapse');
-        if (document.querySelectorAll('popup.show, next-screen.show, sidenav.show').length === 0){
+        DOM.q('body').classList.remove('sidenav-collapse');
+        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
     }

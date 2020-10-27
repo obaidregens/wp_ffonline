@@ -5,11 +5,11 @@ window.addEventListener('beforeunload', function (e) {
     }
 });
 const reRenderSaveTime = () =>  {
-    const stamp = document.querySelector('save-time').getAttribute('datetime');
+    const stamp = DOM.q('save-time').getAttribute('datetime');
     if (parseInt(stamp) === 0) {
         return;
     }
-    const nodes = document.querySelectorAll('save-time');
+    const nodes = DOM.qa('save-time');
     timeago.cancel(nodes[0]);
     timeago.render(nodes, 'en_US', { minInterval: 5 });    
 }
@@ -25,7 +25,7 @@ window.autosaveDraft = (val,perm) => {
         const content = val ;
         api('save_draft',{
             data: {
-                draft_id: document.querySelector('editor').getAttribute('draft_id'),
+                draft_id: DOM.q('editor').getAttribute('draft_id'),
                 title,
                 content,
                 perm
@@ -45,13 +45,13 @@ window.autosaveDraft = (val,perm) => {
             }
             window.editedAtAll = false;
             // Time
-            document.querySelector('save-time').setAttribute('datetime',response.time*1000);
+            DOM.q('save-time').setAttribute('datetime',response.time*1000);
             reRenderSaveTime();
             // Draft ID
-            document.querySelector('editor').setAttribute('draft_id',response.draft_id);
+            DOM.q('editor').setAttribute('draft_id',response.draft_id);
             window.history.pushState(
                 "object or string",
-                document.querySelector("title").innerText,
+                DOM.q("title").innerText,
                 '/drafts/' + response.draft_id + '/edit'
             );
         })
@@ -69,7 +69,7 @@ window.draftTitle = {
     value: '',
     set: (val,initial = false) => {
         window.editedAtAll = true;
-        document.querySelector('input[placeholder="Title"]').value = val;
+        DOM.q('input[placeholder="Title"]').value = val;
         window.draftTitle.value = val;
         document.title = `${val} - Edit - Drafts - Fanfiction Online`;
         if (!initial) {
@@ -77,8 +77,8 @@ window.draftTitle = {
         }
     }
 };
-document.querySelector('input[placeholder="Title"]').addEventListener('input',({target}) => window.draftTitle.set(target.value) );
-document.querySelector('input[placeholder="Title"]').addEventListener('change',({target}) => {
+DOM.q('input[placeholder="Title"]').addEventListener('input',({target}) => window.draftTitle.set(target.value) );
+DOM.q('input[placeholder="Title"]').addEventListener('change',({target}) => {
     if (target.value === '') {
         window.draftTitle.set('Untitled');
     }

@@ -10,10 +10,10 @@ function api(action,{data,reCAPTCHA = null} = {}){
     return new Promise((res,rej) => {
         const submission = {
             action,
-            placeholder: document.querySelector('placeholder_data').innerText
+            placeholder: DOM.q('placeholder_data').innerText
         };
         if (reCAPTCHA === null){
-            submission.nonce = document.querySelector('nonce').innerHTML;
+            submission.nonce = DOM.q('nonce').innerHTML;
         }
         else{
             submission.reCAPTCHA = reCAPTCHA;

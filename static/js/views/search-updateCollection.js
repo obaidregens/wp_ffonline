@@ -4,8 +4,8 @@ function create_collection_open(collection_id = 'new'){
         prompt_login();
         return;
     }
-    let cc_popup = document.querySelector('popup[update_collection]');
-    const open_collection_popup = document.querySelector('popup.show.collections[book_id]');
+    let cc_popup = DOM.q('popup[update_collection]');
+    const open_collection_popup = DOM.q('popup.show.collections[book_id]');
     const prev_book_id = open_collection_popup ? open_collection_popup.getAttribute('book_id') : null;
     function open_cmd_only(){
         cc_popup.setAttribute('collection_id',collection_id);

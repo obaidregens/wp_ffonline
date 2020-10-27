@@ -3,7 +3,7 @@ function prompt_login() {
 		new toast("You're offline.");
 		return;
 	}
-	let login_popup = document.querySelector('popup[login]');
+	let login_popup = DOM.q('popup[login]');
 	if (login_popup) {
 		popup.open(login_popup);
 		return;
@@ -90,7 +90,7 @@ function prompt_login() {
 	popup.open(login_popup);
 }
 function prompt_signup() {
-	let signup_popup = document.querySelector('popup[signup]');
+	let signup_popup = DOM.q('popup[signup]');
 	if (signup_popup) {
 		popup.close();
 		popup.open(signup_popup);
@@ -170,7 +170,7 @@ function prompt_signup() {
 	popup.open(signup_popup);
 }
 function prompt_forgot() {
-	let forgot_popup = document.querySelector('popup[forgot]');
+	let forgot_popup = DOM.q('popup[forgot]');
 	if (forgot_popup) {
 		popup.close();
 		popup.open(forgot_popup);
@@ -232,7 +232,7 @@ function prompt_forgot() {
 	popup.open(forgot_popup);
 }
 function prompt_email_code(existing_data) {
-	let code_popup = document.querySelector('popup[email_code]');
+	let code_popup = DOM.q('popup[email_code]');
 	if (code_popup) {
 		popup.open(code_popup);
 		return;

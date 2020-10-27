@@ -1,5 +1,5 @@
 const reHookOffline = () => {
-    document.querySelectorAll('book > options > [label="Offline"]').forEach(btn => {
+    DOM.qa('book > options > [label="Offline"]').forEach(btn => {
         const book = btn.closest('book');
         const book_id = book.getAttribute('book_id');
         const total_chapters = parseInt(book.getAttribute('chapters'));

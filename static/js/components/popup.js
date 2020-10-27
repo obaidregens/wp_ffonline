@@ -1,6 +1,6 @@
 const popup = class {
     static get overlay () {
-        let popup_overlay = document.querySelector('popup-overlay');
+        let popup_overlay = DOM.q('popup-overlay');
         if (! popup_overlay){
             popup_overlay = document.createElement("popup-overlay");
             document.documentElement.appendChild(popup_overlay);            
@@ -46,16 +46,16 @@ const popup = class {
     }
     static close () {
         const popup_overlay = popup.overlay;
-        const _popup = document.querySelector('popup.show');
+        const _popup = DOM.q('popup.show');
         if ( ! _popup ){
             return;
         }
         _popup.dispatchEvent(new Event('onClose'));
         _popup.classList.remove('show');
-        if (document.querySelectorAll('popup.show, next-screen.show, sidenav.show').length === 0){
+        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
-        if (document.querySelectorAll('popup.show').length === 0){
+        if (DOM.qa('popup.show').length === 0){
             popup_overlay.classList.remove('show');
         }
         _popup.dispatchEvent(new Event('onAfterClose'));
