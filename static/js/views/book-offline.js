@@ -2,7 +2,7 @@ offlineAPI({
     book_id,
     title: DOM.q('book-header > book-title').innerText,
     author: DOM.q('book-header > author > a').innerText,
-    total_chapters: DOM.qa('chapter-index > collapsible > index > a').length,
+    total_chapters: DOM.qa('chapter-index > a').length,
     elems: [
         DOM.q('book-options > .book-offline'),
     ],

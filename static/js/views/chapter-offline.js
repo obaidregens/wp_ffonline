@@ -2,7 +2,7 @@ offlineAPI({
     book_id,
     title: DOM.q('book-info > a.title').innerText,
     author: DOM.q('book-info > author > a').innerText,
-    total_chapters: DOM.qa('popup.chapter-index > index > a').length,
+    total_chapters: DOM.qa('popup.chapter-index chapter-index > a').length,
     elems: [
         DOM.q('acs-options > .offline'),
         DOM.q('chapter > book-options > .book-offline')

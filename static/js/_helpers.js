@@ -1,4 +1,3 @@
-
 class _ {
     static scrollTo (el) {
         const ht = DOM.q('html');

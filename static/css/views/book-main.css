@@ -61,10 +61,10 @@ book-options > .book-offline::before {
 book-options > .book-offline.active::before {
     content: '\e948';
 }
-chapter-index {
+chapters {
     margin-top: 10px;
 }
-chapter-index > label {
+chapters > label {
     justify-content: center;
 }
 /* Mobile */

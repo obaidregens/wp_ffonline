@@ -38,7 +38,7 @@ window.addEventListener('load',async () => {
                 chapter_num,
                 paragraph: paraI,
                 timestamp: Date.now(),
-                chapterProgress: parseFloat(( (chapter_num/DOM.qa('popup.chapter-index > index > a').length)*100 ).toFixed(1))
+                chapterProgress: parseFloat(( (chapter_num/DOM.qa('popup.chapter-index chapter-index > a').length)*100 ).toFixed(1))
             }));
         });    
     },10000);

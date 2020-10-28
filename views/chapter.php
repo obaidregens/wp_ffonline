@@ -1,13 +1,14 @@
 <?php
 $app->bundle = global_bundle('chapters');
 $app->bundle->mix('speak');
+$app->bundle->js('external/nosleep/NoSleep');
 $app->bundle->css('css/js-components/checkbox');
-$app->bundle->css('css/components/index');
 $app->bundle->mix('confirmation');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/components/slider');
 $app->bundle->mix('search-options');
+$app->bundle->css('css/views/chapter-index');
 $app->bundle->css('css/views/chapter-main');
 $app->bundle->css('css/views/chapter-reviews');
 $app->bundle->js('js/views/chapter-main');

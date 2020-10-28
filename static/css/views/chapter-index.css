@@ -1,0 +1,60 @@
+chapter-index,
+chapter-index > a {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--text-color) !important;
+}
+chapter-index > a {
+    padding: 5px;
+}
+chapter-index > a:hover {
+    background-color: var(--hover);
+}
+chapter-index > a > chapter-title {
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+}
+chapter-index > a > chapter-meta {
+    display: flex;
+    color: var(--theme-color) !important;
+    font-size: 0.9rem
+}
+chapter-index > a > chapter-meta > * {
+    margin-right: 8px;
+}
+chapter-index > a > chapter-meta > *::after {
+    display: inline-block;
+    font-family: 'icons';
+    float: left;
+    margin-right: 5px;
+}
+chapter-index > a > chapter-meta > [tooltip-top="Words"]::after {
+    content: "\e915";
+}
+chapter-index > a > chapter-meta > [tooltip-top="Votes"]::after {
+    content: "\e945";
+    transform: translateY(-1px);
+}
+chapter-index > a > chapter-meta > [tooltip-top="Reviews"]::after {
+    content: "\e952";
+    transform: translateY(0.5px) scale(0.95);
+    margin-left: 3px;
+}
+chapter-index > a[selected] {
+    background-color: var(--theme-color);
+    pointer-events: none;
+}
+chapter-index > a[selected] > chapter-title,
+chapter-index > a[selected] > chapter-meta > * {
+    color: var(--white);
+    opacity: 0.7;
+}
+@media only screen and (max-width: 600px) {
+    chapter-index > a > chapter-title {
+        font-size: 0.8rem;
+    }
+    chapter-index > a > chapter-meta {
+       font-size: 0.75rem;
+    }
+}

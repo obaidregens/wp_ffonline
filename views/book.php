@@ -4,9 +4,9 @@ $app->bundle = global_bundle('book');
 $app->bundle->mix('search-options');
 $app->bundle->mix('confirmation');
 $app->bundle->css('css/components/collapsible');
-$app->bundle->css('css/components/index');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('/css/components/floater');
+$app->bundle->css('css/views/chapter-index');
 $app->bundle->css('css/views/search-tags');
 $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
@@ -37,7 +37,7 @@ $is_user_logged_in = is_user_logged_in(  );
             <button class="book-share"></button>
             <button class="book-offline"></button>
         </book-options>
-        <chapter-index>
+        <chapters>
             <input class="collapsible" type="checkbox">
             <label>Chapter Index</label>
             <collapsible>
@@ -45,7 +45,7 @@ $is_user_logged_in = is_user_logged_in(  );
                 $app->template('subviews/chapter-index');
                 ?>
             </collapsible>
-        </chapter-index>
+        </chapters>
     </book-more>
     <script>
         window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
