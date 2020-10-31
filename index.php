@@ -472,43 +472,6 @@ $app->listen('/@:user/settings',function($self){
 $app->listen('/@:user',function($self){
     author_template_load('about');
 });
-function ffn_author_template_load($template){
-    global $app;
-    $self_user = c_user::get($app->params['ffn_author']);
-    if ($self_user !== false){
-        $user = user::get_by( 'ID', $self_user );
-        $app->_301('/@' . $user->user_login);
-    }
-    $author_books = new book_query([
-        'included'      => [
-            'ffn_author'    => [$app->params['ffn_author']]
-        ]
-    ]);
-    if (empty($author_books->books)){
-        $app->_404();
-    }
-    $app->type = $template === 'about' ? 'ffn_author' : 'ffn_author-' . $template;
-    $app->type_id = intval($app->params['ffn_author']);
-    $app->author_id = intval($app->params['ffn_author']);
-    $app->author_books = $author_books;
-    $app->author_name = get_post_meta( $author_books->books[0]->ID, 'author_name', true );
-    $title = $template === 'about' ?
-        construct_page_title($app->author_name) :
-        construct_page_title($app->author_name,ucfirst($template));
-    $app->header([
-        'title'         => $title,
-        'description'   => ''
-    ]);
-    $app->template('/views/ffn_user/' . $template);
-    $app->footer();
-    exit();
-}
-$app->listen('/ffn@:ffn_author',function($self){
-    ffn_author_template_load('about');
-});
-$app->listen('/ffn@:ffn_author/stories',function($self){
-    ffn_author_template_load('stories');
-});
 // Inbox
 $app->listen('/inbox',function($self){
     $self->type = 'inbox';
@@ -647,7 +610,7 @@ $app->listen('/drafts/:draft_share',function($self){
     exit();
 });
 $app->listen('/drafts/:draft_id',function($self){
-    $self->_301( '/drafts/' . $self->params['draft_id'] . '/edit' );
+    $self->redirect( '/drafts/' . $self->params['draft_id'] . '/edit' );
 });
 $app->listen('/drafts/:draft_id/preview',function($self){
     $self->login();

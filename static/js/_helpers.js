@@ -58,6 +58,13 @@ class _ {
     static ucfirst(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
+    static HexToRGB (hex) {
+        const
+            r = parseInt(hex.slice(1, 3), 16),
+            g = parseInt(hex.slice(3, 5), 16),
+            b = parseInt(hex.slice(5, 7), 16);
+        return [r,g,b];
+    }
     static camelToHyphen(key) {
         return key.replace( /([A-Z])/g, "-$1").toLowerCase();
     }

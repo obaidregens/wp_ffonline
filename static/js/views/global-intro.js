@@ -38,6 +38,7 @@
         }
         return false;
     }
+    const mobileLay = window.matchMedia("(max-width: 500px)").matches;
     const introSteps = {
         1: {v: 1,steps: [
             {
@@ -132,9 +133,12 @@
                 intro: "Save offline to read without internet!"
             },
         ]},
-        6: {v: 2,steps: [
+        6: {v: 3,steps: [
             {
-                intro: "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet! Tap to open options."
+                intro: mobileLay ?
+                "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet! Tap to open options." :
+                "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet!",
+                element: mobileLay ? null : 'acs-options'
             },
             {
                 intro: "To change the font, theme, or text size, tap twice."

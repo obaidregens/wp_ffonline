@@ -64,8 +64,9 @@ class drafts {
         if (! in_array($field,['share','ID','chapter_id'])){
             return $e->add('$field','Should be either "share" or "ID"');
         }
+        $placeholder = $field === "share" ? "%s" : "%d";
         global $wpdb;
-        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND branch_type IS NULL",[$value]));
+        $results = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE $field = $placeholder AND branch_type IS NULL",[$value]));
         if (empty($results)) {
             return false;
         }

@@ -7,6 +7,12 @@
     --background-accent: #ececec;
     --transparent-accent: rgb(128 128 128 / 12%);
 
+    /* RGB Values */
+    --theme-color-v: 0, 122, 204;
+    --text-color-v: 38, 40, 40;
+    --background-color-v: 253, 253, 253;
+    --background-accent-v: 236, 236, 236;
+
     --hover: rgba(206,206,206,.22);
     --border: 1.5px solid rgba(129, 129, 129, 0.49);
     --shadow-light: 0px 0px 4px 0px #646464;

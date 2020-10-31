@@ -47,6 +47,7 @@ const themes = class {
         for (let i = 0; i < themes_keys.length; i++) {
             const theme_key = _.camelToHyphen(themes_keys[i]);
             root.style.setProperty("--" + theme_key, themes.all[theme][themes_keys[i]] );
+            root.style.setProperty("--" + theme_key + "-v", _.HexToRGB(themes.all[theme][themes_keys[i]]).join(', ') );
         }
         if (! temp) {
             cookies.set("theme", theme );

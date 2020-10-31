@@ -90,7 +90,7 @@ function get_data($book_id = 'new'){
 
 	$data['selected']['title'] 				  = '';
 	$data['selected']['description'] 		  = '';
-	$data['selected']['reviews']  			  = false;
+	$data['selected']['reviews']  			  = true;
 	$data['selected']['anonymous_reviews']	  = false;
 	$data['selected']['publish'] 			  = false;
 	$data['selected']['book_id']			  = $book_id;
