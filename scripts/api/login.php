@@ -38,7 +38,6 @@ function api_username_check () {
         'username'  => $_POST['data']['username'],
     ],['username']))->return;
     if (err::is($validation)){
-        $i = array_key_first($validation->errors);
         return [
             'code'      => 7,
             'error'    => $validation->errors[0]['error']
