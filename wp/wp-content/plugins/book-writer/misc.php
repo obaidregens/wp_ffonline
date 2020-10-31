@@ -124,9 +124,25 @@ function print_book_tags($book_id,$book_query) {
 	unset($ref['fandom']);
 	$ref = array_merge(['fandom'=>$fandom],$ref);
 	?>
+	<main-tags>
+	<?php
+	foreach (['fandom','rating','language','status'] as $taxonomy ){
+		$terms = &$ref[$taxonomy];
+		?>
+		<tag-group name="<?= ucfirst($taxonomy) ?>">
+			<?= implode('',array_column($terms,'link')); ?>
+		</tag-group>
+		<?php
+	}	
+	?>
+	</main-tags>
 	<tags>
 	<?php
-	foreach ($ref as $taxonomy => $terms){
+	foreach (['genre','character','tag'] as $taxonomy ){
+		$terms = &$ref[$taxonomy];
+		if (!isset($terms)) {
+			continue;
+		}
 		?>
 		<tag-group name="<?= ucfirst($taxonomy) ?>">
 			<?= implode('',array_column($terms,'link')); ?>

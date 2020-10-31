@@ -30,12 +30,13 @@ book-meta > span[tooltip-top="Votes"]::after{
     content: '\e945';
 }
 /* Book Tags */
+main-tags,
 tags {
     display: block;
     cursor: text;
-    margin-bottom: 15px;
 }
-tags > tag-group {
+tags > tag-group,
+main-tags > tag-group {
     color: var(--darkgrey);
     background-color: var(--background-accent);
     margin: 4px 2px;
@@ -45,25 +46,49 @@ tags > tag-group {
     font-size: 0.9rem;
 }
 @media only screen and (max-width: 400px) {
+    main-tags > tag-group,
     tags > tag-group {
         font-size: 0.8rem;
     }
 }
-tags > tag-group:not([name="Fandom"]):not([name="Language"]):not([name="Rating"]):before {
-    cursor: pointer;
-    font-weight: bold;
-    content: attr(name) ": ";
-}
+main-tags > tag-group > a:not(:last-child):after,
 tags > tag-group > a:not(:last-child):after {
     content: ', ';
     color: var(--text-color);
-}
-tags > tag-group[name="Fandom"] > a:not(:last-child):after {
-    content: '/';
 }
 tag-group > a {
     color: var(--darkgrey);
     margin: 0 0px;
     padding: 4px;
     display: inline-block;
+}
+/* Main Tags */
+/* main-tags > tag-group {
+    background: var(--theme-color);
+    opacity: 0.7;
+}
+main-tags > tag-group > a {
+    color: var(--white);
+}
+main-tags > tag-group > a:hover {
+    color: var(--white);
+    opacity: 0.7;
+}
+main-tags > tag-group[name="Fandom"] > a:not(:last-child):after {
+    content: '/';
+} */
+/* Other Tags */
+tags {
+    margin-bottom: 15px;
+}
+tags > tag-group::before {
+    cursor: pointer;
+    font-weight: bold;
+    content: attr(name) ": ";
+}
+/* Collapse Tags */
+@media only screen and (max-width: 500px) {
+    book:not(.show) > tags {
+        display: none;
+    }
 }

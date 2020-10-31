@@ -63,6 +63,9 @@ author-updates > update > button.dropdown > dropdown > *:after {
     margin-left: 9px;
     content: attr(label);
 }
+author-updates > update > content {
+    white-space: break-spaces;
+}
 author-updates > .button.more {
     position: relative;
     width: -webkit-fill-available;

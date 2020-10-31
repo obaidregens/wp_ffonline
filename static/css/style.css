@@ -298,10 +298,6 @@ dark-mode::before {
     header > nav > [onclick="prompt_login();"]::after {
         content: 'Login';
     }
-    /* Collapse Tags */
-    book:not(.show) > tags > tag-group:not([name="Language"]):not([name="Rating"]):not([name="Fandom"]) {
-        display: none;
-    }
 }
 /* Tags Default */
 mark {
