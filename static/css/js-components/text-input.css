@@ -48,6 +48,15 @@ text-input > textarea.filled ~ label{
     top: -12px;
     transform: scale(0.75);
 }
+/* Helper */
+text-input[helper]::after {
+    content: attr(helper);
+    display: flex;
+    color: grey;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    margin-left: 4px;
+}
 /* Invalid */
 text-input > input.invalid {
     border-color: var(--lightred);

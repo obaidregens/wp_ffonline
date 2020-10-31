@@ -32,8 +32,7 @@ if (empty($questions)) {
 <li>Your question may be rephrased before being posted in the FAQ's.</li>
 <li>If you don't want your question to be posted in the FAQ's, you can <a href="/contact">ask us directly</a>.</li>
 </ul>
-<text-input input_type="email" label="Your Email"></text-input>
-<helper-text>This is optional. You can add your email to receive a notification when your question is answered.</helper-text>
+<text-input helper="This is optional. You can add your email to receive a notification when your question is answered." input_type="email" label="Your Email"></text-input>
 <text-input type="multi" label="Your Question"></text-input>
 <recaptcha></recaptcha>
 <button label="Ask"></button>

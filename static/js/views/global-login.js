@@ -108,6 +108,18 @@ function prompt_signup() {
 			name: 'username'
 		}
 	});
+	username_input.querySelector('input').addEventListener('input',async ({target}) => {
+		const ress = await api('username_check',{data: {
+			username: target.value
+		}});
+		if (ress.code === 1) {
+			username_input.removeAttribute('helper');
+			target.classList.remove("invalid");
+			return;
+		}
+		username_input.setAttribute('helper',ress.error);
+		target.classList.add("invalid");
+	});
 	const email_input = DOM.update(create_text_input({
 		label: 'Email',
 		input_type: 'email'

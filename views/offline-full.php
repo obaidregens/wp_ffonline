@@ -75,17 +75,10 @@ header("x-is-serving-offline: true");
             time_formatted = time_formatted.substring(0,time_formatted.length-3);
             const el = document.createElement('a');
             el.addEventListener('click',() => window.location.href = "/story/" + i)
-            el.innerHTML =`
-<story-title>${v.title}</story-title>
-<story-author>by ${v.author}</story-author>
-<story-meta>
-    <single>${v.chapters} Chapters</single>
-    <single>Added ${time_formatted}</single>
-</story-meta>
-            `;
+            el.innerHTML =`<story-title>${v.title}</story-title><story-author>by ${v.author}</story-author><story-meta><single>${v.chapters} Chapters</single><single>Added ${time_formatted}</single></story-meta>`;
             stories_list.appendChild(el);
         });
-        DOM.q('body').appendChild(stories_list);
+        document.querySelector('body').appendChild(stories_list);
     });
     </script>
 </head>

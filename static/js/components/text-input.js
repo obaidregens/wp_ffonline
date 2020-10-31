@@ -18,16 +18,22 @@ function init_text_input(){
             value: Val,
             prefix: elem.getAttribute('prefix')
         });
+        const Helper = elem.getAttribute('helper');
+        if (Helper) {
+            text_input.setAttribute("Helper",Helper);
+        }
         let input_e = text_input.querySelector('input');
         if (! input_e) {
             input_e = text_input.querySelector('textarea');
         }
 
+        elem.removeAttribute('helper');
         elem.removeAttribute('label');
         elem.removeAttribute('type');
         elem.removeAttribute('prefix');
     
         _.moveAttr(elem,input_e);
+
         elem.replaceWith(text_input);
         input_e.dispatchEvent(new Event('change'));
         input_e.dispatchEvent(new Event('input'));

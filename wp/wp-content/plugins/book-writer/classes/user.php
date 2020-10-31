@@ -6,7 +6,6 @@ add_action( 'pre_user_query', function( $uqi ) {
 class user {
     // Signup
     public static function signup ($email,$username) {
-        $username = strtolower($username);
         $validation = (new v_user([
             'username'  => $username,
             'email'     => $email
@@ -254,6 +253,9 @@ class v_user extends user {
     }
     function username($value){
         $error = new err();
+        if ( !ctype_lower($value) ) {
+            $error->add('username','Username must be in lowercase.');
+        }
         if ( strlen ($value) < 5 ) {
             $error->add('username','Username must be of at least 5 characters.');
         }

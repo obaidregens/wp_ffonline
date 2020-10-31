@@ -162,4 +162,24 @@ class reviews {
             comments_open( $book_id ) &&
             (get_post_meta( $book_id, 'anon_review', true) === 'true' || $logged_in );
     }
+    static function count($chapter_id_or_book_id) {
+        $chapter_or_book = get_post($chapter_id_or_book_id);
+        if (! $chapter_or_book) {
+            return 0;
+        }
+        if ($chapter_or_book->post_type === 'book') {
+            $sql = "SELECT COUNT(wp_comments.comment_ID) AS c FROM wp_comments
+            INNER JOIN wp_posts ON wp_posts.ID = wp_comments.comment_post_ID
+            WHERE wp_posts.post_parent = %d
+            GROUP BY wp_posts.post_parent";
+        } else if ($chapter_or_book->post_type === 'chapter') {
+            $sql = "SELECT COUNT(comment_ID) AS c FROM wp_comments
+            WHERE comment_post_ID = %d";
+        } else {
+            return 0;
+        }
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare($sql,[$chapter_or_book->ID]));
+        return empty($r) ? 0 : intval($r[0]->c);
+    }
 }

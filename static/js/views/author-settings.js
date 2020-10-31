@@ -45,3 +45,15 @@ DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(2) > button').addEventListe
         }
     });
 });
+DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(2) > text-input > input').addEventListener('input',async ({target}) => {
+    const ress = await api('username_check',{data: {
+        username: target.value
+    }});
+    if (ress.code === 1) {
+        target.parentElement.removeAttribute('helper');
+        target.classList.remove("invalid");
+        return;
+    }
+    target.parentElement.setAttribute('helper',ress.error);
+    target.classList.add("invalid");
+});

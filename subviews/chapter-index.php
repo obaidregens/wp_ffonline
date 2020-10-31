@@ -8,7 +8,7 @@ $all_chapters = published_chapters($app->story->ID);
             <chapter-meta>
                 <span tooltip-top="Words"><?= get_post_meta($link_chapter->ID,'word-count',true); ?></span>
                 <span tooltip-top="Votes"><?= count(vote::query_by('chapter','type_id',$link_chapter->ID)); ?></span>
-                <span tooltip-top="Reviews"><?= get_comments_number($link_chapter->ID); ?></span>
+                <span tooltip-top="Reviews"><?= reviews::count($link_chapter); ?></span>
             </chapter-meta>
         </a>
     <?php } ?>
