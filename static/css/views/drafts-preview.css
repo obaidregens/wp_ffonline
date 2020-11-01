@@ -37,3 +37,14 @@ next-screen > compare {
     margin-top: 20px;
     display: block;
 }
+/* Acs Options */
+@media only screen and (min-width: 501px) {
+    acs-options {
+        height: calc(100% - 53px) !important;
+        justify-content: center !important;
+        padding-bottom: 60px;
+    }
+    button.edit-draft {
+        right: 30px;
+    }
+}
