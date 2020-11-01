@@ -98,9 +98,12 @@ function api_edit_book() {
         foreach ($to_remove as $chapter_id ) {
             wp_delete_post( $chapter_id, true );
         }
+        $words_total = 0;
         foreach ($chapter_ids_order as $k => $chapter_id) {
+            $words_total += intval(get_post_meta( $chapter_id, 'word-count', true ));
             update_post_meta( $chapter_id, 'chapter_order', $k+1 );
         }
+        update_post_meta( $book->ID, 'word-count', $words_total );
     }
 
     // Tags
