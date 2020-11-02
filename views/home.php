@@ -13,9 +13,8 @@ $app->bundle->enqueue();
     <section-description>
     Welcome to Fanfiction Online
     </section-description>
-    <mini-description class="action">
-    <a theme class="button" href="/read">Start Reading</a>
-    <a theme class="button" href="/write">Start Writing</a>
+    <mini-description>
+    Scroll down to see why you've come to the right place
     </mini-description>
 </section>
 <!-- Write -->
