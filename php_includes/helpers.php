@@ -19,3 +19,8 @@ class arr {
         return $reindex ? array_values($arr) : $arr;
     }
 }
+class str {
+    static function is_lower($txt) {
+        return strtolower($txt) === $txt;
+    }
+}

@@ -253,7 +253,7 @@ class v_user extends user {
     }
     function username($value){
         $error = new err();
-        if ( !ctype_lower($value) ) {
+        if ( !str::is_lower($value) ) {
             $error->add('username','Username must be in lowercase.');
         }
         if ( strlen ($value) < 5 ) {

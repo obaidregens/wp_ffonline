@@ -203,9 +203,10 @@ html.show-acs acs-options {
 	main {
 		position: relative;
 		left: -10px;
+		padding-right: 40px;
 	}
 	acs-options {
-		width: 25px;
+		width: 40px;
 		left: unset;
 		right: 0;
 		flex-direction: column;

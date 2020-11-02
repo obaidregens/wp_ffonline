@@ -11,7 +11,9 @@ $follows = count(collection_follow::query_by('type_id',$collection->ID));
     <a href="<?= collection_helpers::link($collection->ID); ?>" class="title"><?= htmlspecialchars($collection->title); ?></a>
     <a href="<?= get_author_posts_url( $author->ID ); ?>" class="author">@<?= $author->user_login; ?></a>
     <collection-meta>
+        <?php if (!in_array($collection->title,['Favorites','Hidden'])) { ?>
         <span tooltip-top="Created"><?= human_time_diff( $collection->created, time() ); ?></span>
+        <?php } ?>
         <span tooltip-top="Books"><?= $collection->count; ?></span>
         <span tooltip-top="Follows"><?= $follows ?></span>
     </collection-meta>
