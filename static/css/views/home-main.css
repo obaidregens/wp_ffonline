@@ -72,6 +72,31 @@ main > section mini-description {
     text-align: center;
     max-width: 500px;
 }
+main > section .action a.button {
+    margin-top: 7px !important;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: 0.1px;
+}
+main > section .action a.button:first-child {
+    margin-left: 0 !important;
+}
+main > section .action a.button:last-child {
+    margin-right: 0 !important;
+}
+@media only screen and (min-width: 1000px) {
+    main > section .action a.button {
+        font-size: 18px;
+        padding: 20px 15px;
+        margin: 0 14px;
+        border-radius: 5px;
+    }
+}
+@media only screen and (max-width: 400px) {
+    main > section .action a.button {
+        margin: 0 5px;
+    }
+}
 @media only screen and (max-width: 1000px) {
     main > section section-description {
         font-size: 2.3vw;

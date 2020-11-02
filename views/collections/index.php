@@ -25,8 +25,8 @@ $type = _landing::get_type();
 if ($type['type'] === 'author-collections'){
     $args['author_included'] = array($type['type_id']);
     $args['types'] = array('Public','Favorites');
+    unset($args['count']);
     if (is_current_user($type['type_id'])){
-        unset($args['count']);
         $args['types'] = array('Public','Favorites','Private','Unlisted');
     }
 }
