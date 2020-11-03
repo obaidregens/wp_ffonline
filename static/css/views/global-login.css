@@ -64,6 +64,7 @@ code-input {
 }
 
 code-input > input {
+    min-width: 0;
     display: inline-flex;
     background: transparent;
     width: 100%;

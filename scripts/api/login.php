@@ -47,7 +47,7 @@ function api_username_check () {
 }
 function api_signup(){
     required_params('email','username');
-    $return = user::signup($_POST['data']['email'],$_POST['data']['username']);
+    $return = user::signup(trim($_POST['data']['email']),trim($_POST['data']['username']));
     if (err::is($return)){
         return [
             'code'      => 7,
