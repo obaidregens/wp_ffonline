@@ -14,7 +14,7 @@ function f_dt($time){
     return str_replace(' ','T',$time) . '+00:00';
 }
 function u($url){
-    return "https://fanfiction.online/" . trim($url) . "/";
+    return "https://fanfiction.online/" . trim($url,'/') . "/";
 }
 function url_field($loc,$lastmod,$changefreq){
     $construct = '<url>';
