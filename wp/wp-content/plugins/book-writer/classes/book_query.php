@@ -178,7 +178,10 @@ class book_query{
         $this->args = $args;
         $this->ids = $included;
         $this->count = count($this->ids);
-        $this->pages = $this->count % 10 > 0 ? intval($this->count / 10)+1 : intval($this->count / 10);
+        $this->page = 1;
+        if ($args['per_page'] !== "all") {
+            $this->pages = ($this->count % $args['per_page'] > 0) ? (intval($this->count / $args['per_page'])+1) : (intval($this->count / $args['per_page']));
+        }
         $this->books = array();
         if (! empty($paged_ids)){
             $fill = implode(',',array_fill(0,count($paged_ids),'%d'));

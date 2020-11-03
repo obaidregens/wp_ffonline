@@ -1,6 +1,8 @@
 <?php
 class book_stats extends stats {
     function __construct($story_id) {
+        $this->updated = time();
+
         // Tables
         $landings_table = stats::$landing_table;
         $actions_table = stats::$actions_table;
@@ -59,8 +61,13 @@ class book_stats extends stats {
         $cache_time = 60*60*6; // 6 Hours
 
         $fname = MAIN_DIR . "/reports/story-" . $story_id;
-        if (file_exists($fname) && (time() - filemtime($fname)) <= $cache_time ) {
-            return unserialize(file_get_contents($fname));
+        $mtime = filemtime($fname);
+        if (file_exists($fname) && (time() - $mtime) <= $cache_time ) {
+            $inst = unserialize(file_get_contents($fname));
+            if (!isset($inst->updated)) {
+                $inst->updated = $mtime;
+            }
+            return $inst;
         }
 
         $inst = new book_stats($story_id);

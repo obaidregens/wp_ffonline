@@ -12,3 +12,11 @@ a.back-to-stories::before {
 a.back-to-stories::after {
     content: "Back to Stories";
 }
+
+last-updated {
+    display: flex;
+    font-size: 0.85rem;
+    width: 100%;
+    justify-content: flex-end;
+    color: var(--darkgrey);
+}
