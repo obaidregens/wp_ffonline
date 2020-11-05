@@ -129,3 +129,30 @@ function api_follow_user() {
     follow::unfollow('user',$user->ID);
     return ['code'=>2];
 }
+function api_user_settings() {
+    required_login();
+    required_params('setting',"set");
+    $s = $_POST['data']['setting'];
+    $b = $_POST['data']['set'];
+    if ($s === "news") {
+        $admin = user::get_by( 'login', 'admin' )->ID;
+        if ($b) {
+            follow::new([
+                'type'      => 'user',
+                'type_id'   => $admin,
+                'landing_id'=> $_POST['landing_id']
+            ]);
+            return ['code'=>1,'set'=>true];
+        }
+        follow::unfollow('user',$admin);
+        return ['code'=>1,'set'=>false];
+    }
+    if (!in_array($s,['features'])) {
+        return ['code'=>10,'set'=>!$b];
+    }
+    if (!is_bool($b)) {
+        return ['code'=>9,'set'=>!$b];
+    }
+    user_settings::set($s,$b);
+    return ['code'=>1,'set'=>$b];
+}

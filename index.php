@@ -173,14 +173,7 @@ $app->listen('/logout',function($self){
     $self->redirect('/read');
 });
 $app->listen('/news',function($self){
-    $self->type = 'news';
-    $self->type_id = 0;
-    $self->header([
-        'title'         => construct_page_title("News")
-    ]);
-    $self->template('/views/news');
-    $self->footer();
-    exit();
+    $self->redirect('/@admin/updates');
 });
 $app->listen('/read',function($self){
     $self->type = 'read';
@@ -376,10 +369,25 @@ $app->listen('/collections/:collection',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/inbox/@ffonline/&*',function($self) {
+    $self->_404();
+});
+$app->listen('/inbox/@author/&*',function($self) {
+    $self->_404();
+});
+$app->listen('/inbox/@notifications/&*',function($self) {
+    $self->_404();
+});
 $app->listen('/@ffonline/&*',function($self) {
     if (! current_user_can( 'administrator' )){
         $self->_404();
     }
+});
+$app->listen('/@author/&*',function($self) {
+    $self->_404();
+});
+$app->listen('/@notifications/&*',function($self) {
+    $self->_404();
 });
 $app->listen('/@me/&*',function($self) {
     if (!is_user_logged_in()) {

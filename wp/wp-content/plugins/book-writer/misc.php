@@ -138,7 +138,7 @@ function print_book_tags($book_id,$book_query) {
 	</main-tags>
 	<tags>
 	<?php
-	foreach (['genre','character','tag'] as $taxonomy ){
+	foreach (['genre','character','pairing','tag'] as $taxonomy ){
 		$terms = &$ref[$taxonomy];
 		if (!isset($terms)) {
 			continue;
@@ -238,7 +238,7 @@ function username_possible($username){
 function verify_reCAPTCHA($response){
     $postdata = http_build_query(
         array(
-            'secret' => '6Lc_ROEUAAAAADrnccSNHPP3whrLFAM5qrPAK4-S',
+            'secret' => RECAPTCHA_SECRET,
             'response' => $response
         )
     );

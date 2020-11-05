@@ -1,5 +1,8 @@
 author-updates {
     position: relative;
+    display: inline-block;
+    padding: 20px;
+    width: 100%;
 }
 author-updates::before {
     content: 'Updates';

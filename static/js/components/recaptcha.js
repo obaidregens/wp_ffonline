@@ -1,5 +1,5 @@
 function init_reCAPTCHA(){
-    const reCAPTCHA_sitekey = '6Lc_ROEUAAAAAE2WALbN67FKxK284OnW7jSxEBth';
+    const reCAPTCHA_sitekey = DOM.q('recaptcha-sitekey').innerText;
     const captcha_elems = DOM.qa('reCAPTCHA');
     for (let i = 0; i < captcha_elems.length; i++) {
         const wrapper = captcha_elems[i];

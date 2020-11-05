@@ -70,15 +70,26 @@ a.author-message::before {
     content: '\e937';
     transform: scale(0.95);
 }
-a.author-follow::before {
+.author-follow::before {
     font-family: 'icons';
     content: '\e930';
     transform: scale(0.8);
 }
-a.author-follow.followed::before {
+.author-follow.followed::before {
     content: '\e901';
     transform: scale(1);
 }
+/* Author Follow */
+author-nav {
+    align-items: center;
+}
+author-nav > .author-follow {
+    background-color: transparent;
+    font-size: 17px;
+    margin-left: auto;
+    padding: 0 10px;
+}
+
 prompt {
     padding: 10px;
     margin: 20px 0;

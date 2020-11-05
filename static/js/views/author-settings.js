@@ -57,3 +57,15 @@ DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(2) > text-input > input').a
     target.parentElement.setAttribute('helper',ress.error);
     target.classList.add("invalid");
 });
+window.addEventListener('load',() => {
+    DOM.qa('label.switch > input').forEach(el => el.addEventListener('change',async ({target}) => {
+        const response = await api('user_settings',{data: {
+            setting: target.getAttribute('setting'),
+            set: target.checked
+        }});
+        if (response.code > 5) {
+            new toast("An error occured");
+        }
+        target.checked = response.set;
+    }));
+});

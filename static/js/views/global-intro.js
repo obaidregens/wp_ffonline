@@ -9,7 +9,14 @@
             return 2;
         }
         if (current_view_parts[0] === 'my-stories' && current_view_parts.length > 1) {
-            return 8;
+            switch (current_view_parts[2]) {
+                case "edit":
+                    return 8;
+                case "stats":
+                    return 9;
+                default:
+                    return false;
+            }
         }
         if (current_view_parts[0] === 'drafts') {
             if (! current_view_parts[1]) {

@@ -17,7 +17,7 @@ $href = rtrim(get_author_posts_url($user->ID),'/') . '/';
 $book_query = $app->author_stories_query;
 $description = htmlspecialchars(get_the_author_meta( 'description', $user->ID ));
 ?>
-<author-main user_id="<?= $user->ID; ?>">
+<author-main>
     <?php if ($description !== '' && $is_current_author){ ?>
     <author-bio>
         <a class="edit-about"></a>

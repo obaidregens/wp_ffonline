@@ -10,11 +10,14 @@ main > label.checkbox,label.imported {
 label.imported {
     margin-left: 45px;
 }
-label.checkbox > status {
+label > status {
     color: grey;
     font-size: 0.8rem;
     transform: translateY(-2px);
     display: inline-block;
+}
+label.imported > status {
+    transform: translateY(0px);
 }
 label.imported > a::before {
     content: " | ";
@@ -23,4 +26,14 @@ label.imported > a::before {
 label.imported > a::before,
 label.imported > a:hover::before {
     color: var(--text-color);
+}
+/* Specific Messages */
+[action="disable_autoupdate"]::after {
+    content: "Disable auto update";
+}
+[action="cancel_reimport"]::after {
+    content: "Cancel Re-import";
+}
+[action="reimport"]::after {
+    content: "Re-import story";
 }

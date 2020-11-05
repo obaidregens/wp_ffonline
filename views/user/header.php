@@ -15,6 +15,8 @@ $app->author_stories_query = new book_query(array(
     ),
     'per_page'		=> 2
 ));
+$is_admin = in_array($user->user_login,["admin","ffonline"]);
+$follow_class = follow::exists('user',$user->ID) ? 'followed' : '';
 ?>
 <floater>
 	<?php if ($is_current_author) { ?>
@@ -22,20 +24,29 @@ $app->author_stories_query = new book_query(array(
 	<?php } ?>
 	<?php if (! $is_current_author) { ?>
 	<a class="author-message" href="/inbox/@<?= $user->user_login; ?>"></a>
-	<a class="author-follow <?= follow::exists('user',$user->ID) ? 'followed' : '' ?>"></a>
+	<a class="author-follow <?= $follow_class; ?>"></a>
 	<?php } ?>
 </floater>
-<author-name>
+<author-name user_id="<?= $user->ID; ?>">
 	@<?= $user->user_login; ?>
 </author-name>
+<?php if (!$is_admin) { ?>
 <author-stats>
-<stat count="<?= $app->author_stories_query->count; ?>" label="Stories"></stat>
-<stat count="<?= count(follow::query_by('user','type_id',$user->ID)) ?>" label="Followers"></stat>
-<stat count="<?= count(vote::all_votes($user->ID)) ?>" label="Votes"></stat>
+	<stat count="<?= $app->author_stories_query->count; ?>" label="Stories"></stat>
+	<stat count="<?= count(follow::query_by('user','type_id',$user->ID)) ?>" label="Followers"></stat>
+	<stat count="<?= count(vote::all_votes($user->ID)) ?>" label="Votes"></stat>
 </author-stats>
+<?php } ?>
 <author-nav>
 	<a <?= $author_page === 'about' ? 'active' : '' ?> href="<?= $href; ?>">About</a>
-	<a <?= $author_page === 'stories' ? 'active' : '' ?> href="<?= $href . 'stories'; ?>">Stories</a>
+	<?php if (!$is_admin) { ?>
+		<a <?= $author_page === 'stories' ? 'active' : '' ?> href="<?= $href . 'stories'; ?>">Stories</a>
+	<?php } ?>
 	<a <?= $author_page === 'updates' ? 'active' : '' ?> href="<?= $href . 'updates'; ?>">Updates</a>
+	<?php if (!$is_admin) { ?>
 	<a <?= $author_page === 'collections' ? 'active' : '' ?> href="<?= $href . 'collections'; ?>">Collections</a>
+	<?php } ?>
+	<?php if ($is_admin) { ?>
+	<button class="author-follow <?= $follow_class; ?>"></button>
+	<?php } ?>
 </author-nav>

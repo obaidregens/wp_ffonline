@@ -22,20 +22,20 @@ select-tag {
     position: relative;
     display: block;
     margin: 25px 0;
-    border-bottom: 1px solid #9e9e9e;
+    border-bottom: 1px solid var(--darkgrey);
     padding: 12px 9px 6px;
 }
 select-tag::before {
     content: attr(label);
     position: absolute;
     font-size: 0.65rem;
-    color: #9e9e9e;
+    color: var(--darkgrey);
     top: -11px;
     left: 4px;
 }
 select-tag:empty::after {
     content: 'All';
-    color: #9e9e9e;
+    color: var(--darkgrey);
     font-size: 0.9rem;
 }
 select-tag > tag {
@@ -56,7 +56,7 @@ words-slider::before {
     content: 'Words';
     position: absolute;
     font-size: 0.7rem;
-    color: #9e9e9e;
+    color: var(--darkgrey);
     top: -36px;
     left: -11px;
 }
@@ -156,7 +156,7 @@ tag_list {
 tag_list:empty::before {
     content: 'No Tags';
     font-size: 0.85rem;
-    color: #9e9e9e;
+    color: var(--darkgrey);
     display: block;
     margin: 18px;
 }

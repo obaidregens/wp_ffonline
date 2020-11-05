@@ -108,4 +108,15 @@ class import_stories {
             ]
         );
     }
+    static function set_re_import($story_id,$set) {
+        global $wpdb;
+        $wpdb->update(
+            self::$table,
+            [ "import_status" => ($set ? "reimport" : "imported") ],
+            [
+                "story_id"      => $story_id,
+                "import_status" => (!$set ? "reimport" : "imported")
+            ]
+        );
+    }
 }

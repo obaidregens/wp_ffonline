@@ -32,13 +32,19 @@ $remote_stories = import_stories::view_all($connected);
     <text>Select All</text>
 </label>
 <?php foreach($remote_stories as $story) { ?>
-<?php if ( in_array($story['status'],['imported','live']) ) { ?>
+<?php if ( in_array($story['status'],['imported','live','reimport']) ) { ?>
 <label class="imported">
     <text><?= htmlspecialchars($story['title']); ?></text>
-    <a href="/story/<?= $story['storyID']; ?>">Read</a>
     <?php if ($story['status'] === "live") { ?>
-        <a story_id="<?= $story['storyID']; ?>" class="disable-update">Disable auto update</a>
+        <a story_id="<?= $story['storyID']; ?>" action="disable_autoupdate"></a>
+        <a href="/story/<?= $story['storyID']; ?>">Read</a>
+    <?php } else if ($story['status'] === "reimport") { ?>
+        <status>(Re-import pending)</status>
+        <a href="/story/<?= $story['storyID']; ?>">Read</a>
+        <a story_id="<?= $story['storyID']; ?>" action="cancel_reimport"></a>
     <?php } else { ?>
+        <a href="/story/<?= $story['storyID']; ?>">Read</a>
+        <a story_id="<?= $story['storyID']; ?>" action="reimport"></a>
     <?php } ?>
 </label>
 <?php } else { ?>

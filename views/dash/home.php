@@ -1,4 +1,12 @@
 <?php
+// Online Users
+// SELECT wp_users.user_login,stats_landings.type,stats_landings.type_id, (UNIX_TIMESTAMP() - stats_actions.timestamp) as passed FROM `stats_landings`
+// INNER JOIN stats_actions ON stats_landings.ID = stats_actions.landing_id
+// INNER JOIN wp_users ON stats_landings.user_id = wp_users.ID
+// WHERE wp_users.user_login != 'admin'
+// GROUP BY stats_landings.ID
+// ORDER BY stats_actions.ID DESC
+// LIMIT 50
 $app->bundle = global_bundle('dash-home');
 $app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');

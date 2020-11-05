@@ -1,7 +1,7 @@
 <?php
-// Exclude user_status 1 from WP_User_Query
+// Exclude user_status 1 & 2 from WP_User_Query
 add_action( 'pre_user_query', function( $uqi ) {
-    $uqi->query_where .= ' AND user_status != 1';
+    $uqi->query_where .= ' AND user_status = 0';
 });
 class user {
     // Signup
@@ -38,7 +38,7 @@ class user {
 
         $results = $wpdb->get_results($wpdb->prepare("
             SELECT * FROM wp_users
-            WHERE user_status != 1
+            WHERE user_status = 0
             AND (
                 user_email = %s OR
                 user_login = %s
@@ -83,7 +83,7 @@ class user {
             return false;
         }
         $user = $return->data;
-        if (intval($user->user_status) === 1){
+        if (intval($user->user_status) !== 0){
             return false;
         }
         self::internal_login($user->ID);
@@ -117,6 +117,7 @@ class user {
         $return = $wpdb->get_results($wpdb->prepare("
             SELECT * FROM wp_users
             WHERE ID = %s
+            AND user_status = 0
             AND user_activation_key = %s
         ",[$user->ID,$token]));
         if (empty($return)){
@@ -134,7 +135,7 @@ class user {
     }
     // Get
     // Duplicates WP get_user_by
-    static function get_by(string $field,$value,bool $unverified = false) {
+    static function get_by(string $field,$value,bool $show_unverified = false) {
         $f = in_array($field,["id","ID"]) ? "ID" : "";
         $f = in_array($field,["email"]) ? "user_email" : $f;
         $f = in_array($field,["login"]) ? "user_login" : $f;
@@ -142,8 +143,11 @@ class user {
             return false;
         }
         $sql = "SELECT * FROM wp_users WHERE $f = " . ($f === "ID" ? "%d" : "%s");
-        if (!$unverified) {
-            $sql .= " AND user_status != 1";
+        if (!$show_unverified) {
+            $sql .= " AND user_status = 0";
+        }
+        else {
+            $sql .= " AND user_status IN (0,1)";
         }
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare($sql,[$value]));
@@ -151,6 +155,9 @@ class user {
     }
 }
 class user_settings extends user {
+    protected static $default_usettings = [
+        "features"  => true
+    ];
     public static function change_username($new_username) {
         $validation = (new v_user([
             'username'  => $new_username,
@@ -185,13 +192,13 @@ class user_settings extends user {
             $user = get_current_user_id();
         }
         $meta = get_user_meta( $user, 'usetting_' . $setting, true );
-        return $meta === '' ? null : $meta;
+        return $meta === '' ? (self::$default_usettings[$setting] ?? null) : unserialize($meta);
     }
     public static function set ($setting, $value, $user = null) {
         if ($user === null){
             $user = get_current_user_id();
         }
-        update_user_meta( $user, 'usetting_' . $setting, $value );
+        update_user_meta( $user, 'usetting_' . $setting, serialize($value) );
     }
 }
 class mail_user extends user {
@@ -288,7 +295,7 @@ class v_user extends user {
         return 
             $user_obj !== false &&
             !is_current_user($user_obj->ID) &&
-            intval($user_obj->user_status) !== 1;
+            intval($user_obj->user_status) === 0;
     }
     protected static function get_by_username_or_email($username_or_email){
         $byusername = user::get_by( 'login' , $username_or_email );

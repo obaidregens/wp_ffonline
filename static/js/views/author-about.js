@@ -14,7 +14,7 @@ if (DOM.q('.edit-about')) {
     DOM.q('.edit-about ~ button[label="Save"]').addEventListener('click',async function(){
         const response = await api('update_bio',{
             data: {
-                user: DOM.q('author-main').getAttribute('user_id'),
+                user: DOM.q('author-name').getAttribute('user_id'),
                 bio: DOM.q('.edit-about ~ text-input > textarea').value
             }
         });
