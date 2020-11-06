@@ -1,10 +1,8 @@
 <?php
 $start = time();
 set_time_limit(0);
-define('WP_USE_THEMES', false);
-$maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
-$wp_dir = $maindir . '/content/wp/';
-require( $wp_dir . 'wp-load.php');
+define("NO_ROUTES",true);
+require (rtrim(explode('content',__DIR__,2)[0],'/\\') . '/content/index.php');
 
 bundle::reWrite();
 

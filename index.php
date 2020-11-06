@@ -22,6 +22,9 @@ class Router {
         $this->request = '/' . implode('/',$this->r);
     }
     function listen($dyno_url,$func){
+        if (defined("NO_ROUTES") && NO_ROUTES === true) {
+            return;
+        }
         $match = arr::non_empty(explode('/',$dyno_url));
         if ( empty($match) && !empty($this->r) ){
             return;

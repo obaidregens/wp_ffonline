@@ -25,12 +25,12 @@ if (empty($questions)) {
 }
 // Ask New Question
 ?>
+<p>If you don't think your question should be posted in the FAQ's, you can message <a href="/inbox/@mods">@mods</a> or send us a message through the <a href="/contact">contact form</a>.</p>
 <h2>Ask a question</h2>
 <ul>
 <li>Question will be asked anonymously.</li>
 <li>You may ask one question per submission. If you have multiple questions, ask them separately.</li>
 <li>Your question may be rephrased before being posted in the FAQ's.</li>
-<li>If you don't want your question to be posted in the FAQ's, you can <a href="/contact">ask us directly</a>.</li>
 </ul>
 <text-input helper="This is optional. You can add your email to receive a notification when your question is answered." input_type="email" label="Your Email"></text-input>
 <text-input type="multi" label="Your Question"></text-input>

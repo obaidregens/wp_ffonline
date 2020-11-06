@@ -7,7 +7,8 @@ function global_bundle($name){
     $_bundle->mix('intro');
     return $_bundle;
 }
-function curl_minify($post,$url){
+function curl_minify($post,$url,$try_again = false){
+    $error = "A";
     $ch = curl_init();
     curl_setopt_array($ch, [
         CURLOPT_URL => $url,
@@ -17,8 +18,12 @@ function curl_minify($post,$url){
         CURLOPT_POSTFIELDS => http_build_query([ "input" => $post ]),
         CURLOPT_SSL_VERIFYPEER => false
     ]);
-    $minified = curl_exec($ch);
-    $error = curl_error($ch);
+    $i = 0;
+    while( ($try_again || $i === 0) && $error !== "") {
+        $i++;
+        $minified = curl_exec($ch);
+        $error = curl_error($ch);
+    }
     curl_close($ch);
     return $minified;
 }
@@ -116,8 +121,8 @@ class bundle {
             }
             $total_css .= "\r\n";
         }
-        $minified_css = curl_minify( $total_css, 'https://cssminifier.com/raw' );
-
+        $minified_css = curl_minify( $total_css, 'https://cssminifier.com/raw', true );
+        
         $total_js = '';
         foreach ($raw_urls['js'] as $file) {
             if (substr ($file ,0,3) === '://'){
@@ -128,7 +133,7 @@ class bundle {
             }
             $total_js .= "\r\n";
         }
-        $minified_js = curl_minify( $total_js, 'https://javascript-minifier.com/raw' );
+        $minified_js = curl_minify( $total_js, 'https://javascript-minifier.com/raw', true );
 
         // Put
         unlink($this->bundles_dir . $this->hash('css'));

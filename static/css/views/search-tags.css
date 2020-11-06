@@ -60,7 +60,8 @@ tag-group > a {
     color: var(--darkgrey);
     margin: 0 0px;
     padding: 4px;
-    display: inline-block;
+    display: inline;
+    line-height: 30px;
 }
 /* Main Tags */
 /* main-tags > tag-group {
