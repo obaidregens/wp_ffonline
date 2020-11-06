@@ -13,7 +13,9 @@ footer {
     display: none;
 }
 chat-list {
-    display: block;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
     overflow: auto;
     height: calc(100vh - 53px);
     padding: 10px;

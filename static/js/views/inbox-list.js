@@ -1,26 +1,27 @@
-const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
-if (DOM.q('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
-    window.addEventListener('load',() => {
-        DOM.q('user-info').remove();
-        DOM.q('send-message').remove();
-        const pp = DOM.create('popup',{
-            children: [
-                DOM.create('h3',{
-                    innerText: 'No messages yet.'
-                }),
-                DOM.create('p',{
-                    innerText: 'To message someone, visit their profile and click on the chat button in the bottom-right corner.'
-                }),
-            ]
+(() => {
+    const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
+    if (DOM.q('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
+        window.addEventListener('load',() => {
+            DOM.q('user-info').remove();
+            DOM.q('send-message').remove();
+            const pp = DOM.create('popup',{
+                children: [
+                    DOM.create('h3',{
+                        innerText: 'No messages yet.'
+                    }),
+                    DOM.create('p',{
+                        innerText: 'To message someone, visit their profile and click on the chat button in the bottom-right corner.'
+                    }),
+                ]
+            });
+            popup.create(pp);
+            popup.open(pp);
+            const pOver = popup.overlay;
+            pOver.style.pointerEvents = 'none';
+            pp.style.maxWidth = '600px';
         });
-        popup.create(pp);
-        popup.open(pp);
-        const pOver = popup.overlay;
-        pOver.style.pointerEvents = 'none';
-        pp.style.maxWidth = '600px';
-    });
-}
-else {
+        return;
+    }
     if (full_url_parts[full_url_parts.length-1] !== 'inbox'){
         const username = full_url_parts[full_url_parts.length-1];
         const existing_user_elem = DOM.q(`chat-list > [username="${username}"]`);
@@ -38,7 +39,7 @@ else {
     // Back Button
     DOM.q('user-info > button.back').addEventListener('click',() => {
         DOM.q('chat-list').classList.add('show');
-    })
+    });
     // Block Button
     DOM.q('user-info > button.block').addEventListener('click',function(){
         this.classList.toggle('blocked');
@@ -209,4 +210,4 @@ else {
         }
         
     },{passive: true});
-}
+})();

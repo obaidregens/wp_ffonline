@@ -25,10 +25,12 @@
 /* Colors */
 :root {
     --red: #bd3535;
+    --lightred: #ff4f4f;
+    --fadedred: #ffcdcd;
     --grey: rgb(146 146 146 / 22%);
     --darkgrey: #969696;
-    --lightred: #ff4f4f;
     --white: #fdfdfd;
+    --lightwhite: #b7bfc4;
     --black: #262828;
     --lightblack: #5f6368;
     --normalgrey: rgb(147 147 147 / 60%);

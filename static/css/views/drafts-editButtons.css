@@ -29,11 +29,11 @@ editor:fullscreen > toolbar {
 }
 editor:-moz-full-screen > toolbar + div,
 editor:-ms-full-screen > toolbar + div {
-    height: calc(100vh - 30px);
+    height: calc(100vh - 30px - 25px);
 }
 editor:-webkit-full-screen > toolbar + div,
 editor:fullscreen > toolbar + div {
-    height: calc(100vh - 30px);
+    height: calc(100vh - 30px - 25px);
 }
 
 toolbar > button[action] {
@@ -98,3 +98,18 @@ toolbar > button[action="delete"]::before {
     content: '\e921';
 }
 
+/* Word Count */
+editor > word-count {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 12px;
+    width: 100%;
+    height: 25px;
+    padding: 0 10px;
+    border: 1px solid var(--grey);
+    border-top: none;
+}
+editor > word-count:empty::before {
+    content: "0 Words";
+}

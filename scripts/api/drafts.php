@@ -5,7 +5,15 @@ function api_save_draft() {
     required_login();
     required_params('title','draft_id','content','perm');
 
+    if (!is_array($d['content'])) {
+        return ['code'=>13];
+    }
+    $words = str_word_count(drafts_json::simpleText($d['content'],true)) . " Words";
     $d['content'] = json_encode($d['content']);
+    if ($d['content'] === false) {
+        return ['code'=>14];
+    }
+
     // Prepared Data
     $insert = [
         'title'     => $d['title'],
@@ -48,7 +56,8 @@ function api_save_draft() {
         'code'          => 1,
         'draft_id'      => $draft_id,
         'time'          => $time,
-        'perm'          => $flag === 'push'
+        'perm'          => $flag === 'push',
+        "words"         => $words
     ];
 }
 function api_share_draft() {
@@ -224,9 +233,10 @@ function api_compare_draft () {
 
 // Index
 function api_get_drafts() {
+    $words = (bool) ($_POST['data']['words'] ?? false);
     return [
         'code'  => 1,
-        'path'  => drafts_dir::get_path()
+        'path'  => drafts_dir::get_path($words)
     ];
 }
 function api_create_drafts_folder() {

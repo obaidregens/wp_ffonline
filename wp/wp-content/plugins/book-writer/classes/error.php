@@ -49,4 +49,17 @@ class err {
         }
         return $this->errors;
     }
+    function array() {
+        return array_column($this->errors,'error');
+    }
+    function k_array() {
+        return array_column($this->errors,'error','name');
+    }
+    function j_array() {
+        $errs = [];
+        foreach ($this->errors as $err) {
+            $errs[] = $err["name"] . " - " . $err["error"];
+        }
+        return $errs;
+    }
 }

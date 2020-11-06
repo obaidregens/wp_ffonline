@@ -144,10 +144,10 @@ class bundle {
 
         // Put
 
-        if (file_exists($this->bundles_dir . $this->hash('css'))) {
+        if ( file_exists($this->bundles_dir . $this->hash('css')) ) {
             unlink($this->bundles_dir . $this->hash('css'));
         }
-        if ($this->bundles_dir . $this->hash('js')) {
+        if ( file_exists($this->bundles_dir . $this->hash('js')) ) {
             unlink($this->bundles_dir . $this->hash('js'));
         }
         

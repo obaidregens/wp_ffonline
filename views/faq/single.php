@@ -6,6 +6,6 @@ $app->bundle->enqueue();
 ?>
 <a class="back-to-faq" href="/faq">Back to FAQ</a>
 <question><?= htmlspecialchars($app->faq_question->question); ?></question>
-<answer><?= strip_tags($app->faq_question->answer,'<a><strong>'); ?></answer>
+<answer><answer-content><?= strip_tags($app->faq_question->answer,'<a><strong>'); ?></answer-content></answer>
 <?php
 ?>

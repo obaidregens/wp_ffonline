@@ -29,7 +29,7 @@ label.imported > a:hover::before {
 }
 /* Specific Messages */
 [action="disable_autoupdate"]::after {
-    content: "Disable auto update";
+    content: "Disable auto updates";
 }
 [action="cancel_reimport"]::after {
     content: "Cancel Re-import";

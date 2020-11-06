@@ -133,25 +133,21 @@ class draft_revision extends drafts{
         if ($prev_draft['hash'] === $hash ) {
             return intval($prev_draft['edited']);
         }
+        global $wpdb;
+        $table = self::$table;
         // Now that validation is done,
         // remove previous depending on flag
-        global $wpdb;
         if ($FLAG === 'update') {
-            $rows = $wpdb->delete(
-                self::$table,
-                ['ID'    => $prev_draft['ID']]
-            );
+            $sql1 = $wpdb->prepare("DELETE FROM $table WHERE ID=%d",[$prev_draft['ID']]);
         }
-        $wpdb->insert(
-            self::$table,
-            [
-                'draft_id'  => $draft_id,
-                'user_id'   => get_current_user_id(),
-                'content'   => $content,
-                'hash'      => $hash,
-                'edited'    => $t
-            ]
+        $sql2 = $wpdb->prepare(
+            "INSERT INTO $table (`draft_id`,`user_id`,`hash`,`edited`,`content`)
+            VALUES (%s,%s,%s,%s,%s)",
+            [$draft_id,get_current_user_id(),$hash,$t,$content]
         );
+        $rows = $wpdb->query($sql2);
+        $rows = $wpdb->query($sql1);
+
         $session_last_revision = [
             'ID'        => $wpdb->insert_id,
             'edited'    => $t,
@@ -202,24 +198,40 @@ class drafts_dir extends drafts {
         $exists_dir = $path === '' ? true : false;
         return empty($r) ? false : true;
     }
-    static function get_path () {
+    static function get_path (bool $words = false) {
         $user = get_current_user_id();
         if ($user === 0) {
             return [];
         }
         $table = self::$table;
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE user_id = %s AND (branch_type IS NULL || branch_type = 'dir') ",[$user]);
+        if ($words) {
+            $rsql = $wpdb->prepare(
+                "SELECT draft_id,content FROM `draft_revisions`
+                WHERE user_id = %d
+                GROUP BY draft_id
+                ORDER BY edited DESC",
+                [$user]
+            );
+            $revisions = array_column($wpdb->get_results($rsql),'content','draft_id');    
+        }
+        $sql = $wpdb->prepare(
+            "SELECT * FROM $table WHERE user_id = %d AND (branch_type IS NULL || branch_type = 'dir') "
+        ,[$user]);
         $results = $wpdb->get_results($sql);
         $f = [];
         foreach ($results as $s ) {
             $f[$s->path] = $f[$s->path] ?? [];
             if ( $s->branch_type === null ) {
-                $f[$s->path][] = [
+                $put_draft = [
                     'ID'        => intval($s->ID),
                     'title'     => $s->title,
                     'time'      => intval($s->updated)
                 ];
+                if ($words) {
+                    $put_draft['words'] = str_word_count( drafts_json::simpleText( $revisions[$s->ID] ) );
+                }
+                $f[$s->path][] = $put_draft;
             }
         }
         return $f;
@@ -388,10 +400,12 @@ class drafts_json extends drafts {
         }
         return $html;
     }
-    public static function simpleText($json) {
-        $array = json_decode($json,true);
+    public static function simpleText($json,$direct = false) {
+        if (!$direct) {
+            $json = json_decode($json,true);
+        }
         $text = '';
-        foreach ($array as $k => $para) {
+        foreach ($json as $k => $para) {
             foreach ($para['children'] as $kk => $leaf) {
                 $text .= $leaf['text'];
             }

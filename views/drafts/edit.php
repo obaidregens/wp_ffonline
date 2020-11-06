@@ -50,6 +50,7 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 </button>
 </drafts-header>
 <share-is hidden><?=  $share_link ?></share-is>
+<words-is hidden><?= str_word_count(drafts_json::simpleText($content)) ?> Words</words-is>
 <script>
 <?php $load_content = script_json($content); ?>
 const load_title = <?= script_string($title); ?>;

@@ -240,6 +240,11 @@ function new_chapter_popup_create() {
                 if (file === null || file.classList.contains('new-draft-file') ) {
                     return;
                 }
+                const words = file.getAttribute('words');
+                if (parseInt(words) < 10) {
+                    new toast("Chapter has to be of at least 10 words!");
+                    return;
+                }
                 // Title
                 const title = chapter_title_input.value;
                 if (title === '') {
@@ -267,7 +272,7 @@ function new_chapter_popup_create() {
         }
     }));
     popup.create(p);
-    rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NEW_DRAFT_IN_NEW_TAB: true});
+    rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NEW_DRAFT_IN_NEW_TAB: true, WITH_WORDS: true});
 }
 new_chapter_popup_create();
 DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
@@ -303,15 +308,10 @@ DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
     })
     .then(response => {
         target.removeAttribute('disabled');
-        if (response.code === 14) {
-            new toast('Title is required');
+        response.errors.forEach(er => new toast(er,3000));
+        if (!response.selected) {
             return;
         }
-        if (response.code > 5) {
-            new toast('An error occured.');
-            return;
-        }
-        prev_status = selected.publish;
         selected = response.selected;
         if (DOM.q('popup[new_chapter]')) {
             DOM.q('popup[new_chapter]').remove();
@@ -320,54 +320,53 @@ DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
         reAddChapters();
         reRender();
         window.history.pushState("object or string", DOM.q("title").innerText,'/my-stories/' + selected.book_id);
-        if (response.code === 1) {}
-        else if (response.code === 2) {
-            window.setCurrentPage(4);
-            new toast('Select a chapter to publish.');
+        
+        console.log(response);
+        if (!response.new_publish) {
+            new toast('Story Updated',3000);
+            if (response.errors.length > 0) {
+                new toast("Your story couldn't be published",3000,["warning"]);
+            }
+            return;
         }
-        else if (response.code === 3) {
-            new toast('Story Title, Story Summary, Rating, Language and Status are required to publish story.')
-        }
-        new toast('Story Updated');
+        new toast("Story Published!");
         const newPublishNotice = DOM.q('exciting');
-        if (prev_status === false && selected.publish === true) {
-            newPublishNotice.innerText = '';
-            const shareData = {
-                title: selected.title,
-                share_title: `I found a great fanfiction by ${selected.username} '${selected.title}'!`,
-                url: '/story/' + selected.book_id,
-                author: selected.username,
-                desc: selected.description,
-                callOnCopy: () => new toast('Copied!')
-            };
-            DOM.append(newPublishNotice,[
-                DOM.create('span',{
-                    innerText: 'Your story has been published!'
-                }),
-                DOM.create('br'),
-                DOM.create('span',{
-                    innerText: 'While it may take some time to appear in searches, you can still '
-                }),
-                DOM.create('a',{
-                    innerText: 'read',
-                    attributes: {
-                        target: '_blank',
-                        href: shareData.href
-                    }
-                }),
-                DOM.create('span',{
-                    innerText: ' & '
-                }),
-                DOM.create('a',{
-                    innerText: 'share',
-                    listeners: {
-                        click: () => shareAPI(shareData)
-                    }
-                }),
-                DOM.create('span',{
-                    innerText: ' it with your friends.'
-                })
-            ]);
-        }
+        newPublishNotice.innerText = '';
+        const shareData = {
+            title: selected.title,
+            share_title: `I found a great fanfiction by ${selected.username} '${selected.title}'!`,
+            url: 'https://fanfiction.online/story/' + selected.book_id,
+            author: selected.username,
+            desc: selected.description,
+            callOnCopy: () => new toast('Copied!')
+        };
+        DOM.append(newPublishNotice,[
+            DOM.create('span',{
+                innerText: 'Your story has been published!'
+            }),
+            DOM.create('br'),
+            DOM.create('span',{
+                innerText: 'While it may take some time to appear in searches, you can still '
+            }),
+            DOM.create('a',{
+                innerText: 'read',
+                attributes: {
+                    target: '_blank',
+                    href: shareData.url
+                }
+            }),
+            DOM.create('span',{
+                innerText: ' & '
+            }),
+            DOM.create('a',{
+                innerText: 'share',
+                listeners: {
+                    click: () => shareAPI(shareData)
+                }
+            }),
+            DOM.create('span',{
+                innerText: ' it with your friends.'
+            })
+        ]);
     });
 });

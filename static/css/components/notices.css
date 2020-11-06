@@ -4,10 +4,10 @@ important, exciting {
     margin: 25px 40px;
 }
 important {
-    color: black;
-    background-color: #ffcdcd;
+    color: var(--black);
+    background-color: var(--fadedred);
 }
 exciting {
-    color: black;
+    color: var(--black);
     background-color: rgb(168 220 255 / 84%);
 }

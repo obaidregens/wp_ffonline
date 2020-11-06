@@ -1,6 +1,10 @@
-function rootDraftsIndex(root,{OPT_HIDE_DISPLAY_FILES,OPT_REMOVE_FILES_CLICK,OPT_NO_NEW_DRAFT} = {}) {
+function rootDraftsIndex(root,{OPT_HIDE_DISPLAY_FILES,OPT_REMOVE_FILES_CLICK,OPT_NO_NEW_DRAFT, WITH_WORDS} = {}) {
     const listing = typeof root === 'string' ? DOM.q(root) : root;
-    api('get_drafts')
+    api('get_drafts',{
+        data: {
+            words: !!WITH_WORDS
+        }
+    })
     .then(response => {
         window.all_files = response.path;
         loadFolder(window.current_path);
@@ -52,9 +56,11 @@ function rootDraftsIndex(root,{OPT_HIDE_DISPLAY_FILES,OPT_REMOVE_FILES_CLICK,OPT
                 };
                 listing.appendChild(DOM.create('file',{
                     listeners: lst,
-                    attributes: {
-                        draft_id: file.ID
-                    },
+                    attributes: Object.assign({
+                        draft_id: file.ID,
+                    },(typeof WITH_WORDS === 'undefined') ? {} : {
+                        words: file.words 
+                    }),
                     children: [
                         DOM.create('file-meta',{
                             innerText: file.title

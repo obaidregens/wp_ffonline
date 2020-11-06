@@ -32,6 +32,7 @@ window.autosaveDraft = (val,perm) => {
             }
         })
         .then(response => {
+            DOM.q('word-count').innerText = response.words;
             if (response.code > 5) {
                 if (document.fullscreenElement) {
                     document.exitFullscreen();
@@ -83,13 +84,18 @@ DOM.q('input[placeholder="Title"]').addEventListener('change',({target}) => {
         window.draftTitle.set('Untitled');
     }
 });
-// Initial Loading
-const loadDraft = () => {
-    if ( load_content !== null && load_content.length > 0) {
-        window.draftContent.set(load_content);
-    }
-    window.draftTitle.set(load_title,true);
-    window.editedAtAll = false;
-    window.refreshRevisions = true;
-};
-loadDraft();
+(() => {
+    DOM.q('editor').appendChild(DOM.create('word-count',{
+        innerText: DOM.q('words-is').innerText
+    }));
+    // Initial Loading
+    const loadDraft = () => {
+        if ( load_content !== null && load_content.length > 0) {
+            window.draftContent.set(load_content);
+        }
+        window.draftTitle.set(load_title,true);
+        window.editedAtAll = false;
+        window.refreshRevisions = true;
+    };
+    loadDraft();
+})();
