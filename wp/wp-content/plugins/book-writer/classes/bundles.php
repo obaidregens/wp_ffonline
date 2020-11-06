@@ -23,6 +23,10 @@ function curl_minify($post,$url,$try_again = false){
         $i++;
         $minified = curl_exec($ch);
         $error = curl_error($ch);
+        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ( in_array(substr(strval($response_code),0,1),["4","5"]) ) {
+            $error = CURLINFO_HTTP_CODE;
+        }
     }
     curl_close($ch);
     return $minified;
@@ -46,7 +50,10 @@ class bundle {
             $css_file = $bundles_dir . $bundle_name . "-" . $bundle['css_hash'] . ".css";
             $js_file = $bundles_dir . $bundle_name . "-" . $bundle['js_hash'] . ".js";
             $bundle_wo_suffix = $bundles_dir . $bundle_name;
-            $last_edited = max(array(filemtime($css_file),filemtime($js_file)));
+            $last_edited = max(array(
+                (file_exists($css_file) ? filemtime($css_file) : 0),
+                (file_exists($js_file) ? filemtime($js_file) : 0)
+            ));
             $raw_files = self::raw_urls($bundle);
             foreach ($raw_files as $extension => $files) {
                 foreach ($files as $file) {
@@ -136,8 +143,13 @@ class bundle {
         $minified_js = curl_minify( $total_js, 'https://javascript-minifier.com/raw', true );
 
         // Put
-        unlink($this->bundles_dir . $this->hash('css'));
-        unlink($this->bundles_dir . $this->hash('js'));
+
+        if (file_exists($this->bundles_dir . $this->hash('css'))) {
+            unlink($this->bundles_dir . $this->hash('css'));
+        }
+        if ($this->bundles_dir . $this->hash('js')) {
+            unlink($this->bundles_dir . $this->hash('js'));
+        }
         
         $this->bundle['css_hash'] = sha1($minified_css);
         $this->bundle['js_hash'] = sha1($minified_js);
