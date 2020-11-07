@@ -18,6 +18,14 @@ class arr {
         }
         return $reindex ? array_values($arr) : $arr;
     }
+    static function remove(&$arr,$val,bool $strict = false,bool $reindex = true) {
+        $i = array_search($val,$arr,$strict);
+        if ($i === false){
+            return;
+        }
+        unset($arr[$i]);
+        return array_values($arr);
+    }
 }
 class str {
     static function is_lower($txt) {

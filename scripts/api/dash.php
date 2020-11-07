@@ -82,3 +82,27 @@ function api_reply_to_question() {
     );
     return ['code'=>1];
 }
+function api_allow_reimport() {
+    required_admin();
+    required_params('user_id','allow');
+    $d = &$_POST['data'];
+    if (substr($d['user_id'],0,1) === "@") {
+        $d['user_id'] = substr($d['user_id'],0);
+    }
+    $user = get_user_by( "login", $d['user_id'] );
+    if (! $user) {
+        $user = get_user_by( "ID", $d['user_id'] );
+    }
+    if (!$user) {
+        return ['code'=>10];
+    }
+    $users = get_option( 'reimport_allow', [] );
+    if ($d['allow']) {
+        $users[] = intval($user->ID);
+    }
+    else {
+        arr::remove($users,intval($user->ID));
+    }
+    update_option( "reimport_allow", array_unique($users) );
+    return ['code'=>1];
+}

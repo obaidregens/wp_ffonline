@@ -321,7 +321,6 @@ DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
         reRender();
         window.history.pushState("object or string", DOM.q("title").innerText,'/my-stories/' + selected.book_id);
         
-        console.log(response);
         if (!response.new_publish) {
             new toast('Story Updated',3000);
             if (response.errors.length > 0) {

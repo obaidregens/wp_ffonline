@@ -179,6 +179,7 @@ messages > message[my] {
     border-radius: 0px 10px 10px 40px;
     background-color: var(--theme-color);
     color: var(--white);
+    opacity: 0.85;
 }
 messages > message[other] {
     border-radius: 10px 0px 40px 10px;

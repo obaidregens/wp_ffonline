@@ -27,6 +27,7 @@ class book_query{
 
         ),
         'search'        => '',
+        'author' => '',
         'order'         => 'DESC',
         'orderby'       => 'updated',
         'words'         => array(
@@ -148,9 +149,39 @@ class book_query{
             $search_result = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT ID FROM wp_posts
-                    WHERE post_title LIKE %s
-                    OR post_excerpt LIKE %s",
+                    WHERE post_type = 'book'
+                    AND (
+                        post_title LIKE %s
+                        OR post_excerpt LIKE %s
+                    )",
                     array($search_sql,$search_sql)
+                )
+            );
+            $included = a_intersect($included,array_column($search_result,'ID'));
+        }
+        // Author Search
+        if ($args['author'] !== ''){
+            $search = $args['author'];
+            $search_sql = '%' . $search . '%';
+            global $wpdb;
+            $search_result = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT wp_posts.ID FROM wp_posts
+                    INNER JOIN wp_users ON wp_posts.post_author = wp_users.ID
+                    INNER JOIN wp_postmeta ON wp_postmeta.post_id = wp_posts.ID
+                    WHERE post_type = 'book'
+                    AND (
+                        wp_users.display_name LIKE %s
+                        OR (
+                            wp_postmeta.meta_key = 'author_name'
+                            AND wp_postmeta.meta_value LIKE %s 
+                        )
+                        OR (
+                            wp_postmeta.meta_key = 'ffn_author_id'
+                            AND wp_postmeta.meta_value = %s 
+                        )
+                    )",
+                    array($search_sql,$search_sql,$search)
                 )
             );
             $included = a_intersect($included,array_column($search_result,'ID'));
@@ -192,7 +223,7 @@ class book_query{
                     AND post_status = 'publish'
                     ORDER BY FIELD(ID, " . $fill . ")",
                 array_merge($paged_ids,$paged_ids)
-            ));    
+            ));
         }
         $this->book_tags = $this->book_tags();
     }
@@ -260,6 +291,9 @@ class book_query{
                 else if ($arr[0] === 'search'){
                     $args['search'] = $arr[1];
                 }
+                else if ($arr[0] === 'author'){
+                    $args['author'] = $arr[1];
+                }
             }
         }
         $this->args = $args;
@@ -281,6 +315,7 @@ class book_query{
         $string .= isset($args['order']) || isset($args['orderby']) ? '&sort=' . ($args['orderby'] ?? 'updated') . '/' . ($args['order'] ?? 'DESC') : '';
         $string .= isset($args['words']) ? '&words=' . $args['words']['from'] . ',' . $args['words']['to'] : '';
         $string .= isset($args['search']) ? '&search=' . $args['search'] : '';
+        $string .= isset($args['author']) ? '&author=' . $args['author'] : '';
         return $string;
     }
     function has(){

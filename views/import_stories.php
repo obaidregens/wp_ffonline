@@ -6,6 +6,7 @@ $app->bundle->css('css/components/notices');
 $app->bundle->css('css/views/import-main');
 $app->bundle->js('js/views/import-main');
 $app->bundle->enqueue();
+$allow_reimport = in_array(intval(get_current_user_id()),get_option( 'reimport_allow', [] ));
 $connected = c_user::current();
 $pending = c_user::pending();
 if (is_string($pending)){ $pending = htmlspecialchars($pending); }
@@ -44,7 +45,9 @@ $remote_stories = import_stories::view_all($connected);
         <a story_id="<?= $story['storyID']; ?>" action="cancel_reimport"></a>
     <?php } else { ?>
         <a href="/story/<?= $story['storyID']; ?>">Read</a>
+        <?php if ($allow_reimport) { ?>
         <a story_id="<?= $story['storyID']; ?>" action="reimport"></a>
+        <?php } ?>
     <?php } ?>
 </label>
 <?php } else { ?>

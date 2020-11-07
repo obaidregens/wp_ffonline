@@ -195,6 +195,11 @@ acs-options > button.offline::before {
 acs-options > button.offline.active::before {
 	content: '\e948';
 }
+acs-options > button.collections::before {
+	content: '\e907';
+	transform: scale(1.6) translateX(1px) translateY(-0.7px);
+}
+
 html.show-acs acs-options {
 	transform: translateY(0);
 }
@@ -214,12 +219,12 @@ html.show-acs acs-options {
 		z-index: 52 !important;
 	}
 	acs-options:nth-of-type(1) {
-		height: calc(45% - 26.5px);
+		height: calc(41% - 26.5px);
 		top: 53px;
 		justify-content: flex-end;
 	}
 	acs-options:nth-of-type(2) {
-		height: calc(55% - 26.5px);
+		height: calc(59% - 26.5px);
 		bottom: 0;
 		justify-content: flex-start;
 	}	
@@ -244,12 +249,15 @@ html.show-acs acs-options {
         transform: scale(1) translateY(-1px);
     }
     acs-options>button.offline::before {
-        transform: scale(1.5) scaleX(.9)
+        transform: scale(1.5) scaleX(.9);
     }
     acs-options>button.listen::before {
-        transform: scale(1)
+        transform: scale(1);
     }
     acs-options>button.listen.active::before {
-        transform: scale(1.05)
-    }
+        transform: scale(1.05);
+	}
+	acs-options>button.collections::before {
+		transform: scale(1.2) translateX(1px) translateY(0);
+	}
 }

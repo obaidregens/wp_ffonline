@@ -25,6 +25,7 @@ $book_query = $query;
     <next-screen>
         <div>
             <text-input label="Search"></text-input>
+            <text-input label="Search by author"></text-input>
             <select>
                 <option value="updated/DESC">Last Updated</option>
                 <option value="date/DESC">Story Published</option>

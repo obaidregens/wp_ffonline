@@ -32,15 +32,6 @@ document.documentElement.appendChild(DOM.create('link',{
     }
     const acs_bottom = htmlEl.appendChild(DOM.create('acs-options',{
         children: [
-            !cex ? null : DOM.create('button',{
-                classes: ['index'],
-                listeners: {
-                    click: () => {
-                        htmlEl.classList.remove('show-acs');
-                        popup.open(DOM.q('popup.chapter-index'));
-                    }
-                }
-            }),
             DOM.create('button',{
                 classes: ['themes'],
                 listeners: {
@@ -56,6 +47,21 @@ document.documentElement.appendChild(DOM.create('link',{
                     click: () => {
                         htmlEl.classList.remove('show-acs');
                         popup.open(acs_popup);
+                    }
+                }
+            }),
+            !cex ? null : DOM.create('button',{
+                classes: ['collections'],
+                listeners: {
+                    click: collections_open.bind(null,book_id)
+                }
+            }),
+            !cex ? null : DOM.create('button',{
+                classes: ['index'],
+                listeners: {
+                    click: () => {
+                        htmlEl.classList.remove('show-acs');
+                        popup.open(DOM.q('popup.chapter-index'));
                     }
                 }
             }),

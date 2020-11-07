@@ -58,6 +58,10 @@ DOM.q('button[label="Import"]').addEventListener('click',event => {
             return;
         }
         new toast(confirms[action].t);
+        if (!response.allow_reimport) {
+            target.remove();
+            return;
+        }
         target.replaceWith(DOM.create("a",{
             attributes: {
                 story_id,

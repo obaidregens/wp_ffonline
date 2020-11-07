@@ -239,6 +239,17 @@ $app->listen('/dash/contact',function($self){
     $self->footer();
     exit();
 });
+$app->listen('/dash/reimport',function($self){
+    $self->admin();
+    $self->type = 'dash-reimport';
+    $self->type_id = 0;
+    $self->header([
+        'title'     => construct_page_title("Dash Reimport")
+    ]);
+    $self->template('/views/dash/reimport');
+    $self->footer();
+    exit();
+});
 $app->listen('/manage',function($self){
     $self->admin();
     $self->type = 'manage';
@@ -250,15 +261,6 @@ $app->listen('/manage',function($self){
     $self->footer();
     exit();
 });
-$app->listen("/book/:story/", function($self){
-    $query = (new WP_Query(array(
-        'post_type'         => array('book'),
-        'post_name__in'     => array($self->params['story'])
-    )))->posts;
-    if (! empty($query)){
-        $self->_301('/story/' . $query[0]->ID);
-    }
-});
 $app->listen('/story/:story/',function($self){
     $story = get_post($self->params['story']);
     if ($story === null || $story->post_type !== 'book' || $story->post_status !== 'publish' ){
@@ -268,35 +270,12 @@ $app->listen('/story/:story/',function($self){
     $self->type_id = intval($story->ID);
     $self->story = $story;
     $self->header([
-        'title'         => construct_page_title($story->post_title . ' by ' . author_name_single($story->ID)),
+        'title'         => ($story->post_title . ' by ' . author_name_single($story->ID)),
         'description'   => $story->post_excerpt
     ]);
     $self->template('/views/book');
     $self->footer();
     exit();
-});
-$app->listen("/book/:story/chapter/:chapter", function($self){
-    $bquery = (new WP_Query(array(
-        'post_type'         => array('book'),
-        'post_name__in'     => array($self->params['story'])
-    )))->posts;
-    if (empty($bquery)){
-        return;
-    }
-    $cquery = (new WP_Query(array(
-        'post_type' => array('chapter'),
-        'meta_query' => array(
-            array(
-                'key'       => 'chapter_order',
-                'value'     => $self->params['chapter'],
-                'type'      => 'NUMERIC',
-            ),
-        ),
-        'post_parent__in'   => array($bquery[0]->ID)
-    )))->posts;
-    if (! empty($cquery)){
-        $self->_301('/story/' . $bquery[0]->ID . '/' . $self->params['chapter'] );
-    }
 });
 $app->listen('/story/:story/:chapter',function($self){
     $story = get_post($self->params['story']);
@@ -326,10 +305,10 @@ $app->listen('/story/:story/:chapter',function($self){
     $self->story = $story;
     $self->chapter = $chapter;
     $self->header([
-        'title'         => construct_page_title(
+        'title'         => implode(" - ",[
             'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true),
             $story->post_title . ' by ' . author_name_single($story->ID)
-        ),
+        ]),
         'description'   => $story->post_excerpt
     ]);
     $self->template('/views/chapter');
