@@ -265,7 +265,7 @@ class collection_follow extends collection {
         return follow::new([
             'type'      => 'collection',
             'type_id'   => $collection,
-            'user_id'   => get_current_user_id(),
+            'user_id'   => $user,
             'landing_id'=> $landing_id
         ]);
     }
@@ -337,11 +337,12 @@ class collection_helpers extends collection {
         return $return;
     }
     static function create_default($user_id) {
-        collection::update([
+        $favs = collection::update([
             'title'     => 'Favorites',
             'type'      => 'Favorites',
             'author'    => $user_id
         ]);
+        collection_follow::follow($favs, $user_id, 0);
         collection::update([
             'title'     => 'Hidden',
             'type'      => 'Private',
