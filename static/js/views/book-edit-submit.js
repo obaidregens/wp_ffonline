@@ -66,7 +66,7 @@ function reAddChapters() {
     chapPage.innerText = '';
     if (selected.updating) {
         chapPage.appendChild(DOM.create('important',{
-            innerHTML: "You can't edit or add new chapters because this story is being auto updated. <a href='/import-stories'>Disable auto update</a>."
+            innerHTML: "You can't add new chapters because this story is being auto updated. You can though, edit your existing chapters. To add new chapters, <a href='/import-stories'>disable auto update</a>."
         }));
     }
     chapPage.appendChild(index);
@@ -124,9 +124,6 @@ function createChapterDraggableLi(chapter) {
                 children: [
                     DOM.create('a',{
                         innerText: 'Edit',
-                        attributes: {
-                            disabled: selected.updating ? "" : null 
-                        },
                         listeners: {
                             click: ({target}) => {
                                 const pnc = DOM.q('popup[new_chapter]');

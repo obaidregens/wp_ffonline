@@ -8,8 +8,8 @@ $r = array_column($wpdb->get_results(
     INNER JOIN wp_postmeta as m ON p.ID = m.post_id
     WHERE p.post_type = 'chapter'
     AND m.meta_key = 'chapter_order'
-    AND c > 0
-    GROUP BY p.post_parent"
+    GROUP BY p.post_parent
+    HAVING c > 0"
 ),'s');
 foreach ( $r as $story ) {
     $chapters = published_chapters($story,-1,'ids');

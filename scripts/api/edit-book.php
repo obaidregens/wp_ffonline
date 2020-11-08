@@ -60,10 +60,10 @@ function api_edit_book() {
         $e->add("description","Story summary is required");
     }
     $chapter_disabled = import_stories::get_status($book->ID) === 'live';
+    $old_chapters = published_chapters($book->ID,-1);
     if (!$chapter_disabled) {
         // Chapter
         $new_chapter_ids = array_map('strval',array_column($d['chapters'] ?? [],'ID'));
-        $old_chapters = published_chapters($book->ID,-1);
         $old_chapter_titles = array_column($old_chapters,'post_title','ID');
         $old_chapter_ids = array_map('strval',array_column($old_chapters,'ID'));
         $to_remove = array_diff($old_chapter_ids,$new_chapter_ids);
@@ -113,6 +113,32 @@ function api_edit_book() {
             update_post_meta( $chapter_id, 'chapter_order', $nu );
         }
         update_post_meta( $book->ID, 'word-count', $words_total );
+    }
+    else {
+        $chapters = array_combine(array_column($d['chapters'],'ID'),$d['chapters']);
+        foreach ($old_chapters as $old_chapter) {
+            $chapter = &$chapters[$old_chapter->ID];
+            if (!isset($chapter)) {
+                continue;
+            }
+            if (trim($chapter['title'] ?? "") === "") {
+                continue;
+            }
+            if (
+                $chapter['draft_id'] ||
+                ($chapter['title'] ?? "") !== ($old_chapter->post_title ?? "") ||
+                $chapter['preAN'] !== get_post_meta($old_chapter->ID,'pre_author_note',true) ||
+                $chapter['postAN'] !== get_post_meta($old_chapter->ID,'pre_author_note',true)
+            ){
+                $chapter_id = draft_chapters::save(
+                    ($chapter['draft_id'] ?? null) ?: null,
+                    $book->ID,
+                    substr( ($chapter['title'] ?? "") ,0,80),
+                    [ 'pre' => $chapter['preAN'], 'post' => $chapter['postAN'] ],
+                    $old_chapter->ID
+                );
+            }
+        }
     }
 
     // Tags

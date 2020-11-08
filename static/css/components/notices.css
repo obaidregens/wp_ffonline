@@ -3,6 +3,11 @@ important, exciting {
     display: block;
     margin: 25px 40px;
 }
+@media screen and (max-width: 500px) {
+    important, existing {
+        margin: 25px 10px;
+    }
+}
 important {
     color: var(--black);
     background-color: var(--fadedred);
