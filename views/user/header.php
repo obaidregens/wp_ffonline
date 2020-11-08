@@ -30,7 +30,7 @@ $follow_class = follow::exists('user',$user->ID) ? 'followed' : '';
 <author-name user_id="<?= $user->ID; ?>">
 	@<?= $user->user_login; ?>
 </author-name>
-<?php if (!$is_admin) { ?>
+<?php if (!$is_admin || current_user_can( 'administrator' )) { ?>
 <author-stats>
 	<stat count="<?= $app->author_stories_query->count; ?>" label="Stories"></stat>
 	<stat count="<?= count(follow::query_by('user','type_id',$user->ID)) ?>" label="Followers"></stat>

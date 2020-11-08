@@ -72,7 +72,7 @@ class follow {
         }
         global $wpdb;
         $table = self::$table;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE $field = %s",[$value]);
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE $field = %s AND type = %s",[$value,$type]);
         $results = $wpdb->get_results($sql);
         return $results;
     }
