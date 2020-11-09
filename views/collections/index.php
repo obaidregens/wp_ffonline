@@ -9,8 +9,8 @@ $app->bundle->css('css/views/collection-content');
 $app->bundle->css('css/views/collection-options');
 $app->bundle->js('js/views/collection-options');
 $app->bundle->js('js/views/collection-content');
-$app->bundle->js('js/views/search-updateCollection');
-$app->bundle->css('css/views/search-updateCollection');
+$app->bundle->js('js/views/global-collections');
+$app->bundle->css('css/views/global-collections');
 $app->bundle->enqueue();
 
 $args = array(
@@ -34,11 +34,10 @@ $collections = collection::query($args);
 ?>
 <collection-bar>
 <button label="Create New"></button>
+<?php if ($type['type'] !== 'author-collections') { ?>
 <button label="My Collections"></button>
+<?php } ?>
 </collection-bar>
-<script>
-    window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-</script>
 <collections-container class="grid"><?php
 foreach ($collections as $collection) {
     $app->collection = $collection;

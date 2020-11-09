@@ -1,13 +1,13 @@
 <?php
 $app->bundle = global_bundle('chapters');
 $app->bundle->mix('speak');
+$app->bundle->mix('confirmation');
+$app->bundle->mix('story-options');
 $app->bundle->js('external/nosleep/NoSleep');
 $app->bundle->css('css/js-components/checkbox');
-$app->bundle->mix('confirmation');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/components/slider');
-$app->bundle->mix('search-options');
 $app->bundle->css('css/views/chapter-index');
 $app->bundle->css('css/views/chapter-main');
 $app->bundle->css('css/views/chapter-reviews');
@@ -57,10 +57,6 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 	<content class="acs-elem"><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'pre_author_note', true )); ?></author-notes><?= $chapter->post_content; ?><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'post_author_note', true )); ?></author-notes></content>
 	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
 	<book-options>
-		<script>
-			window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-			window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
-		</script>
 		<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
 		<button class="book-collections"></button>
 		<button class="book-share"></button>

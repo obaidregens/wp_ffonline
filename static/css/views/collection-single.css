@@ -4,3 +4,8 @@ collections-container {
     padding-bottom: 20px;
     margin-bottom: 20px;
 }
+collections-container > collection {
+    display: block;
+    position: relative;
+    padding: 1rem;
+}

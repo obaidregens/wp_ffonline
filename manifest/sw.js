@@ -1,4 +1,4 @@
-const OFFLINE_VERSION = 17;
+const OFFLINE_VERSION = 19;
 const CACHE_NAME = 'offline';
 const OFFLINE_URL = '/offline';
 const permCaching = [

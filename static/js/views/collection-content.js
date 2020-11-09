@@ -16,4 +16,9 @@ DOM.q('collections-container').addEventListener('click',function(event){
             callOnCopy: () => new toast("Copied!")
         });
     }
+    else if ( event.target.classList.contains('edit-collection') ){
+        const collection_id = event.target.closest('collection').getAttribute('collection_id');
+        collections.edit(collection_id);
+        
+    }
 });

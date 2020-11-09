@@ -53,7 +53,7 @@ document.documentElement.appendChild(DOM.create('link',{
             !cex ? null : DOM.create('button',{
                 classes: ['collections'],
                 listeners: {
-                    click: collections_open.bind(null,book_id)
+                    click: collections.open.bind(null,book_id)
                 }
             }),
             !cex ? null : DOM.create('button',{

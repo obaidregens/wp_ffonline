@@ -10,13 +10,20 @@ if (err::is($query->args)){
 $query->query();
 global $book_query;
 $book_query = $query;
+$tags_data = tags_data($query);
+$icf = $book_query->args['included']['fandom'] ?? [];
+$fandoms = [];
+foreach(($book_query->args['included']['fandom'] ?? []) as $fandom_id ) {
+    $fandoms[] = $tags_data['fandom'][$fandom_id]['name'];
+}
+$fandoms = implode('/',$fandoms);
 ?>
 <script>
-    window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-    window.tags_data = <?= script_json(json_encode(tags_data($query))); ?>;
-    window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
+    window.tags_data = <?= script_json(json_encode($tags_data)); ?>;
 </script>
 <prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
+
+<loader xl></loader>
 
 <filter-books>
     <button class="next-screen">
@@ -47,9 +54,20 @@ $book_query = $query;
             <button class="close_next-screen" label="Close"></button>
         </div>
     </next-screen>
+    <fandom-filter>
+    <showing class="<?= $book_query->is_default ? "" : "show" ?>">
+        <fandom><?= empty($fandoms) ? "All" : $fandoms ?></fandom>
+        <span> stories by </span>
+        <select>
+            <option value="updated/DESC">Last Updated</option>
+            <option value="date/DESC">Story Published</option>
+            <option value="words/DESC">Words</option>
+            <option value="votes/DESC">Votes</option>
+        </select>
+    </showing>
+    <input type="text" placeholder="Filter by fandom">
+    </fandom-filter>
 </filter-books>
-
-<loader xl></loader>
 
 <books-container>
 <?php
@@ -73,13 +91,12 @@ if (! isset($app->bundle)){
 }
 $app->bundle->mix('glide_js');
 $app->bundle->mix('confirmation');
+$app->bundle->mix('story-options');
+$app->bundle->mix('autocomplete');
 $app->bundle->css('css/components/loader');
-$app->bundle->css('css/components/select');
 $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->js("js/components/checkbox");
-$app->bundle->css('css/js-components/switch');
-$app->bundle->js("js/components/switch");
 $app->bundle->js("external/noUiSlider/nouislider");
 $app->bundle->css('external/noUiSlider/nouislider');
 $app->bundle->css('css/views/search-tags');
@@ -87,10 +104,8 @@ $app->bundle->css('css/views/search-content');
 $app->bundle->js("js/views/search-content");
 $app->bundle->css('css/views/search-filters');
 $app->bundle->js("js/views/search-filters");
-$app->bundle->css('css/views/search-options');
-$app->bundle->js("js/views/search-options");
-$app->bundle->css('css/views/search-updateCollection');
-$app->bundle->js("js/views/search-updateCollection");
 $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js("js/views/search-offline");
+$app->bundle->css('css/views/search-filterFandom');
+$app->bundle->js("js/views/search-filterFandom");
 $app->bundle->enqueue();

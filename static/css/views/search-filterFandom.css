@@ -1,0 +1,42 @@
+fandom-filter {
+    display: flex;
+    width: 100%;
+}
+fandom-filter {
+    display: flex;
+    width: 100%;
+    font-size: 1.4rem;
+}
+fandom-filter > showing {
+    width: 100%;
+    display: none;
+}
+fandom-filter > showing.show {
+    display: flex;
+}
+fandom-filter > showing.show + input {
+    display: none;
+}
+fandom-filter > showing > select {
+    width: fit-content;
+    width: -moz-fit-content;
+    margin: 0;
+    border: none;
+    padding: 0;
+}
+fandom-filter > showing > select > option {
+    font-size: 1.3rem;
+}
+fandom-filter > showing > span,fandom {
+    display: inline-flex;
+    align-items: center;
+    white-space: break-spaces;
+}
+fandom-filter > input {
+    display: flex;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    font-size: 1.4rem;
+    color: var(--text-color);
+}

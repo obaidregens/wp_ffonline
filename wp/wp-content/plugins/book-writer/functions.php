@@ -141,6 +141,8 @@ function run_at_activation(){
 		`import_status`	VARCHAR(20) NOT NULL ,
 		`request_time`	BIGINT NOT NULL ,
 		`import_time`	BIGINT NOT NULL ,
+		`import_favs`	BIGINT NOT NULL ,
+		`import_follows`BIGINT NOT NULL ,
 		`viewed_time`	BIGINT NOT NULL ,
 		PRIMARY KEY (`import_from`,`import_story`)
 	) $charset_collate;";

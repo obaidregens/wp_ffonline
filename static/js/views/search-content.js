@@ -28,7 +28,7 @@ const reChapterProgress = () => {
         const label = target.getAttribute('label');
         if (['Collections','Favorite','Hide'].includes(label) ){
             const book_id = book.getAttribute('book_id');
-            collections_open(book_id);
+            collections.open(book_id);
         }
         else if (label === 'Share'){
             const 
@@ -45,4 +45,12 @@ const reChapterProgress = () => {
             });
         }
     });
+})();
+// Load Collections
+(async () => {
+    const res = await api("get_collections",{
+        data: {book_ids: [...DOM.qa('books-container > book')].map(el => el.getAttribute('book_id') )}
+    });
+    collections.book_collections = res.book_collections;
+    collections.collections_data = res.collections_data;
 })();

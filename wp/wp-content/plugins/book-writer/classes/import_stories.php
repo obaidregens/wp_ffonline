@@ -35,7 +35,9 @@ class import_stories {
                     'import_status' => 'pending',
                     'request_time'  => time(),
                     'import_time'   => 0,
-                    'viewed_time'   => 0
+                    'viewed_time'   => 0,
+                    'import_favs'   => 0,
+                    'import_follows'=> 0
                 ]
             );    
         }

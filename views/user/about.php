@@ -2,7 +2,7 @@
 $app->template('/views/user/header');
 $app->bundle->css('/css/components/divider');
 $app->bundle->mix('search-content');
-$app->bundle->mix('search-options');
+$app->bundle->mix('story-options');
 $app->bundle->css('/css/views/author-about');
 $app->bundle->css('/css/views/updates-add');
 $app->bundle->css('/css/views/updates-content');
@@ -40,10 +40,6 @@ $description = htmlspecialchars(get_the_author_meta( 'description', $user->ID ))
     <?php } ?>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">
-        <script>
-        window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-        window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
-        </script>
         <books-container class="grid">
             <?php
             global $book;

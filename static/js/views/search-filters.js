@@ -414,39 +414,66 @@
         }
         progress_spinner();
     
-        let construct = 'words=' + words('get');
-        construct += '&sort=' + filters_sort_elem.value;
+        const construct = [
+            "words=" + words('get'),
+            'sort=' + filters_sort_elem.value
+        ];
         const search = filters_search_elem.value;
-        construct += search === '' ? '' : '&search=' + search;
+        if (search !== "") {
+            construct.push('search=' + search);
+        }
         const author_search = author_search_elem.value;
-        construct += author_search === '' ? '' : '&author=' + author_search;
+        if (author_search !== ""){
+            construct.push('author=' + author_search);
+        }
         const select_tags = DOM.qa('select-tag');
+        let fandom_name = "";
         for (let i = 0; i < select_tags.length; i++) {
             const raw_selected = select_tags[i].getAttribute('selected');
             if (! raw_selected){
                 continue;
             }
-            const name = select_tags[i].getAttribute('name');
             const selected = JSON.parse(raw_selected);
-            construct += selected.included.length === 0 ? '' : ('&' + name + '_included=' + selected.included.join(','));
-            construct += selected.excluded.length === 0 ? '' : ('&' + name + '_excluded=' + selected.excluded.join(','));
+            const name = select_tags[i].getAttribute('name');
+            if (name === "fandom") {
+                fandom_name = selected.included.map(fid => tags_data.fandom[fid].name).join("/");
+            }
+            if (selected.included.length > 0) {
+                construct.push(name + '_included=' + selected.included.join(','));
+            }
+            if (selected.excluded.length > 0) {
+                construct.push(name + '_excluded=' + selected.excluded.join(','));
+            }
         }
         const prev_ss = DOM.q('prev_ss');
         api('search',{
             data: {
-                search: construct,
+                search: construct.join('&'),
                 page,
                 prev: prev_ss.innerText
             }
         })
         .then(response => {
+            // Fandom Filter
+            if (construct.length > 2) {
+                const fandom_showing = DOM.q('fandom-filter > showing');
+                fandom_showing.classList.add('show');
+                fandom_showing.querySelector('select').value = filters_sort_elem.value;
+                fandom_showing.querySelector('fandom').innerText = fandom_name === "" ? "All" : fandom_name;
+            }
+            else {
+                const fandom_showing = DOM.q('fandom-filter > showing');
+                fandom_showing.classList.remove('show');
+                DOM.q('fandom-filter > input').value = "";
+            }
+
             // New Data
             prev_ss.innerText = response.prev;
-            window.tags_data = _.clone( response.tags_data );
-            window.book_collections = _.clone( response.book_collections );
+            window.tags_data = response.tags_data;
+            collections.book_collections = response.book_collections;
             DOM.q('pagination').innerHTML = response.paginate;
             DOM.q('books-container').innerHTML = response.output;
-            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct);
+            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct.join("&"));
             
             // Styling
             clearInterval(search_progress_interval);
@@ -470,6 +497,10 @@
         });
     
     }
+    DOM.q('fandom-filter select').addEventListener('change',({target}) => {
+        filters_sort_elem.value = target.value;
+        DOM.q('[label="Search"]').dispatchEvent(new Event("click"));
+    });
     DOM.q('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',function(event){
         event.preventDefault();
         trigger_search();

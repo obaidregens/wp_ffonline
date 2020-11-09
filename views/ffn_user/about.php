@@ -1,7 +1,7 @@
 <?php
 $app->template('/views/ffn_user/header');
 $app->bundle->mix('search-content');
-$app->bundle->mix('search-options');
+$app->bundle->mix('story-options');
 $app->bundle->css('css/views/author-about');
 $app->bundle->enqueue();
 global $book_query;
@@ -11,10 +11,6 @@ $book_query = $app->author_books;
 <author-main>
     <?php if ($book_query->has()) { ?>
     <author-books books="<?= $book_query->count; ?>">
-        <script>
-            window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-            window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
-        </script>
         <books-container class="grid">
             <?php
             global $book;

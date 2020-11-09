@@ -1,5 +1,6 @@
 <?php
 $app->bundle = global_bundle('create-fandom');
+$app->bundle->mix('autocomplete');
 $app->bundle->css('css/components/select');
 $app->bundle->js('js/views/createFandom-main');
 $app->bundle->css('css/views/createFandom-main');

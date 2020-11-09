@@ -332,7 +332,7 @@ class collection_helpers extends collection {
                 $collection->type = 'Public';
             }
             $collection->link = collection_helpers::link($collection->ID);
-            $return[] = $collection;
+            $return[$collection->ID] = $collection;
         }
         return $return;
     }

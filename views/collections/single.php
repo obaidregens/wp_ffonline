@@ -9,7 +9,7 @@ $app->bundle->js('js/views/collection-options');
 $app->bundle->js('js/views/collection-content');
 $app->bundle->css('css/views/collection-single');
 
-?><collections-container><?php
+?><collections-container ><?php
 $app->template('/subviews/collection');
 ?></collections-container><?php
 $app->template('/views/search');

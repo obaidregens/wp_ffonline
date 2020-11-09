@@ -60,7 +60,7 @@ const themes = class {
     static get current () {
         return cookies.all.theme;
     }
-}
+};
 themes.all = {
     light: {
         themeColor: "#007ACC",
@@ -86,7 +86,7 @@ themes.all = {
         backgroundColor: "#edd1b0",
         backgroundAccent: "#f1e1d0"
     },
-}
+};
 var frewfrewgfre = (function(){
     let currentTheme = themes.current;
     if (! currentTheme) {

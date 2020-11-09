@@ -36,12 +36,12 @@
     --normalgrey: rgb(147 147 147 / 60%);
 }
 ::-moz-selection {
-    color: var(--white);
-    background: var(--theme-color);
+    background: rgba(var(--theme-color-v),0.2);
+    color: var(--text-color);
 }
 ::selection {
-    background: #e8e8e8;
-    color: var(--black);
+    background: rgba(var(--theme-color-v),0.2);
+    color: var(--text-color);
 }
 html {
     background-color: var(--background-color);
@@ -61,6 +61,11 @@ html {
     background: transparent;
     width: 5px;
 
+}
+* {
+    scrollbar-color: var(--theme-color) transparent;
+    scrollbar-width: thin;
+    scrollbar-width: 1px;
 }
 /* Styles General */
 a {

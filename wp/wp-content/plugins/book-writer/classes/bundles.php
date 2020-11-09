@@ -342,17 +342,16 @@ class bundle {
                 "js/views/search-filters",
             ),
         ),
-        'search-options'    => array(
+        'story-options'    => array(
             'css'   => array(
                 'css/components/select',
                 'css/js-components/switch',
-                'css/views/search-options',
-                'css/views/search-updateCollection'
+                "css/views/global-collections"
             ),
             'js'    => array(
                 "js/components/switch",
-                "js/views/search-options",
-                "js/views/search-updateCollection"
+                "js/views/story-options",
+                "js/views/global-collections"
             ),
         ),
         'glide_js'      => array(
@@ -361,6 +360,14 @@ class bundle {
             ),
             'js'    => array(
                 'external/glide/glide'
+            )
+        ),
+        'autocomplete'  => array(
+            'css'   => array(
+                'css/js-components/autocomplete',
+            ),
+            'js'    => array(
+                'js/components/autocomplete',
             )
         ),
         'react'   => array(

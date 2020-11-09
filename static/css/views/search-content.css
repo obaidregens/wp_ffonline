@@ -173,7 +173,9 @@ main > loader {
 main > loader.show {
     opacity: 1;
 }
-main > loader.show ~ books-container, main > loader.show ~ pagination{
+main > loader.show ~ filter-books fandom-filter,
+main > loader.show ~ books-container,
+main > loader.show ~ pagination{
     opacity: 0;
     pointer-events: none;
 }

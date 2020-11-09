@@ -1,5 +1,6 @@
 filter-books {
     display: flex;
+    flex-direction: column;
     margin-bottom: 20px;
     justify-content: center;
     align-items: center;

@@ -1,0 +1,30 @@
+ul[autocomplete] {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    background-color: var(--background-color);
+    box-shadow: var(--elevate-light);
+    transition: background-color .2s;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    transition: height .2s;
+    will-change: height;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+ul[autocomplete].select > li {
+    cursor: pointer;
+}
+ul[autocomplete] > li,ul[autocomplete] > text {
+    user-select: none;
+    display: flex;
+    padding: 10px;
+    width: 100%;
+    transition: background-color .2s;
+}
+ul[autocomplete] > li:focus,
+ul[autocomplete] > li:hover {
+    background-color: var(--theme-color);
+    color: var(--white);
+}

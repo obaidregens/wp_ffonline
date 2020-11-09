@@ -206,6 +206,7 @@ class book_query{
                 $args['per_page']
             );    
         }
+        $this->is_default = count($included) === count($results_['words=0']);
         $this->args = $args;
         $this->ids = $included;
         $this->count = count($this->ids);

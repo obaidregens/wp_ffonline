@@ -1,4 +1,3 @@
-OPT_BOOK_IN_COLLECTIONS = true;
 function follow_collection(collection_id,follow = true){
     if (! logged_in) {
         prompt_login();
@@ -30,7 +29,7 @@ if (DOM.q('collection-bar > button[label="Create New"]')) {
             new toast('Login to create collection.');
             return;
         }
-        create_collection_open('new');
+        collections.edit('new');
     });    
 }
 if (DOM.q('collection-bar > button[label="My Collections"]')) {
@@ -43,3 +42,11 @@ if (DOM.q('collection-bar > button[label="My Collections"]')) {
         window.location.href = '/@me/collections'
     });
 }
+// Load Collections
+(async () => {
+    const res = await api("get_collections",{
+        data: {book_ids: []}
+    });
+    collections.book_collections = res.book_collections;
+    collections.collections_data = res.collections_data;
+})();

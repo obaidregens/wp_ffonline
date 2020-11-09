@@ -11,6 +11,10 @@ collection.grid-item > button.share-collection::before {
     content: '\e908';
     transform: scale(1.35) translateX(1.5px);
 }
+collection.grid-item > button.edit-collection::before {
+    content: '\e909';
+    transform: scale(1.10) translateX(0.5px) translateY(1px);
+}
 
 collection > a.title {
     display: block;

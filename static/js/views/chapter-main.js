@@ -75,7 +75,7 @@ if (review_submit_btn){
 const book_info = DOM.q('book-info');
 const book_id = book_info.getAttribute('book_id');
 DOM.q('.book-collections').addEventListener('click',function(){
-    collections_open(book_id);
+    collections.open(book_id);
 });
 DOM.q('.book-share').addEventListener('click',function(){
     const book_title = book_info.querySelector('a.title');
@@ -121,4 +121,12 @@ DOM.q('.book-vote').addEventListener('click',({target}) => {
         window.removeEventListener('click', enableNoSleep, false);
         noSleep.enable();
     }, false);
+})();
+// Load Collections
+(async () => {
+    const res = await api("get_collections",{
+        data: {book_ids: [book_id]}
+    });
+    collections.book_collections = res.book_collections;
+    collections.collections_data = res.collections_data;
 })();

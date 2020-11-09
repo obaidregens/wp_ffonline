@@ -1,7 +1,7 @@
 <?php
 
 $app->bundle = global_bundle('book');
-$app->bundle->mix('search-options');
+$app->bundle->mix('story-options');
 $app->bundle->mix('confirmation');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/tooltips');
@@ -47,8 +47,4 @@ $is_user_logged_in = is_user_logged_in(  );
             </collapsible>
         </chapters>
     </book-more>
-    <script>
-        window.collections_data = <?= script_json(json_encode(collection_helpers::js_data())); ?>;
-        window.book_collections = <?= script_json(json_encode(collection_helpers::query_by_book(array_column($book_query->books,'ID')))); ?>;
-    </script>
 </book>

@@ -8,6 +8,9 @@ $follows = count(collection_follow::query_by('type_id',$collection->ID));
     <?php if (in_array($collection->type,['Favorites','Public','Unlisted'])) { ?>
     <button class="share-collection options"></button>
     <?php } ?>
+    <?php if (is_current_user($collection->author)) { ?>
+    <button class="edit-collection options"></button>
+    <?php } ?>
     <a href="<?= collection_helpers::link($collection->ID); ?>" class="title"><?= htmlspecialchars($collection->title); ?></a>
     <a href="<?= get_author_posts_url( $author->ID ); ?>" class="author">@<?= $author->user_login; ?></a>
     <collection-meta>
