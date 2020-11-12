@@ -22,7 +22,7 @@ class dict {
                 'thesaurus_com'     => json_encode($this->data->thesaurus_com),
                 'milli_timestamp'   => millitime(),
                 'landing_id'        => $landing_id
-            ],
+            ]
         );
     }
     function google_synonym() {
