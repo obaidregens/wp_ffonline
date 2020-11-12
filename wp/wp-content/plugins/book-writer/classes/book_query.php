@@ -560,7 +560,6 @@ class book_query_cache extends book_query {
                     ),
                 )
             ))))->posts;
-            var_dump($word_ids);
             self::put(array(
                 array(
                     '_key'        => 'words',

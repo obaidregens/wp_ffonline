@@ -55,7 +55,8 @@ function api_edit_book() {
     if (trim($d['description']) === '') {
         $e->add("description","Story summary is required");
     }
-    $chapter_disabled = import_stories::get_status($book->ID) === 'live';
+    $import_status = import_stories::get_status($book->ID);
+    $chapter_disabled = in_array($import_status,["live","reimport"]);
     $old_chapters = published_chapters($book->ID,-1);
     if (!$chapter_disabled) {
         // Chapter
@@ -110,7 +111,7 @@ function api_edit_book() {
         }
         update_post_meta( $book->ID, 'word-count', $words_total );
     }
-    else {
+    else if ($import_status === "live") {
         $chapters = array_combine(array_column($d['chapters'],'ID'),$d['chapters']);
         foreach ($old_chapters as $old_chapter) {
             $chapter = &$chapters[$old_chapter->ID];

@@ -66,6 +66,9 @@ html {
     -webkit-tap-highlight-color: transparent;
     overflow-x: hidden;
 }
+header,html {
+    transition: background-color 0.3s, color 0.3s;
+}
 /* Scrollbar */
 *::-webkit-scrollbar-thumb {
     background: var(--theme-color);
@@ -342,7 +345,7 @@ hr,div.hr {
     width: 100%;
     display: flex;
     margin: 2em 0;
-    height: 1px;
+    height: 2px;
     background-image:
     linear-gradient(to right,
         rgba(var(--text-color-v),0.05),

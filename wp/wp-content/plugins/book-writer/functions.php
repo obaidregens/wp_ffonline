@@ -318,7 +318,16 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
-    //RUN SQL
+	$dictionary_data = "CREATE TABLE dictionary_data (
+		`word`				VARCHAR(150) NOT NULL ,
+		`google`			LONGTEXT NOT NULL ,
+		`thesaurus_com`		LONGTEXT NOT NULL ,
+		`landing_id`		BIGINT NOT NULL ,
+		`milli_timestamp`	BIGINT NOT NULL ,
+		PRIMARY KEY (`word`)
+	) $charset_collate;";
+
+	//RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 	// Stats
@@ -363,7 +372,7 @@ function run_at_activation(){
 	dbDelta( $offline_stats_table );
 	// Spam
 	dbDelta( $spam_log_table );
-
+	dbDelta( $dictionary_data );
 
 	//Create Default Collections for users
 	$users = get_users(array(

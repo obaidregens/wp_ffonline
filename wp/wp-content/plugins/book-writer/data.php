@@ -82,6 +82,7 @@ function get_data($book_id = 'new'){
 		}
 	}
 
+	$import_status = import_stories::get_status($book_id);
 	//Selected
 	//Categories
 	$data['selected']['fandom'] = [];
@@ -94,7 +95,8 @@ function get_data($book_id = 'new'){
 	$data['selected']['anonymous_reviews']	  = false;
 	$data['selected']['publish'] 			  = false;
 	$data['selected']['book_id']			  = $book_id;
-	$data['selected']['updating']			  = import_stories::get_status($book_id) === "live";
+	$data['selected']['updating']			  = in_array($import_status,["live","reimport"]);
+	$data['selected']['reimporting']		  = $import_status === "reimport";
 
 	if ($book_id != 'new'){
 		$data['selected']['book_id']		  = (int) $book_id;

@@ -160,6 +160,18 @@ function print_book_meta($book_id) {
 		'types'			=> ['Favorites','Public'],
 	]);
 	$words = get_post_meta($book_id,'word-count',true);
+	if (current_user_can( 'administrator' )) {
+		global $wpdb;
+		$r = $wpdb->get_results($wpdb->prepare("SELECT * FROM import_stories WHERE story_id = %d",[$book_id]));
+		if (!empty($r)) {
+			?>
+			<book-meta>
+				<span tooltip-top="FFN Follows"><?= $r[0]->import_follows; ?></span>
+				<span tooltip-top="FFN Favs"><?= $r[0]->import_favs; ?></span>
+			</book-meta>
+			<?php	
+		}
+	}
 	?>
 	<book-meta>
 		<span tooltip-top="Updated"><?= get_the_time('',$book_id); ?></span>
