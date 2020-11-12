@@ -46,6 +46,9 @@ toolbar > button[action] {
     border-radius: 0;
     font-size: 1.2rem;
 }
+toolbar > button[action]::before {
+    display: inline-block;
+}
 toolbar > button[action="bold"]::before {
     content: '\e933';
 }
@@ -55,8 +58,11 @@ toolbar > button[action="italic"]::before {
 toolbar > button[action="center"]::before {
     content: '\e935';
 }
+toolbar > button[action="seperator"]::before {
+    content: '\e917';
+    transform: scaleY(0.75);
+}
 toolbar > button[action="fullscreen"]::before {
-    display: inline-block;
     transform: scale(1.35);
     content: '\e936';
 }
@@ -79,13 +85,11 @@ button[label="Save"] > dropdown > li::before {
 /* Share Button */
 toolbar > button[action="share"]::before {
     content: '\e908';
-    display: inline-block;
     transform: translateY(-1px) translateX(2px);
 }
 /* Preview Button */
 toolbar > button[action="preview"]::before {
     content: '\e947';
-    display: inline-block;
     transform: translateY(-1px) translateX(2px);
 }
 /* Delete Button */
@@ -93,24 +97,25 @@ toolbar > button[action="delete"] {
     margin-left: auto;
 }
 toolbar > button[action="delete"]::before {
-    display: inline-block;
     transform: scale(0.9);
     content: '\e921';
 }
 
 /* Word Count */
-editor > word-count {
-    color: var(--darkgrey);
+editor > infobar {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     font-size: 12px;
     width: 100%;
     height: 25px;
     padding: 0 10px;
-    border: 1px solid var(--grey);
-    border-top: none;
+    user-select: none;
 }
-editor > word-count:empty::before {
+editor > infobar > word-count {
+    display: flex;
+    color: var(--darkgrey);
+}
+editor > infobar > word-count:empty::before {
     content: "0 Words";
 }

@@ -38,8 +38,8 @@ class notifications {
     static function createNotification($row) {
         switch ($row->notification_type) {
             case 'add_to_collection':
-                $story = get_post($row->type_of_id);
-                if (! $story || $story->post_status !== 'publish' || $story->post_type !== 'book'){
+                $story = story::get($row->type_of_id,false);
+                if (! $story ){
                     return null;
                 }
                 $collection = collection::get_by('ID',$row->type_by_id);
@@ -61,8 +61,8 @@ class notifications {
                     'link'      => collection_helpers::link($collection) ,
                 ];
             case 'story_update':
-                $story = get_post($row->type_by_id);
-                if (! $story || $story->post_status !== 'publish' || $story->post_type !== 'book'){
+                $story = story::get($row->type_by_id,false);
+                if (! $story ){
                     return null;
                 }
                 $chapter_num = get_post_meta( $row->type_of_id, 'chapter_order', true );
@@ -167,8 +167,8 @@ class notifications_insert extends notifications {
         if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
         }
-        $story = get_post($chapter->post_parent);
-        if (! $story || $story->post_type !== 'book' || $story->post_status !== 'publish') {
+        $story = story::get($chapter->post_parent,false);
+        if (!$story) {
             return false;
         }
         $followers = follow::query_by('user','type_id',$chapter->post_author);
@@ -217,6 +217,10 @@ class notifications_insert extends notifications {
         if ( !$review || !$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
         }
+        $story = story::get($chapter->post_parent,false);
+        if (!$story) {
+            return false;
+        }
         if ( 
             intval($chapter->post_author) === intval($review->user_id) &&
             intval($review->comment_parent) === 0
@@ -239,6 +243,10 @@ class notifications_insert extends notifications {
             return false;
         }
         if (intval($chapter->post_author) === intval($user_id)) {
+            return false;
+        }
+        $story = story::get($chapter->post_parent,false);
+        if (!$story) {
             return false;
         }
         $args = [
@@ -275,8 +283,8 @@ class notifications_insert extends notifications {
         }
     }
     function addToCollection($storyID, $by_collection_id) {
-        $story = get_post($storyID);
-        if (! $story || $story->post_type !== 'book' || $story->post_status !== 'publish'){
+        $story = story::get($storyID,false);
+        if ( !$story ){
             return false;
         }
         $by_collection = collection::get_by('ID',$by_collection_id);

@@ -309,6 +309,35 @@ class drafts_json extends drafts {
         ));
         return empty($r) ? false : $r[0]->ID;
     }
+    protected static function parseHTMLStyle($style) {
+        $style_arrs = explode(';',$style);
+        $TheNew = [];
+        foreach ($style_arrs as $s ) {
+            if ($s === '') {
+                continue;
+            }
+            $split = explode(':',$s);
+            $TheNew[trim($split[0])] = trim($split[1]);
+        }
+        return $TheNew;
+    }
+    protected static function BuildLeafsRecursive($lnode,$leaf,&$block) {
+        if ($lnode instanceof DOMText) {
+            $leaf['text'] = $lnode->wholeText;
+            $block['children'][] = $leaf;
+            return;
+        }
+        $style = self::parseHTMLStyle($lnode->getAttribute('style'));
+        if (in_array($lnode->tagName,['b','strong']) || ($style['font-weight'] ?? '') === 'bold' ) {
+            $leaf['bold'] = true;
+        }
+        if (in_array($lnode->tagName,['i','em']) || ($style['font-style'] ?? '') === 'italic' ) {
+            $leaf['italic'] = true;
+        }
+        foreach ($lnode->childNodes as $tnode ) {
+            self::BuildLeafsRecursive($tnode,$leaf,$block);
+        }
+    }
     public static function toJSON($xml) {
         $d = new DOMDocument();
         $r = $d->loadXML('<content>' . $xml . '</content>');
@@ -316,49 +345,23 @@ class drafts_json extends drafts {
             return;
         }
         $json = [];
-        function parseHTMLStyle($style) {
-            $style_arrs = explode(';',$style);
-            $TheNew = [];
-            foreach ($style_arrs as $s ) {
-                if ($s === '') {
-                    continue;
-                }
-                $split = explode(':',$s);
-                $TheNew[trim($split[0])] = trim($split[1]);
-            }
-            return $TheNew;
-        }
-        function BuildLeafsRecursive($lnode,$leaf,&$block) {
-            if ($lnode instanceof DOMText) {
-                $leaf['text'] = $lnode->wholeText;
-                $block['children'][] = $leaf;
-                return;
-            }
-            $style = parseHTMLStyle($lnode->getAttribute('style'));
-            if (in_array($lnode->tagName,['b','strong']) || ($style['font-weight'] ?? '') === 'bold' ) {
-                $leaf['bold'] = true;
-            }
-            if (in_array($lnode->tagName,['i','em']) || ($style['font-style'] ?? '') === 'italic' ) {
-                $leaf['italic'] = true;
-            }
-            foreach ($lnode->childNodes as $tnode ) {
-                BuildLeafsRecursive($tnode,$leaf,$block);
-            }
-        }
         foreach ($d->firstChild->childNodes as $node) {
-            if (!$node instanceof DOMElement || $node->tagName !== 'p') {continue;}
+            if (!$node instanceof DOMElement || !in_array($node->tagName,['p','hr']) ) {continue;}
             $block = [
                 'children' => []
             ];
-            $style = parseHTMLStyle($node->getAttribute('style'));
-            if ( ($style['text-align'] ?? '') === 'center' ) {
+            $style = self::parseHTMLStyle($node->getAttribute('style'));
+            if ( ($style['text-align'] ?? '') === 'center' && $node->tagName === "p" ) {
                 $block['type'] = 'center';
+            }
+            else if ($node->tagName === "hr") {
+                $block['type'] = 'seperator';
             }
             // Build Styles
             foreach ($node->childNodes as $leaf_el) {
-                BuildLeafsRecursive($leaf_el,[],$block);
+                self::BuildLeafsRecursive($leaf_el,[],$block);
             }
-            if ( $block === ['children'=>[]] ){
+            if (empty($block['children'])) {
                 $block['children'][] = ['text'=>""];
             }
             $json[] = $block;
@@ -389,14 +392,18 @@ class drafts_json extends drafts {
         $array = json_decode($json,true);
         foreach ($array as $k => $para) {
             $para_style = '';
+            $tagName = "p";
             if (isset($para['type']) && $para['type'] === 'center'){
                 $para_style = 'style="text-align:center;"';
             }
-            $html .= "<p $para_style>";
+            if (isset($para['type']) && $para['type'] === 'seperator'){
+                $tagName = "hr";
+            }
+            $html .= "<$tagName $para_style>";
             foreach ($para['children'] as $kk => $leaf) {
                 $html .= $create_span_draft($leaf);
             }
-            $html .= '</p>'; 
+            $html .= "</$tagName>"; 
         }
         return $html;
     }
@@ -435,6 +442,8 @@ class drafts_json extends drafts {
         return $style . nl2br(FineDiff::renderDiffToHTMLFromOpcodes($old_text, $opcodes));
     }
     public static function output_odt($json,$dump) {
+        // Redundant
+        return "";
         $create_span_draft = function($leaf) {
             $leaf_attr = [
                 'bold'      => 'B',
@@ -499,14 +508,18 @@ class drafts_json extends drafts {
         $array = json_decode($json,true);
         foreach ($array as $k => $para) {
             $para_style = '';
+            $tagName = "p";
             if (isset($para['type']) && $para['type'] === 'center'){
-                $para_style = 'align="center"';
+                $para_style = ' align="center"';
             }
-            $html .= "<p$para_style>";
+            if (isset($para['type']) && $para['type'] === 'seperator'){
+                $tagName = 'hr';
+            }
+            $html .= "<$tagName$para_style>";
             foreach ($para['children'] as $kk => $leaf) {
                 $html .= $create_span_draft($leaf);
             }
-            $html .= '</p>'; 
+            $html .= "</$tagName>";
         }
         return $html;
     }
@@ -568,7 +581,11 @@ class draft_chapters extends drafts {
     }
     static function edit($chapter_id) {
         $chapter = get_post($chapter_id);
-        if (!$chapter || $chapter->post_type !== 'chapter' || !is_current_user($chapter->post_author) ) {
+        if (!$chapter || !is_current_user($chapter->post_author) ) {
+            return false;
+        }
+        $story = story::get($chapter->post_parent,true,false);
+        if (!$story) {
             return false;
         }
         $draft_id = drafts::new([

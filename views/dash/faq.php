@@ -17,6 +17,7 @@ $questions = questions::query([
     <question-wrapper question-id="<?= $q->ID ?>">
         <question><?= htmlspecialchars($q->question); ?></question>
         <a>Reply</a>
+        <a>Delete</a>
     </question-wrapper>
 <?php } ?>
 </questions>
@@ -25,5 +26,6 @@ $questions = questions::query([
     <a>Edit</a>
     <text-input label="Category">General</text-input>
     <text-input type="multi" label="Reply"></text-input>
+    <text-input label="Link To"></text-input>
     <button label="Reply"></button>
 </reply>

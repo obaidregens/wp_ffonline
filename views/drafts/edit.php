@@ -2,11 +2,12 @@
 $bundle = new bundle('drafts-editSlate-ps');
 $bundle->mix('react');
 $bundle->mix('slate');
+$bundle->js('external/slate/isHotkey');
 $bundle->enqueue();
-
 $app->bundle = global_bundle('drafts-edit');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');
+$app->bundle->css('css/components/index');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/components/loader');
 $app->bundle->mix('confirmation');
@@ -25,6 +26,8 @@ $app->bundle->js('js/views/drafts-editPost');
 $app->bundle->js('js/views/drafts-editPublish');
 $app->bundle->css('css/views/drafts-editPublish');
 $app->bundle->css('css/views/story-content');
+$app->bundle->js('js/views/drafts-editShortcuts');
+$app->bundle->css('css/views/drafts-editShortcuts');
 $app->bundle->enqueue();
 $draft = $app->draft;
 $content = $draft === false ? '' : $draft->content;
@@ -60,4 +63,16 @@ const load_content = <?= $load_content === "" ? '[]' : $load_content; ?>;
 <editor draft_id="<?= $draft_id; ?>"></editor>
 
 <?php
+// $bundleDev = new bundle("drafts-editSlateDev");
+// $bundleDev->mix('react');
+// $bundleDev->mix('react_dev');
+// $bundleDev->enqueue('dev');
+
+// $bundleDev1 = new bundle("drafts-editSlateDev1");
+// $bundleDev1->script_type = 'text/jsx';
+// $bundleDev1->js('js/views/drafts-editReact.jsx');
+// $bundleDev1->enqueue('dev');
+
+// $bundleDev->print();
+// $bundleDev1->print();
 $bundle->print();

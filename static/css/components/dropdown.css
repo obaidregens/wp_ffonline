@@ -17,13 +17,13 @@ button.dropdown:active {
     width: -moz-fit-content;
     min-width: 10rem;
     font-size: 1rem;
-    background-color: var(--background-accent);
+    background-color: var(--background-color);
     position: absolute;
     top: -1px;
     overflow: auto;
     height: fit-content;
     height: -moz-fit-content;
-    box-shadow: var(--shadow-strong);
+    box-shadow: var(--elevate-strong);
     /* Transition */
     transform: scale(0);
     transition: transform .2s;

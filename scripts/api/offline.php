@@ -5,8 +5,8 @@ function api_offline() {
     $a = $d['action'];
     if (in_array($a,['borrow','return'])){
         required_params('book_id');
-        $book = get_post($d['book_id']);
-        if (!$book || $book->post_type !== 'book' || $book->post_status !== 'publish' ) {
+        $book = story::get($d['book_id'],false);
+        if (!$book ) {
             return ['code'=>10];
         }
         $key = offline_stats::key($d['key'] ?? "");

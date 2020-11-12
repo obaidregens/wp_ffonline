@@ -45,12 +45,8 @@ function api_edit_book() {
             'post_title'        => $d['title']
         ]);
     }
-    $book = get_post($d['book_id']);
-    if (
-        !$book
-        || $book->post_type !== 'book'
-        || !is_current_user($book->post_author)
-    ){
+    $book = story::get($d['book_id'],true,false);
+    if ( !$book ){
         return [
             'code'      =>  9,
             'errors'    => (new err)->add("title","An error occured")->array(),
@@ -292,12 +288,8 @@ function api_get_book_data() {
             'data'   => get_data("new")
         ];
     }
-    $book = get_post($_POST['data']['book_id']);
-    if (
-        !$book ||
-        $book->post_type !== 'book' ||
-        !is_current_user($book->post_author)
-    ){
+    $book = story::get($_POST['data']['book_id'],true,false);
+    if ( !$book ){
         return ['code'=>9];
     }
    return [

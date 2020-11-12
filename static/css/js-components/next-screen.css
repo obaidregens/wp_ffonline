@@ -3,19 +3,30 @@
 }
 next-screen {
     padding: 20px;
-    transition: left 0.2s;
     z-index: 54;
     background-color: var(--background-color);
     position: fixed;
     top: 0;
-    left: 100%;
     width: 100%;
-    overflow-y: auto;
     height: 100%;
-    will-change: left;
+    overflow-y: auto;
+    /* Transition */
+    transform: translateX(100%);
+    transform-origin: right;
+    transition:
+        transform 0.4s,
+        opacity .4s
+    ;
+    will-change: transform, opacity;
+    opacity: 0;
 }
 next-screen.show {
-    left: 0;
+    transform: translateX(0%);
+    opacity: 1;
+    transition:
+        transform 0.3s,
+        opacity .3s cubic-bezier(0.45, 1.21, 1, 1)
+    ;
 }
 next-screen > cross-button {
     cursor: pointer;

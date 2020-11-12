@@ -78,8 +78,16 @@ function api_reply_to_question() {
         $d['question_id'],
         $d['answer'],
         $d['question'],
-        $d['category']
+        $d['category'],
+        intval(($d['link'] ?? 0) ?: 0)
     );
+    return ['code'=>1];
+}
+function api_archive_question() {
+    required_admin();
+    required_params('id');
+    $d = &$_POST['data'];
+    questions::delete($d['id']);
     return ['code'=>1];
 }
 function api_allow_reimport() {

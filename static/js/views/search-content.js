@@ -51,6 +51,6 @@ const reChapterProgress = () => {
     const res = await api("get_collections",{
         data: {book_ids: [...DOM.qa('books-container > book')].map(el => el.getAttribute('book_id') )}
     });
-    collections.book_collections = res.book_collections;
-    collections.collections_data = res.collections_data;
+    collections.book_collections = res.book_collections || {};
+    collections.collections_data = res.collections_data || {};
 })();

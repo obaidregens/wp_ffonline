@@ -1,5 +1,6 @@
 <?php
 $app->bundle = global_bundle('connections-home');
+$app->bundle->css('css/components/notices');;
 $app->bundle->css('css/views/connections-home');
 $app->bundle->js('js/views/connections-home');
 $app->bundle->enqueue();
@@ -26,6 +27,7 @@ $status_class = $connected ? "linked" : ($pending ? "pending" : "");
     <?php } else if ($status_class === 'linked') { ?>
         <p>The FFN account "<?= $connected; ?>" has been linked. You can now <a href="/import-stories">import your stories</a>.</p>
     <?php } if ($status_class === "") { ?>
+        <important>Please take care not to enter your username as your account will <strong>NOT</strong> be linked if you do.</important>
         <p>Enter your FFN User ID: </p>
         <text-input label="FFN User ID" maxlength="10"></text-input>
         <button label="Submit"></button>

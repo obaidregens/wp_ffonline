@@ -45,8 +45,34 @@ class questions {
             $args
         );
     }
-    static function answer($question_id,$answer,$altered_question = "",$category = "General") {
+    static function answer($question_id,$answer,$altered_question = "",$category = "General",$link = 0) {
+        $q = questions::get($question_id);
         global $wpdb;
+        if ($link!==0) {
+            $link = questions::get($link);
+            if (!$link) {
+                return false;
+            }
+            if ($q->email !== ""){
+                $mail = new email([
+                    'subject'       => "Your question has been answered in the FAQ's",
+                    'txtparams'     => [
+                        "###LINK###"      => "https://fanfiction.online/faq/" . $link->ID
+                    ],
+                    'template'      => 'faq_alert'
+                ]);
+                try {
+                    $mail->send($q->email);
+                } catch(Exception $e) {}
+                $mail->close();
+            }
+            $rows = $wpdb->update(self::$table,[
+                'status'    => 'linked',
+            ],[
+                'ID'        => $q->ID
+            ]);
+            return true;
+        }
         $prev = [
             'answer'                => $answer,
             'replied_millitime'     => millitime(),
@@ -63,7 +89,6 @@ class questions {
                 'ID'                    => $question_id
             ]
         );
-        $q = questions::get($question_id);
         if ($q->email !== ""){
             $mail = new email([
                 'subject'       => "Your question has been answered in the FAQ's",

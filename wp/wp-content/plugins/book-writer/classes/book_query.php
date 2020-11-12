@@ -187,6 +187,7 @@ class book_query{
             $included = a_intersect($included,array_column($search_result,'ID'));
         }
         
+        $pre_sorted = $included;
         // Sort
         $included = a_intersect($results_['sort=' . $args['orderby'] . '/' . $args['order'] ],$included);
         // Custom Ids
@@ -206,7 +207,7 @@ class book_query{
                 $args['per_page']
             );    
         }
-        $this->is_default = count($included) === count($results_['words=0']);
+        $this->is_default = count($pre_sorted) === count($results_['words=0']);
         $this->args = $args;
         $this->ids = $included;
         $this->count = count($this->ids);
@@ -283,7 +284,7 @@ class book_query{
                     if (count($array) <= 1){
                         continue;
                     }
-                    $args['orderby'] = in_array($array[0],array('updated','words','votes','date')) ? $array[0] : 'updated';
+                    $args['orderby'] = in_array($array[0],array('updated','words','votes','date','top')) ? $array[0] : 'updated';
                     $args['order'] = in_array($array[1],array('DESC','ASC')) ? $array[1] : 'DESC';
                 }
                 else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
@@ -326,7 +327,7 @@ class book_query{
 class book_query_cache extends book_query {
     protected static $midfix = '</--/>';
     function __construct(){
-        $min_gap_min = 0.00000000000001;
+        $min_gap_min = 0.0000001;
         $min_gap = $min_gap_min * 60;
 
         global $wpdb;
@@ -409,7 +410,9 @@ class book_query_cache extends book_query {
                 ORDER BY c DESC
             "),'story');
             $word_ids = json_or_serialize_decode($wpdb->get_results("SELECT ids FROM search_cache WHERE _key = 'sort' AND _value = 'words/DESC'")[0]->ids);
-            $r = array_merge($r,array_diff($word_ids,$r));
+            $diff = (array_diff($word_ids,$r));
+            shuffle($diff);
+            $r = array_merge($r,$diff);
             self::put([
                 [
                     '_key'      => 'sort',
@@ -420,6 +423,65 @@ class book_query_cache extends book_query {
                     '_key'      => 'sort',
                     '_value'    => 'votes/ASC',
                     'ids'       => array_reverse($r)
+                ]
+            ]);    
+        }
+        // 
+        $term_key = 'sort' . self::$midfix . 'top/DESC';
+        if (! isset($this->existing[$term_key])){
+            global $wpdb;
+            $imported_ids = array_column($wpdb->get_results("
+                SELECT
+                    import_stories.story_id as s,
+                    (import_stories.`import_favs` + import_stories.`import_follows`) as c
+                FROM import_stories
+                INNER JOIN wp_posts ON wp_posts.ID = import_stories.story_id
+                WHERE wp_posts.post_type = 'book'
+                AND wp_posts.post_status = 'publish'
+                ORDER BY c DESC
+            "),'s');
+            $non_imported_voted_ids = array_column($wpdb->get_results("
+                SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
+                FROM votes
+                INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
+                WHERE votes.type = 'chapter'
+                AND wp_posts.post_type = 'chapter'
+                AND wp_posts.post_status = 'publish'
+                GROUP BY wp_posts.post_parent
+                ORDER BY c DESC
+            "),'story');
+            $non_votes = array_merge($imported_ids,$non_imported_voted_ids);
+            $non_imported_no_votes = array_column($wpdb->get_results(
+                $wpdb->prepare("
+                    SELECT ID as story
+                    FROM wp_posts
+                    WHERE post_type = 'book'
+                    AND post_status = 'publish'
+                    AND ID NOT IN (" . sqlPlaceholder($non_votes) . ")
+                    ",
+                    $non_votes
+                )
+            ),'story');
+            shuffle($non_imported_no_votes);
+            $non_imported = array_merge($non_imported_voted_ids,$non_imported_no_votes);
+            $inserts = [];
+            foreach ($non_imported as $id ) {
+                $inserts[] = mt_rand(0, ceil(count($imported_ids)/8));
+            }
+            sort($inserts);
+            foreach($non_imported as $k => $id){
+                array_splice($imported_ids, $inserts[$k], 0, $id);
+            }
+            self::put([
+                [
+                    '_key'      => 'sort',
+                    '_value'    => 'top/DESC',
+                    'ids'       => $imported_ids
+                ],
+                [
+                    '_key'      => 'sort',
+                    '_value'    => 'top/ASC',
+                    'ids'       => array_reverse($imported_ids)
                 ]
             ]);    
         }
@@ -475,6 +537,8 @@ class book_query_cache extends book_query {
         self::put($key_value_ids);
     }
     function words(){
+        global $wpdb;
+        $a = array_column($wpdb->get_results("SELECT ID FROM wp_users WHERE user_status = 0"),"ID");
         //Words
         $word_limits = self::$words;
         foreach ($word_limits as $from) {
@@ -483,6 +547,7 @@ class book_query_cache extends book_query {
                 continue;
             }
             $word_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
+                'author__in'        => $a,
                 'posts_per_page'    => -1,
                 'fields'            => 'ids',
                 'meta_query'        => array(
@@ -495,6 +560,7 @@ class book_query_cache extends book_query {
                     ),
                 )
             ))))->posts;
+            var_dump($word_ids);
             self::put(array(
                 array(
                     '_key'        => 'words',
@@ -627,10 +693,10 @@ class tag_query extends book_query{
             );
         }
         $this->terms_with_count = $terms_with_count;
-        // book_query_cache::put(array(array(
-        //     '_key'      => 'tags_of',
-        //     '_value'    => $book_ids_hash,
-        //     'ids'       => $terms_with_count,
-        // )));
+        book_query_cache::put(array(array(
+            '_key'      => 'tags_of',
+            '_value'    => $book_ids_hash,
+            'ids'       => $terms_with_count,
+        )));
     }
 }

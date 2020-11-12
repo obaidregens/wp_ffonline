@@ -85,8 +85,12 @@ DOM.q('input[placeholder="Title"]').addEventListener('change',({target}) => {
     }
 });
 (() => {
-    DOM.q('editor').appendChild(DOM.create('word-count',{
-        innerText: DOM.q('words-is').innerText
+    DOM.q('editor').appendChild(DOM.create('infobar',{
+        children: [
+            DOM.create('word-count',{
+                innerText: DOM.q('words-is').innerText
+            })
+        ]
     }));
     // Initial Loading
     const loadDraft = () => {

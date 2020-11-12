@@ -59,7 +59,7 @@ next_screen.create(DOM.create('next-screen',{
             }
         },
         keydown: function(event) {
-            if (!_.cmd(event) || !["ArrowUp","ArrowDown"].includes(event.key) ){
+            if ( !_.cmd(event) || !["ArrowUp","ArrowDown"].includes(event.key) ){
                 return;
             }
             const cm = this.querySelector('compare');

@@ -35,9 +35,10 @@ $fandoms = implode('/',$fandoms);
             <text-input label="Search by author"></text-input>
             <select>
                 <option value="updated/DESC">Last Updated</option>
-                <option value="date/DESC">Story Published</option>
-                <option value="words/DESC">Words</option>
+                <option value="top/DESC">Top</option>
                 <option value="votes/DESC">Votes</option>
+                <option value="words/DESC">Words</option>
+                <option value="date/DESC">Story Published</option>
             </select>
             <label label="Sort"></label>
             <select-tag label="Fandom" name="fandom"></select-tag>
@@ -57,12 +58,13 @@ $fandoms = implode('/',$fandoms);
     <fandom-filter>
     <showing class="<?= $book_query->is_default ? "" : "show" ?>">
         <fandom><?= empty($fandoms) ? "All" : $fandoms ?></fandom>
-        <span> stories by </span>
+        <span> stories by</span>
         <select>
             <option value="updated/DESC">Last Updated</option>
-            <option value="date/DESC">Story Published</option>
-            <option value="words/DESC">Words</option>
+            <option value="top/DESC">Top</option>
             <option value="votes/DESC">Votes</option>
+            <option value="words/DESC">Words</option>
+            <option value="date/DESC">Story Published</option>
         </select>
     </showing>
     <input type="text" placeholder="Filter by fandom">

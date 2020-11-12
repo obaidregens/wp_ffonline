@@ -1,5 +1,6 @@
 <?php
-run_at_activation();
+// Delete Account
+
 // Online Users
 // SELECT wp_users.user_login,stats_landings.type,stats_landings.type_id, (UNIX_TIMESTAMP() - stats_actions.timestamp) as passed FROM `stats_landings`
 // INNER JOIN stats_actions ON stats_landings.ID = stats_actions.landing_id

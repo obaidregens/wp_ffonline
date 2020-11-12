@@ -46,8 +46,8 @@ function api_get_reviews(){
     if ($chapter === false || $chapter->post_status !== 'publish' || $chapter->post_type !== 'chapter') {
         return ['code'=>13];
     }
-    $book = get_post( $chapter->post_parent );
-    if ($book === false || $book->post_status !== 'publish' || $book->post_type !== 'book') {
+    $book = story::get( $chapter->post_parent,false );
+    if ( !$book ) {
         return ['code'=>14];
     }
 

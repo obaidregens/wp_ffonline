@@ -165,8 +165,8 @@ function api_publish_to_story() {
     required_login();
     required_params('chapter_title','draft_id','storyID');
     $d = &$_POST['data'];
-    $story = get_post($d['storyID']);
-    if (! $story || $story->post_type !== 'book' || ! is_current_user($story->post_author)){
+    $story = story::get($d['storyID'],true,false);
+    if (! $story ){
         return ['code'=>7];
     }
     if (trim($d['chapter_title']) === "") {

@@ -28,7 +28,7 @@ class autocomplete {
                 }
                 event.preventDefault();
                 this.focused_list = true;
-                this.drop[event.key === "ArrowDown" ? "lastChild" : "firstChild"].focus();
+                this.drop[event.key === "ArrowDown" ? "firstChild" : "lastChild"].focus();
             });
         }
         this.renderList();
@@ -63,6 +63,9 @@ class autocomplete {
                 },
                 mousedown: event => {
                     event.preventDefault();
+                    if (event.target.tagName.toLowerCase() !== "li") {
+                        return;
+                    }
                     return this.select({
                         name: event.target.innerText,
                         value: event.target.getAttribute('value')

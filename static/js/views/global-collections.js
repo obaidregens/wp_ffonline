@@ -147,6 +147,10 @@ const collections = class {
         collections.open(book_id);
     }
     static open(book_id) {
+        if (!logged_in) {
+            new toast("Login to add to collection");
+            return prompt_login();
+        }
         const pop_c = collections.open_popup;
         pop_c.setAttribute('book_id',book_id);
         pop_c.querySelectorAll('label.switch > input').forEach(el => {
@@ -155,6 +159,10 @@ const collections = class {
         popup.open(pop_c);
     }
     static edit(id,prev_book_id = 0) {
+        if (!logged_in) {
+            new toast("Login to create collection");
+            return prompt_login();
+        }
         const pop_c = collections.edit_popup;
         pop_c.setAttribute('collection_id',id);
         pop_c.setAttribute('prev_book_id',prev_book_id);

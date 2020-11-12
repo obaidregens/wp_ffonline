@@ -158,7 +158,9 @@ class reviews {
             return false;
         }
         $book_id = $chapter_or_book->post_type === 'book' ? $chapter_id_or_book->ID : $chapter_or_book->post_parent;
+        $book = $chapter_or_book->post_type === 'book' ? story::get($chapter_or_book,false) : story::get($book_id,false);
         return
+            $book &&
             comments_open( $book_id ) &&
             (get_post_meta( $book_id, 'anon_review', true) === 'true' || $logged_in );
     }

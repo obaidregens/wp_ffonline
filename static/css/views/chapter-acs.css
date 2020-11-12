@@ -211,6 +211,7 @@ html.show-acs acs-options {
 		padding-right: 40px;
 	}
 	acs-options {
+		background-color: var(--background-color);
 		width: 40px;
 		left: unset;
 		right: 0;

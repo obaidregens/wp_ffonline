@@ -1,0 +1,215 @@
+(() => {
+    "use strict";
+
+    const { useCallback, useEffect, useMemo, useState } = React;
+    const { Text, Range, Editor, Transforms, createEditor } = Slate;
+    const { Editable, withReact, useSlate } = SlateReact;
+    const { withHistory } = SlateHistory;
+    const SlateEl = SlateReact.Slate; // Define our own custom set of helpers.
+    const isHot = isHotkey.isHotkey;
+    const Tool = {
+        marks: ["bold","italic"],
+        blocks: ["seperator","paragraph","center"],
+    };
+    Tool.hotkeys = {
+        'mod+b': 'bold',
+        'mod+i': 'italic',
+        'mod+e`': 'center',
+        'mod+h`': 'seperator'
+    };
+    // Check
+    Tool.isBlockActive = (editor,format) => {
+        if (format === "seperator") {
+            return false;
+        }
+        const [match] = Editor.nodes(editor, {
+            match: n => n.type === format,
+        });
+        return !!match;
+    }
+    Tool.isMarkActive = (editor, format) => {
+        const marks = Editor.marks(editor);
+        return marks ? marks[format] === true : false;
+    }
+    Tool.isActive = (editor, tool) => {
+        return (
+            Tool.blocks.includes(tool) ?
+            Tool.isBlockActive(editor,tool) :
+            Tool.isMarkActive(editor,tool)
+        );
+    };
+    // Toggle
+    Tool.toggleBlock = (editor, format) => {
+        if (format === "seperator") {
+            Transforms.insertNodes(editor, [{
+                type: "seperator",
+                children: [{text: ""}]
+            },{
+                type: "paragraph",
+                children: [{text: ""}]
+            }]);
+            return;
+        }
+        const isActive = Tool.isBlockActive(editor, format);
+        // Set to Format or back to paragraph
+        Transforms.setNodes(editor, {
+            type: isActive ? 'paragraph' : format,
+        });
+    }
+    Tool.toggleMark = (editor, format) => {
+        const isActive = Tool.isMarkActive(editor, format)
+        if (isActive) {
+            Editor.removeMark(editor, format)
+        } else {
+            Editor.addMark(editor, format, true)
+        }
+    }
+    Tool.toggle = (editor, tool) => {
+        return (
+            Tool.blocks.includes(tool) ?
+            Tool.toggleBlock(editor,tool) :
+            Tool.toggleMark(editor,tool)
+        );
+    }
+    let autoSaveOpt = 0;
+    
+    const shouldAutosave = editor => {
+        const opr = editor.operations;
+        const actAt = 50;
+        if (opr.length === 1 && opr[0].type === 'set_selection') {
+            return false;
+        }
+        if (autoSaveOpt >= actAt) {
+            autoSaveOpt = 0;
+            return true;
+        }
+        let largestLength = 0;
+        for (let j = 0; j < opr.length; j++) {
+            const singleOpr = opr[j];
+            const thisLength = singleOpr.text ? singleOpr.text.length : singleOpr.node && singleOpr.node.text ? singleOpr.node.text.length : 0;
+            largestLength = thisLength > largestLength ? thisLength : largestLength;
+    
+            if (autoSaveOpt + thisLength >= actAt) {
+                autoSaveOpt = 0;
+                return true;
+            }
+        }
+        autoSaveOpt += largestLength;
+        return false;
+    };
+        
+    const App = () => {
+        const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+    
+        window.DraftEditor = editor;
+    
+        if (!window.insertEditorText) {
+            window.insertEditorText = text => {
+                Editor.insertText(editor, text);
+            };
+        }
+    
+        const [value, setValue] = useState([{
+            type: 'paragraph',
+            children: [{
+                text: ''
+            }]
+        }]); // Define a rendering function based on the element passed to `props`. We use
+        // `useCallback` here to memoize the function for subsequent renders.
+    
+        window.draftContent = {};
+        window.draftContent.value = value;
+        window.draftContent.set = setValue;
+        const renderElement = useCallback(props => <Block {...props} />, []);
+        const renderLeaf = useCallback(props => <Leaf {...props} />, []);  
+        editor.isVoid = useCallback(element => element.type === "seperator" );
+        const prevDeleteFragment = useCallback(editor.deleteFragment.bind(editor));
+        editor.deleteFragment = useCallback(() => {
+            const { selection } = editor;
+            if (selection && Range.isExpanded(selection)) {
+                const seperators = Array.from(
+                    Editor.nodes(editor, {
+                        match: n => n.type === "seperator"
+                    })
+                );
+                if (!!seperators.length) {
+                    // We're only deleting the last image as that's what is always left behind.
+                    // Slate is handling the rest easily.
+                    const [, cellPath] = seperators[seperators.length - 1];
+                    Transforms.delete(editor, {
+                        at: cellPath,
+                        voids: true
+                    });
+                }
+            }
+            prevDeleteFragment();
+        });
+        return (
+            <SlateEl
+            editor={editor}
+            value={value}
+            autoFocus
+            onChange={value => {
+                const opr = editor.operations;
+                if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
+                    window.editedAtAll = true;
+                    window.autosaveDraft(value, shouldAutosave(editor));
+                }
+                setValue(value);
+            }}>
+                <toolbar>
+                    <ToolButton action="bold" />
+                    <ToolButton action="italic" />
+                    <ToolButton action="center" />
+                    <ToolButton action="seperator" />
+                </toolbar>
+                <Editable
+                renderElement={renderElement}
+                renderLeaf={renderLeaf}
+                onKeyDown={event => {
+                    for (const hotkey in Tool.hotkeys) {
+                        if (isHot(hotkey, event)) {
+                            event.preventDefault();
+                            Tool.toggle(editor,Tool.hotkeys[hotkey]);
+                        }
+                    }
+                }} />
+            </SlateEl>
+        );
+    };
+    const Block = ({ attributes, children, element }) => {
+        switch (element.type) {
+            case 'center':
+                attributes.style = {
+                    textAlign: "center"
+                };
+                return <p {...attributes}>{children}</p>
+            case 'seperator':
+                attributes.className = "hr";
+                return <div {...attributes}>{children}</div>
+            default:
+                return <p {...attributes}>{children}</p>
+        }
+    };
+    const Leaf = ({attributes, children, leaf}) => {
+        return <span {...attributes} style={{
+            fontWeight: leaf.bold ? 'bold' : 'normal',
+            fontStyle: leaf.italic ? 'italic' : 'normal'
+        }}>{children}</span>;
+    };
+    const ToolButton = ({action}) => {
+        const editor = useSlate();
+        const activeClassName = Tool.isActive(editor,action) ? "active" : "";
+        return (
+            <button
+            action={action}
+            className={activeClassName}
+            onMouseDown={event => {
+                event.preventDefault();
+                Tool.toggle(editor,action);
+            }}
+            />
+        )
+    }
+    ReactDOM.render(<App />, DOM.q('editor'));    
+})();

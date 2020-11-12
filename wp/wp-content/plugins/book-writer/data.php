@@ -1,6 +1,6 @@
 <?php
 function get_data($book_id = 'new'){
-	$book = get_post($book_id);
+	$book = story::get($book_id,true,false);
 	$all_categories = get_terms(array(
 		'taxonomy' => 'category',
 		'hide_empty' => false,

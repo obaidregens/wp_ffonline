@@ -1,204 +1,264 @@
-"use strict";
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-const {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} = React;
-const {
-  Text,
-  Range,
-  Editor,
-  Transforms,
-  createEditor
-} = Slate;
-const {
-  Editable,
-  withReact
-} = SlateReact;
-const {
-  withHistory
-} = SlateHistory;
-var {
-  Slate
-} = SlateReact; // Define our own custom set of helpers.
-const EditorTools = {
-  italic: {
-    isActive(editor) {
-      const [match] = Editor.nodes(editor, {
-        match: n => n.italic === true,
-        universal: true
-      });
-      return !!match;
-    },
+(() => {
+  "use strict";
 
-    toggle(editor) {
-      const isActive = EditorTools.italic.isActive(editor);
-      Transforms.setNodes(editor, {
-        italic: isActive ? null : true
-      }, {
-        match: n => Text.isText(n),
-        split: true
-      });
-    }
-  },
-  bold: {
-    isActive(editor) {
-      const [match] = Editor.nodes(editor, {
-        match: n => n.bold === true,
-        universal: true
-      });
-      return !!match;
-    },
+  const {
+    useCallback,
+    useEffect,
+    useMemo,
+    useState
+  } = React;
+  const {
+    Text,
+    Range,
+    Editor,
+    Transforms,
+    createEditor
+  } = Slate;
+  const {
+    Editable,
+    withReact,
+    useSlate
+  } = SlateReact;
+  const {
+    withHistory
+  } = SlateHistory;
+  const SlateEl = SlateReact.Slate; // Define our own custom set of helpers.
 
-    toggle(editor) {
-      const isActive = EditorTools.bold.isActive(editor);
-      Transforms.setNodes(editor, {
-        bold: isActive ? null : true
-      }, {
-        match: n => Text.isText(n),
-        split: true
-      });
+  const isHot = isHotkey.isHotkey;
+  const Tool = {
+    marks: ["bold", "italic"],
+    blocks: ["seperator", "paragraph", "center"]
+  };
+  Tool.hotkeys = {
+    'mod+b': 'bold',
+    'mod+i': 'italic',
+    'mod+e`': 'center'
+  }; // Check
+
+  Tool.isBlockActive = (editor, format) => {
+    if (format === "seperator") {
+      return false;
     }
 
-  },
-  center: {
-    isActive(editor) {
-      const [match] = Editor.nodes(editor, {
-        match: n => n.type === 'center'
-      });
-      return !!match;
-    },
-    toggle(editor) {
-      const isActive = EditorTools.center.isActive(editor);
-      Transforms.setNodes(editor, {
-        type: isActive ? null : 'center'
+    const [match] = Editor.nodes(editor, {
+      match: n => n.type === format
+    });
+    return !!match;
+  };
+
+  Tool.isMarkActive = (editor, format) => {
+    const marks = Editor.marks(editor);
+    return marks ? marks[format] === true : false;
+  };
+
+  Tool.isActive = (editor, tool) => {
+    return Tool.blocks.includes(tool) ? Tool.isBlockActive(editor, tool) : Tool.isMarkActive(editor, tool);
+  }; // Toggle
+
+
+  Tool.toggleBlock = (editor, format) => {
+    if (format === "seperator") {
+      Transforms.insertNodes(editor, [{
+        type: "seperator",
+        children: [{
+          text: ""
+        }]
       }, {
-        match: n => Editor.isBlock(editor, n)
-      });
+        type: "paragraph",
+        children: [{
+          text: ""
+        }]
+      }]);
+      return;
     }
 
-  }
-};
-let autoSaveOpt = 0;
-const shouldAutosave = (editor) => {
-  const opr = editor.operations;
-  const actAt = 50;
-  if (opr.length === 1 && opr[0].type === 'set_selection') {
-    return false;
-  }
-  if (autoSaveOpt >= actAt) {
-    autoSaveOpt = 0;
-    return true;
-  }
-  let largestLength = 0;
-  for (let j = 0; j < opr.length; j++) {
-    const singleOpr = opr[j];
-    const thisLength = singleOpr.text ? singleOpr.text.length : ( (singleOpr.node && singleOpr.node.text) ? singleOpr.node.text.length : 0);
-    largestLength = thisLength > largestLength ? thisLength : largestLength;
-    if ((autoSaveOpt + thisLength) >= actAt) {
+    const isActive = Tool.isBlockActive(editor, format); // Set to Format or back to paragraph
+
+    Transforms.setNodes(editor, {
+      type: isActive ? 'paragraph' : format
+    });
+  };
+
+  Tool.toggleMark = (editor, format) => {
+    const isActive = Tool.isMarkActive(editor, format);
+
+    if (isActive) {
+      Editor.removeMark(editor, format);
+    } else {
+      Editor.addMark(editor, format, true);
+    }
+  };
+
+  Tool.toggle = (editor, tool) => {
+    return Tool.blocks.includes(tool) ? Tool.toggleBlock(editor, tool) : Tool.toggleMark(editor, tool);
+  };
+
+  let autoSaveOpt = 0;
+
+  const shouldAutosave = editor => {
+    const opr = editor.operations;
+    const actAt = 50;
+
+    if (opr.length === 1 && opr[0].type === 'set_selection') {
+      return false;
+    }
+
+    if (autoSaveOpt >= actAt) {
       autoSaveOpt = 0;
       return true;
     }
-  }
-  autoSaveOpt += largestLength;
-  return false;
-} 
-let insertEditorText;
-const App = () => {
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []); // Add the initial value when setting up our state.
-  window.DraftEditor = editor;
-  if (! insertEditorText) {
-    insertEditorText = (text) => {
-      Editor.insertText(editor,text);
+
+    let largestLength = 0;
+
+    for (let j = 0; j < opr.length; j++) {
+      const singleOpr = opr[j];
+      const thisLength = singleOpr.text ? singleOpr.text.length : singleOpr.node && singleOpr.node.text ? singleOpr.node.text.length : 0;
+      largestLength = thisLength > largestLength ? thisLength : largestLength;
+
+      if (autoSaveOpt + thisLength >= actAt) {
+        autoSaveOpt = 0;
+        return true;
+      }
     }
-  }
-  const [value, setValue] = useState([
-    {
+
+    autoSaveOpt += largestLength;
+    return false;
+  };
+
+  const App = () => {
+    const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+    window.DraftEditor = editor;
+
+    if (!window.insertEditorText) {
+      window.insertEditorText = text => {
+        Editor.insertText(editor, text);
+      };
+    }
+
+    const [value, setValue] = useState([{
       type: 'paragraph',
-      children: [{ text: '' }],
-    },
-  ]); // Define a rendering function based on the element passed to `props`. We use
-  // `useCallback` here to memoize the function for subsequent renders.
-  window.draftContent = {}
-  window.draftContent.value = value;
-  window.draftContent.set = setValue;
-  
-  const renderElement = useCallback(props => {
-    switch (props.element.type) {
+      children: [{
+        text: ''
+      }]
+    }]); // Define a rendering function based on the element passed to `props`. We use
+    // `useCallback` here to memoize the function for subsequent renders.
+
+    window.draftContent = {};
+    window.draftContent.value = value;
+    window.draftContent.set = setValue;
+    const renderElement = useCallback(props => /*#__PURE__*/React.createElement(Block, props), []);
+    const renderLeaf = useCallback(props => /*#__PURE__*/React.createElement(Leaf, props), []);
+    editor.isVoid = useCallback(element => element.type === "seperator");
+    const prevDeleteFragment = useCallback(editor.deleteFragment.bind(editor));
+    editor.deleteFragment = useCallback(() => {
+      const {
+        selection
+      } = editor;
+
+      if (selection && Range.isExpanded(selection)) {
+        const seperators = Array.from(Editor.nodes(editor, {
+          match: n => n.type === "seperator"
+        }));
+
+        if (!!seperators.length) {
+          // We're only deleting the last image as that's what is always left behind.
+          // Slate is handling the rest easily.
+          const [, cellPath] = seperators[seperators.length - 1];
+          Transforms.delete(editor, {
+            at: cellPath,
+            voids: true
+          });
+        }
+      }
+
+      prevDeleteFragment();
+    });
+    return /*#__PURE__*/React.createElement(SlateEl, {
+      editor: editor,
+      value: value,
+      autoFocus: true,
+      onChange: value => {
+        const opr = editor.operations;
+
+        if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
+          window.editedAtAll = true;
+          window.autosaveDraft(value, shouldAutosave(editor));
+        }
+
+        setValue(value);
+      }
+    }, /*#__PURE__*/React.createElement("toolbar", null, /*#__PURE__*/React.createElement(ToolButton, {
+      action: "bold"
+    }), /*#__PURE__*/React.createElement(ToolButton, {
+      action: "italic"
+    }), /*#__PURE__*/React.createElement(ToolButton, {
+      action: "center"
+    }), /*#__PURE__*/React.createElement(ToolButton, {
+      action: "seperator"
+    })), /*#__PURE__*/React.createElement(Editable, {
+      renderElement: renderElement,
+      renderLeaf: renderLeaf,
+      onKeyDown: event => {
+        for (const hotkey in Tool.hotkeys) {
+          if (isHot(hotkey, event)) {
+            event.preventDefault();
+            Tool.toggle(editor, Tool.hotkeys[hotkey]);
+          }
+        }
+      }
+    }));
+  };
+
+  const Block = ({
+    attributes,
+    children,
+    element
+  }) => {
+    switch (element.type) {
       case 'center':
-        return /*#__PURE__*/React.createElement(CenterElement, props);
+        attributes.style = {
+          textAlign: "center"
+        };
+        return /*#__PURE__*/React.createElement("p", attributes, children);
+
+      case 'seperator':
+        attributes.className = "hr";
+        return /*#__PURE__*/React.createElement("div", attributes, children);
 
       default:
-        return /*#__PURE__*/React.createElement(ParagraphElement, props);
+        return /*#__PURE__*/React.createElement("p", attributes, children);
     }
-  }, []);
-  const renderLeaf = useCallback(props => {
-    return /*#__PURE__*/React.createElement(Leaf, props);
-  }, []);
-  return /*#__PURE__*/React.createElement(Slate, {
-    editor: editor,
-    value: value,
-    onChange: value => {
-      const opr = editor.operations;
-      if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
-        window.editedAtAll = true;
-        window.autosaveDraft(value,shouldAutosave(editor));
-      }
-      setValue(value);
-    }
-  }, /*#__PURE__*/React.createElement("toolbar", null, /*#__PURE__*/React.createElement("button", {
-    onClick: EditorTools.bold.toggle.bind(null, editor),
-    action: "bold"
-  }), /*#__PURE__*/React.createElement("button", {
-    onClick: EditorTools.italic.toggle.bind(null, editor),
-    action: "italic"
-  }), /*#__PURE__*/React.createElement("button", {
-    onClick: EditorTools.center.toggle.bind(null, editor),
-    action: "center"
-  })), /*#__PURE__*/React.createElement(Editable, {
-    renderElement: renderElement,
-    renderLeaf: renderLeaf,
-    onKeyDown: event => {
-      if (!_.cmd(event)) {
-        return;
-      }
-
-      if (['e', 'E'].includes(event.key)) {
-        event.preventDefault();
-        EditorTools.center.toggle(editor);
-      } else if (['b', 'B'].includes(event.key)) {
-        event.preventDefault();
-        EditorTools.bold.toggle(editor);
-      } else if (['i', 'I'].includes(event.key)) {
-        event.preventDefault();
-        EditorTools.italic.toggle(editor);
-      }
-    }
-  }));
-};
-
-const ParagraphElement = props => {
-  return /*#__PURE__*/React.createElement("p", props.attributes, props.children);
-};
-
-const CenterElement = props => {
-  props.attributes.style = {
-    textAlign: 'center'
   };
-  return /*#__PURE__*/React.createElement("p", props.attributes, props.children);
-};
 
-const Leaf = props => {
-  return /*#__PURE__*/React.createElement("span", _extends({}, props.attributes, {
-    style: {
-      fontWeight: props.leaf.bold ? 'bold' : 'normal',
-      fontStyle: props.leaf.italic ? 'italic' : 'normal'
-    }
-  }), props.children);
-};
+  const Leaf = ({
+    attributes,
+    children,
+    leaf
+  }) => {
+    return /*#__PURE__*/React.createElement("span", _extends({}, attributes, {
+      style: {
+        fontWeight: leaf.bold ? 'bold' : 'normal',
+        fontStyle: leaf.italic ? 'italic' : 'normal'
+      }
+    }), children);
+  };
 
-ReactDOM.render( /*#__PURE__*/React.createElement(App, null), DOM.q('editor'));
+  const ToolButton = ({
+    action
+  }) => {
+    const editor = useSlate();
+    const activeClassName = Tool.isActive(editor, action) ? "active" : "";
+    return /*#__PURE__*/React.createElement("button", {
+      action: action,
+      className: activeClassName,
+      onMouseDown: event => {
+        event.preventDefault();
+        Tool.toggle(editor, action);
+      }
+    });
+  };
+
+  ReactDOM.render( /*#__PURE__*/React.createElement(App, null), DOM.q('editor'));
+})();

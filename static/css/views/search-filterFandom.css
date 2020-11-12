@@ -22,7 +22,7 @@ fandom-filter > showing > select {
     width: -moz-fit-content;
     margin: 0;
     border: none;
-    padding: 0;
+    padding: 0 10px;
 }
 fandom-filter > showing > select > option {
     font-size: 1.3rem;

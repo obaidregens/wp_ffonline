@@ -18,6 +18,7 @@ class pairing {
         }
         $pp = 0;
         foreach ($n as $pairing_id => $characters_of) {
+            $characters_of = array_map('strval',$characters_of);
             sort($characters_of);
             if ($characters === $characters_of) {
                 $pp = $pairing_id;

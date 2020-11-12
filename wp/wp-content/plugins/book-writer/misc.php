@@ -178,7 +178,7 @@ function a_intersect($arrayOne, $arrayTwo){
     return array_flip($x);
 }
 function author_href($_post_id){
-	$book = get_post($_post_id);
+	$book = story::get($_post_id,false);
 	$_author = intval($book->post_author);
 	$a_href = "";
 	if ($_author === 37){
@@ -198,7 +198,7 @@ function author_href($_post_id){
 	return $a_href;
 }
 function author_name_single($_post_id){
-	$book = get_post($_post_id);
+	$book = story::get($_post_id,false);
     $_author = intval($book->post_author);
 
 	$ffonline_name = get_the_author_meta( 'display_name',$_author );

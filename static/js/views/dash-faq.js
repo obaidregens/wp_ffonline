@@ -20,11 +20,18 @@ const pi = DOM.create('popup',{
     ]
 });
 popup.create(pi);
-DOM.qa('question-wrapper > a').forEach(el => {
+DOM.qa('question-wrapper > a:first-of-type').forEach(el => {
     el.addEventListener('click',({target}) => {
         DOM.q('reply').classList.add('show');
         DOM.q('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
         DOM.q('reply > blockquote').innerText = target.previousElementSibling.innerText;
+    });
+});
+DOM.qa('question-wrapper > a:last-of-type').forEach(el => {
+    el.addEventListener('click',async ({target}) => {
+        await api('archive_question',{data: {id: target.parentElement.getAttribute('question-id')}});
+        new toast("Archived");
+        window.location.reload();
     });
 });
 DOM.q('reply > a').addEventListener('click',({target}) => {
@@ -38,7 +45,8 @@ DOM.q('button[label="Reply"]').addEventListener('click',({target}) => {
             category: DOM.q('text-input > input').value,
             question_id: target.parentElement.getAttribute('question-id'),
             question: target.parentElement.querySelector('blockquote').innerText,
-            answer: target.parentElement.querySelector('text-input > textarea').value,
+            answer: target.parentElement.querySelector('text-input:nth-of-type(2) > textarea').value,
+            link: target.previousElementSibling.querySelector('input').value,
         }
     })
     .then(response => {

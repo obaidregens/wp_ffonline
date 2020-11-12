@@ -1,7 +1,8 @@
 <?php
 function api_search_book_contents(){
-	$s = $_POST['data']['s'];
-    $book = get_post(get_post(intval($_POST['data']['chapter_id']))->post_parent);
+    $s = $_POST['data']['s'];
+    $chapter = get_post(intval($_POST['data']['chapter_id']));
+    $book = story::get($chapter->post_parent,false);
     $link = get_permalink( $book );
     $results = [];
     if (stripos($book->post_title,$s) !== false){
@@ -59,7 +60,11 @@ function api_vote_chapter() {
     if (!$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
         return ['code'=>8];
     }
-    if ( is_current_user($chapter->post_author) ){
+    $story = story::get($chapter->post_parent,false);
+    if (!$story) {
+        return false;
+    }
+    if ( is_current_user($story->post_author) ){
         return ['code'=>11];
     }
     $exists = vote::exists('chapter',$chapter->ID);

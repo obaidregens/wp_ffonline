@@ -11,8 +11,8 @@ function api_import_status() {
     required_login();
     required_params("action","story_id");
     $a = $_POST['data']['action'];
-    $story = get_post($_POST['data']['story_id']);
-    if ( !$story || !is_current_user($story->post_author) || $story->post_type !== 'book' ) {
+    $story = story::get($_POST['data']['story_id'],true,false);
+    if ( !$story ) {
         return ['code'=>8];
     }
     $allow_reimport = in_array(intval(get_current_user_id()),get_option( 'reimport_allow', [] ));

@@ -35,14 +35,19 @@ popup {
     min-height: 10%;
     max-height: 70%;
     z-index: 55;
+    opacity: 0;
 
     /* Transition */
-    transition: transform 0.2s /*cubic-bezier(0.6, -0.28, 0.735, 0.045)*/;
+    transition:
+        transform 0.23s
+            cubic-bezier(0.6, -0.28, 0.735, 0.045),
+        opacity 0.3s
+    ;
     will-change: transform;
 }
-/* popup.show {
+popup.show {
     transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-} */
+}
 popup:not(.bottom) {
     top: 0;
     width: 80%;
@@ -50,6 +55,7 @@ popup:not(.bottom) {
     transform: scale(0);
 }
 popup:not(.bottom).show {
+    opacity: 1;
     transform: scale(1);
 }
 popup.bottom {

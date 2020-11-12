@@ -177,12 +177,12 @@ var NoSleep = function () {
       if (nativeWakeLock) {
         navigator.wakeLock.request("screen").then(function (wakeLock) {
           _this2._wakeLock = wakeLock;
-          console.log("Wake Lock active.");
+          // console.log("Wake Lock active.");
           _this2._wakeLock.addEventListener("release", function () {
             // ToDo: Potentially emit an event for the page to observe since
             // Wake Lock releases happen when page visibility changes.
             // (https://web.dev/wakelock/#wake-lock-lifecycle)
-            console.log("Wake Lock released.");
+            // console.log("Wake Lock released.");
           });
         }).catch(function (err) {
           console.error(err.name + ", " + err.message);

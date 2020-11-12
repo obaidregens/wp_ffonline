@@ -262,8 +262,8 @@ $app->listen('/manage',function($self){
     exit();
 });
 $app->listen('/story/:story/',function($self){
-    $story = get_post($self->params['story']);
-    if ($story === null || $story->post_type !== 'book' || $story->post_status !== 'publish' ){
+    $story = story::get($self->params['story'],false);
+    if (!$story){
         $self->_404();
     }
     $self->type = 'story';
@@ -278,8 +278,8 @@ $app->listen('/story/:story/',function($self){
     exit();
 });
 $app->listen('/story/:story/:chapter',function($self){
-    $story = get_post($self->params['story']);
-    if ($story === null || $story->post_type !== 'book' || $story->post_status !== 'publish' ){
+    $story = story::get($self->params['story'],false);
+    if ( !$story ){
         $self->_404();
     }
     $query = (new WP_Query(array(
@@ -522,11 +522,8 @@ $app->listen('/my-stories/:id',function($self){
 });
 $app->listen('/my-stories/:id/edit',function($self){
     $self->login();
-    $story = get_post( $self->params['id'] );
-    if (
-        $self->params['id'] !== 'new' &&
-        ( !$story || ! is_current_user($story->post_author) )
-    ) {
+    $story = story::get( $self->params['id'],true,false );
+    if ( $self->params['id'] !== 'new' && !$story ) {
         return;
     }
     $self->type = 'edit-story';
@@ -541,8 +538,8 @@ $app->listen('/my-stories/:id/edit',function($self){
 });
 $app->listen('/my-stories/:id/stats',function($self){
     $self->login();
-    $story = get_post( $self->params['id'] );
-    if ( !$story || !is_current_user($story->post_author) ) {
+    $story = story::get( $self->params['id'],true,false );
+    if ( !$story ) {
         return;
     }
     $self->type = 'story-stats';

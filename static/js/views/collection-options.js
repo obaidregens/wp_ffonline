@@ -26,7 +26,7 @@ if (DOM.q('collection-bar > button[label="Create New"]')) {
     DOM.q('collection-bar > button[label="Create New"]').addEventListener('click',event => {
         if (! logged_in) {
             prompt_login();
-            new toast('Login to create collection.');
+            new toast('Login to create collection');
             return;
         }
         collections.edit('new');
@@ -36,7 +36,7 @@ if (DOM.q('collection-bar > button[label="My Collections"]')) {
     DOM.q('collection-bar > button[label="My Collections"]').addEventListener('click',event => {
         if (! logged_in) {
             prompt_login();
-            new toast('Login to create and add books to your collections.');
+            new toast('Login to create and add stories to your collections.');
             return;
         }
         window.location.href = '/@me/collections'

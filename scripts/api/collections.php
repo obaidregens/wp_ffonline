@@ -74,7 +74,7 @@ function api_follow_collection(){
     required_login();
     required_params('collection_id','follow');
     $follow = $_POST['data']['follow'] === true;
-    $collection = collection::get_by($_POST['data']['collection_id']);
+    $collection = collection::get_by('ID',$_POST['data']['collection_id']);
     if (!$collection) {
         return ['code'=>9];
     }

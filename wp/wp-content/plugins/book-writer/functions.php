@@ -408,6 +408,7 @@ $includes = array(
 	'classes/offline_stats',
 	'classes/spam',
 	'classes/db',
+	'classes/story',
 );
 foreach($includes as $include){
 	require ($include . '.php');
