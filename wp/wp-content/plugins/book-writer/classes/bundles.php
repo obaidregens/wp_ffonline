@@ -388,6 +388,7 @@ class bundle {
                 'external/slate/slate',
                 'external/slate/slate-react',
                 'external/slate/slate-history',
+                'external/slate/slate-hyperscript',
             ],
             'css'   => []
         ],

@@ -23,7 +23,7 @@ $status_class = $connected ? "linked" : ($pending ? "pending" : "");
 <enter-input source="ffn">
     <?php if ($status_class === 'pending') { ?>
         <p>Verification for the FFN account "<?= $pending; ?>" is pending. <a class="cancel-verification">Cancel</a></p>
-        <p>If you've already sent the code, please wait. It may take some time to process.</p>
+        <p>If you've already sent the code, please wait. It may take up to 30 min to process.</p>
     <?php } else if ($status_class === 'linked') { ?>
         <p>The FFN account "<?= $connected; ?>" has been linked. You can now <a href="/import-stories">import your stories</a>.</p>
     <?php } if ($status_class === "") { ?>

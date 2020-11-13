@@ -1,5 +1,4 @@
 <?php
-exit();
 ignore_user_abort(true);
 define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\');
@@ -21,3 +20,4 @@ $r = $wpdb->get_results($sql);
 foreach ($r as $row) {
     update_post_meta( intval($row->id), 'word-count', intval($row->c) );
 }
+echo "Rows: " count($r);

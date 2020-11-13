@@ -2,14 +2,29 @@
     "use strict";
 
     const { useCallback, useEffect, useMemo, useState } = React;
-    const { Text, Range, Editor, Transforms, createEditor } = Slate;
+    const { Text, Range, Editor, Transforms, createEditor, Node } = Slate;
     const { Editable, withReact, useSlate } = SlateReact;
     const { withHistory } = SlateHistory;
+    const { jsx } = SlateHyperscript;
     const SlateEl = SlateReact.Slate; // Define our own custom set of helpers.
     const isHot = isHotkey.isHotkey;
     const Tool = {
         marks: ["bold","italic"],
         blocks: ["seperator","paragraph","center"],
+        match_mark: {
+            bold: (tagName,style) => ['b','strong'].includes(tagName) || parseInt(style.fontWeight) >= 550,
+            italic: (tagName,style) => ['i','em'].includes(tagName) || style.fontStyle === "italic",
+        },
+        mark_tags: {
+            EM: () => ({ italic: true }),
+            I: () => ({ italic: true }),
+            STRONG: () => ({ bold: true }),
+            B: () => ({ bold: true }),
+        },
+        block_tags: {
+            P: () => ({ type: 'paragraph' }),
+            HR: () => ({ type: 'seperator' }),
+        }
     };
     Tool.hotkeys = {
         'mod+b': 'bold',
@@ -26,11 +41,11 @@
             match: n => n.type === format,
         });
         return !!match;
-    }
+    };
     Tool.isMarkActive = (editor, format) => {
         const marks = Editor.marks(editor);
         return marks ? marks[format] === true : false;
-    }
+    };
     Tool.isActive = (editor, tool) => {
         return (
             Tool.blocks.includes(tool) ?
@@ -55,7 +70,7 @@
         Transforms.setNodes(editor, {
             type: isActive ? 'paragraph' : format,
         });
-    }
+    };
     Tool.toggleMark = (editor, format) => {
         const isActive = Tool.isMarkActive(editor, format)
         if (isActive) {
@@ -63,14 +78,14 @@
         } else {
             Editor.addMark(editor, format, true)
         }
-    }
+    };
     Tool.toggle = (editor, tool) => {
         return (
             Tool.blocks.includes(tool) ?
             Tool.toggleBlock(editor,tool) :
             Tool.toggleMark(editor,tool)
         );
-    }
+    };
     let autoSaveOpt = 0;
     
     const shouldAutosave = editor => {
@@ -144,6 +159,28 @@
             }
             prevDeleteFragment();
         });
+        // Paste HTML
+        const prevInsertData = useCallback(editor.insertData.bind(editor));
+        editor.insertData = useCallback(data => {
+            const html = data.getData('text/html');
+
+            if (html) {
+                const parsed = new DOMParser().parseFromString(html, 'text/html');
+                let doc = parsed.body;
+                const GDocsInternal = doc.querySelector('[id^="docs-internal"]');
+                if (GDocsInternal) {
+                    doc = GDocsInternal;
+                }
+                let fragment = deserialize(parsed.body).filter(child => child !== null);
+                while ( fragment[0].text && fragment[0].text.trim() === "") {
+                    fragment[0].text = "";
+                }
+                Transforms.insertFragment(editor, fragment);
+                return;
+            }
+
+            prevInsertData(data)
+        });
         return (
             <SlateEl
             editor={editor}
@@ -211,5 +248,38 @@
             />
         )
     }
+    const deserialize = el => {
+        if (el.nodeType === 3) {
+            return {text: el.textContent};
+        } else if (el.nodeType !== 1) {
+            return null;
+        }
+        const tagName = el.tagName.toLowerCase();
+        const children = Array.from(el.childNodes)
+        .map(deserialize)
+        .flat();
+
+        if (tagName === "p") {
+            const align = el.style.textAlign;
+            return {children,type: align === "center" ? "center" : 'paragraph'}
+        }
+        if (tagName == "hr") {
+            return {children: [],type: "seperator"};
+        }
+        if (['span','strong','em','i'].includes(tagName)) {
+            const attrs = {};
+            for (const attr in Tool.match_mark) {
+                if (Tool.match_mark[attr](tagName,el.style)) {
+                    attrs[attr] = true;
+                }
+            }
+            return (
+                children
+                .filter(child => Text.isText(child))
+                .map(child => jsx("text", attrs, child))    
+            );    
+        }
+        return children;
+}
     ReactDOM.render(<App />, DOM.q('editor'));    
 })();

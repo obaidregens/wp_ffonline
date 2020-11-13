@@ -644,11 +644,16 @@ $app->listen('/drafts/:draft_id/export/ffn/download',function($self){
     }
     $self->type = 'drafts-download-ffn';
     $self->type_id = intval($draft->ID);
-    $file = MAIN_DIR . '/download/draft-' . $draft->ID . '.odt';
-    drafts_json::output_odt($draft->content,$file);
+    $file = MAIN_DIR . '/download/draft-' . $draft->ID . '.html';
+    $html = drafts_json::output_html($draft->content);
+    $dir = dirname ( $file );
+    if (! is_dir($dir)) {
+        mkdir($dir,0777,true);
+    }
+    file_put_contents($file,$html);
     header("Content-Description: File Transfer");
-    header("Content-Type: application/vnd.oasis.opendocument.text"); 
-    header('Content-Disposition: attachment; filename="' . $draft->title . '.odt"');
+    header("Content-Type: text/html"); 
+    header('Content-Disposition: attachment; filename="' . $draft->title . '.html"');
     header('Content-Length: ' . filesize($file) );
     header( 'Cache-Control: no-store' );
     readfile($file);
