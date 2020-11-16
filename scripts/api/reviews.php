@@ -7,7 +7,7 @@ function api_publish_review(){
     }
     required_params('content');
     $len = strlen($d['content']);
-    if ($len > 5) {
+    if ($len < 5) {
         return ['code'=>10];
     }
     if ( strlen(strip_tags($d['content'])) < $len ) {

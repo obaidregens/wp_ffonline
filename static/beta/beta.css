@@ -1,0 +1,47 @@
+beta-bar {
+    display: flex;
+    position: fixed;
+    left: 0;
+    top: 53px;
+    width: 100%;
+    background-color: #bfe5ff;
+    z-index: 53;
+    height: 40px;
+}
+@media only screen and (max-width: 500px) {
+    beta-bar {
+        top: 0;
+    }
+}
+beta-bar > a{
+    padding-right: 10px;
+}
+beta-bar > text,beta-bar > a{
+    display: flex;
+    align-items: center;
+    white-space: break-spaces;
+}
+beta-bar > text {
+    color: #262828;
+    padding-left: 20px;
+    flex: 1;
+}
+beta-bar > button {
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    height: 40px;
+    width: 40px;
+    color: var(--darkgrey);
+}
+beta-bar > button::before {
+    display: inline-block;
+    font-family: 'icons';
+    content: "\e900";
+    transform: scale(1.6);
+}
+/* Feedback */
+popup[feedback] button{
+    float: right;
+}

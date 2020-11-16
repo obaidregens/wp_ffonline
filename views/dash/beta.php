@@ -1,5 +1,5 @@
 <?php
-$app->bundle = global_bundle('dash-reimport');
+$app->bundle = global_bundle('dash-beta');
 $app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');
 $app->bundle->js('js/components/sidenav');

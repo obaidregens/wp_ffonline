@@ -1,17 +1,33 @@
 <?php
 // Draft Editor APIS
+function api_get_draft_data() {
+    required_login();
+    required_params('draft_id');
+    $d = &$_POST['data'];
+    $draft = drafts::get_by('ID',$d['draft_id']);
+    if (!$draft) {
+        return ['code'=>13];
+    }
+    $dataObject = json_decode($draft->content);
+    return [
+        'code'          => 1,
+        'draft_id'      => $draft->ID,
+        'title'         => $draft->title,
+        'content'       => $dataObject,
+        'length'        => count($dataObject),
+        'time'          => intval($draft->edited)*1000,
+        "words"         => str_word_count(drafts_json::simpleText($draft->content)) . " Words",
+        'share'         => $draft->share === null ? '' : home_url( '/drafts/' . $draft->share)
+    ];
+}
 function api_save_draft() {
     $d = &$_POST['data'];
     required_login();
-    required_params('title','draft_id','content','perm');
+    required_params('draft_id','title','changes','length','perm');
 
-    if (!is_array($d['content'])) {
+    // Check if changes object is vald
+    if (!is_array($d['changes'])) {
         return ['code'=>13];
-    }
-    $words = str_word_count(drafts_json::simpleText($d['content'],true)) . " Words";
-    $d['content'] = json_encode($d['content']);
-    if ($d['content'] === false) {
-        return ['code'=>14];
     }
 
     // Prepared Data
@@ -47,17 +63,18 @@ function api_save_draft() {
     $session_perm = &$_SESSION['drafts'][$d['draft_id']]['prev_perm'];
     $flag = ($session_perm ?? false) ? 'push' : 'update';
     $session_perm = $d['perm'] === true;
-    $time = draft_revision::push($draft_id,$d['content'],$flag );
-    if (err::is($time)) {
+    $return = draft_revision::push($draft_id,$d['changes'],intval($d['length']),$flag );
+    if (err::is($return)) {
         return ['code' => 13];
     }
     global $wpdb;
     return [
         'code'          => 1,
         'draft_id'      => $draft_id,
-        'time'          => $time,
+        'time'          => $return['time'],
         'perm'          => $flag === 'push',
-        "words"         => $words
+        "words"         => $return['words'] . " Words",
+        "length"        => $return['length'],
     ];
 }
 function api_share_draft() {
@@ -68,15 +85,18 @@ function api_share_draft() {
     if ($draft === false) {
         return ['code'=>9];
     }
-    if (! is_current_user($draft->user_id)){
+    if ( !is_current_user($draft->user_id) ){
         return ['code'=>10];
     }
-    $share = $d['share'] === true ? sha1(bin2hex(random_bytes(11))) : null;
+    $share = $d['share'] === true ? substr(sha1(bin2hex(random_bytes(11))),2,24) : null;
     $valid = drafts::update($draft->ID,[
         'share' => $share
     ]);
     if ($d['share'] === true){
-        return ['code'=>1,'link'=>home_url( '/drafts/' . $share )];
+        return [
+            'code'      => 1,
+            'link'      => home_url( '/drafts/' . $share )
+        ];
     }
     return ['code'=>2];
 }

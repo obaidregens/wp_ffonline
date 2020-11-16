@@ -5,7 +5,6 @@ $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/notices');
 $app->bundle->css('css/views/import-main');
 $app->bundle->js('js/views/import-main');
-$app->bundle->enqueue();
 $allow_reimport = in_array(intval(get_current_user_id()),get_option( 'reimport_allow', [] ));
 $connected = c_user::current();
 $pending = c_user::pending();

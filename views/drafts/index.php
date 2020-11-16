@@ -12,7 +12,6 @@ $app->bundle->css('css/views/drafts-indexActions');
 $app->bundle->js('js/views/drafts-index');
 $app->bundle->js('js/views/drafts-indexNew');
 $app->bundle->js('js/views/drafts-indexActions');
-$app->bundle->enqueue();
 ?>
 <floater>
     <button class="new"></button>

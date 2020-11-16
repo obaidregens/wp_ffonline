@@ -9,7 +9,6 @@ $app->bundle->css('/css/views/updates-content');
 $app->bundle->js('/js/views/author-about');
 $app->bundle->js('/js/views/updates-add');
 $app->bundle->js('/js/views/updates-content');
-$app->bundle->enqueue();
 $user = $app->user;
 $is_current_author = intval(get_current_user_id()) === intval($user->ID);
 global $book_query;

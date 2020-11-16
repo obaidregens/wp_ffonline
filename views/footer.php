@@ -11,9 +11,11 @@
 <?php
 if (! isset($app->bundle)){
 	$app->bundle = global_bundle('global');
-	$app->bundle->enqueue();
 }
 $app->bundle->print();
+if (isset($app->beta_bundle)) {
+	$app->beta_bundle->print();
+}
 ?>
 </body>
 </html>

@@ -1,0 +1,744 @@
+{
+    "search": {
+        "css": [
+            "css/components/loader",
+            "css/components/tooltips",
+            "css/js-components/checkbox",
+            "external/noUiSlider/nouislider",
+            "css/views/search-tags",
+            "css/views/search-content",
+            "css/views/search-filters",
+            "css/views/search-filterFandom"
+        ],
+        "js": [
+            "service",
+            "js/components/checkbox",
+            "external/noUiSlider/nouislider",
+            "js/views/search-content",
+            "js/views/search-filters",
+            "js/views/story-offlineAPI",
+            "js/views/search-offline",
+            "js/views/search-filterFandom"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "glide_js",
+            "confirmation",
+            "story-options",
+            "autocomplete"
+        ],
+        "css_hash": "0e40de28b410140c1d8249ad8207af756398a71a",
+        "js_hash": "3daab3e8ad31cf7fa355e531501bbd2ed1c1a894"
+    },
+    "beta-global": {
+        "css": [
+            "beta/beta"
+        ],
+        "js": [
+            "beta/beta"
+        ],
+        "mix": [],
+        "css_hash": "af72d69d17b70f11b1b241b42805eee356d42b3d",
+        "js_hash": "f691d183f68f8ab43a57ac3e8acd0e9363c88181"
+    },
+    "my-books": {
+        "css": [
+            "css/views/my-books"
+        ],
+        "js": [
+            "service"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "1eea11c0314fc2efb0cee82953636390be729230",
+        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+    },
+    "collection-index": {
+        "css": [
+            "css/components/grid",
+            "css/components/tooltips",
+            "css/components/select",
+            "css/views/collection-content",
+            "css/views/collection-options",
+            "css/views/global-collections"
+        ],
+        "js": [
+            "service",
+            "js/views/collection-options",
+            "js/views/collection-content",
+            "js/views/global-collections"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "aa6da335a78b55a6ea214dd7d93d9b7e2bbe2b7e",
+        "js_hash": "2b106a36fb154011698dfe4499f5525a5c2adbaa"
+    },
+    "home": {
+        "css": [
+            "css/views/home-main"
+        ],
+        "js": [
+            "service",
+            "js/views/home-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "glide_js"
+        ],
+        "css_hash": "f0e8ded23bc87008ee10436920f9405444ed1615",
+        "js_hash": "3808eec2abb59ff880c44a8f16a711ce42e4e592"
+    },
+    "react-select-ps": {
+        "css": [],
+        "js": [
+            "external/react-select/react-select"
+        ],
+        "mix": [],
+        "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "js_hash": "12915ba981a5d8e6def2abf707fbe9d2dee16c49"
+    },
+    "edit-book": {
+        "css": [
+            "css/components/notices",
+            "css/components/select",
+            "css/components/collapsible",
+            "css/js-components/switch",
+            "css/components/index",
+            "css/js-components/ask",
+            "css/components/folders",
+            "css/components/tooltips",
+            "css/views/drafts-index",
+            "css/views/book-edit",
+            "css/views/book-edit-submit"
+        ],
+        "js": [
+            "service",
+            "external/draggable/draggable.bundle",
+            "js/components/ask",
+            "js/views/drafts-index",
+            "js/views/book-edit-submit",
+            "js/views/book-edit"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "716ef3170a30eb7460e5bc6383e48c4ecbb3d86d",
+        "js_hash": "0728fa9723e54b0d2bc27bd98d386166a13b2e61"
+    },
+    "global": {
+        "css": [],
+        "js": [
+            "service"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "77e9bddec7efa40db290e6688e70e1e75dfd13ab",
+        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+    },
+    "author-about": {
+        "css": [
+            "css/views/author-header",
+            "css/components/tooltips",
+            "css/components/floater",
+            "/css/components/divider",
+            "/css/views/author-about",
+            "/css/views/updates-add",
+            "/css/views/updates-content"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "/js/views/author-about",
+            "/js/views/updates-add",
+            "/js/views/updates-content"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "search-content",
+            "story-options"
+        ],
+        "css_hash": "ab2b510274de7b4d01c6655e1d813297c870ab09",
+        "js_hash": "977174bb334a784f3f17f80a2282c42c91db108d"
+    },
+    "author-stories": {
+        "css": [
+            "css/views/author-header",
+            "css/components/floater",
+            "css/components/loader",
+            "css/components/tooltips",
+            "css/js-components/checkbox",
+            "external/noUiSlider/nouislider",
+            "css/views/search-tags",
+            "css/views/search-content",
+            "css/views/search-filters",
+            "css/views/search-filterFandom"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "js/components/checkbox",
+            "external/noUiSlider/nouislider",
+            "js/views/search-content",
+            "js/views/search-filters",
+            "js/views/story-offlineAPI",
+            "js/views/search-offline",
+            "js/views/search-filterFandom"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "glide_js",
+            "confirmation",
+            "story-options",
+            "autocomplete"
+        ],
+        "css_hash": "0b5f571a6d6f3f5285e81a330b94406cadcfa909",
+        "js_hash": "279e94a2c8a3aa3054a552cd0fc6d810c05527cf"
+    },
+    "author-updates": {
+        "css": [
+            "css/views/author-header",
+            "css/components/tooltips",
+            "css/components/floater",
+            "/css/views/updates-add",
+            "/css/views/updates-content"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "/js/views/updates-add",
+            "/js/views/updates-content"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "657b058a93316390f76a3dc9cdc7cfab203e2278",
+        "js_hash": "4c2cf38c02399bd269163ac31903f3c0c906f871"
+    },
+    "author-collections": {
+        "css": [
+            "css/views/author-header",
+            "css/components/floater",
+            "css/components/grid",
+            "css/components/tooltips",
+            "css/components/select",
+            "css/views/collection-content",
+            "css/views/collection-options",
+            "css/views/global-collections"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "js/views/collection-options",
+            "js/views/collection-content",
+            "js/views/global-collections"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "3c5375f69ef9dc3761b3bc73079edb6e4dcb4267",
+        "js_hash": "8c6ed7683903ec8bcad6cf642249173e7ca21fcd"
+    },
+    "author-settings": {
+        "css": [
+            "css/views/author-header",
+            "css/components/tooltips",
+            "css/components/floater",
+            "/css/components/collapsible",
+            "/css/js-components/switch",
+            "/css/views/author-settings"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "/js/components/switch",
+            "/js/views/author-settings"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "e548b216c70903e7a09568c1d42907ccb873d7f6",
+        "js_hash": "fcccb3140da0128658a1facab88f64e637ec9bdf"
+    },
+    "inbox": {
+        "css": [
+            "css/components/loader",
+            "css/components/tooltips",
+            "css/views/inbox-list"
+        ],
+        "js": [
+            "service",
+            "js/views/inbox-list"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "7fe81cff4cd9249770eb4316ed10dbc6b264250a",
+        "js_hash": "c69fe9500fbb898a1e2623eeeaa73aae5f1b672d"
+    },
+    "drafts-index": {
+        "css": [
+            "css/js-components/ask",
+            "css/components/folders",
+            "css/components/floater",
+            "css/views/drafts-index",
+            "css/views/drafts-indexNew",
+            "css/views/drafts-indexActions"
+        ],
+        "js": [
+            "service",
+            "external/draggable/draggable.bundle",
+            "js/components/ask",
+            "js/views/drafts-index",
+            "js/views/drafts-indexNew",
+            "js/views/drafts-indexActions"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "confirmation"
+        ],
+        "css_hash": "37ee7bf0c5fe89c40c4f3deca2be818d5244f94d",
+        "js_hash": "b8e2a67ffd02b20b1acda2e03838217e99ce400d"
+    },
+    "drafts-editSlate-ps": {
+        "css": [],
+        "js": [
+            "external/slate/isHotkey"
+        ],
+        "mix": [
+            "react",
+            "slate"
+        ],
+        "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "js_hash": "94f1634969930a0eafc669e82457d80371565a6e"
+    },
+    "drafts-edit": {
+        "css": [
+            "css/components/notices",
+            "css/components/index",
+            "css/components/collapsible",
+            "css/components/loader",
+            "css/js-components/sidenav",
+            "css/views/drafts-edit",
+            "css/views/drafts-editThesaurus",
+            "css/views/drafts-editRevisions",
+            "css/views/drafts-editButtons",
+            "css/views/drafts-editPublish",
+            "css/views/story-content",
+            "css/views/drafts-editShortcuts"
+        ],
+        "js": [
+            "service",
+            "external/timeago/timeago",
+            "js/components/sidenav",
+            "js/views/drafts-editReact",
+            "js/views/drafts-edit",
+            "js/views/drafts-editThesaurus",
+            "js/views/drafts-editRevisions",
+            "js/views/drafts-editButtons",
+            "js/views/drafts-editPost",
+            "js/views/drafts-editPublish",
+            "js/views/drafts-editShortcuts"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "confirmation"
+        ],
+        "css_hash": "c8c9929f7eb7d02854e35f1dc2977fc044d19704",
+        "js_hash": "e4f286e57b9cd8a12d43a0707db073c41505dae1"
+    },
+    "import-stories": {
+        "css": [
+            "css/js-components/checkbox",
+            "css/components/notices",
+            "css/views/import-main"
+        ],
+        "js": [
+            "service",
+            "js/views/import-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "confirmation"
+        ],
+        "css_hash": "80390a0a1858221e8239e34047f4884b363c3e67",
+        "js_hash": "280109c0a8a5965b77e67340fcfe88f9351209c1"
+    },
+    "contact": {
+        "css": [],
+        "js": [
+            "service",
+            "js/views/contact-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "77e9bddec7efa40db290e6688e70e1e75dfd13ab",
+        "js_hash": "388f958df341d82032284adbe7a7f6613977798c"
+    },
+    "connections-home": {
+        "css": [
+            "css/components/notices",
+            "css/views/connections-home"
+        ],
+        "js": [
+            "service",
+            "js/views/connections-home"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "c2682dba7460c0c5d48efa3730f66e0fb071ad23",
+        "js_hash": "c4b3fce64e4b8aa97b28f2e50d82c7a7daa87467"
+    },
+    "create-fandom": {
+        "css": [
+            "css/components/select",
+            "css/views/createFandom-main"
+        ],
+        "js": [
+            "service",
+            "js/views/createFandom-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "autocomplete"
+        ],
+        "css_hash": "849b3c12a863a0fbf2114db9aea492d9f74f0bf9",
+        "js_hash": "6ac181adce2a0f58554236ecbdc757da50b61808"
+    },
+    "faq": {
+        "css": [
+            "css/components/collapsible",
+            "css/views/faq-main"
+        ],
+        "js": [
+            "service",
+            "js/views/faq-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "d2fc9b8dbab235d694852e1ac96ee5a38758337e",
+        "js_hash": "126f6478dd74f9df05af9bfdd7856792c6fa8bce"
+    },
+    "dash-home": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/views/dash-home"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "4fea22b223ecde352efede0a03377be03a5c0923",
+        "js_hash": "e207edb187c3f36bf4427bef07e6395f5e3175a0"
+    },
+    "dash-faq": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/views/dash-faq"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main",
+            "js/views/dash-faq"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "304098e22135b9c4735ad7ddefa552920a801b13",
+        "js_hash": "8784deb645795fca3c8441363ba1851e157b693c"
+    },
+    "dash-tags": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/components/select",
+            "css/components/index",
+            "css/views/dash-tags"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main",
+            "js/views/dash-tags"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "7e31cf05b6afcbfd1ed996c1875076f35c3e5d77",
+        "js_hash": "aa440792026a19716c73e326a3e41249620577e6"
+    },
+    "dash-contact": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/views/dash-contact"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main",
+            "js/views/dash-contact"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "730932a9e21f7a713bbc65b7ee9e5e1738aafce3",
+        "js_hash": "cb65f931b5cd8da1c032beaff7ad72072ab5715b"
+    },
+    "dash-reimport": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/components/index"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main",
+            "js/views/dash-reimport"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "b53ddf13c312c98224a06cd8320c6349d1954ca7",
+        "js_hash": "f61bcce84254b77788605440f1d7a39c2a0cbef3"
+    },
+    "manage": {
+        "css": [
+            "css/components/collapsible",
+            "css/components/index"
+        ],
+        "js": [
+            "service"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "848c5ea2f6619a2c7ac71eb2a5c51a3d1751eb69",
+        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+    },
+    "react-ps": {
+        "css": [],
+        "js": [],
+        "mix": [
+            "react"
+        ],
+        "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+        "js_hash": "a39637b05daed2e835338cf72a387c742c1f3e5a"
+    },
+    "chapters": {
+        "css": [
+            "css/js-components/checkbox",
+            "css/components/loader",
+            "css/components/tooltips",
+            "css/components/slider",
+            "css/views/chapter-index",
+            "css/views/chapter-main",
+            "css/views/chapter-reviews",
+            "css/views/chapter-acs",
+            "css/views/chapter-search"
+        ],
+        "js": [
+            "service",
+            "external/nosleep/NoSleep",
+            "js/views/chapter-main",
+            "js/views/chapter-acs",
+            "js/views/chapter-search",
+            "js/views/reviews-list",
+            "js/views/chapter-tracking",
+            "js/views/story-offlineAPI",
+            "js/views/chapter-offline"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "speak",
+            "confirmation",
+            "story-options"
+        ],
+        "css_hash": "330bd3d034b1317d07d02fcf529f5bdeee7d4fb4",
+        "js_hash": "fba502da1e482a72f7619a03014590c23cc529e7"
+    },
+    "book": {
+        "css": [
+            "css/components/collapsible",
+            "css/components/tooltips",
+            "/css/components/floater",
+            "css/views/chapter-index",
+            "css/views/search-tags",
+            "css/views/book-main"
+        ],
+        "js": [
+            "service",
+            "js/views/book-main",
+            "js/views/story-offlineAPI",
+            "js/views/book-offline"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "story-options",
+            "confirmation"
+        ],
+        "css_hash": "4ec10203721b8b7b005de6928b5b4406f082ef44",
+        "js_hash": "b9a84d0a0984dfcc00c5d4173aec0592a42f177c"
+    },
+    "story-stats": {
+        "css": [
+            "css/components/index",
+            "css/components/collapsible",
+            "css/components/overview",
+            "css/views/book-stats"
+        ],
+        "js": [
+            "service"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "6fc793cba730bfea73eede36f60983429dad9a65",
+        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+    },
+    "drafts-preview": {
+        "css": [
+            "css/views/chapter-acs",
+            "css/views/drafts-index",
+            "css/views/drafts-preview",
+            "css/components/folders"
+        ],
+        "js": [
+            "service",
+            "js/views/chapter-acs",
+            "js/views/drafts-index",
+            "js/views/drafts-preview"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "speak"
+        ],
+        "css_hash": "67efd1ce510aef7c6e52c8d18497182209742768",
+        "js_hash": "2d3557dc513e19358aac714bf2fca6376cb90540"
+    },
+    "collection-single": {
+        "css": [
+            "css/components/tooltips",
+            "css/js-components/checkbox",
+            "external/noUiSlider/nouislider",
+            "css/views/search-tags",
+            "css/views/search-content",
+            "css/views/search-filters",
+            "css/views/search-filterFandom"
+        ],
+        "js": [
+            "service",
+            "js/views/collection-options",
+            "js/views/collection-content",
+            "js/components/checkbox",
+            "external/noUiSlider/nouislider",
+            "js/views/search-content",
+            "js/views/search-filters",
+            "js/views/story-offlineAPI",
+            "js/views/search-offline",
+            "js/views/search-filterFandom"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "glide_js",
+            "confirmation",
+            "story-options",
+            "autocomplete"
+        ],
+        "css_hash": "c7fd50b2a4787a278667043f958b1985268df727",
+        "js_hash": "ea4150292c11210244318af040df8a1b115a15fa"
+    },
+    "author-following": {
+        "css": [
+            "css/views/author-header",
+            "css/components/tooltips",
+            "css/components/floater",
+            "/css/views/author-following"
+        ],
+        "js": [
+            "service",
+            "js/views/author-header",
+            "/js/views/author-following"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro"
+        ],
+        "css_hash": "15ce134930a29c60033e95624d5c68e0a5eafdb9",
+        "js_hash": "079b41decd3a50db8242d08712773d978a0d472f"
+    }
+}

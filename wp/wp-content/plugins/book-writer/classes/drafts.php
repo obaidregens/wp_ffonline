@@ -51,7 +51,7 @@ class drafts {
             $args['title'] = substr($args['title'],0,80);
         }
         global $wpdb;
-        $wpdb->update(
+        $r = $wpdb->update(
             self::$table,
             $args,
             ['ID' => $id]
@@ -113,12 +113,37 @@ class draft_revision extends drafts{
     protected static function hash ($content) {
         return sha1($content);
     }
-    static function push($draft_id,$content, $FLAG = 'update') {
+    // This Static Method will noe accept change only
+    static function push($draft_id,$changes, $length = null, $FLAG = 'update') {
+        if ($length === null) {
+            $length = count($changes);
+        }
+        logging($length);
         if (! in_array($FLAG,['push','update'])) {
             $FLAG = 'update';
         }
         $session_last_revision = &$_SESSION['drafts'][$draft_id]['last_revision'];
-        $prev_draft = $session_last_revision ?? (array) self::getOne($draft_id);        
+        $prev_draft = $session_last_revision ?? (array) self::getOne($draft_id);
+
+        if ($prev_draft === false) {
+            return (new err)->add('draft_id',"Draft doesn't exists");
+        }
+
+        if (isset($changes['title'])) {
+            unset($changes['title']);
+        }
+
+        // Edit Changes
+        $content = json_decode($prev_draft['content'],true);
+        foreach ($changes as $p => $change) {
+            $content[$p] = $change;
+        }
+        $content = array_values($content);
+        array_splice($content,$length);
+
+        // Convert for pushing
+        $words = str_word_count(drafts_json::simpleText($content,true));
+        $content = json_encode($content);
 
         $t = time();
         $added_last = $prev_draft === false ? 0 : intval($prev_draft['edited']);
@@ -131,7 +156,11 @@ class draft_revision extends drafts{
             $FLAG = 'push';
         }
         if ($prev_draft['hash'] === $hash ) {
-            return intval($prev_draft['edited']);
+            return [
+                'time'  => intval($prev_draft['edited']),
+                'words' => $words,
+                'length'=> $length
+            ];
         }
         global $wpdb;
         $table = self::$table;
@@ -154,7 +183,11 @@ class draft_revision extends drafts{
             'hash'      => $hash,
             'content'   => $content
         ];
-        return intval($t);
+        return [
+            'time'      => intval($t),
+            'words'     => $words,
+            'length'    => $length
+        ];
     }
     static function getOne($draft_id) {
         $table = self::$table;

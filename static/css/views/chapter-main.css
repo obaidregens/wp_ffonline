@@ -46,7 +46,8 @@ chapter > chapter-title {
 author-notes {
 	margin: 20px 0px;
     display: flex;
-    flex-direction: column;
+	flex-direction: column;
+	white-space: break-spaces;
 }
 author-notes::before {
 	content: 'Author Notes: ';

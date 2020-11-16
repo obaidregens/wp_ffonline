@@ -36,6 +36,7 @@ class notifications {
         return empty($lastOpen) ? 0 : intval($lastOpen[0]->timestamp);
     }
     static function createNotification($row) {
+        $home_url = home_url(  );
         switch ($row->notification_type) {
             case 'add_to_collection':
                 $story = story::get($row->type_of_id,false);
@@ -68,17 +69,17 @@ class notifications {
                 $chapter_num = get_post_meta( $row->type_of_id, 'chapter_order', true );
                 return [
                     'message'   => '"' . $story->post_title . '" just got a new chapter!',
-                    'link'      => "https://fanfiction.online/story/" . $story->ID . '/' . $chapter_num ,
+                    'link'      => "$home_url/story/" . $story->ID . '/' . $chapter_num ,
                 ];
             case 'account_verified':
                 return [
                     'message'   => "You've been verified. Start importing stories from FFN now!",
-                    'link'      => 'https://fanfiction.online/import-stories'
+                    'link'      => "$home_url/import-stories"
                 ];
             case 'stories_imported':
                 return [
                     'message'   => "Your stories have been imported.",
-                    'link'      => 'https://fanfiction.online/my-stories'
+                    'link'      => "$home_url/my-stories"
                 ];    
             case 'chapter_review':
                 $comment = get_comment( $row->type_of_id );
@@ -112,7 +113,7 @@ class notifications {
                 $udisplay = "@" . $user->user_login;
                 return [
                     'message'   => $udisplay . " just posted an update!",
-                    'link'      => 'https://fanfiction.online/' . $udisplay,
+                    'link'      => '$home_url/' . $udisplay,
                 ];
             case 'follow_user':
                 return [

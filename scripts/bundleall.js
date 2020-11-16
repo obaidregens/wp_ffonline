@@ -1,3 +1,7 @@
+const ref = [
+    "author-collections",
+    "author-about",
+    "author-updates","author-stories","author-settings","global","inbox","drafts-index","drafts-editSlate-ps","drafts-edit","react-select-ps","edit-book","import-stories","contact","connections-home","create-fandom","faq","dash-home","dash-faq","dash-tags","dash-contact","dash-reimport","manage","chapters","react-ps","book","story-stats","collection-single","drafts-editSlateDev","drafts-editSlateDev1","drafts-preview"];
 (async () => {
     const urs = [
         "",
@@ -23,16 +27,14 @@
         'dash/tags',
         'dash/contact',
         'dash/reimport',
-        'manage',
-        'contact',
         'rules',
-        'manage',
     ];
     // remaining
     // Chapter
     // Stroy
     // story stats
-    // 
+    // Drafts Preview
+    // Manage
     for (let i = 0; i < urs.length; i++) {
         console.log(urs[i]);
         await fetch("/" + urs[i]);

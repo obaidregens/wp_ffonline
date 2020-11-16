@@ -12,7 +12,6 @@ $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
 $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/book-offline');
-$app->bundle->enqueue();
 
 $book = $app->story;
 $book_query = new book_query(array(

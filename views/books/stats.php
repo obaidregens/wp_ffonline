@@ -5,7 +5,6 @@ $app->bundle->css("css/components/index");
 $app->bundle->css("css/components/collapsible");
 $app->bundle->css("css/components/overview");
 $app->bundle->css("css/views/book-stats");
-$app->bundle->enqueue();
 $inst = book_stats::cached($story->ID);
 $last_updated = (time() - $inst->updated <= 60*60) ? "Less than an hour ago" : human_time_diff( $inst->updated ) . " ago";
 $chapters = published_chapters($story->ID,-1,'ids');

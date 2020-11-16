@@ -266,6 +266,9 @@ class v_user extends user {
         if ( strlen ($value) < 5 ) {
             $error->add('username','Username must be of at least 5 characters.');
         }
+        if ( strlen ($value) > 20 ) {
+            $error->add('username','Username cannot be of more than 20 characters.');
+        }
         if (strlen (preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$value) ) > 0){
             $error->add('username','Must only contain dots(.), underscores(_), english alphabets, or numbers.');
         }

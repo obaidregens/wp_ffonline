@@ -3,7 +3,6 @@ $app->bundle = global_bundle('connections-home');
 $app->bundle->css('css/components/notices');;
 $app->bundle->css('css/views/connections-home');
 $app->bundle->js('js/views/connections-home');
-$app->bundle->enqueue();
 $connected = c_user::current();
 $pending = c_user::pending();
 if (is_string($pending)){ $pending = htmlspecialchars($pending); }

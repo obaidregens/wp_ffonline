@@ -1,7 +1,6 @@
 <?php
 $app->bundle = global_bundle('contact');
 $app->bundle->js('js/views/contact-main');
-$app->bundle->enqueue();
 ?>
 <style>
 button[label="Send"] {

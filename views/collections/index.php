@@ -11,8 +11,6 @@ $app->bundle->js('js/views/collection-options');
 $app->bundle->js('js/views/collection-content');
 $app->bundle->js('js/views/global-collections');
 $app->bundle->css('css/views/global-collections');
-$app->bundle->enqueue();
-
 $args = array(
     'order'         => $_GET['sort'] ?? 'DESC',
     'orderby'       => 'created',

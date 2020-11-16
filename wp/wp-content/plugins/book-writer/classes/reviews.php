@@ -157,7 +157,7 @@ class reviews {
         if (! in_array($chapter_or_book->post_type,['chapter','book'])){
             return false;
         }
-        $book_id = $chapter_or_book->post_type === 'book' ? $chapter_id_or_book->ID : $chapter_or_book->post_parent;
+        $book_id = $chapter_or_book->post_type === 'book' ? $chapter_or_book->ID : $chapter_or_book->post_parent;
         $book = $chapter_or_book->post_type === 'book' ? story::get($chapter_or_book,false) : story::get($book_id,false);
         return
             $book &&

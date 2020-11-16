@@ -4,7 +4,6 @@ $app->bundle->css('css/components/notices');
 $app->bundle->css('css/components/select');
 $app->bundle->css('css/views/verify-main');
 $app->bundle->js('js/views/verify-main');
-$app->bundle->enqueue();
 
 $logged_in = is_user_logged_in(  );
 $connected = c_user::current();

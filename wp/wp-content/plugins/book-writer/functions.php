@@ -318,7 +318,7 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;";
 
-	$dictionary_data = "CREATE TABLE dictionary_data (
+	$dictionary_data_table = "CREATE TABLE dictionary_data (
 		`word`				VARCHAR(150) NOT NULL ,
 		`google`			LONGTEXT NOT NULL ,
 		`thesaurus_com`		LONGTEXT NOT NULL ,
@@ -326,6 +326,16 @@ function run_at_activation(){
 		`milli_timestamp`	BIGINT NOT NULL ,
 		PRIMARY KEY (`word`)
 	) $charset_collate;";
+
+	// $beta_sessions_table = "CREATE TABLE beta_sessions (
+	// 	`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+	// 	`word`				VARCHAR(150) NOT NULL ,
+	// 	`google`			LONGTEXT NOT NULL ,
+	// 	`thesaurus_com`		LONGTEXT NOT NULL ,
+	// 	`landing_id`		BIGINT NOT NULL ,
+	// 	`milli_timestamp`	BIGINT NOT NULL ,
+	// 	PRIMARY KEY (`word`)
+	// ) $charset_collate;";
 
 	//RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -372,7 +382,10 @@ function run_at_activation(){
 	dbDelta( $offline_stats_table );
 	// Spam
 	dbDelta( $spam_log_table );
-	dbDelta( $dictionary_data );
+	// Dict
+	dbDelta( $dictionary_data_table );
+	// Beta
+	// dbDelta( $beta_sessions_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(

@@ -89,7 +89,7 @@ DOM.q('toolbar').appendChild(DOM.create('button',{
                 popup.open(_p);
                 return;
             }
-            const share_is = DOM.q('share-is').innerText;
+            const share_is = event.target.getAttribute('initial-share');
             const children = [
                 DOM.create('p',{
                     innerText: 'Let anyone with the link see this draft and propose edits.'

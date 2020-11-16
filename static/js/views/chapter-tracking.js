@@ -9,7 +9,7 @@ window.addEventListener('load',async () => {
     if (Track !== null) {
         const hasBeenLeft = (Date.now() - Math.max(parseInt(cStory.timestamp || 0),parseInt(Track.timestamp)) ) > 1000*60*10;
         if (  ( hasBeenLeft || (cStory.book_id || 0).toString() !== book_id.toString() ) ){
-            confirmation("Do you want to continue reading where you left of?").then(v => {
+            confirmation("Do you want to continue reading where you left off?").then(v => {
                 if (!v){return;}
                 window.location.href = "/story/" + book_id + "/" + Track.chapter_num + "#" + Track.paragraph
             });

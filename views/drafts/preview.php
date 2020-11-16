@@ -8,7 +8,6 @@ $app->bundle->js('js/views/drafts-index');
 $app->bundle->css('css/views/drafts-preview');
 $app->bundle->js('js/views/drafts-preview');
 $app->bundle->css('css/components/folders');
-$app->bundle->enqueue();
 $draft = $app->draft;
 $user = get_userdata( $draft->user_id );
 $draft_read = drafts_json::read($draft->content);

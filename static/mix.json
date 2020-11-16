@@ -1,0 +1,190 @@
+{
+    "jquery": {
+        "css": [],
+        "js": [
+            "external\/jquery\/jquery"
+        ]
+    },
+    "idb": {
+        "css": [],
+        "js": [
+            "external\/idbKeyval\/idb-keyval"
+        ]
+    },
+    "materialize": {
+        "css": [
+            "external\/materialize\/extras\/nouislider",
+            "external\/materialize\/materialize.min"
+        ],
+        "js": [
+            "external\/materialize\/extras\/nouislider",
+            "external\/materialize\/materialize.min"
+        ]
+    },
+    "global": {
+        "js": [
+            "js\/normalize",
+            "js\/_helpers",
+            "js\/classes",
+            "js\/helpers",
+            "js\/global",
+            "js\/components\/recaptcha",
+            "js\/components\/text-input",
+            "js\/components\/toast",
+            "js\/components\/popup",
+            "js\/views\/global-login"
+        ],
+        "css": [
+            "style",
+            "css\/style",
+            "css\/resolve",
+            "css\/fonts",
+            "css\/js-components\/recaptcha",
+            "css\/components\/buttons",
+            "css\/js-components\/text-input",
+            "css\/js-components\/toast",
+            "css\/js-components\/popup",
+            "css\/views\/global-login"
+        ]
+    },
+    "dashboard": {
+        "js": [
+            "js\/draggable.bundle",
+            "js\/dashboard",
+            "js\/components\/inputs"
+        ],
+        "css": [
+            "css\/dashboard"
+        ]
+    },
+    "global_new": {
+        "css": [
+            "css\/normalize",
+            "css\/style",
+            "css\/fonts",
+            "css\/helpers",
+            "css\/js-components\/recaptcha",
+            "css\/components\/buttons",
+            "css\/components\/dropdown",
+            "css\/js-components\/text-input",
+            "css\/js-components\/toast",
+            "css\/js-components\/popup",
+            "css\/js-components\/next-screen",
+            "css\/views\/global-login",
+            "css\/views\/global-share",
+            "css\/views\/global-notifications",
+            "external\/waves\/waves"
+        ],
+        "js": [
+            "js\/DOM",
+            "js\/normalize",
+            "js\/_helpers",
+            "js\/helpers",
+            "js\/classes",
+            "js\/global",
+            "js\/components\/recaptcha",
+            "js\/components\/text-input",
+            "js\/components\/toast",
+            "js\/components\/popup",
+            "js\/components\/next-screen",
+            "js\/views\/global-login",
+            "js\/views\/global-share",
+            "external\/waves\/waves"
+        ]
+    },
+    "search-content": {
+        "css": [
+            "css\/components\/tooltips",
+            "css\/views\/search-tags",
+            "css\/views\/search-content"
+        ],
+        "js": [
+            "js\/views\/search-content"
+        ]
+    },
+    "search-filters": {
+        "css": [
+            "css\/views\/search-filters"
+        ],
+        "js": [
+            "js\/views\/search-filters"
+        ]
+    },
+    "story-options": {
+        "css": [
+            "css\/components\/select",
+            "css\/js-components\/switch",
+            "css\/views\/global-collections"
+        ],
+        "js": [
+            "js\/components\/switch",
+            "js\/views\/story-options",
+            "js\/views\/global-collections"
+        ]
+    },
+    "glide_js": {
+        "css": [
+            "external\/glide\/glide.core"
+        ],
+        "js": [
+            "external\/glide\/glide"
+        ]
+    },
+    "autocomplete": {
+        "css": [
+            "css\/js-components\/autocomplete"
+        ],
+        "js": [
+            "js\/components\/autocomplete"
+        ]
+    },
+    "react": {
+        "js": [
+            "external\/react\/react.production.min",
+            "external\/react\/react-dom.production.min"
+        ],
+        "css": []
+    },
+    "react_dev": {
+        "js": [
+            "external\/react_dev\/babel.min"
+        ],
+        "css": []
+    },
+    "slate": {
+        "js": [
+            "external\/slate\/slate",
+            "external\/slate\/slate-react",
+            "external\/slate\/slate-history",
+            "external\/slate\/slate-hyperscript"
+        ],
+        "css": []
+    },
+    "confirmation": {
+        "css": [
+            "css\/js-components\/confirmation"
+        ],
+        "js": [
+            "js\/components\/confirmation"
+        ]
+    },
+    "intro": {
+        "js": [
+            "external\/intro-js\/intro.min",
+            "js\/views\/global-intro"
+        ],
+        "css": [
+            "external\/intro-js\/introjs.min",
+            "css\/views\/global-intro"
+        ]
+    },
+    "speak": {
+        "css": [
+            "css\/views\/global-speak"
+        ],
+        "js": [
+            "js\/api\/speak",
+            "js\/views\/global-speak"
+        ]
+    }
+}

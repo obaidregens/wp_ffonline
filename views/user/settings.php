@@ -5,7 +5,6 @@ $app->bundle->js('/js/components/switch');
 $app->bundle->css('/css/js-components/switch');
 $app->bundle->css('/css/views/author-settings');
 $app->bundle->js('/js/views/author-settings');
-$app->bundle->enqueue();
 $ffn_user = c_user::current();
 $change_username_meta = get_user_meta( get_current_user_id(), 'last_change_username', true );
 $change_username = $change_username_meta === "" ? 1 : (intval($change_username_meta) > time() - 60*60*24*30 ? 0 : 1);

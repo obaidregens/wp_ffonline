@@ -20,7 +20,6 @@ $app->bundle->js('js/views/reviews-list');
 $app->bundle->js('js/views/chapter-tracking');
 $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/chapter-offline');
-$app->bundle->enqueue();
 
 $chapter = $app->chapter;
 $book = $app->story;
@@ -90,5 +89,4 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 <?php
 $bundle = new bundle('react-ps');
 $bundle->mix('react');
-$bundle->enqueue();
 $bundle->print();

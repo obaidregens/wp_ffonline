@@ -3,7 +3,6 @@ $app->bundle = global_bundle('faq');
 $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/views/faq-main');
 $app->bundle->js('js/views/faq-main');
-$app->bundle->enqueue();
 $questions = questions::by_category();
 ?>
 <faq-header>Frequently Asked Questions</faq-header>
@@ -28,7 +27,6 @@ if (empty($questions)) {
 <p>If you don't think your question should be posted in the FAQ's, you can message <a href="/inbox/@mods">@mods</a> or send us a message through the <a href="/contact">contact form</a>.</p>
 <h2>Ask a question</h2>
 <ul>
-<li>Question will be asked anonymously.</li>
 <li>You may ask one question per submission. If you have multiple questions, ask them separately.</li>
 <li>Your question may be rephrased before being posted in the FAQ's.</li>
 </ul>

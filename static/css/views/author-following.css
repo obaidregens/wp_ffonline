@@ -1,0 +1,30 @@
+author-single {
+    display: flex;
+    height: 45px;
+    margin: 15px 0;
+}
+author-meta {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+author-meta > a {
+    display: flex;
+    color: var(--text-color);
+}
+author-meta > span {
+    display: flex;
+    font-size: 0.9rem;
+    color: var(--darkgrey);
+}
+author-single button {
+    background-color: transparent;
+    display: block;
+    margin: auto 0;
+    padding: 8px;
+
+}
+author-single button::before {
+    display: inline-block;
+    transform: scale(1.3) !important;
+}

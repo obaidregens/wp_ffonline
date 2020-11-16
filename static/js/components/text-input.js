@@ -40,7 +40,7 @@ function init_text_input(){
     }
 }
 init_text_input();
-function create_text_input({type = 'input',input_type = 'text',label,value = '',attributes = {},prefix = ""}){
+function create_text_input({type = 'input',input_type = 'text',label,value = '',attributes = {},prefix = "",keydown}){
     const listeners = {
         change: function(){
             if (this.value === ''){
@@ -60,6 +60,9 @@ function create_text_input({type = 'input',input_type = 'text',label,value = '',
                 this.style.height = this.scrollHeight + 'px';    
             }
         }
+    }
+    if (keydown) {
+        listeners.keydown = keydown;
     }
     const children = [];
     children.push(DOM.create(type,{

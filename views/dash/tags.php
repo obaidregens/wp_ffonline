@@ -8,7 +8,6 @@ $app->bundle->css('css/components/select');
 $app->bundle->css('css/components/index');
 $app->bundle->css('css/views/dash-tags');
 $app->bundle->js('js/views/dash-tags');
-$app->bundle->enqueue();
 $current = $_GET['tax'] ?? 'rating';
 $terms = get_terms( array(
     'taxonomy'      => $current,

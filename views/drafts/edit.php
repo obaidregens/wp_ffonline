@@ -3,7 +3,6 @@ $bundle = new bundle('drafts-editSlate-ps');
 $bundle->mix('react');
 $bundle->mix('slate');
 $bundle->js('external/slate/isHotkey');
-$bundle->enqueue();
 $app->bundle = global_bundle('drafts-edit');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');
@@ -28,12 +27,8 @@ $app->bundle->css('css/views/drafts-editPublish');
 $app->bundle->css('css/views/story-content');
 $app->bundle->js('js/views/drafts-editShortcuts');
 $app->bundle->css('css/views/drafts-editShortcuts');
-$app->bundle->enqueue();
 $draft = $app->draft;
-$content = $draft === false ? '' : $draft->content;
-$title = $draft === false ? 'Untitled' : $draft->title;
 $draft_id = $draft === false ? 'new' : $draft->ID;
-$share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '/drafts/' . $draft->share));
 ?>
 <?php if (current_user_can('administrator')) { ?>
     <button style="display:block;margin-left: auto;margin-top: 20px;" label="Post"></button>
@@ -41,24 +36,17 @@ $share_link = $draft === false ? '' : ($draft->share === null ? '' : home_url( '
 <?php if (! is_user_logged_in()) { ?>
     <important>Draft is not being saved. <a onclick="prompt_login();">Login</a> to save your drafts.</important>
 <?php } ?>
-<save-time datetime="<?= $draft === false ? 0 : intval($draft->edited)*1000; ?>" ></save-time>
+<save-time></save-time>
 <drafts-header>
-<a href="/drafts">Back to Drafts</a>
-<button label="Publish"></button>
-<button class="dropdown" label="Export">
-    <dropdown class="right">
-        <a tabindex="0">FFN</a>
-        <a tabindex="0">AO3</a>
-    </dropdown>
-</button>
+    <a href="/drafts">Back to Drafts</a>
+    <button label="Publish"></button>
+    <button class="dropdown" label="Export">
+        <dropdown class="right">
+            <a tabindex="0">FFN</a>
+            <a tabindex="0">AO3</a>
+        </dropdown>
+    </button>
 </drafts-header>
-<share-is hidden><?=  $share_link ?></share-is>
-<words-is hidden><?= str_word_count(drafts_json::simpleText($content)) ?> Words</words-is>
-<script>
-<?php $load_content = script_json($content); ?>
-const load_title = <?= script_string($title); ?>;
-const load_content = <?= $load_content === "" ? '[]' : $load_content; ?>;
-</script>
 <input maxlength="80" placeholder="Title">
 <editor draft_id="<?= $draft_id; ?>"></editor>
 
@@ -66,13 +54,13 @@ const load_content = <?= $load_content === "" ? '[]' : $load_content; ?>;
 // $bundleDev = new bundle("drafts-editSlateDev");
 // $bundleDev->mix('react');
 // $bundleDev->mix('react_dev');
-// $bundleDev->enqueue('dev');
 
 // $bundleDev1 = new bundle("drafts-editSlateDev1");
 // $bundleDev1->script_type = 'text/jsx';
 // $bundleDev1->js('js/views/drafts-editReact.jsx');
-// $bundleDev1->enqueue('dev');
 
 // $bundleDev->print();
 // $bundleDev1->print();
+
+
 $bundle->print();

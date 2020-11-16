@@ -3,7 +3,6 @@ $app->template('/views/ffn_user/header');
 $app->bundle->mix('search-content');
 $app->bundle->mix('story-options');
 $app->bundle->css('css/views/author-about');
-$app->bundle->enqueue();
 global $book_query;
 $href = home_url( '/ffn@' . $app->author_id  . '/');
 $book_query = $app->author_books;

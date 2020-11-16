@@ -7,7 +7,6 @@ $app->bundle->js('js/views/dash-main');
 // Unique
 $app->bundle->css('css/views/dash-contact');
 $app->bundle->js('js/views/dash-contact');
-$app->bundle->enqueue();
 global $wpdb;
 $r = $wpdb->get_results("SELECT * FROM contact ORDER BY received_time ASC");
 $re = [];

@@ -3,7 +3,6 @@ $app->bundle = global_bundle('home');
 $app->bundle->mix('glide_js');
 $app->bundle->css('css/views/home-main');
 $app->bundle->js('js/views/home-main');
-$app->bundle->enqueue();
 ?>
 <!-- Main -->
 <section>

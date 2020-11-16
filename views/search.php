@@ -110,4 +110,3 @@ $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js("js/views/search-offline");
 $app->bundle->css('css/views/search-filterFandom');
 $app->bundle->js("js/views/search-filterFandom");
-$app->bundle->enqueue();

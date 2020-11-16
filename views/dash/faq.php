@@ -7,7 +7,6 @@ $app->bundle->js('js/views/dash-main');
 // Unique
 $app->bundle->css('css/views/dash-faq');
 $app->bundle->js('js/views/dash-faq');
-$app->bundle->enqueue();
 $questions = questions::query([
     'status' => ['pending']
 ]);

@@ -112,7 +112,8 @@
         autoSaveOpt += largestLength;
         return false;
     };
-        
+    
+    window.editedBlocks = [];
     const App = () => {
         const editor = useMemo(() => withHistory(withReact(createEditor())), []);
     
@@ -189,6 +190,12 @@
             onChange={value => {
                 const opr = editor.operations;
                 if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
+                    opr.forEach(operation => {
+                        (operation.path || []).forEach(pa => {
+                            window.editedBlocks.push(pa + Math.max(0,window.draftLastLength - value.length));
+                            window.editedBlocks.push(pa);
+                        });
+                    });
                     window.editedAtAll = true;
                     window.autosaveDraft(value, shouldAutosave(editor));
                 }

@@ -33,6 +33,7 @@ author-stats > stat::after {
 author-nav {
     display: flex;
     margin-bottom: 20px;
+    overflow-x: auto;
 }
 author-nav > a {
     color: var(--text-color);
@@ -42,7 +43,9 @@ author-nav > a {
 }
 @media only screen and (max-width: 400px) {
     author-nav {
-        justify-content: center;
+        max-width: fit-content;
+        max-width: -moz-fit-content;
+        margin: 0 auto;
         font-size: 0.9rem;
     }
 }

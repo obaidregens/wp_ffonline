@@ -15,7 +15,6 @@ $app->bundle->css('css/js-components/sidenav');
 $app->bundle->js('js/components/sidenav');
 $app->bundle->js('js/views/dash-main');
 $app->bundle->css('css/views/dash-home');
-$app->bundle->enqueue();
 global $wpdb;
 
 $landings = $wpdb->get_results("SELECT COUNT(*) as c FROM stats_landings");

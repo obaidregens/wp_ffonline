@@ -46,6 +46,9 @@ $follow_class = follow::exists('user',$user->ID) ? 'followed' : '';
 	<?php if (!$is_admin) { ?>
 	<a <?= $author_page === 'collections' ? 'active' : '' ?> href="<?= $href . 'collections'; ?>">Collections</a>
 	<?php } ?>
+	<?php if ($is_current_author) { ?>
+	<a <?= $author_page === 'following' ? 'active' : '' ?> href="<?= $href . 'following'; ?>">Following</a>
+	<?php } ?>
 	<?php if ($is_admin) { ?>
 	<button class="author-follow <?= $follow_class; ?>"></button>
 	<?php } ?>

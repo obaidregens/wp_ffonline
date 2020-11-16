@@ -1,7 +1,6 @@
 <?php
 $app->bundle = global_bundle('my-books');
 $app->bundle->css('css/views/my-books');
-$app->bundle->enqueue();
 $books = (new WP_Query([
     'post_type'              => array( 'book' ),
     'post_status'            => array( 'publish','draft' ),

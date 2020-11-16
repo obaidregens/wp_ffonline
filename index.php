@@ -1,4 +1,7 @@
 <?php
+// define("GLOBAL_ENV","DEV");
+define("GLOBAL_ENV","PROD");
+
 function construct_page_title(... $parts) {
     return implode(" - ",$parts) . " - Fanfiction Online";
 }
@@ -14,12 +17,17 @@ require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
 class Router {
     public $request;
     private $r;
+    protected $is_beta;
     private $called = [];
     function __construct(){
         $this->request = explode('?',strtolower($_SERVER['REQUEST_URI']))[0];
         $this->request = $this->request === '' ? '/' : $this->request;
         $this->r = arr::non_empty(explode('/',$this->request));
         $this->request = '/' . implode('/',$this->r);
+        $this->is_beta = ($_SERVER['HTTP_HOST'] ?? "") === "beta.fanfiction.online";
+    }
+    function is_beta() {
+        return $this->is_beta;
     }
     function listen($dyno_url,$func){
         if (defined("NO_ROUTES") && NO_ROUTES === true) {
@@ -155,12 +163,16 @@ class Router {
 }
 global $app;
 $app = new Router();
+
+// Beta
+require MAIN_DIR . "/content/beta/index.php";
+
 $app->listen('/',function($self){
     $self->type = 'home';
     $self->type_id = 0;
     $self->header([
         'title'         => "Fanfiction Online - Read & Write Fanfiction",
-        'description'   => "Discover & read the most popular fanfiction stories in your fandom, with the best app to read and write fanfiction!"
+        'description'   => "Discover & read the most popular fanfiction stories in your fandom, with the best site to read and write fanfiction!"
     ]);
     $self->template('/views/home');
     $self->footer();
@@ -182,7 +194,8 @@ $app->listen('/read',function($self){
     $self->type = 'read';
     $self->type_id = 0;
     $self->header([
-        'title'     => construct_page_title("Read")
+        'title'         => "Read Fanfiction Online",
+        'description'   => "Discover & read the top fanfics free on Fanfiction Online."
     ]);
     $self->template('/views/search');
     $self->footer();
@@ -411,7 +424,7 @@ $app->listen('/@:user/collections/:collection',function($self){
 function author_template_load($template){
     global $app;
     $user = user::get_by( 'login', $app->params['user'] );
-    if ( $template === 'settings' && ! is_current_user($user->ID) ){
+    if ( in_array($template,['settings','following']) && !is_current_user($user->ID) ){
         $app->_404();
     }
     if ($user === false){
@@ -458,6 +471,9 @@ $app->listen('/@:user/collections',function($self){
 });
 $app->listen('/@:user/settings',function($self){
     author_template_load('settings');
+});
+$app->listen('/@:user/following',function($self){
+    author_template_load('following');
 });
 $app->listen('/@:user',function($self){
     author_template_load('about');

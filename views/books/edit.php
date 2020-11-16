@@ -24,7 +24,6 @@ if ($book_id !== 'new' && $book->post_status === 'publish') {
 <?php
 $bundle = new bundle('react-select-ps');
 $bundle->js('external/react-select/react-select');
-$bundle->enqueue();
 $bundle->print();
 
 $app->bundle = global_bundle('edit-book');
@@ -44,4 +43,3 @@ $app->bundle->css('css/views/book-edit');
 $app->bundle->js('js/views/book-edit-submit');
 $app->bundle->css('css/views/book-edit-submit');
 $app->bundle->js('js/views/book-edit');
-$app->bundle->enqueue();
