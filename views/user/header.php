@@ -15,7 +15,7 @@ $app->author_stories_query = new book_query(array(
     ),
     'per_page'		=> 2
 ));
-$is_admin = in_array($user->user_login,["admin","ffonline","mods"]);
+$is_admin = in_array($user->user_login,["admin","ffonline","mods","beta"]);
 $follow_class = follow::exists('user',$user->ID) ? 'followed' : '';
 ?>
 <floater>

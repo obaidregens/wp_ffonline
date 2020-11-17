@@ -15,7 +15,6 @@ footer {
 chat-list {
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-end;
     overflow: auto;
     height: calc(100vh - 53px);
     padding: 10px;
@@ -30,7 +29,7 @@ chat-list.show ~ loader {
 }
 chat-list > chat {
     cursor: pointer;
-    display: block;
+    display: flex;
     height: 70px;
     padding: 5px 15px;
     border-radius: 7px;
@@ -43,6 +42,13 @@ chat-list > chat[active] {
 chat-list > chat::before {
     font-size: 0.9rem;
     content: attr(username);
+}
+/* First */
+chat-list > chat:first-child {
+    margin-bottom: auto;
+}
+chat-list chat:last-child {
+    margin-top: 10px;
 }
 /* Unread */
 chat:not([unread="0"])::after {

@@ -56,6 +56,12 @@ const si = DOM.create('sidenav',{
                 href: "/dash/reimport"
             }
         }),
+        DOM.create("a",{
+            innerText: "Beta",
+            attributes: {
+                href: "/dash/beta"
+            }
+        }),
     ],
 });
 sidenav.create(si);

@@ -1,4 +1,5 @@
 (() => {
+    DOM.q('chat-list').scrollTop = DOM.q('chat-list').scrollHeight*-1;
     const full_url_parts = window.location.href.split('/').filter((el) => el !== '');
     if (DOM.q('chat-list').children.length === 0 && full_url_parts[full_url_parts.length-1] === 'inbox') {
         window.addEventListener('load',() => {

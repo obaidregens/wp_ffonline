@@ -1,4 +1,5 @@
-(() => {
+(async () => {
+    // Feedback
     const feedback_pop = DOM.create('popup',{
         classes: ['bottom'],
         attributes: {
@@ -41,10 +42,31 @@
         }
     });
     popup.create(feedback_pop);
+    const {id,description} = await api('get_beta');
+    const about_pop = DOM.create('popup',{
+        attributes: {
+            about: ""
+        },
+        children: [
+            DOM.create('h3',{
+                innerText: "What's in this beta?"
+            }),
+            DOM.create("p",{
+                innerText: description
+            })
+        ]
+    });
+    popup.create(about_pop);
     const bar = document.documentElement.appendChild(DOM.create('beta-bar',{
         children: [
             DOM.create('text',{
-                innerHTML: "You're in beta. Switch to <a>main site.</a>"
+                innerHTML: "You're in beta. Switch to <a href='https://fanfiction.online'>main site.</a>"
+            }),
+            DOM.create('a',{
+                innerHTML: "About",
+                listeners: {
+                    click: () => popup.open(about_pop)
+                }
             }),
             DOM.create('a',{
                 innerHTML: "Feedback",
@@ -59,4 +81,11 @@
             })
         ]
     }));
+    const beta_help = JSON.parse(await idbKeyval.get("beta_help")) || [];
+    if (beta_help.includes(id)) {
+        return;
+    }
+    popup.open(about_pop);
+    beta_help.push(id);
+    idbKeyval.set("beta_help",JSON.stringify(beta_help));
 })();

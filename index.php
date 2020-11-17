@@ -1,5 +1,5 @@
 <?php
-define("GLOBAL_ENV","PROD");
+// define("GLOBAL_ENV","DEV");
 
 function construct_page_title(... $parts) {
     return implode(" - ",$parts) . " - Fanfiction Online";
@@ -28,8 +28,11 @@ class Router {
     function is_beta() {
         return $this->is_beta;
     }
-    function listen($dyno_url,$func){
+    function listen($dyno_url,$func,bool $beta = false){
         if (defined("NO_ROUTES") && NO_ROUTES === true) {
+            return;
+        }
+        if (!$beta && beta::is()) {
             return;
         }
         $match = arr::non_empty(explode('/',$dyno_url));
@@ -169,7 +172,7 @@ $app->listen('/api',function($self){
     }
     include('scripts/api.php');
     exit();
-});
+},true);
 
 // Beta
 require MAIN_DIR . "/content/beta/index.php";
@@ -843,4 +846,4 @@ $app->listen('/content/static/:filename',function($self){
 // 404
 $app->listen('&*',function($self){
     $self->_404();
-});
+},true);

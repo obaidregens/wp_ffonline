@@ -39,9 +39,16 @@ class notifications {
         $home_url = home_url(  );
         switch ($row->notification_type) {
             case 'beta_invite':
+                global $wpdb;
+                $r = $wpdb->get_results($wpdb->prepare("SELECT start_url FROM beta_sessions WHERE ID = %d",[$row->type_of_id]));
+                if (empty($r)) {
+                    return null;
+                }
+                $user = user::get_by("ID",$row->user_id);
+                $username = "@".$user->user_login;
                 return [
-                    'message'   => "You've been invited to beta test a feature.",
-                    'link'      => "https://beta.fanfiction.online"
+                    'message'   => "Hi $username, you've been invited to beta test a new feature before it's release. Interested?",
+                    'link'      => $r[0]->start_url
                 ];
             case 'add_to_collection':
                 $story = story::get($row->type_of_id,false);

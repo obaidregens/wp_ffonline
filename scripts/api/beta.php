@@ -15,3 +15,17 @@ function api_send_beta_feedback() {
     }
     return ['code'=>1];
 }
+function api_get_beta() {
+    if (!beta::can() || !beta::is()) {
+        return ['code'=>10];
+    }
+    $inst = beta::get_current();
+    if (!$inst) {
+        return ['code'=>11];
+    }
+    return [
+        'code'          => 1,
+        'description'   => $inst['description'],
+        'id'            => $inst['ID']
+    ];
+}

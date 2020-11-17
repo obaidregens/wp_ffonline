@@ -332,6 +332,7 @@ function run_at_activation(){
 	$beta_sessions_table = "CREATE TABLE beta_sessions (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`description`		VARCHAR(500) NOT NULL ,
+		`start_url`			VARCHAR(100) NOT NULL ,
 		`start_time`		BIGINT NOT NULL ,
 		`end_time`			BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)

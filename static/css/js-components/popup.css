@@ -50,7 +50,9 @@ popup:not(.bottom) {
     transition:
         transform 0.23s
             cubic-bezier(0.6, -0.28, 0.735, 0.045),
-        opacity 0.3s
+        opacity 0.3s,
+        background-color 0.3s,
+        color 0.3s
     ;
 }
 popup:not(.bottom).show {
@@ -59,7 +61,9 @@ popup:not(.bottom).show {
     transition:
         transform 0.35s
             cubic-bezier(0.175, 0.885, 0.32, 1.275),
-        opacity 0.2s
+        opacity 0.2s,
+        background-color 0.3s,
+        color 0.3s
     ;
 }
 /* Bottom Popup */
@@ -72,7 +76,9 @@ popup.bottom {
         transform 0.2s
             cubic-bezier(0.54, 0.11, 0.97, 0.54),
         opacity 0.4s
-            cubic-bezier(0.72, -0.31, 0.21, 0.64)
+            cubic-bezier(0.72, -0.31, 0.21, 0.64),
+        background-color 0.3s,
+        color 0.3s
     ;
 }
 popup.bottom.show {
@@ -80,7 +86,9 @@ popup.bottom.show {
     transition:
         transform 0.35s
             cubic-bezier(0, 0.66, 0.14, 1.06),
-        opacity 0.2s
+        opacity 0.2s,
+        background-color 0.3s,
+        color 0.3s
     ;
     transform: translateY(0);
 }

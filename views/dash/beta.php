@@ -13,6 +13,7 @@ $current = beta::get_current();
 <text-input label="Description" maxlength="400" type="multi"></text-input>
 <text-input label="Duration" input_type="number">12</text-input>
 <text-input label="Users" input_type="number">15</text-input>
+<text-input label="Start URL">read</text-input>
 <text-input helper="Separate by commas" label="Custom Users"></text-input>
 <button label="Create" style="float:right;"></button>
 <?php } else { ?>

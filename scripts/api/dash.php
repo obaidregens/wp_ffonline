@@ -116,10 +116,11 @@ function api_allow_reimport() {
 }
 function api_beta_session_create() {
     required_admin();
-    required_params('description','duration','users','custom');
+    required_params('description','duration','users','start_url','custom');
     $d = &$_POST['data'];
     $beta_id = beta::new_session([
         'description'   => $d['description'],
+        'start_url'     => "https://beta.fanfiction.online/" . ltrim($d['start_url'],'/'),
         'users'         => intval($d['users']),
         'custom'        => arr::non_empty(explode(',',$d['custom'])),
         'duration'      => intval($d['duration'])*1000*1*60*60

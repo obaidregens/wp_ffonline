@@ -5,7 +5,6 @@ $app->bundle->css('css/components/tooltips');
 $app->bundle->css('css/views/inbox-list');
 $app->bundle->js('js/views/inbox-list');
 
-
 $chats_with = chats::with();
 ?>
 <chat-list class="show">

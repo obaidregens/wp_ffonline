@@ -28,6 +28,7 @@ class beta {
         $args = array_replace([
             'description'       => "",
             'users'             => 15,
+            'start_url'         => "https://fanfiction.online/read",
             "custom"            => [],
             'duration'          => 1000*1*60*60*12 //12 hours
         ],$args);
@@ -48,6 +49,7 @@ class beta {
         $wpdb->insert(
             self::$table,[
                 'description'  => $args['description'],
+                'start_url'    => $args['start_url'],
                 'start_time'   => $milli,
                 'end_time'     => $milli+intval($args['duration'])
             ]
