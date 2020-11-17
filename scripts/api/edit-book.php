@@ -218,16 +218,30 @@ function api_edit_book() {
     }
     wp_set_post_terms( $d['book_id'], $tag, 'tag' );
 
-    // Update Book
+    // Update
+
+    $is_publish = ((!$e->has()) && $publish);
+    $update_arg = [
+        'post_title'        => substr($d['title'],0,80),
+        'post_excerpt'      => substr($d['description'],0,400),
+        'comment_status'    => $reviews ? 'open' : 'closed',
+        'post_status'       => $is_publish ? 'publish' : 'draft' 
+    ];
+
+    $new_publish = $is_publish && $book->post_status === 'draft';
+    $first_publish = get_post_meta( $book->ID, "first_publish", true );
+    $t = time();
+    if ($new_publish && $first_publish === "") {
+        update_post_meta( $book->ID, 'first_publish', $t );
+        $update_arg['post_modified'] = current_time( 'mysql' );
+        $update_arg['post_modified_gmt'] = current_time( 'mysql', 1 );
+    }
+    update_post_meta( $book->ID, 'last_edited', $t );
+
     global $wpdb;
     $wpdb->update(
         'wp_posts',
-        [
-            'post_title'        => substr($d['title'],0,80),
-            'post_excerpt'      => substr($d['description'],0,400),
-            'comment_status'    => $reviews ? 'open' : 'closed',
-            'post_status'       => ((!$e->has()) && $publish) ? 'publish' : 'draft' 
-        ],
+        $update_arg,
         [
             'ID'                =>  $d['book_id']
         ]
@@ -240,7 +254,7 @@ function api_edit_book() {
         'code'          => 1,
         'selected'      => get_data($d['book_id'])['selected'],
         'errors'        => $publish ? $e->array() : [],
-        'new_publish'   => ((!$e->has()) && $publish) && $book->post_status === 'draft'
+        'new_publish'   => $new_publish
     ];
 }
 function api_create_fandom() {

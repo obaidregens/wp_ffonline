@@ -170,6 +170,7 @@ class _landing extends stats {
             'platform'              => 'Not Implemented',
             'browser'               => 'Not Implemented',
             'browser_version'       => 'Not Implemented',
+            'host'                  => beta::is() ? "beta" : ""
         );
         global $wpdb;
         $response = $wpdb->insert(

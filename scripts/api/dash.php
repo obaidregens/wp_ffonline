@@ -114,3 +114,18 @@ function api_allow_reimport() {
     update_option( "reimport_allow", array_unique($users) );
     return ['code'=>1];
 }
+function api_beta_session_create() {
+    required_admin();
+    required_params('description','duration','users','custom');
+    $d = &$_POST['data'];
+    $beta_id = beta::new_session([
+        'description'   => $d['description'],
+        'users'         => intval($d['users']),
+        'custom'        => arr::non_empty(explode(',',$d['custom'])),
+        'duration'      => intval($d['duration'])*1000*1*60*60
+    ]);
+    if (err::is($beta_id)) {
+        return ['code'=>9,'beta_id'=>$beta_id->array()];
+    }
+    return ['code'=>1,'beta_id'=>$beta_id];
+}

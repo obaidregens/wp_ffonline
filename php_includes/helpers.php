@@ -35,3 +35,6 @@ class str {
         return strtolower($txt) === $txt;
     }
 }
+function DEV() {
+    return defined('GLOBAL_ENV') && GLOBAL_ENV === 'DEV';
+}

@@ -190,7 +190,7 @@ class chats_blocking extends chats {
             $error->add('user_id(0)','Invalid Username passed: ' . $user_id);
         }
         // Exception Beta
-        if ($user->user_login === "beta" && !can_beta($by_user_id) ) {
+        if ($user->user_login === "beta" && !beta::can($by_user_id) ) {
             return false;
         }
 

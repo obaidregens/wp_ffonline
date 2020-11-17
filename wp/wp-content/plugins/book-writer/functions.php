@@ -38,8 +38,10 @@ function run_at_activation(){
 	`platform` VARCHAR(100) NULL,
 	`browser` VARCHAR(100) NULL,
 	`browser_version` VARCHAR(20) NULL,
+	`host` VARCHAR(30) NOT NULL,
 	PRIMARY KEY (`ID`)
 	) $charset_collate;";
+
 	//Actions
 	$stats_actions_table = "CREATE TABLE stats_actions (
 	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -327,15 +329,21 @@ function run_at_activation(){
 		PRIMARY KEY (`word`)
 	) $charset_collate;";
 
-	// $beta_sessions_table = "CREATE TABLE beta_sessions (
-	// 	`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-	// 	`word`				VARCHAR(150) NOT NULL ,
-	// 	`google`			LONGTEXT NOT NULL ,
-	// 	`thesaurus_com`		LONGTEXT NOT NULL ,
-	// 	`landing_id`		BIGINT NOT NULL ,
-	// 	`milli_timestamp`	BIGINT NOT NULL ,
-	// 	PRIMARY KEY (`word`)
-	// ) $charset_collate;";
+	$beta_sessions_table = "CREATE TABLE beta_sessions (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`description`		VARCHAR(500) NOT NULL ,
+		`start_time`		BIGINT NOT NULL ,
+		`end_time`			BIGINT NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;";
+
+	$beta_users_table = "CREATE TABLE beta_users (
+		`beta_id`			BIGINT UNSIGNED NOT NULL ,
+		`user_id`			BIGINT NOT NULL ,
+		`selection`			VARCHAR(30) NOT NULL ,
+		PRIMARY KEY (`beta_ID`,`user_id`)
+	) $charset_collate;";
+
 
 	//RUN SQL
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -385,7 +393,8 @@ function run_at_activation(){
 	// Dict
 	dbDelta( $dictionary_data_table );
 	// Beta
-	// dbDelta( $beta_sessions_table );
+	dbDelta( $beta_sessions_table );
+	dbDelta( $beta_users_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -431,6 +440,7 @@ $includes = array(
 	'classes/spam',
 	'classes/db',
 	'classes/story',
+	'classes/beta',
 );
 foreach($includes as $include){
 	require ($include . '.php');

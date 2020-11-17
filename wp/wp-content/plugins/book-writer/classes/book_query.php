@@ -360,13 +360,14 @@ class book_query_cache extends book_query {
                     )
                 ));    
             }
-            // Created
+            // Publish
             $term_key = 'sort' . self::$midfix . 'date/' . $order;
             if ( ! isset($this->existing[$term_key]) ){
                 $sort_ids = (new WP_Query(array_replace(book_query::$wp_base_args,array(
                     'posts_per_page'    => -1,
                     'fields'            => 'ids',
-                    'orderby'           => 'date',
+                    'meta_key'          => 'first_publish',
+                    'orderby'           => 'meta_value_num',
                     'order'             => $order
                 ))))->posts;
                 self::put(array(

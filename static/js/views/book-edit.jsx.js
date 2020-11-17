@@ -242,12 +242,13 @@ const App = () => {
                 }
             }))
             .then(fandom_json => {
+                const newValueNum = selected.characters.filter(({value}) => value.substr(0,8) === "newValue").length;
                 const fandom_parsed = JSON.parse(fandom_json);
                 selected.characters.push({
                     category: fandom_parsed.category,
                     fandom: fandom_parsed.value,
                     label: newCharacter,
-                    value: 'newValue',
+                    value: 'newValue' + newValueNum,
                     __isNew__: true
                 });
                 reRender();

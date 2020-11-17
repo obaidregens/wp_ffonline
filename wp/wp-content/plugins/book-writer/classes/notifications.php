@@ -38,6 +38,11 @@ class notifications {
     static function createNotification($row) {
         $home_url = home_url(  );
         switch ($row->notification_type) {
+            case 'beta_invite':
+                return [
+                    'message'   => "You've been invited to beta test a feature.",
+                    'link'      => "https://beta.fanfiction.online"
+                ];
             case 'add_to_collection':
                 $story = story::get($row->type_of_id,false);
                 if (! $story ){
@@ -69,17 +74,17 @@ class notifications {
                 $chapter_num = get_post_meta( $row->type_of_id, 'chapter_order', true );
                 return [
                     'message'   => '"' . $story->post_title . '" just got a new chapter!',
-                    'link'      => "$home_url/story/" . $story->ID . '/' . $chapter_num ,
+                    'link'      => $home_url . "/story/" . $story->ID . '/' . $chapter_num ,
                 ];
             case 'account_verified':
                 return [
                     'message'   => "You've been verified. Start importing stories from FFN now!",
-                    'link'      => "$home_url/import-stories"
+                    'link'      => $home_url ."/import-stories"
                 ];
             case 'stories_imported':
                 return [
                     'message'   => "Your stories have been imported.",
-                    'link'      => "$home_url/my-stories"
+                    'link'      => $home_url ."/my-stories"
                 ];    
             case 'chapter_review':
                 $comment = get_comment( $row->type_of_id );
@@ -113,7 +118,7 @@ class notifications {
                 $udisplay = "@" . $user->user_login;
                 return [
                     'message'   => $udisplay . " just posted an update!",
-                    'link'      => '$home_url/' . $udisplay,
+                    'link'      => $home_url . "/" . $udisplay,
                 ];
             case 'follow_user':
                 return [
@@ -163,6 +168,21 @@ class notifications {
     }
 }
 class notifications_insert extends notifications {
+    function inviteToBeta($beta_id,$user) {
+        $user = user::get_by("ID",$user);
+        if (! $user) {
+            return false;
+        }
+        $insert = [
+            'notification_type' => "beta_invite",
+            'type_of'           => 'beta',
+            'type_of_id'        => $beta_id,
+            'type_by'           => "user",
+            'type_by_id'        => $user->ID,
+            'user_id'           => $user->ID
+        ];
+        self::insert($insert);
+    }
     function updateStory($chapter_id) {
         $chapter = get_post($chapter_id);
         if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {

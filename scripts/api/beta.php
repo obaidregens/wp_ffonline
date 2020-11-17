@@ -2,8 +2,7 @@
 function api_send_beta_feedback() {
     required_params('message');
     $d = &$_POST['data'];
-    global $app;
-    if (!can_beta() || !$app->is_beta()) {
+    if (!beta::can() || !beta::is()) {
         return ['code'=>10];
     }
     $user = user::get_by( 'login', 'beta' );

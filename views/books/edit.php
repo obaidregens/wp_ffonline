@@ -43,3 +43,13 @@ $app->bundle->css('css/views/book-edit');
 $app->bundle->js('js/views/book-edit-submit');
 $app->bundle->css('css/views/book-edit-submit');
 $app->bundle->js('js/views/book-edit');
+
+// $bundle1 = new bundle('book-edit-dev1');
+// $bundle1->mix('react_dev');
+
+// $bundle0 = new bundle("book-edit-dev");
+// $bundle0->js('js/views/book-edit.jsx');
+// $bundle0->script_type = 'text/jsx';
+
+// $bundle1->print();
+// $bundle0->print();

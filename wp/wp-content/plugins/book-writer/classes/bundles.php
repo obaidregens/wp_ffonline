@@ -61,13 +61,15 @@ class bundle {
     }
     protected function close() {
         self::$index[$this->name] = $this->bundle;
-        file_put_contents($this->static_dir . '/index.json',json_encode(self::$index,JSON_PRETTY_PRINT));
+        if (DEV()) {
+            file_put_contents($this->static_dir . '/index.json',json_encode(self::$index,JSON_PRETTY_PRINT));
+        }
     }
     function print(){
         $this->close();
         $raw_urls = $this->get_raw_urls();
         $type = isset($this->script_type) ? 'type="' . $this->script_type . '"' : "";
-        if (GLOBAL_ENV === 'DEV'){
+        if (DEV()){
             foreach ($raw_urls['css'] as $i => $filename) {
                 $name = 'bundle_' . $this->name . '_css_' . $i;
                 $url_loc = substr($filename ,0,3) === '://' ? 'https' : $this->static_url;
@@ -109,7 +111,7 @@ class bundle {
     protected static $static_dir;
     protected static $static_url;
     protected static $mix;
-    protected static $index;
+    public static $index;
 
     static function init () {
         self::$static_dir = MAIN_DIR . 'content/static/';

@@ -1,5 +1,4 @@
 <?php
-// define("GLOBAL_ENV","DEV");
 define("GLOBAL_ENV","PROD");
 
 function construct_page_title(... $parts) {
@@ -164,6 +163,14 @@ class Router {
 global $app;
 $app = new Router();
 
+$app->listen('/api',function($self){
+    if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+        return;
+    }
+    include('scripts/api.php');
+    exit();
+});
+
 // Beta
 require MAIN_DIR . "/content/beta/index.php";
 
@@ -199,13 +206,6 @@ $app->listen('/read',function($self){
     ]);
     $self->template('/views/search');
     $self->footer();
-    exit();
-});
-$app->listen('/api',function($self){
-    if ($_SERVER['REQUEST_METHOD'] !== "POST") {
-        return;
-    }
-    include('scripts/api.php');
     exit();
 });
 $app->listen('/dash',function($self){
@@ -260,6 +260,17 @@ $app->listen('/dash/reimport',function($self){
         'title'     => construct_page_title("Dash Reimport")
     ]);
     $self->template('/views/dash/reimport');
+    $self->footer();
+    exit();
+});
+$app->listen('/dash/beta',function($self){
+    $self->admin();
+    $self->type = 'dash-beta';
+    $self->type_id = 0;
+    $self->header([
+        'title'     => construct_page_title("Dash Beta")
+    ]);
+    $self->template('/views/dash/beta');
     $self->footer();
     exit();
 });
@@ -319,8 +330,8 @@ $app->listen('/story/:story/:chapter',function($self){
     $self->chapter = $chapter;
     $self->header([
         'title'         => implode(" - ",[
-            'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true),
-            $story->post_title . ' by ' . author_name_single($story->ID)
+            $story->post_title . ' by ' . author_name_single($story->ID),
+            'Chapter ' . get_post_meta($chapter->ID,'chapter_order',true)
         ]),
         'description'   => $story->post_excerpt
     ]);
@@ -826,8 +837,7 @@ $app->listen('/content/static/:filename',function($self){
     $a = explode('.',$f);
     $name = $a[0];
     $type = $a[1];
-    $b = new bundle("O");
-    $filename = $name . '-' . $b->index[$name][$type . '_hash'] . "." . $type;
+    $filename = $name . '-' . bundle::$index[$name][$type . '_hash'] . "." . $type;
     $self->redirect('/content/static/bundles/' . $filename);
 });
 // 404
