@@ -1,6 +1,6 @@
 <?php
-define('WP_USE_THEMES', false);
-require("../wp/wp-load.php");
+define("NO_ROUTES",true);
+require (rtrim(explode('content',__DIR__,2)[0],'/\\') . '/content/index.php');
 
 $cache = new book_query_cache;
 $cache->words();

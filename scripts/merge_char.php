@@ -5,9 +5,9 @@ $merge_to_id = 37343;
 
 ignore_user_abort(true);
 
-define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\');
-require( $maindir . "/content/wp/wp-load.php");
+define("NO_ROUTES",true);
+require ($maindir . '/content/index.php');
 
 // Replace in Pairings Table (character_pairings)
 // Replace in Stories (wp_term_relationships)

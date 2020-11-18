@@ -1,8 +1,8 @@
 <?php
-define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
-$wp_dir = $maindir . '/content/wp/';
-require( $wp_dir . 'wp-load.php');
+define("NO_ROUTES",true);
+require ($maindir . '/content/index.php');
+
 require_once $maindir . '/content/php_includes/mail/mail.php';
 
 // Settings

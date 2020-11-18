@@ -452,7 +452,7 @@ class book_query_cache extends book_query {
                 ORDER BY c DESC
             "),'story');
             $non_votes = array_merge($imported_ids,$non_imported_voted_ids);
-            $non_imported_no_votes = array_column($wpdb->get_results(
+            $non_imported_no_votes = empty($non_votes) ? [] : array_column($wpdb->get_results(
                 $wpdb->prepare("
                     SELECT ID as story
                     FROM wp_posts

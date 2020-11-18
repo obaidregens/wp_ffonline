@@ -1,8 +1,8 @@
 <?php
 ignore_user_abort(true);
-define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\');
-require( $maindir . "/content/wp/wp-load.php");
+define("NO_ROUTES",true);
+require ($maindir . '/content/index.php');
 
 $sql = "SELECT books.ID as id,SUM(met.meta_value) as c FROM wp_posts as books
 INNER JOIN wp_posts as chapters ON books.ID = chapters.post_parent
@@ -20,4 +20,4 @@ $r = $wpdb->get_results($sql);
 foreach ($r as $row) {
     update_post_meta( intval($row->id), 'word-count', intval($row->c) );
 }
-echo "Rows: " count($r);
+echo "Rows: " . count($r);

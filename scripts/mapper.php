@@ -1,7 +1,8 @@
 <?php
-define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\');
-require( $maindir . "/content/wp/wp-load.php");
+define("NO_ROUTES",true);
+require ($maindir . '/content/index.php');
+
 $dir = $maindir . '/sitemap';
 if (! file_exists($dir)){
     mkdir($dir);

@@ -1,9 +1,8 @@
 <?php
 exit();
-define('WP_USE_THEMES', false);
 $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
-$wp_dir = $maindir . '/content/wp/';
-require( $wp_dir . 'wp-load.php');
+define("NO_ROUTES",true);
+require ($maindir . '/content/index.php');
 
 global $wpdb;
 $r = $wpdb->get_results("SELECT * FROM `wp_comments`");

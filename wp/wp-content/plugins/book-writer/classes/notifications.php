@@ -2,6 +2,7 @@
 class notifications {
     protected static $table = 'notifications';
     protected static $priorities = [
+        'beta_invite',
         'stories_imported',
         'account_verified',
         'review_reply',
@@ -10,7 +11,7 @@ class notifications {
         'chapter_vote',
         'user_update',
         'follow_collection',
-        'story_update',
+        'story_update'
     ];
     protected static $priorities_map = false;
     static function getPriority($n) {
