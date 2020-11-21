@@ -1,0 +1,38 @@
+options-menu {
+    display: flex;
+    position: fixed;
+    min-width: 160px;
+    background-color: var(--background-color);
+    box-shadow: var(--elevate-light);
+    user-select: none;
+    z-index: 52;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s;
+}
+options-menu.show {
+    opacity: 1;
+    pointer-events: all;
+}
+options-menu > li {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color .2s;
+    color: var(--lightblack);
+}
+options-menu > li:hover {
+    background-color: var(--hover);
+}
+/* Icons */
+options-menu > li::before {
+    font-family: 'icons';
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: bold;
+}
+options-menu > li.listen::before {
+    content: "\e956";
+    transform: scale(0.9);
+}

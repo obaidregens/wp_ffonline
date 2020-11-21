@@ -80,12 +80,20 @@ class beta {
             return false;
         }
         global $wpdb;
-        $r = $wpdb->get_results(
+        $user_ids = array_column($wpdb->get_results(
+            "SELECT `user_id` FROM wp_usermeta
+            WHERE meta_key = 'usetting_features'
+            AND meta_value = 's:4:\"b:0;\";'"
+        ),'user_id');
+        $sql = $wpdb->prepare(
             "SELECT ID FROM wp_users
             WHERE user_status = 0
+            " . (empty($user_ids) ? "" : "AND ID NOT IN (" . sqlPlaceholder($user_ids) . ")") . "
             ORDER BY RAND()
-            LIMIT $num;"
+            LIMIT $num;",
+            $user_ids
         );
+        $r = $wpdb->get_results($sql);
         return array_map('intval',array_column($r,'ID'));
     }
     static function get_current() {

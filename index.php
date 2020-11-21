@@ -196,7 +196,7 @@ $app->listen('/logout',function($self){
     $self->type_id = 0;
     wp_logout();
     $self->redirect('/read');
-});
+},true);
 $app->listen('/news',function($self){
     $self->redirect('/@admin/updates');
 });
@@ -210,7 +210,7 @@ $app->listen('/read',function($self){
     $self->template('/views/search');
     $self->footer();
     exit();
-});
+},true);
 $app->listen('/dash',function($self){
     $self->admin();
     $self->type = 'dash-home';
@@ -303,7 +303,7 @@ $app->listen('/story/:story/',function($self){
     $self->template('/views/book');
     $self->footer();
     exit();
-});
+},true);
 $app->listen('/story/:story/:chapter',function($self){
     $story = story::get($self->params['story'],false);
     if ( !$story ){
@@ -341,7 +341,7 @@ $app->listen('/story/:story/:chapter',function($self){
     $self->template('/views/chapter');
     $self->footer();
     exit();
-});
+},true);
 // Collections
 $app->listen('/collections',function($self){
     $self->type = 'collection-index';

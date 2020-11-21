@@ -63,4 +63,13 @@ window.addEventListener('load',() => {
             }
         }
     }));
+
+    // Expose
+    window.readFrom = para => {
+        pause_button.classList.add(cs);
+        DOM.q('acs-options .listen').classList.add('active');
+        panel.classList.add('show');
+        speak_inst.current = Math.min(speak_inst.paras.length-1,Math.max(0,para));
+        speak_inst.resume.bind(speak_inst)();
+    };
 });

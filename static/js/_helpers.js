@@ -1,4 +1,12 @@
 class _ {
+    static childIndex (el) {
+        let ii = 0;
+        while (el.previousElementSibling) {
+            ii++;
+            el = el.previousElementSibling;
+        }
+        return ii;
+    }
     static scrollTo (el) {
         const ht = DOM.q('html');
         el.scrollIntoView();

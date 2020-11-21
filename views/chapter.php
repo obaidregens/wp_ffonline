@@ -21,6 +21,11 @@ $app->bundle->js('js/views/chapter-tracking');
 $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/chapter-offline');
 
+// Options
+$app->bundle->css('css/js-components/menu');
+$app->bundle->js('js/components/menu');
+$app->bundle->js('js/views/chapter-options');
+
 $chapter = $app->chapter;
 $book = $app->story;
 $all_chapters = published_chapters($book->ID);

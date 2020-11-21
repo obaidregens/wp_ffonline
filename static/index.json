@@ -30,7 +30,7 @@
             "autocomplete"
         ],
         "css_hash": "63f656f28b31a779d57eacce94c22915bca1d78b",
-        "js_hash": "3daab3e8ad31cf7fa355e531501bbd2ed1c1a894"
+        "js_hash": "ca236dd3855e38935e6800535376da3edcf4cbe4"
     },
     "beta-global": {
         "css": [
@@ -56,7 +56,7 @@
             "intro"
         ],
         "css_hash": "7a7c22fae79d0b633956961217b1b14b3701bd1e",
-        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+        "js_hash": "e5f518579203288d6a8ff4bbe474e5a28193dc23"
     },
     "collection-index": {
         "css": [
@@ -79,7 +79,7 @@
             "intro"
         ],
         "css_hash": "09cbb19ca7afb1430bc762e2d7bba3fbcd080dcd",
-        "js_hash": "2b106a36fb154011698dfe4499f5525a5c2adbaa"
+        "js_hash": "2524d1c5d92b308ebd896a44641555ef4dcfaa8a"
     },
     "home": {
         "css": [
@@ -96,7 +96,7 @@
             "glide_js"
         ],
         "css_hash": "22e3d48ff13c8c7c7d789603ce528fd85244db7b",
-        "js_hash": "3808eec2abb59ff880c44a8f16a711ce42e4e592"
+        "js_hash": "989c12741b9a66cbe3323f1f3a1a0eddad78a457"
     },
     "react-select-ps": {
         "css": [],
@@ -135,7 +135,7 @@
             "intro"
         ],
         "css_hash": "b897e32a65383bab35b24723184954881ef144cf",
-        "js_hash": "e54e3dce650668f530eccc6a18728ef45775f7b6"
+        "js_hash": "a5353d5dfc6546330ee56d1e8566775aa2994124"
     },
     "global": {
         "css": [],
@@ -148,7 +148,7 @@
             "intro"
         ],
         "css_hash": "20822f2190446e0928330de08a7b60f542723f1e",
-        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+        "js_hash": "e5f518579203288d6a8ff4bbe474e5a28193dc23"
     },
     "author-about": {
         "css": [
@@ -175,7 +175,7 @@
             "story-options"
         ],
         "css_hash": "06b378b6b59ae178172f7d245035534d060aba8e",
-        "js_hash": "977174bb334a784f3f17f80a2282c42c91db108d"
+        "js_hash": "673aa7098cae8159a00299f760c7ef8e5a853371"
     },
     "author-stories": {
         "css": [
@@ -211,7 +211,7 @@
             "autocomplete"
         ],
         "css_hash": "fceddbe7a0ebb4eba3e5fa05f630d807c19de123",
-        "js_hash": "279e94a2c8a3aa3054a552cd0fc6d810c05527cf"
+        "js_hash": "853328f50e037d34c4df0fe85804d709f3bffe91"
     },
     "author-updates": {
         "css": [
@@ -233,7 +233,7 @@
             "intro"
         ],
         "css_hash": "0a9217273a81ea3fdd46339cd13e833ce54df755",
-        "js_hash": "4c2cf38c02399bd269163ac31903f3c0c906f871"
+        "js_hash": "712dc886776de375e2c63cf65790d701f81f2687"
     },
     "author-collections": {
         "css": [
@@ -259,7 +259,7 @@
             "intro"
         ],
         "css_hash": "c05cb94f4ca22b511dad940f60af9849d1372f56",
-        "js_hash": "8c6ed7683903ec8bcad6cf642249173e7ca21fcd"
+        "js_hash": "2bd7886a8aea1a3f98883a480874be088a6a0e67"
     },
     "author-settings": {
         "css": [
@@ -282,7 +282,7 @@
             "intro"
         ],
         "css_hash": "1f46828d670acfbb2171b1dec24c0d121e997460",
-        "js_hash": "fcccb3140da0128658a1facab88f64e637ec9bdf"
+        "js_hash": "37b3c36abd47f3f16a87ef9a0a29dd1419bf4ac0"
     },
     "inbox": {
         "css": [
@@ -300,7 +300,7 @@
             "intro"
         ],
         "css_hash": "e7eef7a0d859efa49b25f76553e2204b6b582553",
-        "js_hash": "ea64092ff2ba569dc540b451cf304d5aa679afc0"
+        "js_hash": "e69ef488fe27d5bdb67745ab57d5866a3d3e2c3c"
     },
     "drafts-index": {
         "css": [
@@ -326,7 +326,7 @@
             "confirmation"
         ],
         "css_hash": "e49267853e112c23236db991eb6ba3d792a3fc69",
-        "js_hash": "b8e2a67ffd02b20b1acda2e03838217e99ce400d"
+        "js_hash": "301ef58a00c1c121a8ead506bd7c225e18cee199"
     },
     "drafts-editSlate-ps": {
         "css": [],
@@ -375,7 +375,7 @@
             "confirmation"
         ],
         "css_hash": "ca5e3f6a038e890c604f61fa8f48adf5b239c880",
-        "js_hash": "e4f286e57b9cd8a12d43a0707db073c41505dae1"
+        "js_hash": "2a4a6fd4afe484ec28586c6c5f33b335899fa2ad"
     },
     "import-stories": {
         "css": [
@@ -394,7 +394,7 @@
             "confirmation"
         ],
         "css_hash": "7f0b73af04beff40daa9bd1bd6247a678863522d",
-        "js_hash": "280109c0a8a5965b77e67340fcfe88f9351209c1"
+        "js_hash": "58864c866a35a521a49696919a6d987faf1653a3"
     },
     "contact": {
         "css": [],
@@ -408,7 +408,7 @@
             "intro"
         ],
         "css_hash": "20822f2190446e0928330de08a7b60f542723f1e",
-        "js_hash": "388f958df341d82032284adbe7a7f6613977798c"
+        "js_hash": "241689d0703c245b60c7d7582045afb7914634a8"
     },
     "connections-home": {
         "css": [
@@ -425,7 +425,7 @@
             "intro"
         ],
         "css_hash": "78c44ced256646269f70d9ab7485bab4475347ab",
-        "js_hash": "c4b3fce64e4b8aa97b28f2e50d82c7a7daa87467"
+        "js_hash": "31e8188ecfd5647c541c9713d0127ea6eb163c11"
     },
     "create-fandom": {
         "css": [
@@ -443,7 +443,7 @@
             "autocomplete"
         ],
         "css_hash": "3cec9d67f2d9c05bb5ee24139c563992072b7bff",
-        "js_hash": "6ac181adce2a0f58554236ecbdc757da50b61808"
+        "js_hash": "f891c9f68165514e51dd4de99886769a5f90178e"
     },
     "faq": {
         "css": [
@@ -460,7 +460,7 @@
             "intro"
         ],
         "css_hash": "471e08e72d876767c6c94e3c7f253add4c98c78d",
-        "js_hash": "126f6478dd74f9df05af9bfdd7856792c6fa8bce"
+        "js_hash": "022bacae49f8817c50461f01ce2ee28d1ddaeb93"
     },
     "dash-home": {
         "css": [
@@ -479,7 +479,7 @@
             "intro"
         ],
         "css_hash": "47cdf108b77bc5519a1777607065c9de96ffb6a1",
-        "js_hash": "84586f44c279d43b5f44c18730e3665af06e5526"
+        "js_hash": "200d125b7dd3d59f0b677031246765e0abc82440"
     },
     "dash-faq": {
         "css": [
@@ -499,7 +499,7 @@
             "intro"
         ],
         "css_hash": "a80c4c26e10c846d7e49dc8b80fd8fea87dbe841",
-        "js_hash": "fd888f8a0a1af855c5e557bf05a7dcb6d552d136"
+        "js_hash": "867abeb8006a1a4d19a7a2290b3789139b5d11ad"
     },
     "dash-tags": {
         "css": [
@@ -521,7 +521,7 @@
             "intro"
         ],
         "css_hash": "7bbb38da8fd3d9eb476e645117ef260b9a31428e",
-        "js_hash": "751726edc57acd457f1cac1fb8ee8b308b1a01ab"
+        "js_hash": "f32661716e8304a1913890ed70a871f69a36bc20"
     },
     "dash-contact": {
         "css": [
@@ -541,7 +541,7 @@
             "intro"
         ],
         "css_hash": "09aaa780f03c620fa56ec04878f06f772ec498e4",
-        "js_hash": "b11f5d3c4112b409aa353639d7678bbf58f048f4"
+        "js_hash": "291b9bce26b7584d882669e280c177fd78ef9144"
     },
     "dash-reimport": {
         "css": [
@@ -561,7 +561,7 @@
             "intro"
         ],
         "css_hash": "1a75eb1e568e2acb0a26c8350e40c09ce85c420c",
-        "js_hash": "f6bdcf372f02a42630f2d992e5d7cc96dfb84f4e"
+        "js_hash": "96374f79922d7538b2b7dcb5dc31855a95ca42d9"
     },
     "manage": {
         "css": [
@@ -577,7 +577,7 @@
             "intro"
         ],
         "css_hash": "2f90ca8296de0449ae11375b47dae56980e95d62",
-        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+        "js_hash": "e5f518579203288d6a8ff4bbe474e5a28193dc23"
     },
     "react-ps": {
         "css": [],
@@ -598,7 +598,8 @@
             "css/views/chapter-main",
             "css/views/chapter-reviews",
             "css/views/chapter-acs",
-            "css/views/chapter-search"
+            "css/views/chapter-search",
+            "css/js-components/menu"
         ],
         "js": [
             "service",
@@ -609,7 +610,9 @@
             "js/views/reviews-list",
             "js/views/chapter-tracking",
             "js/views/story-offlineAPI",
-            "js/views/chapter-offline"
+            "js/views/chapter-offline",
+            "js/components/menu",
+            "js/views/chapter-options"
         ],
         "mix": [
             "idb",
@@ -619,8 +622,8 @@
             "confirmation",
             "story-options"
         ],
-        "css_hash": "78a5b06f6b141a83be3a45fc45abaf390be2f7a9",
-        "js_hash": "fba502da1e482a72f7619a03014590c23cc529e7"
+        "css_hash": "d0b4192856ec57fbc51c32ce40336f0761ef8ef3",
+        "js_hash": "ec210a5ca15d02c91083f1640d01aa16acd5940d"
     },
     "book": {
         "css": [
@@ -645,7 +648,7 @@
             "confirmation"
         ],
         "css_hash": "fd08459063c6177dbb4b2c16ddda6b57921ef803",
-        "js_hash": "b9a84d0a0984dfcc00c5d4173aec0592a42f177c"
+        "js_hash": "e3b0938f1a43ba09ebc244f99de9e904ef5ba34f"
     },
     "story-stats": {
         "css": [
@@ -663,7 +666,7 @@
             "intro"
         ],
         "css_hash": "c7c27dd0d7033a1ac937a8d8cfa5a578d6e3eb3b",
-        "js_hash": "899d2e4163ef654f7b9b2732f1d2d0cdf278031c"
+        "js_hash": "e5f518579203288d6a8ff4bbe474e5a28193dc23"
     },
     "drafts-preview": {
         "css": [
@@ -685,7 +688,7 @@
             "speak"
         ],
         "css_hash": "52c9f4039730d7cd2475b79a5c79e3db9ce391df",
-        "js_hash": "2d3557dc513e19358aac714bf2fca6376cb90540"
+        "js_hash": "0687c41c37d348f82ec6497bef76e452575058af"
     },
     "collection-single": {
         "css": [
@@ -723,7 +726,7 @@
             "autocomplete"
         ],
         "css_hash": "2c019e5416dbdbe7e9759070feaddb671841afb2",
-        "js_hash": "ea4150292c11210244318af040df8a1b115a15fa"
+        "js_hash": "c65f24bcced993785bb24255111bfdc136161f02"
     },
     "author-following": {
         "css": [
@@ -743,7 +746,7 @@
             "intro"
         ],
         "css_hash": "bce11283ab2cf864c5a0dc0508718798d0ba39e1",
-        "js_hash": "079b41decd3a50db8242d08712773d978a0d472f"
+        "js_hash": "6af3e84dbcf4384463114e8eb227a861a875c532"
     },
     "dash-beta": {
         "css": [
@@ -764,7 +767,7 @@
             "intro"
         ],
         "css_hash": "25d5c97a63d64b3e96fafad5d8385deb8be31736",
-        "js_hash": "6e1383a69be67f3e727bdccc807978451aa4a0b5"
+        "js_hash": "472d35bb58ceeb2e3d9dd7a1cfa0aa792ffda1e0"
     },
     "book-edit-dev": {
         "css": [],

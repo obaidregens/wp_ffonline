@@ -1,4 +1,5 @@
 <?php
+
 function api_new_tax() {
     required_admin();
     required_params('tax','name');

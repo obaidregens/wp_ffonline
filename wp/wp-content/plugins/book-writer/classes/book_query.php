@@ -331,7 +331,7 @@ class book_query_cache extends book_query {
         $min_gap = $min_gap_min * 60;
 
         global $wpdb;
-        $results = $wpdb->get_results("SELECT * FROM " . self::$table);
+        $results = $wpdb->get_results("SELECT * FROM " . self::$table . " WHERE _key != 'tags_of'");
         $t = time();
         $this->existing = array();
         foreach ($results as $value) {
