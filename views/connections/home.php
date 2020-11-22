@@ -14,7 +14,7 @@ $status_class = $connected ? "linked" : ($pending ? "pending" : "");
 <?php } ?>
 <connections>
     <a source="ffn">
-        <img src="/content/static/images/ffnlogo.png">
+        <img src="<?= STATIC_URL() ?>images/ffnlogo.png">
         <text>Fanfiction.Net</text>
         <button class="<?= $status_class ?>"></button>
     </a>

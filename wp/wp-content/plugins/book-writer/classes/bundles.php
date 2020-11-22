@@ -115,7 +115,7 @@ class bundle {
 
     static function init () {
         self::$static_dir = MAIN_DIR . 'content/static/';
-        self::$static_url = '/content/static/';
+        self::$static_url = rtrim(STATIC_URL,'/') . '/';
         $index_file = self::$static_dir . 'index.json';
         $mix_file = self::$static_dir . 'mix.json';
         if (! file_exists($index_file)){

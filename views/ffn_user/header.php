@@ -15,5 +15,5 @@ $connection = c_user::current();
 <author-nav>
 	<a <?= $author_page === 'about' ? 'active' : '' ?> href="<?= $href; ?>">About</a>
 	<a <?= $author_page === 'stories' ? 'active' : '' ?> href="<?= $href . 'stories'; ?>">Stories</a>
-	<a target="_blank" tooltip-top="FFNet" class="logo-link" rel="nofollow" href="https://fanfiction.net/u/<?= $app->author_id; ?>"><img width="25" src="/content/static/images/ffnlogo.png"/></a>
+	<a target="_blank" tooltip-top="FFNet" class="logo-link" rel="nofollow" href="https://fanfiction.net/u/<?= $app->author_id; ?>"><img width="25" src="<?= STATIC_URL() ?>images/ffnlogo.png"/></a>
 </author-nav>

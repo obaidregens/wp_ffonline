@@ -95,7 +95,7 @@ class email {
             $this->mail->clearAddresses();
             $this->mail->addAddress( $to_email );
             try {
-                var_dump($this->mail->send());
+                $this->mail->send();
                 $this->sent++;
             } catch(Exception $e) {
                 $this->unsent++;

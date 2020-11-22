@@ -38,3 +38,6 @@ class str {
 function DEV() {
     return defined('GLOBAL_ENV') && GLOBAL_ENV === 'DEV';
 }
+function STATIC_URL() {
+    return defined("STATIC_URL") ? rtrim(STATIC_URL,'/') . '/' : "https://static.fanfiction.online/";
+}

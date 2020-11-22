@@ -161,27 +161,27 @@
             prevDeleteFragment();
         });
         // Paste HTML
-        const prevInsertData = useCallback(editor.insertData.bind(editor));
-        editor.insertData = useCallback(data => {
-            const html = data.getData('text/html');
+        // const prevInsertData = useCallback(editor.insertData.bind(editor));
+        // editor.insertData = useCallback(data => {
+        //     const html = data.getData('text/html');
 
-            if (html) {
-                const parsed = new DOMParser().parseFromString(html, 'text/html');
-                let doc = parsed.body;
-                const GDocsInternal = doc.querySelector('[id^="docs-internal"]');
-                if (GDocsInternal) {
-                    doc = GDocsInternal;
-                }
-                let fragment = deserialize(parsed.body).filter(child => child !== null);
-                while ( fragment[0].text && fragment[0].text.trim() === "") {
-                    fragment[0].text = "";
-                }
-                Transforms.insertFragment(editor, fragment);
-                return;
-            }
+        //     if (html) {
+        //         const parsed = new DOMParser().parseFromString(html, 'text/html');
+        //         let doc = parsed.body;
+        //         const GDocsInternal = doc.querySelector('[id^="docs-internal"]');
+        //         if (GDocsInternal) {
+        //             doc = GDocsInternal;
+        //         }
+        //         let fragment = deserialize(parsed.body).filter(child => child !== null);
+        //         while ( fragment[0].text && fragment[0].text.trim() === "") {
+        //             fragment[0].text = "";
+        //         }
+        //         Transforms.insertFragment(editor, fragment);
+        //         return;
+        //     }
 
-            prevInsertData(data)
-        });
+        //     prevInsertData(data)
+        // });
         return (
             <SlateEl
             editor={editor}

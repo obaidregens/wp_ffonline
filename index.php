@@ -832,7 +832,7 @@ $app->listen('/robots.txt',function($self){
     $self->static('/content/robots.txt');
 });
 // Temp Resources
-$app->listen('/content/static/:filename',function($self){
+$app->listen( STATIC_URL() . ':filename',function($self){
     $f = $self->params['filename'];
     if (! in_array($f,['chapters.css','chapters.js','book.css','book.js'])){
         return;
@@ -841,7 +841,7 @@ $app->listen('/content/static/:filename',function($self){
     $name = $a[0];
     $type = $a[1];
     $filename = $name . '-' . bundle::$index[$name][$type . '_hash'] . "." . $type;
-    $self->redirect('/content/static/bundles/' . $filename);
+    $self->redirect(STATIC_URL() . 'bundles/' . $filename);
 });
 // 404
 $app->listen('&*',function($self){

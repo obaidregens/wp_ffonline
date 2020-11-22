@@ -13,6 +13,28 @@ def main():
         encoded = str_text.encode('utf-8')
         myhash = hashlib.sha1(encoded)
         return myhash.hexdigest()
+    def isOfStatic(path):
+        static_files = [
+            "content/static/bundles",
+            "content/static/images",
+            "content/static/css/fonts/icons.woff"
+        ]
+        for f in static_files:
+            if path.startswith(f): return True
+        return False
+    def isOfDev(path):
+        dev_files = [
+            "content/static/beta",
+            "content/static/css",
+            "content/static/external",
+            "content/static/js",
+            "content/root",
+            "content/static/service.js",
+        ]
+        for f in dev_files:
+            if path.startswith(f): return True
+        return False
+
 
     # Paths
     current_path = "C:/wamp64/www/ffonline/"
@@ -23,6 +45,12 @@ def main():
     startTime = time.time()
     # Raw Urls
     static_path = current_path + "content/static/"
+
+    upload = input("Upload to SSH?").lower() == "y"
+    unzip = False
+    if upload:
+        unzip = input("Replace Content?").lower() == "y"
+
 
     with open(static_path + "mix.json", "r",encoding="utf8") as dump:
         mix_ref = json.loads(dump.read())
@@ -100,12 +128,7 @@ def main():
 
     print("Bundles Compiled")
     print("Time took: " + str(time.time() - startTime))
-    # Archive Current Dir
-    current_time = datetime.now().strftime("%m-%d-%Y %I-%M %p")
-    zip_name = onedrive_path + 'content ' + current_time
-    shutil.make_archive(zip_name, 'zip', current_path, "content")
-    print("Zipped to OneDrive")
-
+    
     # Delete from github folder
     github_files = os.listdir(github_path)
     github_files.remove('.git')
@@ -133,7 +156,60 @@ def main():
 
     print("Copied to Github folder")
 
-    print("Completed")
+    # Archive For Production
+    static_zip = zipfile.ZipFile(current_path + 'static.zip', 'w', zipfile.ZIP_DEFLATED)
+    main_zip = zipfile.ZipFile(current_path + 'content.zip', 'w', zipfile.ZIP_DEFLATED)
+    for root,dirs,files in os.walk(current_path + "content"):
+        for f in files:
+            ZipPath = os.path.join(root, f)
+            relativePath = ZipPath.replace(current_path,"").replace("\\",'/')
+            if isOfStatic(relativePath):
+                static_zip.write(ZipPath,arcname=relativePath.replace("content/static/",""))
+            elif isOfDev(relativePath):
+                pass
+            else:
+                main_zip.write(ZipPath,arcname=relativePath)
+    main_zip.close()
+    static_zip.close()
+    print("Produced")
+
+    # Copy to Onedrive
+    current_time = str(int(time.time()))
+    shutil.copy(current_path + "content.zip",onedrive_path + "content-" + current_time + ".zip")
+    shutil.copy(current_path + "static.zip",onedrive_path + "static-" + current_time + ".zip")
+    print("Zipped to OneDrive")
+    
+    # Upload
+    if upload:
+        host = "root@167.99.11.178"
+        sep = ":"
+        upload_to = "/home/runcloud/webapps/"
+        cmd = "scp " + current_path + "content.zip "  + host + sep  + upload_to
+        subprocess.call(cmd,shell=True)
+        cmd = "scp " + current_path + "static.zip "  + host + sep  + upload_to
+        subprocess.call(cmd,shell=True)
+        print("Uploaded")
+        unzip = False
+        if unzip:
+            ssh_connection = "ssh " + host + " "
+            # Content
+            cmd = ssh_connection + " rm -r " + upload_to + "fanfiction_online/content" 
+            subprocess.call(cmd,shell=True)
+            cmd = ssh_connection + " unzip " + upload_to + "content.zip" + " -d " + upload_to + "fanfiction_online/" 
+            subprocess.call(cmd,shell=True)
+            cmd = ssh_connection + " rm " + upload_to + "content.zip" 
+            subprocess.call(cmd,shell=True)
+
+            # Static
+            cmd = ssh_connection + " rm -r " + upload_to + "static/*"
+            subprocess.call(cmd,shell=True)
+            cmd = ssh_connection + " unzip " + upload_to + "static.zip" + " -d " + upload_to + "static/" 
+            subprocess.call(cmd,shell=True)
+            cmd = ssh_connection + " rm " + upload_to + "static.zip" 
+            subprocess.call(cmd,shell=True)
+            print("Replaced")
+    
+    input("Completed")
 
 try:
     main()

@@ -1,5 +1,6 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 (() => {
-  function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
   "use strict";
 
   const {
@@ -206,33 +207,28 @@
       }
 
       prevDeleteFragment();
-    }); // Paste HTML
-
-    const prevInsertData = useCallback(editor.insertData.bind(editor));
-    editor.insertData = useCallback(data => {
-      const html = data.getData('text/html');
-
-      if (html) {
-        const parsed = new DOMParser().parseFromString(html, 'text/html');
-        let doc = parsed.body;
-        const GDocsInternal = doc.querySelector('[id^="docs-internal"]');
-
-        if (GDocsInternal) {
-          doc = GDocsInternal;
-        }
-
-        let fragment = deserialize(parsed.body).filter(child => child !== null);
-
-        while (fragment[0].text && fragment[0].text.trim() === "") {
-          fragment[0].text = "";
-        }
-
-        Transforms.insertFragment(editor, fragment);
-        return;
-      }
-
-      prevInsertData(data);
     });
+    // Paste HTML
+    // const prevInsertData = useCallback(editor.insertData.bind(editor));
+    // editor.insertData = useCallback(data => {
+    //     const html = data.getData('text/html');
+    //     if (html) {
+    //         const parsed = new DOMParser().parseFromString(html, 'text/html');
+    //         let doc = parsed.body;
+    //         const GDocsInternal = doc.querySelector('[id^="docs-internal"]');
+    //         if (GDocsInternal) {
+    //             doc = GDocsInternal;
+    //         }
+    //         let fragment = deserialize(parsed.body).filter(child => child !== null);
+    //         while ( fragment[0].text && fragment[0].text.trim() === "") {
+    //             fragment[0].text = "";
+    //         }
+    //         Transforms.insertFragment(editor, fragment);
+    //         return;
+    //     }
+    //     prevInsertData(data)
+    // });
+
     return /*#__PURE__*/React.createElement(SlateEl, {
       editor: editor,
       value: value,

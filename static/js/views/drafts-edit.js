@@ -130,7 +130,6 @@ DOM.q('editor').appendChild(
         new toast("Your draft couldn't be loaded because of an error.");
         return;
     }
-    console.log(share);
     DOM.q('toolbar [action="share"]').setAttribute('initial-share',share);
     window.draftLastLength = length;
     window.draftContent.set(content);

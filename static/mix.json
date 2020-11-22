@@ -38,7 +38,6 @@
             "style",
             "css\/style",
             "css\/resolve",
-            "css\/fonts",
             "css\/js-components\/recaptcha",
             "css\/components\/buttons",
             "css\/js-components\/text-input",
@@ -61,7 +60,6 @@
         "css": [
             "css\/normalize",
             "css\/style",
-            "css\/fonts",
             "css\/helpers",
             "css\/js-components\/recaptcha",
             "css\/components\/buttons",

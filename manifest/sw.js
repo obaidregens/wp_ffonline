@@ -11,14 +11,14 @@ const permCaching = [
   "https://fonts.gstatic.com/s/montserrat/v15/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2",
   "https://fonts.gstatic.com/s/pangolin/v6/cY9GfjGcW0FPpi-tWMfN79w.woff2",
   "https://fonts.gstatic.com/s/raleway/v18/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCIPrE.woff2",
-  "/content/static/css/fonts/icons.woff",
+  "https://static.fanfiction.online/css/fonts/icons.woff",
   OFFLINE_URL
 ];
 const dynamicCaching = [
-  "/content/static/chapters.css",
-  "/content/static/chapters.js",
-  "/content/static/book.css",
-  "/content/static/book.js",
+  "https://static.fanfiction.online/chapters.css",
+  "https://static.fanfiction.online/chapters.js",
+  "https://static.fanfiction.online/book.css",
+  "https://static.fanfiction.online/book.js",
 ];
 self.addEventListener('install', (event) => {
   self.skipWaiting();
