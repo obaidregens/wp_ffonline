@@ -79,6 +79,7 @@ revision-header,revision-footer {
     display: flex;
     padding: 10px;
     background-color: var(--grey);
+    transition: background-color var(--theme-change);
 }
 revision-footer > button {
     background-color: transparent;

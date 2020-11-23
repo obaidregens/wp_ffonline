@@ -71,6 +71,28 @@ function api_reply_to_contact() {
     );
     return ['code'  => 1];
 }
+function api_archive_from_contact() {
+    required_admin();
+    required_params('from');
+    $d = &$_POST['data'];
+
+    global $wpdb;
+    $wpdb->insert(
+        'contact',
+        [
+            'user_id'       => get_current_user_id(),
+            'from'          => "Archived",
+            'to'            => $d['from'],
+            'received_time' => microtime(true),
+            'subject'       => "Archived",
+            'headers'       => '',
+            'message'       => "Archived",
+            'message_id'    => "",
+            'vfs'           => ""
+        ]
+    );
+    return ['code'=>1];
+}
 function api_reply_to_question() {
     required_admin();
     required_params('question_id','question','answer','category');
@@ -89,6 +111,33 @@ function api_archive_question() {
     required_params('id');
     $d = &$_POST['data'];
     questions::delete($d['id']);
+    return ['code'=>1];
+}
+function api_contact_question() {
+    required_admin();
+    required_params('id');
+    $q = questions::get($_POST['data']['id']);
+
+    global $wpdb;
+    $vfs = $wpdb->get_results($wpdb->prepare("SELECT vfs FROM stats_landings WHERE ID = %d",[$q->landing_id]));
+    if (empty($vfs)) {
+        return ['code'=>11];
+    }
+    $wpdb->insert(
+        'contact',
+        [
+            'user_id'       => $q->user_id,
+            'from'          => $q->email,
+            'to'            => "FAQ",
+            'received_time' => intval($q->asked_millitime)/1000,
+            'subject'       => "",
+            'headers'       => "",
+            'message'       => $q->question,
+            'message_id'    => "",
+            'vfs'           => $vfs[0]->vfs
+        ]
+    );
+    questions::delete($q->ID);
     return ['code'=>1];
 }
 function api_allow_reimport() {

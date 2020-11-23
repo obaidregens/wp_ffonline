@@ -3,7 +3,7 @@ DOM.q('toggle').addEventListener('click',() => {
 });
 const msg_elem = DOM.q('messages');
 DOM.q('with').addEventListener('click',({target}) => {
-    if (target.tagName.toLowerCase() !== "single"){return;}
+    if (target.tagName.toLowerCase() !== "single-from"){return;}
     const msgs = all[target.innerText];
     msg_elem.parentElement.setAttribute('from',target.innerText);
     msg_elem.innerText = "";
@@ -36,3 +36,10 @@ DOM.q('button[label="Reply"]').addEventListener('click',() => {
         window.location.reload();
     });
 });
+DOM.qa("single > button").forEach(el => el.addEventListener('click',async ({target}) => {
+    const from = target.previousElementSibling.innerText;
+    await api("archive_from_contact",{data: {
+        from
+    }});
+    window.location.reload();
+}));

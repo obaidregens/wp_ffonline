@@ -24,6 +24,7 @@ drafts-header > a::before {
 }
 editor {
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
 }
 /* Title */
 input[placeholder="Title"] {

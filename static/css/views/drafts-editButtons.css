@@ -13,6 +13,7 @@ toolbar {
     position: sticky;
     top: 52px;
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
 }
 @media only screen and (max-width: 500px) {
     toolbar {

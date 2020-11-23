@@ -100,7 +100,12 @@ function Pairing() {
                 selected.pairing[i] = newValue || [];
                 reRender();
             }}
-            noOptionsMessage={() => (selected.pairing[i] || []).length >= 4 ?  "Max characters selected" : 'No options' }
+            noOptionsMessage={() => {
+                if ((selected.characters || []).length < 1) {
+                    return "Select your characters first.";
+                } 
+                return (selected.pairing[i] || []).length >= 4 ?  "Max characters selected" : "Select the characters you want to add a pairing of.";
+            } }
             className={"select pairing"}
             isSearchable
             isMulti
@@ -229,10 +234,30 @@ const App = () => {
         {selects}
         <CreatableSelect
         placeholder="Select Characters"
+        noOptionsMessage={() => "No more characters in the fandoms you've selected."}
         onChange={charChange}
+        isValidNewOption={(inputValue,selectValue, selectOptions) => {
+            const Ival = (inputValue || "").trim().toLowerCase();
+            if (Ival.length < 1) {
+                return false;
+            }
+            const searchFunc = element => element.label.trim().toLowerCase() === Ival;
+            if (selectValue.find(searchFunc)) {
+                return false;
+            }
+            if (selectOptions.find(eleme => eleme.options.find(searchFunc))) {
+                return false;
+            }
+            return true;
+
+        }}
         onCreateOption={(newCharacter) => {
             if ((selected.fandom || []).length < 1) {
                 new toast('Select a fandom first.');
+                return;
+            }
+            if ((selected.characters || []).length >= 6) {
+                new toast('Stories can have up to 6 characters.');
                 return;
             }
             ask(`Which fandom is ${newCharacter} from?`,selected.fandom.map((fandom) => {

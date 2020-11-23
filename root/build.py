@@ -50,6 +50,8 @@ def main():
     unzip = False
     if upload:
         unzip = input("Replace Content?").lower() == "y"
+        if unzip:
+            unzip = input("Sure?").lower() == "y"
 
 
     with open(static_path + "mix.json", "r",encoding="utf8") as dump:
@@ -189,7 +191,6 @@ def main():
         cmd = "scp " + current_path + "static.zip "  + host + sep  + upload_to
         subprocess.call(cmd,shell=True)
         print("Uploaded")
-        unzip = False
         if unzip:
             ssh_connection = "ssh " + host + " "
             # Content
@@ -208,6 +209,14 @@ def main():
             cmd = ssh_connection + " rm " + upload_to + "static.zip" 
             subprocess.call(cmd,shell=True)
             print("Replaced")
+            
+            # Permissions
+            cmd = ssh_connection + " sudo chown -R runcloud:runcloud /home/runcloud/webapps/fanfiction_online"
+            subprocess.call(cmd,shell=True)
+
+            cmd = ssh_connection + " sudo chown -R runcloud:runcloud /home/runcloud/webapps/static"
+            subprocess.call(cmd,shell=True)
+
     
     input("Completed")
 

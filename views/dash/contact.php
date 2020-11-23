@@ -12,7 +12,7 @@ $r = $wpdb->get_results("SELECT * FROM contact ORDER BY received_time ASC");
 $re = [];
 foreach ($r as $message ) {
     $conv = $message->from;
-    if ($conv === "Contact" || (explode('@',$conv)[1] ?? '') === "fanfiction.online"){
+    if ( in_array($conv,['Contact','Archived',"FAQ"]) || (explode('@',$conv)[1] ?? '') === "fanfiction.online"){
         $conv = $message->to;
     }
     $k = &$re[htmlspecialchars($conv)];
@@ -28,7 +28,10 @@ foreach ($r as $message ) {
 <script>const all = <?= script_json(json_encode($re)); ?>;</script>
 <with class="show">
 <?php foreach ($re as $user => $conv ) { ?>
-    <single <?= is_current_user($conv[count($conv)-1]['user_id']) ? "hidden" : "" ?> ><?= $user; ?></single>
+    <single <?= is_current_user($conv[count($conv)-1]['user_id']) ? "hidden" : "" ?> >
+        <single-from><?= $user; ?></single-from>
+        <button></button>
+    </single>
 <?php } ?>
 </with>
 <toggle><?= "Open Users" ?></toggle>

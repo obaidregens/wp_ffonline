@@ -467,7 +467,7 @@ class book_query_cache extends book_query {
             $non_imported = array_merge($non_imported_voted_ids,$non_imported_no_votes);
             $inserts = [];
             foreach ($non_imported as $id ) {
-                $inserts[] = mt_rand(0, ceil(count($imported_ids)/8));
+                $inserts[] = mt_rand(0, ceil(count($imported_ids)/4));
             }
             sort($inserts);
             foreach($non_imported as $k => $id){

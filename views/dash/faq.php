@@ -15,8 +15,11 @@ $questions = questions::query([
 <?php foreach ($questions as $q) { ?>
     <question-wrapper question-id="<?= $q->ID ?>">
         <question><?= htmlspecialchars($q->question); ?></question>
+        <options>
         <a>Reply</a>
         <a>Delete</a>
+        <a>Contact</a>
+        </options>
     </question-wrapper>
 <?php } ?>
 </questions>

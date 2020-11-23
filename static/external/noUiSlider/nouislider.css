@@ -291,6 +291,7 @@ Tear Drop
   border-radius: 15px 15px 15px 0;
   transform: rotate(-45deg) translate(18px,-34px);
   background-color: var(--theme-color);
+  transition: background-color var(--theme-change);
 }
 .noUi-target.noUi-horizontal .noUi-handle.noUi-active .noUi-tooltip {
   width: fit-content;

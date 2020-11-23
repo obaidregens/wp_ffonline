@@ -2,6 +2,7 @@
     overflow: unset;
     --selectLight: var(--grey);
     margin: 20px 0;
+    white-space: break-spaces;
 }
 .css-1g6gooi {
     color: var(--text-color);
@@ -11,12 +12,14 @@
 }
 .select [class$="-control"] {
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
     border-color: var(--selectLight);
     box-shadow: none;
     border-radius: 0px;
 }
 .select [class$="-indicatorSeparator"] {
     background-color: var(--selectLight);
+    transition: background-color var(--theme-change);
 }
 .select [class$="-indicatorContainer"] {
     color: var(--selectLight);

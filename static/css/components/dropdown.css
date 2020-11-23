@@ -18,6 +18,7 @@ button.dropdown:active {
     min-width: 10rem;
     font-size: 1rem;
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
     position: absolute;
     top: -1px;
     overflow: auto;

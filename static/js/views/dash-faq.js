@@ -20,18 +20,25 @@ const pi = DOM.create('popup',{
     ]
 });
 popup.create(pi);
-DOM.qa('question-wrapper > a:first-of-type').forEach(el => {
+DOM.qa('question-wrapper > options > a:nth-of-type(1)').forEach(el => {
     el.addEventListener('click',({target}) => {
         DOM.q('reply').classList.add('show');
-        DOM.q('reply').setAttribute('question-id',target.parentElement.getAttribute('question-id'));
-        DOM.q('reply > blockquote').innerText = target.previousElementSibling.innerText;
+        DOM.q('reply').setAttribute('question-id',target.parentElement.parentElement.getAttribute('question-id'));
+        DOM.q('reply > blockquote').innerText = target.parentElement.previousElementSibling.innerText;
     });
 });
-DOM.qa('question-wrapper > a:last-of-type').forEach(el => {
+DOM.qa('question-wrapper > options > a:nth-of-type(2)').forEach(el => {
     el.addEventListener('click',async ({target}) => {
-        await api('archive_question',{data: {id: target.parentElement.getAttribute('question-id')}});
+        await api('archive_question',{data: {id: target.parentElement.parentElement.getAttribute('question-id')}});
         new toast("Archived");
         window.location.reload();
+    });
+});
+DOM.qa('question-wrapper > options > a:nth-of-type(3)').forEach(el => {
+    el.addEventListener('click',async ({target}) => {
+        await api("contact_question",{data: {id: target.parentElement.parentElement.getAttribute('question-id')}});
+        new toast("Private Contact");
+        window.location.href = "/dash/contact";
     });
 });
 DOM.q('reply > a').addEventListener('click',({target}) => {

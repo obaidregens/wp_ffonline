@@ -7,10 +7,12 @@ h2::before {
     bottom: -18px;
     padding: 0 13px;
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
 }
 h2 {
     z-index: 10;
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
     display: block;
     text-align: center;
     border-bottom: 1px solid var(--grey);

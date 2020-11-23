@@ -15,10 +15,10 @@ const permCaching = [
   OFFLINE_URL
 ];
 const dynamicCaching = [
-  "https://static.fanfiction.online/chapters.css",
-  "https://static.fanfiction.online/chapters.js",
-  "https://static.fanfiction.online/book.css",
-  "https://static.fanfiction.online/book.js",
+  "/shortcuts/chapters.css",
+  "/shortcuts/chapters.js",
+  "/shortcuts/book.css",
+  "/shortcuts/book.js",
 ];
 self.addEventListener('install', (event) => {
   self.skipWaiting();

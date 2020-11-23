@@ -201,7 +201,7 @@ function api_publish_to_story() {
     if ($chapter_id === false) {
         return ['code'=>9];
     }
-    $chapter_num = count(published_chapters($story->ID,-1,'ids'));
+    $chapter_num = count(published_chapters($story->ID,-1,'ids'))+1;
     update_post_meta( $chapter_id, 'chapter_order', $chapter_num );
     return ['code'=>1,'new_chapter_link'=>'/story/'.$story->ID.'/'.$chapter_num];
 }

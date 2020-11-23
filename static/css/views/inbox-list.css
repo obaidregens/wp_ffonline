@@ -74,6 +74,7 @@ user-info {
     width: 70vw;
     height: 50px;
     background-color: var(--background-accent);
+    transition: background-color var(--theme-change);
 }
 user-info > a {
     /* Also to be removed on phones */
@@ -134,6 +135,7 @@ new-messages::before {
     height: 24px;
     top: -12px;
     background-color: var(--background-color);
+    transition: background-color var(--theme-change);
     padding: 0 16px;
 }
 messages > message {
@@ -184,6 +186,7 @@ messages > message[other]::before {
 messages > message[my] {
     border-radius: 0px 10px 10px 40px;
     background-color: var(--theme-color);
+    transition: background-color var(--theme-change);
     color: var(--white);
     opacity: 0.85;
 }
@@ -205,7 +208,7 @@ new-messages-prompt {
     padding: 10px 25px;
     border-radius: 10px;
     cursor: pointer;
-    transition: bottom .2s;
+    transition: bottom .2s, background-color var(--theme-change);
 }
 new-messages-prompt.show {
     bottom: 110px;
