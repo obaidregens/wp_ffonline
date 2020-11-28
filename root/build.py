@@ -46,6 +46,7 @@ def main():
     # Raw Urls
     static_path = current_path + "content/static/"
 
+    dev_build = input("Create a dev build?").lower() == "y"
     upload = input("Upload to SSH?").lower() == "y"
     unzip = False
     if upload:
@@ -159,18 +160,24 @@ def main():
     print("Copied to Github folder")
 
     # Archive For Production
+    if dev_build:
+        dev_zip = zipfile.ZipFile(current_path + 'dev.zip', 'w', zipfile.ZIP_DEFLATED)
     static_zip = zipfile.ZipFile(current_path + 'static.zip', 'w', zipfile.ZIP_DEFLATED)
     main_zip = zipfile.ZipFile(current_path + 'content.zip', 'w', zipfile.ZIP_DEFLATED)
     for root,dirs,files in os.walk(current_path + "content"):
         for f in files:
             ZipPath = os.path.join(root, f)
             relativePath = ZipPath.replace(current_path,"").replace("\\",'/')
+            if dev_build:
+                dev_zip.write(ZipPath,arcname=relativePath)
             if isOfStatic(relativePath):
                 static_zip.write(ZipPath,arcname=relativePath.replace("content/static/",""))
             elif isOfDev(relativePath):
                 pass
             else:
                 main_zip.write(ZipPath,arcname=relativePath)
+    if dev_build:
+        dev_zip.close()
     main_zip.close()
     static_zip.close()
     print("Produced")
@@ -192,32 +199,28 @@ def main():
         subprocess.call(cmd,shell=True)
         print("Uploaded")
         if unzip:
-            ssh_connection = "ssh " + host + " "
-            # Content
-            cmd = ssh_connection + " rm -r " + upload_to + "fanfiction_online/content" 
-            subprocess.call(cmd,shell=True)
-            cmd = ssh_connection + " unzip " + upload_to + "content.zip" + " -d " + upload_to + "fanfiction_online/" 
-            subprocess.call(cmd,shell=True)
-            cmd = ssh_connection + " rm " + upload_to + "content.zip" 
-            subprocess.call(cmd,shell=True)
-
-            # Static
-            cmd = ssh_connection + " rm -r " + upload_to + "static/*"
-            subprocess.call(cmd,shell=True)
-            cmd = ssh_connection + " unzip " + upload_to + "static.zip" + " -d " + upload_to + "static/" 
-            subprocess.call(cmd,shell=True)
-            cmd = ssh_connection + " rm " + upload_to + "static.zip" 
-            subprocess.call(cmd,shell=True)
+            ssh_connection = "ssh " + host 
+            cmds = [
+                "rm -r " + upload_to + "fanfiction_online/content",
+                "rm -r " + upload_to + "static/*",
+                "unzip " + upload_to + "static.zip" + " -d " + upload_to + "static/",
+                "unzip " + upload_to + "content.zip" + " -d " + upload_to + "fanfiction_online/",
+                "rm " + upload_to + "content.zip",
+                "rm " + upload_to + "static.zip",
+                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/fanfiction_online",
+                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/static"
+            ]
+            full_cmd = ssh_connection + ' "' + " && ".join(cmds) + '"'
+            subprocess.call(full_cmd,shell=True)
             print("Replaced")
-            
-            # Permissions
-            cmd = ssh_connection + " sudo chown -R runcloud:runcloud /home/runcloud/webapps/fanfiction_online"
-            subprocess.call(cmd,shell=True)
-
-            cmd = ssh_connection + " sudo chown -R runcloud:runcloud /home/runcloud/webapps/static"
-            subprocess.call(cmd,shell=True)
-
     
+    # Cleanup Zips
+    try:
+        os.remove(current_path + 'static.zip')
+        os.remove(current_path + 'content.zip')
+    except:
+        pass
+
     input("Completed")
 
 try:
