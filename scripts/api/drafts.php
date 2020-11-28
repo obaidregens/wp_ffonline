@@ -166,7 +166,7 @@ function api_get_stories() {
     required_login();
     $q = (new WP_Query([
         'post_type'              => array( 'book' ),
-        'post_status'            => array( 'publish' ),
+        'post_status'            => array( 'publish', 'draft' ),
         'posts_per_page'		 => -1,
         'author__in'             => [get_current_user_id()]
     ]))->posts;

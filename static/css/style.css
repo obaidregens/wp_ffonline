@@ -32,10 +32,11 @@
         0 8px 10px 1px rgba(var(--text-color-v),.14),
         0 3px 14px 2px rgba(var(--text-color-v),.12),
         0 5px 5px -3px rgba(var(--text-color-v),.2); */
+    --elevate-stack: 0 2px 4px 0 rgba(0,0,0,.25);
 
     --font: 'Varela Round';
 
-    --theme-change: .4s;
+    --theme-change: .3s;
 }
 /* Colors */
 :root {
@@ -69,8 +70,8 @@ html {
     overflow-x: hidden;
 }
 header,html {
-    will-change: background-color, color;
-    transition: background-color var(--theme-change), color var(--theme-change);
+    will-change: background-color;
+    transition: background-color .3s ease-in;
 }
 /* Scrollbar */
 *::-webkit-scrollbar-thumb {
@@ -179,7 +180,7 @@ header > nav > *:hover {
     color: var(--lightblack);
 }
 footer {
-    max-width: 960px;
+    max-width: 1240px;
     margin: 0 auto;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -198,13 +199,13 @@ footer > nav > a:not(:last-child)::after {
 }
 /* Main */
 main {
-    max-width: 960px;
+    max-width: 1240px;
     margin: auto;
     padding: 20px;
 }
 @media only screen and (max-width: 400px) {
     main,footer {
-        max-width: 960px;
+        max-width: 1240px;
         padding: 20px 5px;
     }
     footer {
@@ -334,7 +335,6 @@ dark-mode::before {
 /* Tags Default */
 mark {
     background-color: var(--theme-color);
-    transition: background-color var(--theme-change);
     color: var(--white);
 }
 blockquote {

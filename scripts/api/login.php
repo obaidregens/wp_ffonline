@@ -87,3 +87,39 @@ function api_verify_code(){
     }
     return ['code'=>1];
 }
+function api_google_signin() {
+    required_params("token");
+    $token = $_POST['data']['token'];
+    $r = GoogleAuth::login($token,$_POST['landing_id']);
+    if (!$r) {
+        return ['code'=>10];
+    }
+    if ($r['action'] === "login") {
+        return ['code'=>1];
+    }
+    return [
+        'code' => 2,
+        'token' => ctrk_encrypt([
+            'token' => anon_token($r['ID'])]
+        )
+    ];
+}
+function api_create_username() {
+    required_params('token','username');
+    $d = &$_POST['data'];
+    $validation = (new v_user([
+        'username'  => $d['username'],
+    ],['username']))->return;
+    if (err::is($validation)){
+        return [
+            'code'      => 7,
+            'errors'    => array_column($return->errors,'error','name')
+        ];
+    }
+    $ID = get_anon_token(ctrk_decrypt($d['token'])->token);
+    $r = GoogleAuth::verify($ID,$d['username']);
+    if (!$r) {
+        return ['code'=>10,'ID'=>$ID];
+    }
+    return ['code'=>1];
+}

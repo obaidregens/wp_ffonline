@@ -1,112 +1,226 @@
 <?php
 class reviews {
+    public static $table = 'reviews';
+    protected static $types = ['chapter'];
+    protected static $status = ['public'];
+
     static function new($args) {
-        if (
-            ! isset($args['chapter_id']) ||
-            ! isset($args['review']) ||
-            trim($args['review']) === ''
-        ){
-            return false;
+        $args = array_replace([
+            'review'        => "",
+            'user_id'       => get_current_user_id(),
+            'reply'         => 0,
+            'status'        => 'public',
+            'millitime'     => millitime()
+        ],$args);
+        $e = new err;
+        $e->is_required([
+            'type',
+            'type_id',
+            'landing_id'
+        ],$args);
+        $e->one_of('type',$args['type'],self::$types);
+        $e->one_of('status',$args['status'],self::$status);
+        $e->numeric('type_id',$args['type_id']);
+        $e->numeric('landing_id',$args['landing_id']);
+        $e->numeric('user_id',$args['user_id']);
+        if ( strlen(trim($args['review'])) < 3 ) {
+            $e->add("review",'Review has to be of at least 3 characters.');
         }
-        $chapter = get_post( $args['chapter_id'] );
-        if (! $chapter || $chapter->post_type !== 'chapter' || !self::can_review($args['chapter_id']) ){
-            return false;
-        }
-        if (isset($args['reply_to'])) {
-            $comment = get_comment( $args['reply_to'] );
-            if (
-                ! $comment ||
-                ! is_current_user($chapter->post_author) ||
-                is_current_user($comment->user_id)
-            ) {
-                return false;
+        if (intval($args['reply']) !== 0 ) {
+            $reply = reviews::get($args['reply']);
+            if (!$reply || is_current_user($reply->user_id)) {
+                $e->add('reply',"Can't reply to review.");
             }
         }
-        $comment_id = wp_insert_comment(array(
-            'user_id'           => get_current_user_id(),
-            'comment_post_ID'   => $args['chapter_id'],
-			'comment_parent'	=> $args['reply_to'] ?? 0,
-            'comment_content'   => $args['review'],
-            'comment_author_IP' => $_SERVER['REMOTE_ADDR']
-        ));
-        $inst = new notifications_insert;
-        $inst->addReview($comment_id);
-        return $comment_id;
-    }
-    static function query($args = []) {
-        function build_comment($comment,$chapter_author,$current_user_id) {
-            $comment_author = intval($comment->user_id);
-            $user = get_userdata( $comment->user_id );
-            $Suser = [
-                'ID'        => $comment_author,
-                'name'      => $comment_author === 0 ? 'Anonymous' : '@' . $user->user_login,
-                'checked'   => true
-            ];
-            $Scomment = [
-                'ID'        => intval($comment->comment_ID),
-                'content'   => $comment->comment_content,
-                'time'      => human_time_diff( strtotime( $comment->comment_date ) ),
-                'chapter'   => [
-                    'num'       => $chapter_num ?? 0,
-                    'title'     => $chapter->post_title ?? '',
-                ],
-                'user'      => [
-                    'self'          => $chapter_author === $comment_author,
-                    'ID'            => $comment_author,
-                    'name'          => $comment_author === 0 ? 'Anonymous' : '@' . $user->user_login,
-                    'can_delete'    => reviews::can_delete($comment),
-                    'can_reply'     => $current_user_id === $chapter_author && $comment_author !== $current_user_id && $current_user_id !== 0
-                ]
-            ];
-            return [
-                'user'      => $Suser,
-                'comment'   => $Scomment
-            ];
+        if ($e->has()){
+            return $e;
         }
+        global $wpdb;
+        $wpdb->insert(
+            self::$table,
+            $args
+        );
+        $review_id = (int) $wpdb->insert_id;
+        $inst = new notifications_insert;
+        $inst->addReview($review_id);
+        return $review_id;
+    }
+    static function get($id) {
+        if ( is_object($id) && isset($id->ID) && isset($id->review) && isset($id->reply) && isset($id->millitime) ) {
+            return $id;
+        }
+        global $wpdb;
+        $table = self::$table;
+        $r = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE ID = %d",[$id]));
+        return empty($r) ? false : $r[0];
+    }
+    static function delete($review_id) {
+        if ( !self::can_delete($review_id) ){
+            return false;
+        }
+        global $wpdb;
+        $wpdb->update(self::$table,[
+            'status'    => "trash"
+        ],[
+            "ID"        => $review_id
+        ]);
+    }
+    protected static function build_comment($comment,$author,$chapter_author,$current_user_id) {
+        $comment_author = intval($author->ID);
+        $chapter_author = intval($chapter_author);
+        $current_user_id = intval($current_user_id);
+        
+        $Suser = [
+            'ID'        => $comment_author,
+            'name'      => $comment_author === 0 ? 'Anonymous' : '@' . $author->user_login,
+            'checked'   => true
+        ];
+        $Scomment = [
+            'ID'        => intval($comment->ID),
+            'content'   => $comment->review,
+            'time'      => human_time_diff( intval( $comment->millitime )/1000 ),
+            // 'chapter'   => [
+            //     'num'       => $chapter_num ?? 0,
+            //     'title'     => $chapter->post_title ?? '',
+            // ],
+            'user'      => [
+                'self'          => $chapter_author === $comment_author,
+                'ID'            => $comment_author,
+                'name'          => $comment_author === 0 ? 'Anonymous' : '@' . $author->user_login,
+                'can_delete'    => reviews::can_delete($comment),
+                'can_reply'     => $current_user_id === $chapter_author && $comment_author !== $current_user_id && $current_user_id !== 0
+            ]
+        ];
+        return [
+            'user'      => $Suser,
+            'comment'   => $Scomment
+        ];
+    }
+    static function query(array $args = []) {
         $args = array_replace([
             'exclude_users' => [],
-            'orderby'       => 'comment_date',
+            'orderby'       => 'millitime',
             'order'         => 'DESC',
             'per_page'      => 10,
             'page'          => 1,
             'chapter'       => 0,
-            // 'book'          => ''
+            'story'         => 0,
+            'threaded'      => true,
+            'with_users'    => false,
+            'status'        => ['public']
         ],$args);
+        if (empty($args['status'])) {
+            return [];
+        }
+        $table = self::$table;
+        $fields = [
+            "$table.`ID` AS ID",
+            "$table.`type_id` AS type_id",
+            "$table.`review` AS review",
+            "$table.`user_id` AS user_id",
+            "$table.`reply` AS reply",
+            "$table.`status` AS status",
+            "$table.`millitime` AS millitime"    
+        ];
+        $sql =
+        "SELECT " . implode(',',$fields) .  " FROM $table
+        INNER JOIN wp_posts ON wp_posts.`ID` = $table.`type_id`
+        WHERE wp_posts.`post_type` = 'chapter'
+        AND $table.`status` IN (" . sqlPlaceholder($args['status']) . ") ";
+        $prep = $args['status'];
+        if (count($args['exclude_users']) > 0) {
+            $sql .= " AND $table.`user_id` NOT IN (" . sqlPlaceholder($args['exclude_users'],"%d") . ")";
+            $prep = array_merge($prep,$args['exclude_users']);
+        }
+        if ($args['chapter'] !== 0) {
+            $sql .= " AND $table.`type_id` = %d";
+            $prep[] = $args['chapter'];
+        }
+        if ($args['story'] !== 0) {
+            $sql .= " AND wp_posts.`post_parent` = %d";
+            $prep[] = $args['story'];
+        }
+        $orderby = [
+            'millitime'        => "$table.millitime"
+        ][in_array($args['orderby'],["millitime"]) ? $args['orderby'] : "millitime"];
+        $args['order'] = strtoupper($args['order']);
+        $order = in_array($args['order'],["DESC","ASC"]) ? $args['order'] : "DESC";
 
-        $comment_query = (new WP_Comment_Query([
-            'author__not_in'    => $args['exclude_users'],
-            'number'            => $args['per_page'],
-            'paged'             => $args['page'],
-            'orderby'           => $args['orderby'],
-            'order'             => $args['order'],
-            'post_id'           => $args['chapter'],
-            'parent'            => 0,
-            // 'post_parent'       => $args['book'],
-            'hierarchical'	    => 'threaded'
-        ]))->comments;
-        $chapter = get_post($args['chapter']);
-        $chapter_author = intval($chapter->post_author);
-        $chapter_num = intval(get_post_meta( $chapter->ID, 'chapter_order', true ));
-        $comments = [];
+        $sql .= " ORDER BY $orderby $order";
+        $sql .= " LIMIT " . intval($args['per_page']) . " OFFSET " . (intval($args['page'])-1)*intval($args['per_page']);
+
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare($sql,$prep));
+
+        $args['threaded'] = (bool) $args['threaded'];
+        if (!$args['threaded']) {
+            return $r;
+        }
+        $a = [];
+        foreach ($r as $v) {
+            $k = &$a[$v->ID];
+            if (isset($k->review)) {continue;}
+            if (intval($v->reply) === 0) {
+                $replies = $k->replies ?? [];
+                $k = $v;
+                $k->replies = $replies;
+                continue;
+            }
+            unset($a[$v->ID]);
+            $a[$v->reply] = $a[$v->reply] ?? ((object) [
+                'replies'   => []
+            ]);
+            $a[$v->reply]->replies[] = $v;
+        }
+        return [
+            'reviews'       => $a,
+            'users'         => array_unique(array_column($r,'user_id'))
+        ];
+    }
+    static function queryBuild(array $args = []) {
+        $args['threaded'] = true;
+        $args['with_users'] = true;
+        $r = self::query($args);
+
+        global $wpdb;
+        $user_ids_in = array_merge($r['users'],$args['exclude_users'] ?? []);
+        $authors = empty($user_ids_in) ? [] : (
+            $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT * FROM wp_users
+                    WHERE user_status = 0
+                    AND `ID` IN (" . sqlPlaceholder($user_ids_in,"%d") . ")",
+                    $user_ids_in
+                ),
+            OBJECT_K)
+        );
+        $r = $r['reviews'];
+
         $current_user_id = intval(get_current_user_id());
+
+        $reviews = [];
         $users = [];
-        foreach ($comment_query as $k => $comment) {
-            $f = build_comment($comment,$chapter_author,$current_user_id);
-            $comment_author = intval($comment->user_id);
+        foreach ($r as $review) {
+            $chapter = get_post($review->type_id);
+            $chapter_author = intval($chapter->post_author);
+            
+            $f = self::build_comment($review,$authors[$review->user_id],$chapter_author,$current_user_id);
+            $comment_author = intval($review->user_id);
             $users[$comment_author] = $f['user'];
-            $children = $comment->get_children();
+            $children = $review->replies;
             $f['comment']['replies'] = [];
             foreach ($children as $child) {
-                $f['comment']['replies'][] = build_comment($child,$chapter_author,$current_user_id)['comment'];
+                $f['comment']['replies'][] =
+                self::build_comment($child,$authors[$child->user_id],$chapter_author,$current_user_id)['comment'];
             }
-            $comments[] = $f['comment'];
+            $reviews[] = $f['comment'];
         }
         foreach ($args['exclude_users'] as $user_id) {
             $user_id = intval($user_id);
             if (isset($users[$user_id])) {
                 continue;
             }
-            $user = get_userdata( $user_id );
+            $user = $authors[strval($user_id)];
             $users[$user_id] = [
                 'ID'        => $user_id,
                 'name'      => $user_id === 0 ? 'Anonymous' : '@' . $user->user_login,
@@ -114,34 +228,27 @@ class reviews {
             ];
         }
         return [
-            'reviews'   => $comments,
+            'reviews'   => $reviews,
             'users'     => array_values($users)
         ];
     }
-    static function delete($comment_id) {
-        if ( ! self::can_delete($comment_id) ){
+    // Helpers
+    static function can_delete($review_id) {
+        if (!is_user_logged_in()) {
             return false;
         }
-        wp_delete_comment($comment_id);
-    }
-    static function can_delete($comment_id) {
-        if ($comment_id instanceof WP_Comment) {
-            $comment = $comment_id;
-        }
-        else {
-            $comment = get_comment($comment_id);
-        }
-        if ( !is_user_logged_in() || !$comment ){
+        $review = reviews::get($review_id);
+        if (!$review) {
             return false;
         }
-        if ( is_current_user($comment->user_id) ) {
+        if ( is_current_user($review->user_id) ) {
             return true;
         }
-        $chapter = get_post($comment->comment_post_ID);
+        $chapter = get_post($review->type_id);
         if (! $chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
         }
-        if ( intval($comment->user_id) === 0 && is_current_user($chapter->post_author) ) {
+        if ( intval($review->user_id) === 0 && is_current_user($chapter->post_author) ) {
             return true;
         }
         return false;
@@ -169,14 +276,16 @@ class reviews {
         if (! $chapter_or_book) {
             return 0;
         }
+        $table = self::$table;
         if ($chapter_or_book->post_type === 'book') {
-            $sql = "SELECT COUNT(wp_comments.comment_ID) AS c FROM wp_comments
-            INNER JOIN wp_posts ON wp_posts.ID = wp_comments.comment_post_ID
+            $sql =
+            "SELECT COUNT($table.ID) AS c FROM $table
+            INNER JOIN wp_posts ON wp_posts.ID = $table.ID
             WHERE wp_posts.post_parent = %d
             GROUP BY wp_posts.post_parent";
         } else if ($chapter_or_book->post_type === 'chapter') {
-            $sql = "SELECT COUNT(comment_ID) AS c FROM wp_comments
-            WHERE comment_post_ID = %d";
+            $sql = "SELECT COUNT(ID) AS c FROM $table
+            WHERE type_id = %d";
         } else {
             return 0;
         }

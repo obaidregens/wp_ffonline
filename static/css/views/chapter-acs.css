@@ -131,7 +131,7 @@ change-options[action="theme"] > div[color="black"] {
 
 /* Options */
 acs-options {
-	transition: transform .2s, background-color var(--theme-change);
+	transition: transform .2s;
 	transform: translateY(0);
 	background-color: var(--background-accent);
     height: 50px;

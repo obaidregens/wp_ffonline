@@ -38,7 +38,7 @@ sidenav {
     z-index: 90;
     /* Transition */
     transform: scaleX(0);
-    transition: transform .3s, background-color var(--theme-change);
+    transition: transform .3s;
     transform-origin: right;
 }
 sidenav.show {

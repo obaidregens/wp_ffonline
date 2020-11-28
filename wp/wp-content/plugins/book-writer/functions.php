@@ -22,40 +22,42 @@ function run_at_activation(){
     
 	global $wpdb;
 	$charset_collate = $wpdb->get_charset_collate();
+
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	//Stats
 	//Landing
-	$stats_landings_table = "CREATE TABLE stats_landings (
-	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-	`vfs` VARCHAR(100) NOT NULL ,
-	`timestamp` BIGINT NOT NULL ,
-	`type` VARCHAR(50) NOT NULL ,
-	`type_id` BIGINT NOT NULL ,
-	`request` TEXT NULL ,
-	`user_id` BIGINT NOT NULL ,
-	`IP` VARCHAR(100) NOT NULL ,
-	`referrer_host` VARCHAR(150) NULL ,
-	`referrer_path` VARCHAR(300) NULL ,
-	`platform` VARCHAR(100) NULL,
-	`browser` VARCHAR(100) NULL,
-	`browser_version` VARCHAR(20) NULL,
-	`host` VARCHAR(30) NOT NULL,
-	PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	dbDelta("CREATE TABLE stats_landings (
+		`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`vfs` VARCHAR(100) NOT NULL ,
+		`timestamp` BIGINT NOT NULL ,
+		`type` VARCHAR(50) NOT NULL ,
+		`type_id` BIGINT NOT NULL ,
+		`request` TEXT NULL ,
+		`user_id` BIGINT NOT NULL ,
+		`IP` VARCHAR(100) NOT NULL ,
+		`referrer_host` VARCHAR(150) NULL ,
+		`referrer_path` VARCHAR(300) NULL ,
+		`platform` VARCHAR(100) NULL,
+		`browser` VARCHAR(100) NULL,
+		`browser_version` VARCHAR(20) NULL,
+		`host` VARCHAR(30) NOT NULL,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
 
 	//Actions
-	$stats_actions_table = "CREATE TABLE stats_actions (
-	`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-	`landing_id` BIGINT UNSIGNED NOT NULL ,
-	`timestamp` BIGINT NOT NULL ,
-	`type` VARCHAR(50) NOT NULL ,
-	`type_id` BIGINT NOT NULL ,
-	`stat` VARCHAR(20) NOT NULL,
-	PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	dbDelta("CREATE TABLE stats_actions (
+		`ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`landing_id` BIGINT UNSIGNED NOT NULL ,
+		`timestamp` BIGINT NOT NULL ,
+		`type` VARCHAR(50) NOT NULL ,
+		`type_id` BIGINT NOT NULL ,
+		`stat` VARCHAR(20) NOT NULL,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
 
 
 	//surveys
-	$surveys_table = "CREATE TABLE surveys (
+	dbDelta("CREATE TABLE surveys (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
 		`vfs` VARCHAR(100) NOT NULL ,
 		`user_id` BIGINT NOT NULL ,
@@ -65,9 +67,9 @@ function run_at_activation(){
 		`suggestion` TEXT NULL ,
 		`email` VARCHAR(300) NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$collections_table = "CREATE TABLE collections (
+	dbDelta("CREATE TABLE collections (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
 		`title` VARCHAR(100) NOT NULL ,
 		`description` VARCHAR(500) NOT NULL ,
@@ -77,31 +79,31 @@ function run_at_activation(){
 		`modified` BIGINT NOT NULL ,
 		`author` BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$collection_books_table = "CREATE TABLE collection_books (
+	dbDelta("CREATE TABLE collection_books (
 		`collection_id` BIGINT NOT NULL ,
 		`book_id` BIGINT NOT NULL ,
 		`time_added` BIGINT NOT NULL ,
 		PRIMARY KEY (`collection_id`,`book_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$search_cache_table = "CREATE TABLE search_cache (
+	dbDelta("CREATE TABLE search_cache (
 		`_key` VARCHAR(50) NOT NULL ,
 		`_value` VARCHAR(50) NOT NULL ,
 		`ids` LONGTEXT NOT NULL ,
 		`updated` BIGINT NOT NULL ,
 		PRIMARY KEY (`_key`,`_value`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$verification_codes_table = "CREATE TABLE verification_codes (
+	dbDelta("CREATE TABLE verification_codes (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT,
 		`code` VARCHAR(8) NOT NULL ,
 		`issued` BIGINT NOT NULL ,
 		PRIMARY KEY (ID)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$user_connections_table = "CREATE TABLE user_connections (
+	dbDelta("CREATE TABLE user_connections (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT,
 		`user_id` BIGINT NOT NULL,
 		`connection_user` VARCHAR(50) NOT NULL ,
@@ -111,9 +113,9 @@ function run_at_activation(){
 		`unlink_timestamp` BIGINT NULL ,
 		`verification_ID` BIGINT NULL ,
 		PRIMARY KEY (ID)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$drafts_table = "CREATE TABLE drafts (
+	dbDelta("CREATE TABLE drafts (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT,
 		`user_id` BIGINT NOT NULL,
 		`share` VARCHAR(25) NULL ,
@@ -123,8 +125,8 @@ function run_at_activation(){
 		`branch_type` VARCHAR(20) NULL ,
 		`path` TEXT NOT NULL ,
 		PRIMARY KEY (ID)
-	) $charset_collate;";
-	$draft_revisions_table = "CREATE TABLE draft_revisions (
+	) $charset_collate;");
+	dbDelta("CREATE TABLE draft_revisions (
 		`ID` BIGINT NOT NULL AUTO_INCREMENT ,
 		`user_id` BIGINT NOT NULL ,
 		`draft_id` BIGINT NOT NULL ,
@@ -132,9 +134,9 @@ function run_at_activation(){
 		`hash` VARCHAR(40) NOT NULL ,
 		`edited` BIGINT NOT NULL ,
 		PRIMARY KEY (ID)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$import_stories_table = "CREATE TABLE import_stories (
+	dbDelta("CREATE TABLE import_stories (
 		`import_user` 	VARCHAR(50) NOT NULL ,
 		`import_from` 	VARCHAR(20) NOT NULL ,
 		`user_id` 		BIGINT NOT NULL ,
@@ -147,9 +149,9 @@ function run_at_activation(){
 		`import_follows`BIGINT NOT NULL ,
 		`viewed_time`	BIGINT NOT NULL ,
 		PRIMARY KEY (`import_from`,`import_story`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$ffn_outreach_table = "CREATE TABLE ffn_outreach (
+	dbDelta("CREATE TABLE ffn_outreach (
 		`ffn_user_id`			BIGINT NOT NULL ,
 		`message_sent`			BIGINT NOT NULL ,
 		`ffn_username`			VARCHAR(40) NOT NULL ,
@@ -179,23 +181,23 @@ function run_at_activation(){
 		`newest_published`		BIGINT NOT NULL ,
 		`newest_updated`		BIGINT NOT NULL ,
 		PRIMARY KEY (`ffn_user_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$character_pairings_tables = "CREATE TABLE character_pairings (
+	dbDelta("CREATE TABLE character_pairings (
 		`pairing_id` 	BIGINT NOT NULL ,
 		`character_id` 	BIGINT NOT NULL ,
 		PRIMARY KEY (`pairing_id`,`character_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$pairing_relationships_tables = "CREATE TABLE pairing_relationships (
+	dbDelta("CREATE TABLE pairing_relationships (
 		`pairing_id` 	BIGINT NOT NULL ,
 		`book_id`		BIGINT NOT NULL ,
 		`priority`		VARCHAR(20) NOT NULL ,
 		`added_time`	BIGINT NOT NULL ,
 		PRIMARY KEY (`pairing_id`,`book_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$contact_tables = "CREATE TABLE contact (
+	dbDelta("CREATE TABLE contact (
 		`ID` 			BIGINT NOT NULL AUTO_INCREMENT ,
 		`user_id`		BIGINT NOT NULL ,
 		`from`		 	VARCHAR(400) NOT NULL ,
@@ -207,10 +209,10 @@ function run_at_activation(){
 		`message_id`	VARCHAR(300) NOT NULL ,
 		`vfs`			VARCHAR(100) NOT NULL ,
 		PRIMARY KEY (ID)
-	) $charset_collate;";
+	) $charset_collate;");
 
 	// Follows/Notifications
-	$follow_tables = "CREATE TABLE follows (
+	dbDelta("CREATE TABLE follows (
 		`type` 			VARCHAR(50) NOT NULL ,
 		`type_id`		BIGINT NOT NULL ,
 		`user_id`		BIGINT NOT NULL ,
@@ -218,18 +220,18 @@ function run_at_activation(){
 		`landing_id`	BIGINT NOT NULL ,
 		`followed_time`	DOUBLE NOT NULL ,
 		PRIMARY KEY (`type`,`type_id`,`user_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$votes_tables = "CREATE TABLE votes (
+	dbDelta("CREATE TABLE votes (
 		`type` 			VARCHAR(50) NOT NULL ,
 		`type_id`		BIGINT NOT NULL ,
 		`user_id`		BIGINT NOT NULL ,
 		`landing_id`	BIGINT NOT NULL ,
 		`voted_time`	DOUBLE NOT NULL ,
 		PRIMARY KEY (`type`,`type_id`,`user_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$notifications_table = "CREATE TABLE notifications (
+	dbDelta("CREATE TABLE notifications (
 		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`user_id`			BIGINT NOT NULL ,
 		`notification_type` VARCHAR(100) NOT NULL ,
@@ -240,9 +242,9 @@ function run_at_activation(){
 		`email_status`		VARCHAR(120) NOT NULL ,
 		`timestamp`			DOUBLE NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$chats_table = "CREATE TABLE chats (
+	dbDelta("CREATE TABLE chats (
 		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`from`				BIGINT NOT NULL ,
 		`to`				BIGINT NOT NULL ,
@@ -250,9 +252,9 @@ function run_at_activation(){
 		`message`			VARCHAR(400) NOT NULL ,
 		`milli_timestamp`	BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$questions_table = "CREATE TABLE questions (
+	dbDelta("CREATE TABLE questions (
 		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`email`				VARCHAR(300) NOT NULL ,
 		`user_id`			BIGINT NOT NULL ,
@@ -267,9 +269,9 @@ function run_at_activation(){
 		`deleted_millitime`	BIGINT UNSIGNED NOT NULL ,
 		`is_anonymous`		TINYINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$polls_table = "CREATE TABLE polls (
+	dbDelta("CREATE TABLE polls (
 		`ID` 				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`user_id`			BIGINT NOT NULL ,
 		`description`		TEXT NOT NULL ,
@@ -278,25 +280,25 @@ function run_at_activation(){
 		`deleted_milli`		BIGINT NOT NULL ,
 		`expire_in`			BIGINT NOT NULL,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$poll_options_table = "CREATE TABLE poll_options (
+	dbDelta("CREATE TABLE poll_options (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`poll_id`			BIGINT UNSIGNED NOT NULL ,
 		`title`				VARCHAR(50) NOT NULL ,
 		UNIQUE (`poll_id`,`title`) ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$poll_votes_table = "CREATE TABLE poll_votes (
+	dbDelta("CREATE TABLE poll_votes (
 		`poll_id`			BIGINT UNSIGNED NOT NULL ,
 		`option_id`			BIGINT NOT NULL ,
 		`user_id`			BIGINT NOT NULL ,
 		`voted_millitime`	BIGINT NOT NULL ,
 		PRIMARY KEY (`poll_id`,`user_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$offline_stats_table = "CREATE TABLE offline_stats (
+	dbDelta("CREATE TABLE offline_stats (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`type`				VARCHAR(20) NOT NULL ,
 		`key`				VARCHAR(100) NOT NULL ,
@@ -307,9 +309,9 @@ function run_at_activation(){
 		`stat_millitime`	BIGINT NOT NULL ,
 		`added_millitime`	BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$spam_log_table = "CREATE TABLE spam_log (
+	dbDelta("CREATE TABLE spam_log (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`reason`			VARCHAR(100) NOT NULL ,
 		`user_id`			BIGINT NOT NULL ,
@@ -318,84 +320,56 @@ function run_at_activation(){
 		`description`		TEXT NOT NULL ,
 		`logged_millitime`	BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$dictionary_data_table = "CREATE TABLE dictionary_data (
+	dbDelta("CREATE TABLE dictionary_data (
 		`word`				VARCHAR(150) NOT NULL ,
 		`google`			LONGTEXT NOT NULL ,
 		`thesaurus_com`		LONGTEXT NOT NULL ,
 		`landing_id`		BIGINT NOT NULL ,
 		`milli_timestamp`	BIGINT NOT NULL ,
 		PRIMARY KEY (`word`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$beta_sessions_table = "CREATE TABLE beta_sessions (
+	dbDelta("CREATE TABLE beta_sessions (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
 		`description`		VARCHAR(500) NOT NULL ,
 		`start_url`			VARCHAR(100) NOT NULL ,
 		`start_time`		BIGINT NOT NULL ,
 		`end_time`			BIGINT NOT NULL ,
 		PRIMARY KEY (`ID`)
-	) $charset_collate;";
+	) $charset_collate;");
 
-	$beta_users_table = "CREATE TABLE beta_users (
+	dbDelta("CREATE TABLE beta_users (
 		`beta_id`			BIGINT UNSIGNED NOT NULL ,
 		`user_id`			BIGINT NOT NULL ,
 		`selection`			VARCHAR(30) NOT NULL ,
 		PRIMARY KEY (`beta_ID`,`user_id`)
-	) $charset_collate;";
+	) $charset_collate;");
 
+	dbDelta("CREATE TABLE reviews (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`type`				VARCHAR(50) NOT NULL ,
+		`type_id`			BIGINT UNSIGNED NOT NULL ,
+		`review`			TEXT NOT NULL,
+		`user_id`			BIGINT NOT NULL ,
+		`landing_id`		BIGINT UNSIGNED NOT NULL ,
+		`reply`				BIGINT UNSIGNED NOT NULL ,
+		`status`			VARCHAR(50) NOT NULL ,
+		`millitime`			BIGINT UNSIGNED NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
 
-	//RUN SQL
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	dbDelta("CREATE TABLE google_auth (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`user_id`			BIGINT NOT NULL ,
+		`email`				VARCHAR(350) NOT NULL ,
+		`google_user_id`	VARCHAR(50) NOT NULL,
+		`landing_id`		BIGINT UNSIGNED NOT NULL ,
+		`registered`		BIGINT UNSIGNED NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
 
-	// Stats
-	dbDelta( $stats_landings_table );
-	dbDelta( $stats_actions_table );
-	// Surveys
-	dbDelta( $surveys_table );
-	// Collections
-	dbDelta( $collections_table );
-	dbDelta( $collection_books_table );
-	// Cache
-	dbDelta( $search_cache_table );
-	// Codes
-	dbDelta( $verification_codes_table );
-	// User Connections
-	dbDelta( $user_connections_table );
-	// Drafts
-	dbDelta( $drafts_table );
-	dbDelta( $draft_revisions_table );
-	// Import Stories
-	dbDelta( $import_stories_table );
-	// FFN Outreach
-	dbDelta( $ffn_outreach_table );
-	// Pairings
-	dbDelta( $character_pairings_tables );
-	dbDelta( $pairing_relationships_tables );
-	// Contact Table
-	dbDelta( $contact_tables );
-	// Follows/Notifications
-	dbDelta( $follow_tables );
-	dbDelta( $votes_tables );
-	dbDelta( $notifications_table );
-	// Chats
-	dbDelta( $chats_table );
-	// Questions
-	dbDelta( $questions_table );
-	// Polls
-	dbDelta( $polls_table );
-	dbDelta( $poll_options_table );
-	dbDelta( $poll_votes_table );
-	// Offline
-	dbDelta( $offline_stats_table );
-	// Spam
-	dbDelta( $spam_log_table );
-	// Dict
-	dbDelta( $dictionary_data_table );
-	// Beta
-	dbDelta( $beta_sessions_table );
-	dbDelta( $beta_users_table );
 
 	//Create Default Collections for users
 	$users = get_users(array(
@@ -403,7 +377,8 @@ function run_at_activation(){
 	));
 	foreach ($users as $user ) {
 		collection_helpers::create_default($user->ID);
-	}}
+	}
+}
 register_activation_hook(__FILE__, 'run_at_activation' );
 
 $includes = array(

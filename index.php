@@ -1,6 +1,4 @@
 <?php
-// define("GLOBAL_ENV","DEV");
-
 function construct_page_title(... $parts) {
     return implode(" - ",$parts) . " - Fanfiction Online";
 }

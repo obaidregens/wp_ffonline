@@ -93,9 +93,9 @@ class notifications {
                 return [
                     'message'   => "Your stories have been imported.",
                     'link'      => $home_url ."/my-stories"
-                ];    
+                ];
             case 'chapter_review':
-                $comment = get_comment( $row->type_of_id );
+                $comment = reviews::get( $row->type_of_id );
                 if (! $comment ) {
                     return null;
                 }
@@ -111,7 +111,7 @@ class notifications {
                     'link'      => $link
                 ];
             case 'review_reply':
-                $comment = get_comment($row->type_by_id);
+                $comment = reviews::get($row->type_by_id);
                 return [
                     'message'   => "The author replied to your review.",
                     'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $comment->user_id
@@ -234,10 +234,10 @@ class notifications_insert extends notifications {
         }
     }
     function addReview($review_id) {
-        $review = get_comment( $review_id );
+        $review = reviews::get( $review_id );
         $parent_0 = intval($review->comment_parent) === 0;
         if (!$parent_0){
-            $parent_review = get_comment( $review->comment_parent );
+            $parent_review = reviews::get( $review->comment_parent );
             if (intval($parent_review->user_id) === 0) {
                 return false;
             }

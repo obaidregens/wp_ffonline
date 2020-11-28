@@ -16,6 +16,9 @@ $app->bundle->print();
 if (isset($app->beta_bundle)) {
 	$app->beta_bundle->print();
 }
+if (!is_user_logged_in()) {
+	?><script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script><?php
+}
 ?>
 <style>
 @font-face {

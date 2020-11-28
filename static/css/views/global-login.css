@@ -2,14 +2,16 @@
 popup[login],
 popup[signup],
 popup[forgot],
-popup[email_code] {
+popup[email_code],
+popup[create_username] {
     max-width: 300px;
     text-align: center;
 }
 popup[login] > form,
 popup[signup] > form,
 popup[forgot] > form,
-popup[email_code] > form {
+popup[email_code] > form,
+popup[create_username] > form {
     display: flex;
     flex-direction: column;
     text-align: left;
@@ -18,27 +20,31 @@ popup[email_code] > form {
 popup[login] > form > text-input,
 popup[signup] > form > text-input,
 popup[forgot] > form > text-input,
-popup[email_code] > form > text-input {
+popup[email_code] > form > text-input,
+popup[create_username] > form > text-input {
     margin: 20px 0;
 }
 popup[login] > form > recaptcha > div,
 popup[signup] > form > recaptcha > div,
 popup[forgot] > form > recaptcha > div,
-popup[email_code] > form > recaptcha > div {
+popup[email_code] > form > recaptcha > div,
+popup[create_username] > form > recaptcha > div {
     transform: scale(0.55);
     margin-right: -127px;
 }
 popup[login] > form > button,
 popup[signup] > form > button,
 popup[forgot] > form > button,
-popup[email_code] > form > button {
+popup[email_code] > form > button,
+popup[create_username] > form > button {
     width: 100%;
     margin: 0;
 }
 popup[login] > a::before,
 popup[signup] > a::before,
 popup[forgot] > a::before,
-popup[email_code] > a::before {
+popup[email_code] > a::before,
+popup[create_username] > a::before {
     font-size: 85%;
     font-weight: bold;
     content: attr(label);

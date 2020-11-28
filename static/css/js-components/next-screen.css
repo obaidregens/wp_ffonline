@@ -16,8 +16,7 @@ next-screen {
     transition:
         transform 0.4s,
         opacity .4s,
-        background-color 0.3s,
-        color 0.3s
+        background-color 0.3s
     ;
     will-change: transform, opacity;
     opacity: 0;
@@ -28,8 +27,7 @@ next-screen.show {
     transition:
         transform 0.3s,
         opacity .3s cubic-bezier(0.45, 1.21, 1, 1),
-        background-color 0.3s,
-        color 0.3s
+        background-color 0.3s
     ;
 }
 next-screen > cross-button {

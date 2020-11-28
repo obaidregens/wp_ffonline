@@ -1,0 +1,49 @@
+.google-signin {
+    margin-bottom: 15px;
+}
+.google-signin .abcRioButton {
+    width: 100% !important;
+    background-color: var(--transparent-accent);
+    color: var(--text-color);
+    border-radius: 4px;
+    height: fit-content !important;
+    box-shadow: none;
+}
+.google-signin .abcRioButton:hover {
+    box-shadow: none;
+}
+.google-signin .abcRioButton:active {
+    transform: scale(0.97);
+}
+.abcRioButtonContentWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.abcRioButtonContents {
+    display: flex;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-family: var(--font);
+    font-size: 12px !important;
+    margin-right: 16px;
+    line-height: unset !important;
+}
+.google-signin .abcRioButton:hover {
+    background-color: var(--theme-color);
+    color: var(--white);
+}
+.abcRioButtonIcon {
+    padding: 6px !important;
+    float: unset !important;
+}
+.abcRioButtonSvg {
+    width: 16px;
+    height: 16px;
+}
+[id^="not_signed_in"] {
+    display: inline !important;
+}
+[id^="connected"] {
+    display: none !important;
+}

@@ -87,7 +87,7 @@ messages>message.other::before {
 messages>message.my {
     border-radius: 0 10px 10px 40px;
     background-color: var(--theme-color);
-    transition: background-color var(--theme-change);
+    transition: background-color var(--theme-change) ease-in;
     color: var(--white)
 }
 

@@ -317,3 +317,109 @@ function get_user_by(string $field,$value,bool $unverified = false) {
     }
     return new WP_User($user);
 }
+
+class GoogleAuth extends user {
+    protected static $table = "google_auth";
+    static function login($token,$landing_id){
+        $opts = [
+            'http' => [
+                'method'  => 'POST',
+                'header'  => 'Content-Type: application/x-www-form-urlencoded',
+                'content' => http_build_query(
+                    [ 'id_token' => $token ]
+                )
+            ]
+        ];
+        $context = stream_context_create($opts);
+        $result = json_decode(file_get_contents('https://oauth2.googleapis.com/tokeninfo', false, $context),true);
+        if (($result['aud'] ?? false) !== GOOGLE_CLIENT_ID . ".apps.googleusercontent.com") {
+            return false;
+        }
+        if (($result['email_verified'] ?? false) === false) {
+            return false;
+        }
+        $table = self::$table;
+        global $wpdb;
+        
+        $exists = $wpdb->get_results($wpdb->prepare(
+            "SELECT `ID`,`user_id` FROM $table
+            WHERE `user_id` != 0
+            AND google_user_id = %s",
+        [$result['sub']]));
+        $exists = empty($exists) ? false : $exists[0];
+
+        if ($exists) {
+            user::internal_login($exists->user_id);
+            return ['action'=>'login'];
+        }
+
+        $exists_email = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM wp_users
+            WHERE `user_email` = %s
+            AND user_status = 0",
+        [$result['email']]));
+        $exists_email = empty($exists_email) ? false : $exists_email[0];
+
+        $wpdb->insert(
+            self::$table,
+            [
+                'user_id'       => $exists_email ? $exists_email->ID : 0,
+                'email'         => $result['email'],
+                'google_user_id'=> $result['sub'],
+                'landing_id'    => $landing_id,
+                'registered'    => millitime(),
+            ]
+        );
+        if ($exists_email) {
+            self::internal_login($exists_email->ID);
+            return ['action'=>'login'];
+        }
+        return ['action'=>'signup','ID'=>$wpdb->insert_id];
+    }
+    static function verify($ID,$username) {
+        global $wpdb;
+        $table = self::$table;
+
+        $exists = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table
+            WHERE `ID` = %d AND `user_id` = 0",
+        [$ID]));
+        $exists = empty($exists) ? false : $exists[0];
+        if (!$exists) {
+            return false;
+        }
+
+        $exists_email = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM wp_users
+            WHERE (`user_login` = %s OR `user_email` = %s)
+            AND user_status = 0",
+        [$username,$exists->email]));
+        $exists_email = empty($exists_email) ? false : $exists_email[0];
+        if ($exists_email) {
+            return false;
+        }
+        $wpdb->insert(
+            'wp_users',
+            [
+                'user_login'            => $username,
+                'user_pass'             => bin2hex(random_bytes(103)),
+                'user_nicename'         => $username,
+                'user_email'            => $exists->email,
+                'user_registered'       => current_time('mysql'),
+                'user_activation_key'   => "",
+                'user_status'           => 0,
+                'display_name'          => "@$username"
+            ]
+        );
+        $user_id = intval($wpdb->insert_id);
+        $wpdb->update(
+            self::$table,[
+                'user_id'   => $user_id,
+            ],[
+                'ID'        => $ID,
+                'user_id'   => 0
+            ]
+        );
+        return $user_id;
+    }
+}

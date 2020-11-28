@@ -68,6 +68,7 @@
             "css\/js-components\/toast",
             "css\/js-components\/popup",
             "css\/js-components\/next-screen",
+            "css\/views\/global-Glogin",
             "css\/views\/global-login",
             "css\/views\/global-share",
             "css\/views\/global-notifications",
@@ -85,6 +86,7 @@
             "js\/components\/toast",
             "js\/components\/popup",
             "js\/components\/next-screen",
+            "js\/views\/global-Glogin",
             "js\/views\/global-login",
             "js\/views\/global-share",
             "external\/waves\/waves"

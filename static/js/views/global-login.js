@@ -81,6 +81,7 @@ function prompt_login() {
 	form.appendChild(reCAPTCHA_elem);
 	form.appendChild(submit_btn);
 	login_popup.appendChild(form);
+	login_popup.appendChild(window.googleSignInRender());
 	login_popup.appendChild(forgot_btn);
 	login_popup.appendChild(signup_btn);
 

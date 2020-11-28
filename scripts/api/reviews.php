@@ -7,7 +7,7 @@ function api_publish_review(){
     }
     required_params('content');
     $len = strlen($d['content']);
-    if ($len < 5) {
+    if ($len < 3) {
         return ['code'=>10];
     }
     if ( strlen(strip_tags($d['content'])) < $len ) {
@@ -15,15 +15,19 @@ function api_publish_review(){
     }
     if ($d['action'] === 'insert'){
         reviews::new([
-            'chapter_id'    => $d['chapter_id'],
+            'type'          => 'chapter',
+            'type_id'       => $d['chapter_id'],
+            'landing_id'    => $_POST['landing_id'],
             'review'        => $d['content']
         ]);
     }
     else if ($d['action'] == 'reply'){
         required_params('review_id');
         reviews::new([
-            'chapter_id'    => $d['chapter_id'],
-            'reply_to'      => $d['review_id'],
+            'type'          => 'chapter',
+            'type_id'       => $d['chapter_id'],
+            'landing_id'    => $_POST['landing_id'],
+            'reply'         => $d['review_id'],
             'review'        => $d['content']
         ]);
     }
@@ -51,7 +55,7 @@ function api_get_reviews(){
         return ['code'=>14];
     }
 
-    $reviews = reviews::query([
+    $reviews = reviews::queryBuild([
         'order'         => $sort,
         'chapter'       => $chapter->ID,
         'page'          => $d['page'] ?? 1,

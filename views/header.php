@@ -28,6 +28,7 @@ $current_user = get_userdata( get_current_user_id() );
 		<!-- Preconnections -->
 		<link rel="dns-prefetch" href="https://www.gstatic.com">
 		<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+		<link rel="dns-prefetch" href="https://static.fanfiction.online">
 
 		<!-- Load Font -->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap">
@@ -53,6 +54,9 @@ $current_user = get_userdata( get_current_user_id() );
 		<meta name="apple-mobile-web-app-status-bar" content="#007ACC">
 		<meta name="theme-color" content="#007ACC">
 		<meta name="color-scheme" content="dark light">
+
+		<!-- Verifications -->
+		<meta name="google-signin-client_id" content="<?= GOOGLE_CLIENT_ID ?>.apps.googleusercontent.com">
     </head>
     <body>
 		<loading-shadow>

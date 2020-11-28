@@ -34,7 +34,7 @@ class email {
         $this->mail = new PHPMailer(true);
         $this->mail->CharSet="UTF-8";
         $this->mail->isSMTP();
-        $this->mail->SMTPDebug = 2;
+        $this->mail->SMTPDebug = defined("SMTP_DEBUG") ? SMTP_DEBUG : 0;
         $this->mail->Host = defined("SMTP_HOST") ? SMTP_HOST : "";
         $this->mail->SMTPAuth = defined("SMTP_AUTH") ? SMTP_AUTH : true;
         $this->mail->Port = defined("SMTP_PORT") ? SMTP_PORT : 0;

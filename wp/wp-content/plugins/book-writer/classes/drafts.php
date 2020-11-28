@@ -118,7 +118,6 @@ class draft_revision extends drafts{
         if ($length === null) {
             $length = count($changes);
         }
-        logging($length);
         if (! in_array($FLAG,['push','update'])) {
             $FLAG = 'update';
         }

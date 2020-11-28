@@ -25,8 +25,7 @@ toast {
     transition:
     margin-top var(--toast-transition),
     transform var(--toast-transition),
-    opacity var(--toast-transition),
-    background-color var(--theme-change);
+    opacity var(--toast-transition);
 }
 toast[open] {
     margin-top: 10px;
