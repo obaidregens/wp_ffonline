@@ -7,7 +7,8 @@
 	</nav>
 </footer>
 <recaptcha-sitekey hidden><?= RECAPTCHA_SITEKEY ?></recaptcha-sitekey>
-<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=init_reCAPTCHA"></script>
+<script>exposeReCaptcha = () => window.expose.init_reCAPTCHA();</script>
+<script src="https://www.google.com/recaptcha/api.js?render=explicit&onload=exposeReCaptcha"></script>
 <?php
 if (! isset($app->bundle)){
 	$app->bundle = global_bundle('global');
@@ -17,7 +18,7 @@ if (isset($app->beta_bundle)) {
 	$app->beta_bundle->print();
 }
 if (!is_user_logged_in()) {
-	?><script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script><?php
+	?><script src="https://apis.google.com/js/platform.js" async defer></script><?php
 }
 ?>
 <style>

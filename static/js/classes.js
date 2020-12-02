@@ -63,12 +63,14 @@ const themes = class {
         return cookies.all.theme;
     }
 };
+window.expose = window.expose || {};
+window.expose.themes_switch = themes.switch;
 themes.all = {
     light: {
         themeColor: "#007ACC",
         textColor: "#262828",
         backgroundColor: "#fdfdfd",
-        backgroundAccent: "#ececec"
+        backgroundAccent: "#f7f7f7"
     },
     dark: {
         themeColor: "#1f63a7",

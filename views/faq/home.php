@@ -4,6 +4,7 @@ $app->bundle->css('css/components/collapsible');
 $app->bundle->css('css/views/faq-main');
 $app->bundle->js('js/views/faq-main');
 $questions = questions::by_category();
+$current_user = user::get_by("ID",get_current_user_id());
 ?>
 <faq-header>Frequently Asked Questions</faq-header>
 <?php
@@ -30,7 +31,7 @@ if (empty($questions)) {
 <li>You may ask one question per submission. If you have multiple questions, ask them separately.</li>
 <li>Your question may be rephrased before being posted in the FAQ's.</li>
 </ul>
-<text-input helper="This is optional. You can add your email to receive a notification when your question is answered." input_type="email" label="Your Email"></text-input>
+<text-input helper="This is optional. You can add your email to receive a notification when your question is answered." input_type="email" label="Your Email"><?= $current_user ? $current_user->user_email : ""; ?></text-input>
 <text-input type="multi" label="Your Question"></text-input>
 <recaptcha></recaptcha>
 <button label="Ask"></button>

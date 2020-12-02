@@ -80,6 +80,16 @@ review > review-time, reply-to > review-time {
 	font-size: 0.75rem;
 	margin-bottom: 5px;
 }
+/* Quote */
+review > quote {
+    white-space: pre-wrap;
+    font-size: 0.8rem;
+    margin-top: 15px;
+}
+review > quote::after {
+    left: 32px;
+    top: -10px;
+}
 review > review-content {
 	display: block;
 	white-space: pre-wrap;

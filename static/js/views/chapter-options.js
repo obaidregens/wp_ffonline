@@ -27,6 +27,20 @@
                     window.readFrom(_.childIndex(menu_instance.openedOn));
                 }
             }
+        }),
+        DOM.create('li',{
+            classes: ["quote"],
+            innerText: "Quote",
+            listeners: {
+                mousedown: event => {
+                    const reply_el = DOM.q('write-review > reply-to');
+                    reply_el.setAttribute("hidden","0");
+                    reply_el.setAttribute('review_id',"0");
+                    const quote_el = DOM.q('write-review > quote');
+                    quote_el.innerText = menu_instance.getCurrentSelection().trim();
+                    _.scrollTo(quote_el);
+                }
+            }
         })
     ]);
 })();

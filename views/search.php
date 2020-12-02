@@ -1,17 +1,8 @@
 <?php
 // Find Args from Url
-$query = new book_query;
-$query->args_from_url();
-$placeholder = _landing::get_type();
-$query->args = type_args($query->args,$placeholder);
-if (err::is($query->args)){
-    $app->_404();
-}
-$query->query();
 global $book_query;
-$book_query = $query;
-$tags_data = tags_data($query);
-$icf = $book_query->args['included']['fandom'] ?? [];
+$book_query = $app->book_query;
+$tags_data = tags_data($book_query);
 $fandoms = [];
 foreach(($book_query->args['included']['fandom'] ?? []) as $fandom_id ) {
     $fandoms[] = $tags_data['fandom'][$fandom_id]['name'];
@@ -21,7 +12,7 @@ $fandoms = implode('/',$fandoms);
 <script>
     window.tags_data = <?= script_json(json_encode($tags_data)); ?>;
 </script>
-<prev_ss hidden><?= ctrk_encrypt($query->args); ?></prev_ss>
+<prev_ss hidden><?= ctrk_encrypt($book_query->args); ?></prev_ss>
 
 <loader xl></loader>
 

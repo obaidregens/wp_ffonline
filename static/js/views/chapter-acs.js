@@ -71,7 +71,6 @@ document.documentElement.appendChild(DOM.create('link',{
                     click: () => {
                         DOM.q('reviews-wrapper').scrollIntoView();
                         document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
-                        document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
                     }
                 }
             }),

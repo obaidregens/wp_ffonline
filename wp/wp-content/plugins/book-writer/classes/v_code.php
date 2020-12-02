@@ -1,4 +1,5 @@
 <?php
+
 class v_code {
     public static $table = 'verification_codes';
     protected static $hours = 0.5;

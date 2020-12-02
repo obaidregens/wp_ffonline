@@ -18,3 +18,5 @@ function init_reCAPTCHA(){
         }
     }
 }
+window.expose = window.expose || {};
+window.expose.init_reCAPTCHA = init_reCAPTCHA;

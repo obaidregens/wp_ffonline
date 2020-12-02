@@ -20,9 +20,25 @@ class beta {
         $r = $wpdb->get_results($wpdb->prepare($sql,[millitime(),$current]));
         return ( !empty($r) ) || current_user_can( 'administrator' );    
     }
+    static function expired($user_id = null) {
+        if ($user_id === null) {
+            $user_id = get_current_user_id();
+        }
+        $current = (int) $user_id;
+        $table = self::$table;
+        $utable = self::$user_table;
+        $sql =
+        "SELECT * FROM $utable
+        INNER JOIN $table ON $table.ID = $utable.beta_id
+        WHERE $utable.`user_id` = %d
+        ORDER BY $table.end_time DESC";
+
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare($sql,[$current]));
+        return empty($r) ? false : $r[0];    
+    }
     static function is () {
-        global $app;
-        return $app->is_beta();
+        return defined('IS_BETA') && IS_BETA === 'TRUE';
     }
     static function new_session(array $args) {
         $args = array_replace([
@@ -35,8 +51,8 @@ class beta {
         if (trim($args['description']) === "") {
             return (new err)->add('description',"Description can't be empty");
         }
-        if (strlen($args['description']) > 400) {
-            return (new err)->add('description',"Description can't be of more than 400 characters.");
+        if (strlen($args['description']) > 5000) {
+            return (new err)->add('description',"Description can't be of more than 5000 characters.");
         }
         if (intval($args['users']) < 1) {
             return (new err)->add("users","Can't create session with no users.");
@@ -45,13 +61,14 @@ class beta {
             return (new err)->add("current","Session in progress");
         }
         $milli = millitime();
+        $end_time = roundToNextHour(($milli+intval($args['duration']))/1000)*1000;
         global $wpdb;
         $wpdb->insert(
             self::$table,[
                 'description'  => $args['description'],
                 'start_url'    => $args['start_url'],
                 'start_time'   => $milli,
-                'end_time'     => $milli+intval($args['duration'])
+                'end_time'     => $end_time
             ]
         );
         $beta_id = intval($wpdb->insert_id);

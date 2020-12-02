@@ -8,6 +8,7 @@ speak-panel {
     width: fit-content;
     width: -moz-fit-content;
     background-color: var(--background-accent);
+    box-shadow: var(--elevate-stack);
     padding: 2px 15px;
     border-radius: 200px;
     transform: scale(1.5);

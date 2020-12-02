@@ -1,4 +1,17 @@
 <?php
+function setup_book_query() {
+	$query = new book_query;
+    $query->args_from_url();
+    $placeholder = _landing::get_type();
+    $query->args = type_args($query->args,$placeholder);
+    if (err::is($query->args)){
+        $app->_404();
+    }
+	$query->query();
+	global $app;
+    $app->book_query = $query;
+}
+
 function fuzz($num) {
 	$num = intval($num);
 	if ($num === 0) {
@@ -190,7 +203,7 @@ function a_intersect($arrayOne, $arrayTwo){
     return array_flip($x);
 }
 function author_href($_post_id){
-	$book = story::get($_post_id,false);
+	$book = story::get($_post_id,false,false);
 	$_author = intval($book->post_author);
 	$a_href = "";
 	if ($_author === 37){

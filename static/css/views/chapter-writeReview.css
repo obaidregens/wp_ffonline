@@ -1,0 +1,108 @@
+/* Write Review */
+write-review {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+write-review > text-input {
+    width: 100%;
+    box-shadow: var(--elevate-stack);
+}
+write-review > text-input > label {
+    padding-left: 7px;
+}
+write-review > text-input > textarea {
+    border: none;
+    padding-left: 11px;
+}
+write-review > submission {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 0;
+    transition: height 0.3s ;
+    overflow: hidden;
+}
+write-review > submission > recaptcha {
+	margin-right: 20px;
+}
+write-review > submission > button[label="Submit"] {
+    margin-left: auto;
+}
+/* Quote */
+quote {
+    display: flex;
+    position: relative;
+    padding: 15px 10px;
+    border: 2px solid var(--theme-color);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: rgba(var(--text-color-v),0.7);
+}
+quote::before,
+quote::after {
+    position: absolute;
+    background-color: var(--background-color);
+    color: var(--theme-color);
+}
+quote::before {
+    top: -11px;
+    font-family: 'icons';
+    content: '\e958';
+    padding-right: 10px;
+    padding-left: 5px;
+}
+quote::after {
+    top: -11.5px;
+    content: "Quote";
+    left: 35px;
+    font-size: 0.95em;
+    padding-right: 5px;
+}
+quote:empty,
+write-review > quote:empty + cancel {
+    display: none;
+}
+write-review > quote + cancel {
+    padding-left: 10px;
+}
+/* Replies */
+reply-to > review, review > review {
+	margin-left: 50px;
+}
+review, reply-to {
+	position: relative;
+	display: block;
+}
+reply-to {
+	border-left: 4px solid var(--theme-color);
+    padding-left: 15px;
+}
+reply-to::before {
+    content: 'Replying to:';
+    display: block;
+    font-size: 0.9rem;
+    padding-bottom: 10px;
+    color: #9c9c9c;
+    margin-left: -20px;
+    background-color: var(--background-color);
+}
+cancel {
+    display: flex;
+    width: fit-content;
+    color: #9c9c9c;
+    font-size: 0.7rem;
+    cursor: pointer;
+    background-color: var(--background-color);
+}
+cancel:hover {
+	color: #b0afaf;
+}
+cancel::before {
+	content: 'Cancel';
+}
+reply-to > cancel {
+    margin-left: -40px;
+    padding-left: 20px;
+    padding-top: 10px;
+}

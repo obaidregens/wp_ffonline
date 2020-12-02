@@ -333,7 +333,7 @@ function run_at_activation(){
 
 	dbDelta("CREATE TABLE beta_sessions (
 		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
-		`description`		VARCHAR(500) NOT NULL ,
+		`description`		TEXT NOT NULL ,
 		`start_url`			VARCHAR(100) NOT NULL ,
 		`start_time`		BIGINT NOT NULL ,
 		`end_time`			BIGINT NOT NULL ,
@@ -356,6 +356,7 @@ function run_at_activation(){
 		`landing_id`		BIGINT UNSIGNED NOT NULL ,
 		`reply`				BIGINT UNSIGNED NOT NULL ,
 		`status`			VARCHAR(50) NOT NULL ,
+		`quote`				TEXT NOT NULL ,
 		`millitime`			BIGINT UNSIGNED NOT NULL ,
 		PRIMARY KEY (`ID`)
 	) $charset_collate;");

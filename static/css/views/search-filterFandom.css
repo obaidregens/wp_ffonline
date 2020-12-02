@@ -10,9 +10,11 @@ fandom-filter {
 fandom-filter > showing {
     width: 100%;
     display: none;
+    flex-wrap: wrap;
 }
 fandom-filter > showing.show {
     display: flex;
+    margin-top: 10px;
 }
 fandom-filter > showing.show + input {
     display: none;

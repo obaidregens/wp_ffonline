@@ -69,7 +69,7 @@ $current_user = get_userdata( get_current_user_id() );
         <nonce hidden value="<?= $nonce; ?>"></nonce>
 	    <placeholder_data hidden value="<?= $landing_key; ?>"></placeholder_data>
 	    <logged_in hidden value="<?= $is_user_logged_in ? 'true' : 'false'; ?>"></logged_in>
-		<dark-mode onclick="themes.switch();"></dark-mode>
+		<dark-mode onclick="window.expose.themes_switch();"></dark-mode>
         <header>
 			<a class="<?= $app->request === '/' ? 'active' : '' ?> logo waves-effect" href="/">
 				<?php include(MAIN_DIR . '/content/logo.svg'); ?>
@@ -90,7 +90,7 @@ $current_user = get_userdata( get_current_user_id() );
 						</dropdown>
 					</drop>
 				<?php } else { ?>
-					<a class="waves-effect" onclick="prompt_login();">Login</a>
+					<a class="waves-effect" onclick="window.expose.prompt_login();">Login</a>
 				<?php } ?>
 			</nav>
 		</header>

@@ -139,6 +139,7 @@ const collections = class {
         });
         if (code > 5) {
             new toast("An error occured");
+            return;
         }
         if (is_hidden && add) {
             new toast("Story will be hidden in your next search.");
@@ -223,3 +224,5 @@ const collections = class {
         collections.open(prev_book_id);
     }
 };
+window.expose = window.expose || {};
+window.expose.collections_edit = collections.edit;

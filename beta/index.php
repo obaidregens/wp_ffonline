@@ -5,7 +5,21 @@ if (!is_user_logged_in() && beta::is()) {
     $app->login();
 }
 if (!beta::can() && beta::is() ) {
-    $app->redirect("https://fanfiction.online/" . trim($self->request,"/"));
+    $expired = beta::expired();
+    if ($expired) {
+        $app->type = "beta-expired";
+        $app->type_id = 0;
+        $app->last_beta = $expired;
+        $app->header([
+            'title'     => construct_page_title("Invite Expired")
+        ]);
+        $app->template("/views/beta/expired");
+        $app->footer();
+        exit();
+    }
+    else {
+        $app->redirect("https://fanfiction.online/" . trim($self->request,"/"));
+    }
 }
 if (beta::is()) {
     add_filter( 'home_url', function($url,$path) {

@@ -10,7 +10,7 @@ $app->bundle->js('js/views/dash-beta');
 $current = beta::get_current();
 ?>
 <?php if (!$current) { ?>
-<text-input label="Description" maxlength="400" type="multi"></text-input>
+<text-input label="Description" maxlength="5000" type="multi"></text-input>
 <text-input label="Duration" input_type="number">12</text-input>
 <text-input label="Users" input_type="number">15</text-input>
 <text-input label="Start URL">read</text-input>
@@ -36,7 +36,7 @@ $sql = $wpdb->prepare(
 $users_visited = $wpdb->get_results($sql);
 ?>
 <h2>Beta Ongoing</h2>
-<p><?= $current['description']; ?></p>
+<p style="white-space:pre;"><?= $current['description']; ?></p>
 <overview>
 <block count="<?= count($current['users']); ?>" label="Users Invited"></block>
 <block count="<?= count($users_visited); ?>" label="Users Visited"></block>

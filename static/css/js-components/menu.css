@@ -1,9 +1,10 @@
 options-menu {
     display: flex;
+    flex-direction: column;
     position: fixed;
     min-width: 160px;
-    background-color: var(--background-color);
-    box-shadow: var(--elevate-light);
+    background-color: var(--background-accent);
+    box-shadow: var(--elevate-stack);
     user-select: none;
     z-index: 52;
     opacity: 0;
@@ -20,7 +21,7 @@ options-menu > li {
     padding: 10px;
     cursor: pointer;
     transition: background-color .2s;
-    color: var(--lightblack);
+    color: rgba(var(--text-color-v),.7);
 }
 options-menu > li:hover {
     background-color: var(--hover);
@@ -34,5 +35,9 @@ options-menu > li::before {
 }
 options-menu > li.listen::before {
     content: "\e956";
+    transform: scale(0.9);
+}
+options-menu > li.quote::before {
+    content: "\e958";
     transform: scale(0.9);
 }

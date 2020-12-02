@@ -9,6 +9,7 @@ class reviews {
             'review'        => "",
             'user_id'       => get_current_user_id(),
             'reply'         => 0,
+            'quote'         => "",
             'status'        => 'public',
             'millitime'     => millitime()
         ],$args);
@@ -28,7 +29,9 @@ class reviews {
         }
         if (intval($args['reply']) !== 0 ) {
             $reply = reviews::get($args['reply']);
-            if (!$reply || is_current_user($reply->user_id)) {
+            $chapter = get_post( $args['type_id'] );
+            $can_reply = reviews::can_reply($reply->user_id,$chapter);
+            if (!$can_reply) {
                 $e->add('reply',"Can't reply to review.");
             }
         }
@@ -65,9 +68,9 @@ class reviews {
             "ID"        => $review_id
         ]);
     }
-    protected static function build_comment($comment,$author,$chapter_author,$current_user_id) {
+    protected static function build_comment($comment,$author,$chapter,$current_user_id) {
         $comment_author = intval($author->ID);
-        $chapter_author = intval($chapter_author);
+        $chapter_author = intval($chapter->post_author);
         $current_user_id = intval($current_user_id);
         
         $Suser = [
@@ -78,6 +81,7 @@ class reviews {
         $Scomment = [
             'ID'        => intval($comment->ID),
             'content'   => $comment->review,
+            'quote'     => $comment->quote,
             'time'      => human_time_diff( intval( $comment->millitime )/1000 ),
             // 'chapter'   => [
             //     'num'       => $chapter_num ?? 0,
@@ -88,7 +92,7 @@ class reviews {
                 'ID'            => $comment_author,
                 'name'          => $comment_author === 0 ? 'Anonymous' : '@' . $author->user_login,
                 'can_delete'    => reviews::can_delete($comment),
-                'can_reply'     => $current_user_id === $chapter_author && $comment_author !== $current_user_id && $current_user_id !== 0
+                'can_reply'     => reviews::can_reply($comment_author,$chapter)
             ]
         ];
         return [
@@ -117,6 +121,7 @@ class reviews {
             "$table.`ID` AS ID",
             "$table.`type_id` AS type_id",
             "$table.`review` AS review",
+            "$table.`quote` AS quote",
             "$table.`user_id` AS user_id",
             "$table.`reply` AS reply",
             "$table.`status` AS status",
@@ -151,6 +156,14 @@ class reviews {
 
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare($sql,$prep));
+        
+        if ( beta::is() && beta::can() && is_test_story($args['chapter']) ) {
+            $exclude_users = array_unique(array_merge($args['exclude_users'],array_column($r,'user_id')));
+            arr::remove($exclude_users,get_current_user_id());
+            if ($args['exclude_users'] != $exclude_users) {
+                return self::query(array_replace($args,['exclude_users' => $exclude_users]));
+            }
+        }
 
         $args['threaded'] = (bool) $args['threaded'];
         if (!$args['threaded']) {
@@ -204,14 +217,14 @@ class reviews {
             $chapter = get_post($review->type_id);
             $chapter_author = intval($chapter->post_author);
             
-            $f = self::build_comment($review,$authors[$review->user_id],$chapter_author,$current_user_id);
+            $f = self::build_comment($review,$authors[$review->user_id],$chapter,$current_user_id);
             $comment_author = intval($review->user_id);
             $users[$comment_author] = $f['user'];
             $children = $review->replies;
             $f['comment']['replies'] = [];
             foreach ($children as $child) {
                 $f['comment']['replies'][] =
-                self::build_comment($child,$authors[$child->user_id],$chapter_author,$current_user_id)['comment'];
+                self::build_comment($child,$authors[$child->user_id],$chapter,$current_user_id)['comment'];
             }
             $reviews[] = $f['comment'];
         }
@@ -253,6 +266,20 @@ class reviews {
         }
         return false;
     }
+    static function can_reply($comment_author,$chapter) {
+        $chapter_author = intval($chapter->post_author);
+        $current_user_id = intval(get_current_user_id());
+        if ($current_user_id === 0) {
+            return false;
+        }
+        if ($comment_author === $current_user_id) {
+            return false;
+        }
+        if ($current_user_id === $chapter_author) {
+            return true;
+        }
+        return beta::is() && beta::can() && is_test_story($chapter);
+    }
     static function can_review($chapter_id_or_book_id,$logged_in = null){
         if ($logged_in === null) {
             $logged_in = is_user_logged_in();
@@ -263,6 +290,9 @@ class reviews {
         }
         if (! in_array($chapter_or_book->post_type,['chapter','book'])){
             return false;
+        }
+        if (is_test_story($chapter_or_book) && beta::is() && beta::can()) {
+            return true;
         }
         $book_id = $chapter_or_book->post_type === 'book' ? $chapter_or_book->ID : $chapter_or_book->post_parent;
         $book = $chapter_or_book->post_type === 'book' ? story::get($chapter_or_book,false) : story::get($book_id,false);

@@ -41,15 +41,20 @@ class notifications {
         switch ($row->notification_type) {
             case 'beta_invite':
                 global $wpdb;
-                $r = $wpdb->get_results($wpdb->prepare("SELECT start_url FROM beta_sessions WHERE ID = %d",[$row->type_of_id]));
+                $r = $wpdb->get_results($wpdb->prepare("SELECT start_url,end_time FROM beta_sessions WHERE ID = %d",[$row->type_of_id]));
                 if (empty($r)) {
                     return null;
                 }
+                $beta = $r[0];
                 $user = user::get_by("ID",$row->user_id);
                 $username = "@".$user->user_login;
+
+                $ends = new DateTime( );
+                $ends->setTimestamp( intval($beta->end_time)/1000 );
                 return [
-                    'message'   => "Hi $username, you've been invited to beta test a new feature before it's release. Interested?",
-                    'link'      => $r[0]->start_url
+                    'message'       => "We're testing a new feature to perfect it before release, and we'd like if you could help us with that.",
+                    'description'   => "This invite will expire "  . $ends->format("l jS F Y") . " at " . $ends->format("g:i A e"),
+                    'link'          => $beta->start_url
                 ];
             case 'add_to_collection':
                 $story = story::get($row->type_of_id,false);
@@ -72,6 +77,7 @@ class notifications {
                 }
                 return [
                     'message'   => $message,
+                    'description'   => "",
                     'link'      => collection_helpers::link($collection) ,
                 ];
             case 'story_update':
@@ -82,16 +88,19 @@ class notifications {
                 $chapter_num = get_post_meta( $row->type_of_id, 'chapter_order', true );
                 return [
                     'message'   => '"' . $story->post_title . '" just got a new chapter!',
+                    'description'   => "",
                     'link'      => $home_url . "/story/" . $story->ID . '/' . $chapter_num ,
                 ];
             case 'account_verified':
                 return [
                     'message'   => "You've been verified. Start importing stories from FFN now!",
+                    'description'   => "",
                     'link'      => $home_url ."/import-stories"
                 ];
             case 'stories_imported':
                 return [
                     'message'   => "Your stories have been imported.",
+                    'description'   => "",
                     'link'      => $home_url ."/my-stories"
                 ];
             case 'chapter_review':
@@ -108,17 +117,20 @@ class notifications {
                 }
                 return [
                     'message'   => $message,
+                    'description'   => "",
                     'link'      => $link
                 ];
             case 'review_reply':
                 $comment = reviews::get($row->type_by_id);
                 return [
                     'message'   => "The author replied to your review.",
+                    'description'   => "",
                     'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $comment->user_id
                 ];
             case 'chapter_vote':
                 return [
                     'message'   => "Your chapter got another vote!",
+                    'description'   => "",
                     'link'      => get_permalink( $row->type_of_id ),
                 ];
             case 'user_update':
@@ -126,17 +138,20 @@ class notifications {
                 $udisplay = "@" . $user->user_login;
                 return [
                     'message'   => $udisplay . " just posted an update!",
+                    'description'   => "",
                     'link'      => $home_url . "/" . $udisplay,
                 ];
             case 'follow_user':
                 return [
                     'message'   => "You got a new follower!",
+                    'description'   => "",
                     'link'      => get_author_posts_url( $row->user_id ),
                 ];
             case 'follow_collection':
                 $collection = collection::get_by('ID',$row->type_of_id);
                 return [
                     'message'   => "Your " . $collection->type . " collection " . $collection->title . " just got a new follower!",
+                    'description'   => "",
                     'link'      => collection_helpers::link( $collection ),
                 ];
             default:
@@ -164,6 +179,8 @@ class notifications {
             }
             $n['time'] = intval(floatval($row->timestamp)*1000);
             $n['read'] = intval($row->timestamp) < $lastOpen;
+            $n['message'] .= $n['description'] === "" ? "" : ("\n\n" . $n['description']);
+            unset($n['description']);
             if (! $n['read']) {
                 $unread += 1;
             }

@@ -1,4 +1,18 @@
 class _ {
+    static elNode (text_or_el_node) {
+        return text_or_el_node.nodeType === 1 ? text_or_el_node : text_or_el_node.parentElement;
+    }
+    static fitHeight (el) {
+        const prevHeight = el.style.height;
+        el.style.height = 'auto';
+        const newHeight = el.scrollHeight;
+        el.style.height = prevHeight;
+        setTimeout(() => {
+            window.requestAnimationFrame(() => {
+                el.style.height = newHeight + 'px';
+            });
+        });
+    }
     static childIndex (el) {
         let ii = 0;
         while (el.previousElementSibling) {
@@ -10,7 +24,7 @@ class _ {
     static scrollTo (el) {
         const ht = DOM.q('html');
         el.scrollIntoView();
-        ht.scrollTop = ht.scrollTop - 55;
+        ht.scrollTop = ht.scrollTop - 60;
     }
     static clone (obj) {
         return JSON.parse(JSON.stringify(obj));
@@ -119,15 +133,20 @@ class _ {
             console.warn("Could not select text in node: Unsupported browser.");
         }
     }
-    static copyText(text){
+    static copyText(text,do_toast = false){
         const copy_bubble = document.createElement('copy_bubble');
         copy_bubble.innerText = text;
         document.documentElement.appendChild(copy_bubble);
         _.selectText(copy_bubble);
         document.execCommand("copy");
         copy_bubble.remove();
+        if (do_toast) {
+            new toast("Copied");
+        }
     }
 }
+window.expose = window.expose || {};
+window.expose.copyText = _.copyText;
 const _a = class {
     static intersect(array1,array2) {
         let loop_arr = array1;

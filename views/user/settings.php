@@ -25,5 +25,5 @@ $change_username = $change_username_meta === "" ? 1 : (intval($change_username_m
     <span>You have <strong><?= $change_username; ?></strong> available username change.</span>
     <button <?= $change_username > 0 ? "" : "disabled"; ?> label="Change"></button>
 </collapsible>
-<switch <?= user_settings::get('features') ? "checked" : "" ?> setting="features" label="Notify me of surveys & polls for upcoming features."></switch>
+<switch <?= user_settings::get('features') ? "checked" : "" ?> setting="features" label="Participate in polls & beta-testing for upcoming features."></switch>
 <switch <?= follow::exists('user',user::get_by('login','admin')->ID) ? 'checked' : ''; ?> setting="news" label="Notify of news & new features."></switch>

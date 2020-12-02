@@ -173,7 +173,7 @@ function api_beta_session_create() {
         'start_url'     => "https://beta.fanfiction.online/" . ltrim($d['start_url'],'/'),
         'users'         => intval($d['users']),
         'custom'        => arr::non_empty(explode(',',$d['custom'])),
-        'duration'      => intval($d['duration'])*1000*1*60*60
+        'duration'      => floatval($d['duration'])*1000*1*60*60
     ]);
     if (err::is($beta_id)) {
         return ['code'=>9,'beta_id'=>$beta_id->array()];

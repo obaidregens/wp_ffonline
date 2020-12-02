@@ -8,6 +8,7 @@ beta-bar {
     z-index: 53;
     height: 30px;
 }
+
 @media only screen and (max-width: 500px) {
     beta-bar {
         top: 0;
@@ -42,6 +43,10 @@ beta-bar > button::before {
     font-family: 'icons';
     content: "\e900";
     transform: scale(1.6);
+}
+/* About */
+popup[about] > p {
+    white-space: break-spaces;
 }
 /* Feedback */
 popup[feedback] button{

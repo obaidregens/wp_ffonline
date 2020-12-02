@@ -1,4 +1,5 @@
 const offlineAPI = async args => {
+    const is_disabled = args.disabled || false;
     // Extract
     const bid = args.book_id;
     const b_title = args.title;
@@ -23,6 +24,9 @@ const offlineAPI = async args => {
         urls.push("/story/" + bid + "/" + i);
     }
     const listener_click = async ({target}) => {
+        if (is_disabled) {
+            return new toast("Story can't be saved offline.");
+        }
         const existing = JSON.parse(await idbKeyval.get('offline_stories')) || {stories: {}};
         const cache = await caches.open('offline');
         b_elems.forEach( el => el.setAttribute('disabled','') );

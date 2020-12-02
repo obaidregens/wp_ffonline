@@ -54,10 +54,17 @@ function api_add_to_collection(){
     required_login();
     required_params('book_id','collection_id','add');
     $d = &$_POST['data'];
+    $story = story::get($d['book_id'],false);
+    if (! $story) {
+        return ['code'=>7];
+    }
+
     $add = $d['add'] === true;
     $collection = collection::get_by('ID',$d['collection_id']);
     if (!$collection || !is_current_user($collection->author)) {
-        return ['code'=>10];
+        return [
+            'code' => 10,
+        ];
     }
     ob_start();
     $return = $add ?

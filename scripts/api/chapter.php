@@ -2,7 +2,19 @@
 function api_search_book_contents(){
     $s = $_POST['data']['s'];
     $chapter = get_post(intval($_POST['data']['chapter_id']));
-    $book = story::get($chapter->post_parent,false);
+    if (beta::is() && beta::can() && is_test_story($chapter->post_parent) ) {
+        $book = get_post($chapter->post_parent);
+    }
+    else {
+        $book = story::get($chapter->post_parent,false);
+        if (!$book) {
+            return [
+                'code'      => 9,
+                'results'   => [],
+                'exceeded'  => false
+            ];
+        }    
+    }
     $link = get_permalink( $book );
     $results = [];
     if (stripos($book->post_title,$s) !== false){
@@ -49,6 +61,7 @@ function api_search_book_contents(){
         }
     }
     return [
+        'code'      => 1,
         'results'   => $results,
         'exceeded'  => $exceeded ?? false
     ];

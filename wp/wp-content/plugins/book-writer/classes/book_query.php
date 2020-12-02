@@ -27,7 +27,7 @@ class book_query{
 
         ),
         'search'        => '',
-        'author' => '',
+        'author'        => '',
         'order'         => 'DESC',
         'orderby'       => 'updated',
         'words'         => array(
@@ -114,6 +114,7 @@ class book_query{
         foreach ($results as $value) {
             $results_[$value->_key . '=' . $value->_value] = json_or_serialize_decode($value->ids);
         }
+        $results = null;
         // Words
         $included = array_merge(
             array_diff(
@@ -141,6 +142,7 @@ class book_query{
             }
         }
         $included = array_diff($included,$excluded);
+        $excluded = null;
         // Search
         if ($args['search'] !== ''){
             $search = $args['search'];
@@ -186,6 +188,7 @@ class book_query{
             );
             $included = a_intersect($included,array_column($search_result,'ID'));
         }
+        $search_result = null;
         
         $pre_sorted = $included;
         // Sort
@@ -210,6 +213,8 @@ class book_query{
         $this->is_default = count($pre_sorted) === count($results_['words=0']);
         $this->args = $args;
         $this->ids = $included;
+        $pre_sorted = null;
+        $included = null;
         $this->count = count($this->ids);
         $this->page = 1;
         if ($args['per_page'] !== "all") {
@@ -322,6 +327,21 @@ class book_query{
     }
     function has(){
         return (isset($this->books) && ! empty($this->books));
+    }
+    function is_only_fandom() {
+        if ($this->args == self::$default_args) {
+            return false;
+        }
+        $clone = $this->args;
+        unset($clone['included']['fandom']);
+        if (empty($clone['exclude_ids'])) {
+            unset($clone['exclude_ids']);
+        }
+        ?><style>pre{white-space:break-spaces !important;}</style><?php
+        if ($clone != self::$default_args){
+            return false;
+        }
+        return array_values($this->args['included']['fandom']);
     }
 }
 class book_query_cache extends book_query {

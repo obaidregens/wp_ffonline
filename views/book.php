@@ -41,7 +41,7 @@ $is_user_logged_in = is_user_logged_in(  );
             <label>Chapter Index</label>
             <collapsible>
                 <?php
-                $app->template('subviews/chapter-index');
+                $app->template('/subviews/chapter-index');
                 ?>
             </collapsible>
         </chapters>

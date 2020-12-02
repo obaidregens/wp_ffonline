@@ -347,3 +347,5 @@ function prompt_email_code(existing_data) {
 	init_reCAPTCHA();
 	popup.open(code_popup);
 }
+window.expose = window.expose || {};
+window.expose.prompt_login = prompt_login;

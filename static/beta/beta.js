@@ -52,7 +52,7 @@
                 innerText: "What's in this beta?"
             }),
             DOM.create("p",{
-                innerText: description
+                innerHTML: description
             })
         ]
     });

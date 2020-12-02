@@ -90,10 +90,11 @@ foreach ($by_users as $user_id => $notifications) {
     if (empty($prioritized)) {
         $mail->subject = "You have $more_messages new message$msg_s!";
         $mail->txtparams = [
-            '###USERNAME###'            => "@" . $user->user_login,
-            '###NOTIFICATION###'        => $mail->subject,
-            '###NOTIFICATION_LINK###'   => "https://fanfiction.online/inbox",
-            '###MORE_NOTIFICATIONS###'  => "",
+            '###USERNAME###'                    => "@" . $user->user_login,
+            '###NOTIFICATION###'                => $mail->subject,
+            '###NOTIFICATION_DESCRIPTION###'    => "",
+            '###NOTIFICATION_LINK###'           => "https://fanfiction.online/inbox",
+            '###MORE_NOTIFICATIONS###'          => "",
         ];
     }
     else {
@@ -117,10 +118,11 @@ foreach ($by_users as $user_id => $notifications) {
             $more_str .= 'waiting for you.';
         }
         $mail->txtparams = [
-            '###USERNAME###'            => "@" . $user->user_login,
-            '###NOTIFICATION###'        => $notification['message'],
-            '###NOTIFICATION_LINK###'   => $notification['link'],
-            '###MORE_NOTIFICATIONS###'  => $more_str,
+            '###USERNAME###'                    => "@" . $user->user_login,
+            '###NOTIFICATION###'                => $notification['message'],
+            '###NOTIFICATION_LINK###'           => $notification['link'],
+            '###NOTIFICATION_DESCRIPTION###'    => $notification['description'],
+            '###MORE_NOTIFICATIONS###'          => $more_str,
         ];    
     }
     $mail->setTemplate('notification');

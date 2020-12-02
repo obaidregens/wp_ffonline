@@ -1,4 +1,5 @@
 offlineAPI({
+    disabled: DOM.q('chapter').classList.contains('test-story'),
     book_id,
     title: DOM.q('book-info > a.title').innerText,
     author: DOM.q('book-info > author > a').innerText,

@@ -6,4 +6,4 @@ $app->bundle->js('/js/views/updates-add');
 $app->bundle->js('/js/views/updates-content');
 
 $app->updates_count = 100;
-$app->template('subviews/updates');
+$app->template('/subviews/updates');

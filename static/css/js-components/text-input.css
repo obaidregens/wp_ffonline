@@ -24,6 +24,8 @@ text-input > textarea {
     height: 43px;
 }
 text-input > label {
+    user-select: none;
+    -moz-user-select: none;
     pointer-events: none;
     color: var(--darkgrey);
     position: absolute;

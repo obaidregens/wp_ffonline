@@ -21,12 +21,12 @@
         --sidenav-width: 70vw;
     }
 }
-body {
+/* body {
     transition: transform .3s;
 }
 body.sidenav-collapse {
     transform: translateX(calc(var(--sidenav-width) * -1));
-}
+} */
 sidenav {
     overflow: auto;
     width: var(--sidenav-width);
@@ -37,12 +37,12 @@ sidenav {
     background-color: var(--background-accent);
     z-index: 90;
     /* Transition */
-    transform: scaleX(0);
+    transform: translateX(100%);
     transition: transform .3s;
     transform-origin: right;
 }
 sidenav.show {
-    transform: scaleX(1);
+    transform: translateX(0);
 }
 /* Overlay */
 sidenav-overlay {

@@ -34,7 +34,7 @@ $draft_id = $draft === false ? 'new' : $draft->ID;
     <button style="display:block;margin-left: auto;margin-top: 20px;" label="Post"></button>
 <?php } ?>
 <?php if (! is_user_logged_in()) { ?>
-    <important>Draft is not being saved. <a onclick="prompt_login();">Login</a> to save your drafts.</important>
+    <important>Draft is not being saved. <a onclick="window.expose.prompt_login();">Login</a> to save your drafts.</important>
 <?php } ?>
 <save-time></save-time>
 <drafts-header>

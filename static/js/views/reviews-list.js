@@ -1,5 +1,3 @@
-"use strict";
-
 function Checkbox(props) {
   return /*#__PURE__*/React.createElement("label", {
     class: "checkbox"
@@ -36,8 +34,7 @@ function deleteReview(review_id) {
         chapter_id,
         review_id
       }
-    })
-    .then(response => {
+    }).then(response => {
       if (response.code > 5) {
         new toast('An error occured.');
       }
@@ -69,8 +66,9 @@ function Review(props) {
     review_id: props.ID
   }, /*#__PURE__*/React.createElement("a", {
     "tooltip-top": props.self ? "Story Author" : null,
+    href: props.name === "Anonymous" ? null : "/" + props.name,
     className: "author" + (props.self ? ' book-author' : '')
-  }, props.name), /*#__PURE__*/React.createElement("review-time", null, props.time), /*#__PURE__*/React.createElement("review-content", null, props.content), /*#__PURE__*/React.createElement(Dropdown, {
+  }, props.name), /*#__PURE__*/React.createElement("review-time", null, props.time), /*#__PURE__*/React.createElement("quote", null, props.quote), /*#__PURE__*/React.createElement("review-content", null, props.content), /*#__PURE__*/React.createElement(Dropdown, {
     right: true,
     children: fill
   }), props.replies);
@@ -85,6 +83,7 @@ const map_reviews = reviewObj => {
     user_id: reviewObj.user.ID,
     time: reviewObj.time,
     content: reviewObj.content,
+    quote: reviewObj.quote,
     can_delete: reviewObj.user.can_delete,
     can_reply: reviewObj.user.can_reply,
     replies: (reviewObj.replies || []).map(map_reviews)
@@ -103,8 +102,7 @@ function callReviews(opts) {
       data: Object.assign(opts, {
         chapter_id
       })
-    })
-    .then(response => {
+    }).then(response => {
       if (response.code && response.code > 5) {
         resolve([], []);
         return;

@@ -39,9 +39,9 @@ $collections = collection::query($args);
 <collections-container class="grid"><?php
 foreach ($collections as $collection) {
     $app->collection = $collection;
-    $app->template('subviews/collection');
+    $app->template('/subviews/collection');
 }
 if (empty($collections)) {
-    $app->template('subviews/no-collections');
+    $app->template('/subviews/no-collections');
 }
 ?></collections-container>

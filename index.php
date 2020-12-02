@@ -9,22 +9,17 @@ define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
 
 require_once(__DIR__ . '/php_includes/mail/mail.php');
-require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
+// require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
 
 class Router {
     public $request;
     private $r;
-    protected $is_beta;
     private $called = [];
     function __construct(){
         $this->request = explode('?',strtolower($_SERVER['REQUEST_URI']))[0];
         $this->request = $this->request === '' ? '/' : $this->request;
         $this->r = arr::non_empty(explode('/',$this->request));
         $this->request = '/' . implode('/',$this->r);
-        $this->is_beta = ($_SERVER['HTTP_HOST'] ?? "") === "beta.fanfiction.online";
-    }
-    function is_beta() {
-        return $this->is_beta;
     }
     function listen($dyno_url,$func,bool $beta = false){
         if (defined("NO_ROUTES") && NO_ROUTES === true) {
@@ -165,7 +160,7 @@ global $app;
 $app = new Router();
 
 $app->listen('/api',function($self){
-    if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+    if ($_SERVER['REQUEST_METHOD'] !== "POST" && !DEV()) {
         return;
     }
     include('scripts/api.php');
@@ -201,14 +196,36 @@ $app->listen('/news',function($self){
 $app->listen('/read',function($self){
     $self->type = 'read';
     $self->type_id = 0;
+
+    setup_book_query();
+
+    $title = "Read Fanfiction Online";
+    $desc =  "Discover & read the top fanfics free on Fanfiction Online.";
+    $fandom = $self->book_query->is_only_fandom();
+    $fandom_count = count($fandom);
+    if ($fandom && $fandom_count === 1) {
+        $term = get_term( $fandom[0], 'category' );
+        $title = "Read " . $term->name . " Fanfictions on Fanfiction Online";
+        $desc = "Discover & read the top " . $term->name . " fanfics on Fanfiction Online.";
+    }
+    if ($fandom && $fandom_count > 1) {
+        $fandom_name = "";
+        foreach ($fandom as $k => $v) {
+            $term = get_term( $v, 'category' );
+            $fandom_name .= $k === 0 ? "" : (($k === $fandom_count-1) ? " and " : ", ");
+            $fandom_name .= $term->name;
+        }
+        $title = construct_page_title("Read " . $fandom_name . " Crossovers");
+        $desc = "Discover & read the top $fandom_name crossover fanfictions on Fanfiction Online.";
+    }
     $self->header([
-        'title'         => "Read Fanfiction Online",
-        'description'   => "Discover & read the top fanfics free on Fanfiction Online."
+        'title'         => $title,
+        'description'   => $desc
     ]);
     $self->template('/views/search');
     $self->footer();
     exit();
-},true);
+});
 $app->listen('/dash',function($self){
     $self->admin();
     $self->type = 'dash-home';
@@ -274,7 +291,7 @@ $app->listen('/dash/beta',function($self){
     $self->template('/views/dash/beta');
     $self->footer();
     exit();
-});
+},true);
 $app->listen('/manage',function($self){
     $self->admin();
     $self->type = 'manage';
@@ -299,6 +316,41 @@ $app->listen('/story/:story/',function($self){
         'description'   => $story->post_excerpt
     ]);
     $self->template('/views/book');
+    $self->footer();
+    exit();
+});
+$app->listen('/test-story',function($self){
+    if (!beta::is()) {
+        $self->_404();
+    }
+    global $wpdb;
+    $r = $wpdb->get_results(
+        "SELECT chapter.ID,chapter.post_parent FROM wp_posts as book
+        INNER JOIN wp_users as user ON user.ID = book.post_author
+        INNER JOIN wp_posts as chapter ON book.ID = chapter.post_parent
+        WHERE user.user_login = 'admin'
+        AND chapter.post_type = 'chapter'
+        AND book.post_type = 'book'
+        AND book.post_status = 'draft'
+        AND book.post_title = 'Test Story'"
+    );
+    if (empty($r)) {
+        $self->_404();
+    }
+    $chapter = get_post($r[0]->ID);
+    $story = get_post($r[0]->post_parent);
+
+    $self->type = 'test-chapter';
+    $self->type_id = intval($chapter->ID);
+
+    $self->story = $story;
+    $self->chapter = $chapter;
+
+    $self->header([
+        'title'         => construct_page_title("Test Story"),
+        'description'   => ""
+    ]);
+    $self->template('/views/chapter');
     $self->footer();
     exit();
 },true);
@@ -339,7 +391,7 @@ $app->listen('/story/:story/:chapter',function($self){
     $self->template('/views/chapter');
     $self->footer();
     exit();
-},true);
+});
 // Collections
 $app->listen('/collections',function($self){
     $self->type = 'collection-index';
@@ -362,6 +414,9 @@ $app->listen('/collections/:collection',function($self){
     }
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
+
+    setup_book_query();
+
     $self->collection = $collection;
     $followed = count(collection_follow::query_by('type_id',$collection->ID));
     $and_is_followed = "";
@@ -424,6 +479,9 @@ $app->listen('/@:user/collections/:collection',function($self){
 
     $self->type = 'collection';
     $self->type_id = intval($collection->ID);
+
+    setup_book_query();
+
     $self->collection = $collection;
     $self->header([
         'title'         => $defined_title ?? construct_page_title($collection->title,"Collection")
@@ -444,6 +502,11 @@ function author_template_load($template){
     }
     $app->type = $template === 'about' ? 'author' : 'author-' . $template;
     $app->type_id = intval($user->ID);
+
+    if ($template === "stories") {
+        setup_book_query();
+    }
+
     $app->user = $user;
     $title = $template === 'about' ?
         construct_page_title('@' . $user->user_login) :

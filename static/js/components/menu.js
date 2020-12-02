@@ -7,7 +7,6 @@ class menu {
         this.hook.addEventListener("contextmenu", event => {
             event.preventDefault();
             this.openedOn = this.getClosestElem(event.x,event.y);
-            console.log(this.openedOn);
             const {x,y} = this.getPosition(event);
             this.menu.style.top = y + 'px';
             this.menu.style.left = x + 'px';
@@ -26,9 +25,21 @@ class menu {
         const yFrame = window.innerHeight;
         return {x: Math.min(x,xFrame-elWidth),y: Math.min(y,yFrame-elHeight)};
     }
+    getCurrentSelection(para_el) {
+        para_el = para_el || this.openedOn;
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed === true) {
+            return para_el.textContent;
+        }
+        const range = sel.getRangeAt(0);
+        const commonAncestor = range.commonAncestorContainer;
+        if (!this.hook.contains(commonAncestor)) {
+            return para_el.textContent;
+        }
+        return sel.toString();
+    }
     getClosestElem(x,y) {
         let el = document.elementFromPoint(x,y);
-        console.log(el);
         while (el.tagName === "CONTENT") {
             x -= 10;
             y -= 10;

@@ -51,11 +51,13 @@ function Review (props) {
         <review review_id={props.ID}>
             <a
             tooltip-top={props.self ? "Story Author" : null}
+            href={props.name === "Anonymous" ? null : "/" + props.name}
             className={"author" + (props.self ? ' book-author' : '') }
             >
                 {props.name}
             </a>
             <review-time>{props.time}</review-time>
+            <quote>{props.quote}</quote>
             <review-content>{props.content}</review-content>
             <Dropdown right children={fill}/>
             {props.replies}
@@ -72,6 +74,7 @@ const map_reviews = reviewObj => {
         user_id={reviewObj.user.ID}
         time={reviewObj.time}
         content={reviewObj.content}
+        quote={reviewObj.quote}
         can_delete={reviewObj.user.can_delete}
         can_reply={reviewObj.user.can_reply}
         replies={(reviewObj.replies || []).map(map_reviews)}

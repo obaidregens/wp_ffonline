@@ -18,4 +18,4 @@ pre {
 <li>Go to Post -> New Work</li>
 <li>Scroll to "Work Text" at the bottom and paste HTML there.</li>
 </ol>
-<pre onclick="_.copyText(this.innerText);new toast('Copied');" ><?= htmlspecialchars(drafts_json::output_html($app->draft->content)); ?></pre>
+<pre onclick="window.expose.copyText(this.innerText,true);" ><?= htmlspecialchars(drafts_json::output_html($app->draft->content)); ?></pre>

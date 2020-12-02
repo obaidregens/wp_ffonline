@@ -11,6 +11,8 @@ $app->bundle->css('css/components/slider');
 $app->bundle->css('css/views/chapter-index');
 $app->bundle->css('css/views/chapter-main');
 $app->bundle->css('css/views/chapter-reviews');
+$app->bundle->css('css/views/chapter-writeReview');
+$app->bundle->js('js/views/chapter-reviews');
 $app->bundle->js('js/views/chapter-main');
 $app->bundle->css('css/views/chapter-acs');
 $app->bundle->js('js/views/chapter-acs');
@@ -47,8 +49,9 @@ $query = (new WP_Query(array(
 	'post_parent__in'   => array($book->ID)
 )))->posts;
 $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
+$is_test = $app->type === "test-chapter";
 ?>
-<chapter chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
+<chapter class="<?= $is_test ? "test-story" : ""; ?>" chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
 	<chapter-header tabindex="1" >
 		<book-info book_id="<?= $book->ID; ?>">
 			<a class="title" href="<?= get_permalink( $book->ID ); ?>"><?= htmlspecialchars($book->post_title); ?></a>
@@ -62,24 +65,28 @@ $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
 	<book-options>
 		<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
-		<button class="book-collections"></button>
-		<button class="book-share"></button>
-		<button class="book-offline"></button>
+		<button <?= $is_test ? "disabled" : "" ?> class="book-collections"></button>
+		<button <?= $is_test ? "disabled" : "" ?> class="book-share"></button>
+		<button <?= $is_test ? "disabled" : "" ?> class="book-offline"></button>
 	</book-options>
 </chapter>
-<reviews-wrapper></reviews-wrapper>
 <?php if ( reviews::can_review($chapter->ID)  ){	?>
 	<write-review>
 		<reply-to hidden review_id="0"></reply-to>
-		<text-input type="multi" label="Write Review"></text-input>
-		<reCAPTCHA></reCAPTCHA>
-		<button label="Submit"></button>
+		<quote></quote>
+		<cancel></cancel>
+		<text-input type="multi" label="Leave a review"></text-input>
+		<submission>
+			<reCAPTCHA></reCAPTCHA>
+			<button label="Submit"></button>
+		</submission>
 	</write-review>
 <?php }	else if ($comments_open && ! $is_user_logged_in) { ?>
-	<a onclick="prompt_login();">Anonymous reviews have been disabled. Login to review.</a>
+	<a onclick="window.expose.prompt_login();">Anonymous reviews have been disabled. Login to review.</a>
 <?php }	else if (! $comments_open) { ?>
 	<text>Reviews are closed.</text>
 <?php } ?>
+<reviews-wrapper></reviews-wrapper>
 <popup class="chapter-index">
 	<?= $app->template('/subviews/chapter-index'); ?>
 </popup>

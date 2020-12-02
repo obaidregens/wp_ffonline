@@ -21,7 +21,7 @@ if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 <p>Verify yourself as the author to easily <a href="/import-stories">import</a> your stories from other sites.</p>
 <ol>
 <?php if (! $logged_in) { ?>
-<li>Create an account on Fanfiction Online. Or if you already have one, <a onclick="prompt_login()">login</a>.</li>
+<li>Create an account on Fanfiction Online. Or if you already have one, <a onclick="window.expose.prompt_login()">login</a>.</li>
 <li>Visit this <a href="/verify">page</a>.</li>
 <?php } ?>
 <li>

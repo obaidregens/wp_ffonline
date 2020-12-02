@@ -49,6 +49,7 @@ for ($i=2; $i <= $num_pages; $i++) {
         'hourly'
     );
 }
+$book_query = null;
 
 // Collection Page
 $collections_all = collection::query([
@@ -69,10 +70,27 @@ if (!empty($collections_all)) {
 $xml .= '</urlset>';
 file_put_contents ($dir . '/sitemap-general.xml',$xml);
 
+$xml = '<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+// Fandoms
+$fandoms = array_column($wpdb->get_results("SELECT `_value` FROM search_cache WHERE _key = 'fandom'"),'_value');
+foreach ( $fandoms as $fandom_id ) {
+    $xml .= url_field(
+        u("/read?fandom_included=$fandom_id"),
+        $last_updated,
+        'hourly'
+    );
+}
+$fandoms = null;
+$xml .= '</urlset>';
+file_put_contents($dir . '/sitemap-fandoms.xml',$xml);
+
 $book_query = new book_query( array(
     'per_page'		 => 100,
 ) );
 $num_pages = $book_query->pages;
+$book_query = null;
 for ($i=1; $i <= $num_pages; $i++) {
     $file = $dir . '/sitemap-story-' . $i . '.xml';
     if (file_exists($file) && (time() - filemtime($file)) < $cache_time ) {
@@ -103,6 +121,7 @@ for ($i=1; $i <= $num_pages; $i++) {
     $xml .= '</urlset>';
     file_put_contents ($file,$xml);
 }
+$books = null;
 
 $total_num = count($collections_all);
 $num_pages = intval(($total_num/100)+1);
@@ -128,8 +147,10 @@ for ($i=1; $i <= $num_pages; $i++) {
     $xml .= '</urlset>';
     file_put_contents ($file,$xml);
 }
+$collections = null;
+$collections_all = null;
 
-//Users
+// Users
 $users = new WP_User_Query( array(
     'number'    => 1,
     'paged'     => 1

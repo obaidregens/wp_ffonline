@@ -53,7 +53,10 @@ def main():
         unzip = input("Replace Content?").lower() == "y"
         if unzip:
             unzip = input("Sure?").lower() == "y"
-
+        if unzip:
+            replace_with = ""
+            while replace_with not in ["beta","main"]:
+                replace_with = input("beta or main?")
 
     with open(static_path + "mix.json", "r",encoding="utf8") as dump:
         mix_ref = json.loads(dump.read())
@@ -93,7 +96,7 @@ def main():
         if urls == False:
             continue
         # Minify JS
-        cmd = "terser " + " ".join(urls["js"]) + " --compress --mangle --output " + current_path + "temp.js"
+        cmd = "terser " + " ".join(urls["js"]) + " --enclose --compress --mangle --output " + current_path + "temp.js"
         subprocess.call(cmd,shell=True)
         # Minify CSS
         css_input = ""
@@ -199,18 +202,27 @@ def main():
         subprocess.call(cmd,shell=True)
         print("Uploaded")
         if unzip:
+            main_app = "beta"
+            static_app = "static_beta"
+            if replace_with == "main":
+                main_app = "fanfiction_online"
+                static_app = "static"
+
             ssh_connection = "ssh " + host 
             cmds = [
-                "rm -r " + upload_to + "fanfiction_online/content",
-                "rm -r " + upload_to + "static/*",
-                "unzip " + upload_to + "static.zip" + " -d " + upload_to + "static/",
-                "unzip " + upload_to + "content.zip" + " -d " + upload_to + "fanfiction_online/",
+                "rm -r -f " + upload_to + main_app + "/content",
+                "rm -r -f " + upload_to + static_app + "/*",
+                "unzip " + upload_to + "static.zip" + " -d " + upload_to + static_app + "/",
+                "unzip " + upload_to + "content.zip" + " -d " + upload_to + main_app + "/",
                 "rm " + upload_to + "content.zip",
                 "rm " + upload_to + "static.zip",
                 "sudo chown -R runcloud:runcloud /home/runcloud/webapps/fanfiction_online",
-                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/static"
+                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/static",
+                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/beta",
+                "sudo chown -R runcloud:runcloud /home/runcloud/webapps/static_beta"
             ]
             full_cmd = ssh_connection + ' "' + " && ".join(cmds) + '"'
+            print(full_cmd)
             subprocess.call(full_cmd,shell=True)
             print("Replaced")
     
