@@ -10,7 +10,7 @@ $formatted = $ends->format("l jS F Y") . " at " . $ends->format("g:i A e");
 
 <script>
 window.addEventListener('load',() => {
-    const time_el = DOM.q('time');
+    const time_el = document.querySelector('time');
     time_el.innerText = _t.local(new Date(parseInt(time_el.getAttribute('stamp'))))
 });
 </script>

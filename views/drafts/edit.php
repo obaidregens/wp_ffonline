@@ -1,8 +1,8 @@
 <?php
 $bundle = new bundle('drafts-editSlate-ps');
 $bundle->mix('react');
+$bundle->mix('isHotkey');
 $bundle->mix('slate');
-$bundle->js('external/slate/isHotkey');
 $app->bundle = global_bundle('drafts-edit');
 $app->bundle->js('external/timeago/timeago');
 $app->bundle->css('css/components/notices');

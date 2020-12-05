@@ -14,7 +14,7 @@ function login_only(){
 	if(! is_user_logged_in()){
         ?><script>
         window.onload = function(){
-            prompt_login();
+            window.expose.prompt_login();
             document.querySelector('popup-overlay').style.pointerEvents = 'none';
         }
         </script><?php

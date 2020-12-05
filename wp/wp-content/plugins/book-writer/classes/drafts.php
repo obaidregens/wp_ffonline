@@ -398,7 +398,7 @@ class drafts_json extends drafts {
             }
             $json[] = $block;
         }
-        return (json_encode($json));
+        return json_encode($json);
     }
     public static function read($json) {
         $create_span_draft = function($leaf) {
@@ -627,7 +627,7 @@ class draft_chapters extends drafts {
             return false;
         }
         $json = drafts_json::toJSON($chapter->post_content);
-        draft_revision::push($draft_id,$json);
+        draft_revision::push($draft_id,json_decode($json,true));
         return $draft_id;
     }
 }

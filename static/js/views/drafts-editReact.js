@@ -30,7 +30,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
   } = SlateHyperscript;
   const SlateEl = SlateReact.Slate; // Define our own custom set of helpers.
 
-  const isHot = isHotkey.isHotkey;
+  const isHot = window.isHotkey.isHotkey;
   const Tool = {
     marks: ["bold", "italic"],
     blocks: ["seperator", "paragraph", "center"],

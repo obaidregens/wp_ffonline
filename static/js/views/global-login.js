@@ -36,13 +36,13 @@ function prompt_login() {
 	const signup_btn = DOM.create('a',{
 		attributes: {
 			label: "Signup",
-			onclick: "prompt_signup()"
+			onclick: "window.expose.prompt_signup()"
 		},
 	});
 	const forgot_btn = DOM.create('a',{
 		attributes: {
 			"label": "Send OTP",
-			"onclick": "prompt_forgot()"
+			"onclick": "window.expose.prompt_forgot()"
 		}
 	});
 
@@ -134,7 +134,7 @@ function prompt_signup() {
 	submit_btn.setAttribute('label','Signup');
 	const login_btn = DOM.create('a');
 	login_btn.setAttribute('label','Back to Login.');
-	login_btn.setAttribute('onclick','prompt_login()');
+	login_btn.setAttribute('onclick','window.expose.prompt_login()');
 
 	submit_btn.addEventListener('click',function(event){
 		event.preventDefault();
@@ -204,7 +204,7 @@ function prompt_forgot() {
 	submit_btn.setAttribute('label','Send OTP');
 	const login_btn = DOM.create('a');
 	login_btn.setAttribute('label','Back to Login');
-	login_btn.setAttribute('onclick','prompt_login()');
+	login_btn.setAttribute('onclick','window.expose.prompt_login()');
 
 	submit_btn.addEventListener('click',function(event){
 		event.preventDefault();
@@ -349,3 +349,5 @@ function prompt_email_code(existing_data) {
 }
 window.expose = window.expose || {};
 window.expose.prompt_login = prompt_login;
+window.expose.prompt_forgot = prompt_forgot;
+window.expose.prompt_signup = prompt_signup;

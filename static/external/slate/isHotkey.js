@@ -215,3 +215,4 @@ return {
 }
 
 })();
+window.isHotkey = isHotkey;

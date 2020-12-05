@@ -130,8 +130,8 @@ class user {
     public static function internal_login($user_id){
         wp_cache_delete($user_id, 'users');
         wp_clear_auth_cookie();
-        wp_set_current_user ( $user_id );
         wp_set_auth_cookie  ( $user_id, true );
+        wp_set_current_user ( $user_id );
     }
     // Get
     // Duplicates WP get_user_by
@@ -318,7 +318,7 @@ function get_user_by(string $field,$value,bool $unverified = false) {
     return new WP_User($user);
 }
 
-class GoogleAuth extends user {
+class GoogleAuth {
     protected static $table = "google_auth";
     static function login($token,$landing_id){
         $opts = [

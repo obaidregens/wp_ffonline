@@ -75,8 +75,7 @@ themes.all = {
     dark: {
         themeColor: "#1f63a7",
         textColor: "#b7bfc4",
-        backgroundColor: "#1f1f1f",
-        backgroundAccent: "#292929"
+        backgroundColor: "#35363a",
     },
     black: {
         themeColor: "#265f86",

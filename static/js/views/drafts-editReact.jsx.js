@@ -7,7 +7,7 @@
     const { withHistory } = SlateHistory;
     const { jsx } = SlateHyperscript;
     const SlateEl = SlateReact.Slate; // Define our own custom set of helpers.
-    const isHot = isHotkey.isHotkey;
+    const isHot = window.isHotkey.isHotkey;
     const Tool = {
         marks: ["bold","italic"],
         blocks: ["seperator","paragraph","center"],

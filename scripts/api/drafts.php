@@ -226,7 +226,7 @@ function api_edit_and_save_draft() {
     if (err::is($draft_id)){
         return ['code'=>10];
     }
-    draft_revision::push($draft_id,$old_draft->content,'push');
+    draft_revision::push($draft_id,json_decode($old_draft->content,true),'push');
 
     return ['code'=>1,'draft_id'=>$draft_id];
 }

@@ -85,7 +85,7 @@ function api_follow_collection(){
     if (!$collection) {
         return ['code'=>9];
     }
-    if (!is_current_user($collection) && $collection->type === "Private") {
+    if (!is_current_user($collection->author) && $collection->type === "Private") {
         return ['code'=>10];
     }
     if ($follow) {

@@ -160,6 +160,12 @@
         ],
         "css": []
     },
+    "isHotkey": {
+        "js": [
+            "external\/slate\/isHotkey"
+        ],
+        "css": []
+    },
     "confirmation": {
         "css": [
             "css\/js-components\/confirmation"
@@ -170,11 +176,11 @@
     },
     "intro": {
         "js": [
-            "external\/intro-js\/intro.min",
+            "external\/shepherd\/shepherd.min",
             "js\/views\/global-intro"
         ],
         "css": [
-            "external\/intro-js\/introjs.min",
+            "external\/shepherd\/shepherd",
             "css\/views\/global-intro"
         ]
     },

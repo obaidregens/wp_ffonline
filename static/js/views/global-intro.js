@@ -206,14 +206,27 @@
             if (steps.length === 0) {
                 return;
             }
-            const intro = introJs();
-            intro.setOptions({
-                nextLabel: '',
-                prevLabel: '',
-                exitOnOverlayClick: false,
-                steps
+            const tour = new Shepherd.Tour({
+                defaultStepOptions: {
+                  scrollTo: true
+                }
             });
-            intro.start();
+            steps.forEach(({intro,element}) => {
+                tour.addStep({
+                    text: intro,
+                    attachTo: {
+                      element,
+                      on: 'bottom'
+                    },
+                    buttons: [
+                      {
+                        text: 'Next',
+                        action: tour.next
+                      }
+                    ]
+                });    
+            });
+            tour.start();
         },500);
     }
     window.addEventListener('load',startIntro);

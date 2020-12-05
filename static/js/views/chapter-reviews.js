@@ -74,30 +74,32 @@ if (review_submit_btn){
         });
     });
 }
-(() => {
-    const submission_el = DOM.q("write-review > submission");
-    window.addEventListener('mousedown',event => {
-        const currentHeight = parseInt(submission_el.style.height || 0);
-        if (! event.target.closest('write-review')) {
-            if (currentHeight === 0) {
+if (DOM.q('write-review')) {
+    (() => {
+        const submission_el = DOM.q("write-review > submission");
+        window.addEventListener('mousedown',event => {
+            const currentHeight = parseInt(submission_el.style.height || 0);
+            if (! event.target.closest('write-review')) {
+                if (currentHeight === 0) {
+                    return;
+                }
+                return submission_el.style.height = 0;
+            }
+            if (currentHeight !== 0) {
                 return;
             }
-            return submission_el.style.height = 0;
-        }
-        if (currentHeight !== 0) {
-            return;
-        }
-        _.fitHeight(submission_el);
+            _.fitHeight(submission_el);
+        });
+        DOM.q('write-review > text-input > textarea').addEventListener('input',() => {
+            const currentHeight = parseInt(submission_el.style.height || 0);
+            if (currentHeight !== 0) {
+                return;
+            }
+            _.fitHeight(submission_el);
+        });
+    })();
+    DOM.q("quote + cancel").addEventListener('click',() => {
+        const quote_el = DOM.q('write-review > quote');
+        quote_el.innerText = "";
     });
-    DOM.q('write-review > text-input > textarea').addEventListener('input',() => {
-        const currentHeight = parseInt(submission_el.style.height || 0);
-        if (currentHeight !== 0) {
-            return;
-        }
-        _.fitHeight(submission_el);
-    });
-})();
-DOM.q("quote + cancel").addEventListener('click',() => {
-    const quote_el = DOM.q('write-review > quote');
-    quote_el.innerText = "";
-});
+}
