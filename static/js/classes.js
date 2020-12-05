@@ -76,6 +76,7 @@ themes.all = {
         themeColor: "#1f63a7",
         textColor: "#b7bfc4",
         backgroundColor: "#35363a",
+        backgroundAccent: "#2d2e30"
     },
     black: {
         themeColor: "#265f86",
