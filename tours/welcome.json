@@ -1,0 +1,70 @@
+{
+    "login":false,
+    "steps": {
+        "/read": {
+            "steps": [
+                {
+                    "intro": "Hi! I'll show you around so you can quickly get to reading fanfiction."
+                },
+                {
+                    "element": "dark-mode",
+                    "intro": "Easily switch to dark mode anytime."
+                },
+                {
+                    "element": "filter-books > button",
+                    "intro": "Extensively filter fanfictions to find exactly what you're looking for."
+                },
+                {
+                    "element": ".book .more",
+                    "intro": "See more options like saving the story offline, or adding it to your collections.",
+                    "mobile": {
+                        "element": ".book",
+                        "intro": "Swipe left to see more details about the story, and open up options."
+                    }
+                },
+                {
+                    "element": ".book",
+                    "intro": "Tap to start reading.",
+                    "forward": true
+                }
+            ]
+        },
+        "/story/:a/:b": {
+            "steps": [
+                {
+                    "intro": "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet!",
+                    "element": "acs-options",
+                    "mobile": {
+                        "intro": "Search story, listen to chapter, customize reading, view chapters, or save offline to read without internet! Tap to open options.",
+                        "element": null    
+                    }
+                },
+                {
+                    "intro": "To change the font, theme, or text size, tap twice."
+                },
+                {
+                    "element": ".book-vote",
+                    "intro": "Enjoyed reading chapter? Vote for it!"
+                },
+                {
+                    "element": "book-options",
+                    "intro": "Like the story? Follow and share with others."
+                },
+                {
+                    "element": "reviews-wrapper",
+                    "intro": "What do you think about this chapter? Leave a review for the author.",
+                    "repeat": "/read"
+                }
+            ]
+        },
+        "help/&*": {
+            "steps": [
+                {
+                    "element": "header > nav > [href='/read']",
+                    "intro": "Start Guide!",
+                    "forward": true
+                }
+            ]
+        }
+    }
+}

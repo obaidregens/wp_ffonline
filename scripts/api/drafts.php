@@ -23,10 +23,13 @@ function api_get_draft_data() {
 function api_save_draft() {
     $d = &$_POST['data'];
     required_login();
-    required_params('draft_id','title','changes','length','perm');
+    required_params('draft_id','title','changes','maps','length','perm');
 
     // Check if changes object is vald
     if (!is_array($d['changes'])) {
+        return ['code'=>13];
+    }
+    if (!is_array($d['maps'])) {
         return ['code'=>13];
     }
 
@@ -63,7 +66,7 @@ function api_save_draft() {
     $session_perm = &$_SESSION['drafts'][$d['draft_id']]['prev_perm'];
     $flag = ($session_perm ?? false) ? 'push' : 'update';
     $session_perm = $d['perm'] === true;
-    $return = draft_revision::push($draft_id,$d['changes'],intval($d['length']),$flag );
+    $return = draft_revision::push($draft_id,$d['changes'],intval($d['length']),$flag,$d['maps'] );
     if (err::is($return)) {
         return ['code' => 13];
     }

@@ -1,4 +1,7 @@
 class _ {
+    static isSame(a,b) {
+        return JSON.stringify(a) === JSON.stringify(b);
+    }
     static elNode (text_or_el_node) {
         return text_or_el_node.nodeType === 1 ? text_or_el_node : text_or_el_node.parentElement;
     }

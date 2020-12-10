@@ -15,22 +15,23 @@ class Router {
     public $request;
     private $r;
     private $called = [];
-    function __construct(){
-        $this->request = explode('?',strtolower($_SERVER['REQUEST_URI']))[0];
-        $this->request = $this->request === '' ? '/' : $this->request;
+    function __construct($url){
+        $parsed = parse_url($url);
+        $path = $parsed ? $parsed['path'] : '/';
+        $this->request = $path === '' ? '/' : $path;
         $this->r = arr::non_empty(explode('/',$this->request));
         $this->request = '/' . implode('/',$this->r);
     }
-    function listen($dyno_url,$func,bool $beta = false){
+    function listen($dyno_url,$func = null,bool $beta = true){
         if (defined("NO_ROUTES") && NO_ROUTES === true) {
-            return;
+            return false;
         }
         if (!$beta && beta::is()) {
-            return;
+            return false;
         }
         $match = arr::non_empty(explode('/',$dyno_url));
         if ( empty($match) && !empty($this->r) ){
-            return;
+            return false;
         }
         $params = [];
         foreach ($match as $i => $m) {
@@ -39,13 +40,13 @@ class Router {
             }
             $portion = $this->r[$i];
             if (! isset($portion)){
-                return;
+                return false;
             }
             if ($m === '*'){
             break;
             }
             if ( isset($this->r[$i+1]) && ! isset($match[$i+1]) ){
-                return;
+                return false;
             }
             $m_colon_split = explode(':',$m,2);
             $m_portion = substr($portion,strlen($m_colon_split[0]));
@@ -61,10 +62,13 @@ class Router {
             if ($m === $portion){
                 continue;
             }
-            return;
+            return false;
         }
         $this->params = $params;
-        $func($this);
+        if ($func !== null) {
+            $func($this);
+        }
+        return true;
     }
     function template ($template,$once = false){
         $template = '/' . ltrim($template,'/');
@@ -157,7 +161,7 @@ class Router {
     }
 }
 global $app;
-$app = new Router();
+$app = new Router($_SERVER['REQUEST_URI']);
 
 $app->listen('/api',function($self){
     if ($_SERVER['REQUEST_METHOD'] !== "POST" && !DEV()) {
@@ -852,17 +856,30 @@ $app->listen('/privacy',function($self){
     exit();
 });
 // FAQ
-$app->listen('/faq',function($self){
+$app->listen('/faq/&*',function($self) {
+    $self->redirect("/help/faq/" . substr($self->request,5));
+});
+$app->listen('/help',function($self){
+    $self->type = 'help';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Help")
+    ]);
+    $self->template('/views/help/home');
+    $self->footer();
+    exit();
+});
+$app->listen('/help/faq',function($self){
     $self->type = 'faq';
     $self->type_id = 0;
     $self->header([
         'title'         => construct_page_title("FAQ")
     ]);
-    $self->template('/views/faq/home');
+    $self->template('/views/help/faq-home');
     $self->footer();
     exit();
 });
-$app->listen('/faq/:q',function($self){
+$app->listen('/help/faq/:q',function($self){
     $q = questions::get($self->params["q"]);
     if ($q === false || $q->status !== 'public') {
         return;
@@ -873,7 +890,17 @@ $app->listen('/faq/:q',function($self){
     $self->header([
         'title'         => construct_page_title("FAQ"),
     ]);
-    $self->template('/views/faq/single');
+    $self->template('/views/help/faq-single');
+    $self->footer();
+    exit();
+});
+$app->listen('/help/guides',function($self){
+    $self->type = 'guides';
+    $self->type_id = 0;
+    $self->header([
+        'title'         => construct_page_title("Guides")
+    ]);
+    $self->template('/views/help/guides-home');
     $self->footer();
     exit();
 });

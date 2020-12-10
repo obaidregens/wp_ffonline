@@ -1,3 +1,5 @@
+"use strict";
+
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 (() => {
@@ -159,6 +161,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
   };
 
   window.editedBlocks = [];
+  window.mapBlocks = [];
 
   const App = () => {
     const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -207,8 +210,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       }
 
       prevDeleteFragment();
-    });
-    // Paste HTML
+    }); // Paste HTML
     // const prevInsertData = useCallback(editor.insertData.bind(editor));
     // editor.insertData = useCallback(data => {
     //     const html = data.getData('text/html');
@@ -235,13 +237,32 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       autoFocus: true,
       onChange: value => {
         const opr = editor.operations;
+        value = _.clone(value);
 
         if (!(opr.length === 1 && opr[0].type === 'set_selection')) {
           opr.forEach(operation => {
-            (operation.path || []).forEach(pa => {
-              window.editedBlocks.push(pa + Math.max(0, window.draftLastLength - value.length));
-              window.editedBlocks.push(pa);
-            });
+            if (!operation.path) {
+              return;
+            }
+
+            let pa = operation.path[0];
+            window.editedBlocks.push(...[pa - 1, pa, pa + 1].filter(n => n >= 0));
+
+            if (['insert_node'].includes(operation.type) || ['split_node'].includes(operation.type) && operation.path.length === 1) {
+              pa = operation.type === "insert_node" ? pa - 1 : pa;
+
+              window.mapBlocks.push({
+                pa,
+                type: "insert"
+              });
+            } else if (['remove_node'].includes(operation.type) || ['merge_node'].includes(operation.type) && operation.path.length === 1) {
+              pa = operation.type === "remove_node" ? pa + 1 : pa;
+
+              window.mapBlocks.push({
+                pa,
+                type: "delete"
+              });
+            }
           });
           window.editedAtAll = true;
           window.autosaveDraft(value, shouldAutosave(editor));

@@ -5,15 +5,16 @@ class autocomplete {
             trim: true,
             select: true,
             limit: false,
-            show_empty_msg: false,
+            preview: true,
             none_found_msg: "No options",
-            maxHeight: 200
+            maxHeight: 200,
+            async: false
         },opts);
         this.input = input;
         this.list = list;
-        const enterInput = ({target}) => {
-            const se = this.search(target.value);
-            this.render(se.list);
+        const enterInput = async ({target}) => {
+            const se = await this.search(target.value);
+            this.render(se.list,{empty_search: se.empty});
             this.change(se);
         };
         input.addEventListener('blur',this.out.bind(this));
@@ -66,32 +67,34 @@ class autocomplete {
                     if (event.target.tagName.toLowerCase() !== "li") {
                         return;
                     }
-                    return this.select({
-                        name: event.target.innerText,
-                        value: event.target.getAttribute('value')
-                    });
+                    return this.select(event.target.refValue);
                 }
             },
             children: [],
         });
         document.documentElement.appendChild(this.drop);
     }
-    render (list) {
+    render (list,opts) {
+        opts = Object.assign({
+            empty_search: false
+        },opts);
         this.drop.innerText = "";
         DOM.append(this.drop,(list.length === 0 && this.opts.none_found_msg) ? [DOM.create('text',{
-            innerText: this.opts.none_found_msg
-        })] : list.map(({name,value},i) => {
-            return DOM.create('li',{
-                innerText: name,
+            innerHTML: this.opts.none_found_msg
+        })] : ((!this.opts.preview && opts.empty_search) ? [] : list.map((Obj,i) => {
+            const thisDOM =  DOM.create('li',{
+                innerText: Obj.name,
                 attributes: {
-                    value,
+                    value: Obj.value,
                     tabindex: this.opts.select ? i : null
                 },
                 listeners: {
                     blur: this.out.bind(this)
                 }
             });
-        }));
+            thisDOM.refValue = Obj;
+            return thisDOM;
+        })));
         const rect = this.input.getBoundingClientRect();
         this.drop.style.top = rect.bottom + "px";
         this.drop.style.width = rect.width + "px";
@@ -116,21 +119,28 @@ class autocomplete {
             this.drop.style.height = "0px";
         }
     }
-    search(search) {
+    async search(search) {
         this.preChange();
         let s = search;
+        if (this.opts.async) {
+            const {result = {}} = await api(this.opts.async,{
+                data: {
+                    search,
+                    opts: this.opts,
+                }
+            });
+            return {
+                search,
+                exactMatch: result.exactMatch || false,
+                list: result.list || [],
+                empty: (this.opts.trim ? search.trim() : search) === ""
+            };
+        }
         if (this.opts.lowercase) {
             s = s.toLowerCase();
         }
         if (this.opts.trim) {
             s = s.trim();
-        }
-        if (this.show_empty_msg && s === "") {
-            return {
-                search,
-                exactMatch: false,
-                list: []
-            };
         }
         let exactMatch  = false;
         const newList = [];
@@ -155,7 +165,8 @@ class autocomplete {
         return {
             search,
             exactMatch,
-            list: newList
+            list: newList,
+            empty: s === ""
         };
     }
     change({exactMatch,list}) {}

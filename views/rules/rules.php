@@ -10,6 +10,6 @@
 </ul>
 <p>We reserve the right to remove any content or suspend/ban any account without prior notice. You may contest such a suspension/ban or removal of content by <a>contacting us</a>.</p>
 <p>If you feel these rules are being violated on the site, <a href="/contact">send us a message</a> with a reference to such content and we'll look in to it.</p>
-<p>If you have a question, you can check out the <a href="/faq">FAQ</a>. If the question has not yet been asked, you can ask it there.</p>
+<p>If you have a question, you can check out the <a href="/help/faq">FAQ</a>. If the question has not yet been asked, you can ask it there.</p>
 <br>
 <a href="/licenses">Credits & Licenses</a>

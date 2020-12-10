@@ -1,0 +1,119 @@
+{
+    "login": true,
+    "steps": {
+        "/my-stories": {
+            "steps": [
+                {
+                    "element": "a.button[label=\"Import Stories\"]",
+                    "intro": "Have stories on other sites? Easily import them to Fanfiction Online."
+                },
+                {
+                    "element": "a.new-book",
+                    "intro": "Publish a new story."
+                },
+                {
+                    "element": "a.button[label=\"Drafts\"]",
+                    "intro": "Click on drafts to start writing.",
+                    "forward": "/drafts"
+                }
+            ]
+        },
+        "/drafts": {
+            "steps": [
+                {
+                    "element": "floater > button.new",
+                    "intro": "Create a new draft or folder."
+                },
+                {
+                    "element": ".new-draft-file",
+                    "intro": "Start writing a new draft.",
+                    "forward": "/drafts/new"
+                }
+            ]
+        },
+        "/drafts/:a/edit": {
+            "steps": [
+                {
+                    "element": "button[label=\"Export\"]",
+                    "intro": "Export your draft to other fanfiction sites."
+                },
+                {
+                    "element": "toolbar > [action=\"share\"]",
+                    "intro": "Collaborate on draft with others."
+                },
+                {
+                    "element": "button[label=\"Publish\"]",
+                    "intro": "Publish draft as chapter."
+                },
+                {
+                    "element": "editor",
+                    "intro": "Press CTRL + D while writing to find similar words."
+                },
+                {
+                    "intro": "Don't worry about saving. Your drafts auto-save as you write."
+                },
+                {
+                    "element": "save-time",
+                    "intro": "Click to compare and restore previous versions of draft."
+                },
+                {
+                    "element": "toolbar > [action=\"preview\"]",
+                    "intro": "Listen & preview draft.",
+                    "forward": true
+                }
+            ]
+        },
+        "/drafts/:a/preview": {
+            "steps": [
+                {
+                    "element": "button.edit-draft",
+                    "intro": "Edit this draft."
+                },
+                {
+                    "intro": "Customize reading or listen to draft.",
+                    "element": "acs-options",
+                    "mobile": {
+                        "intro": "To customize reading or listen to draft, tap once.",
+                        "element": null
+                    }
+                },
+                {
+                    "intro": "Now, let's create our first story.",
+                    "forward": "/my-stories/new"
+                }
+            ]
+        },
+        "/my-stories/:a/edit": {
+            "steps": [
+                {
+                    "element": "page:first-of-type",
+                    "intro": "Enter some basic details about your story."
+                },
+                {
+                    "element": "step:nth-of-type(2)",
+                    "intro": "Add tags to help readers find your story easily."
+                },
+                {
+                    "element": "step:nth-of-type(3)",
+                    "intro": "Manage story settings and publish it."
+                },
+                {
+                    "element": "step:nth-of-type(4)",
+                    "intro": "Add & edit chapter(s) to story."
+                },
+                {
+                    "intro": "That's about it. You can leave a story unpublished and publish it later if you want. Check out our <a href='/help/guides'>help</a> section for more guides."
+                }
+            ]
+        },
+        "/help/&*": {
+            "steps": [
+                {
+                    "element": "header > nav > [href='/my-stories']",
+                    "intro": "Start Guide!",
+                    "forward": true
+                }
+            ]
+        }
+    }
+}

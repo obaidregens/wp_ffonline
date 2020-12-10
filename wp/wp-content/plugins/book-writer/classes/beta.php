@@ -2,7 +2,7 @@
 class beta {
     protected static $table = "beta_sessions";
     protected static $user_table = "beta_users";
-    static function can($user_id = null) {
+    static function can($user_id = null,$could = 0) {
         if ($user_id === null) {
             $user_id = get_current_user_id();
         }
@@ -17,7 +17,7 @@ class beta {
         AND $utable.`user_id` = %d";
 
         global $wpdb;
-        $r = $wpdb->get_results($wpdb->prepare($sql,[millitime(),$current]));
+        $r = $wpdb->get_results($wpdb->prepare($sql,[millitime()-$could,$current]));
         return ( !empty($r) ) || current_user_can( 'administrator' );    
     }
     static function expired($user_id = null) {

@@ -16,6 +16,7 @@ ul[autocomplete].select > li {
     cursor: pointer;
 }
 ul[autocomplete] > li,ul[autocomplete] > text {
+    white-space: break-spaces;
     user-select: none;
     display: flex;
     padding: 10px;

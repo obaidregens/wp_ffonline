@@ -122,8 +122,8 @@ $app->bundle->js('js/views/home-main');
 </section>
 <!-- Contact -->
 <section>
-    <section-description>Have any questions?</section-description>
-    <mini-description><a href="/faq">Check out our FAQ's</a></mini-description>
+    <section-description>Need help?</section-description>
+    <mini-description><a href="/help">Check out our Help section</a></mini-description>
 </section>
 <section>
     <section-description>

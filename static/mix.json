@@ -117,6 +117,7 @@
             "css\/views\/global-collections"
         ],
         "js": [
+            "external\/tiny-swiper\/tiny-swiper",
             "js\/components\/switch",
             "js\/views\/story-options",
             "js\/views\/global-collections"
@@ -177,11 +178,10 @@
     "intro": {
         "js": [
             "external\/shepherd\/shepherd.min",
-            "js\/views\/global-intro"
+            "js\/components\/tour"
         ],
         "css": [
-            "external\/shepherd\/shepherd",
-            "css\/views\/global-intro"
+            "external\/shepherd\/shepherd"
         ]
     },
     "speak": {

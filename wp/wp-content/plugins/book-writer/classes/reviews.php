@@ -131,7 +131,8 @@ class reviews {
         "SELECT " . implode(',',$fields) .  " FROM $table
         INNER JOIN wp_posts ON wp_posts.`ID` = $table.`type_id`
         WHERE wp_posts.`post_type` = 'chapter'
-        AND $table.`status` IN (" . sqlPlaceholder($args['status']) . ") ";
+        AND $table.`status` IN (" . sqlPlaceholder($args['status']) . ")
+        AND reply = 0";
         $prep = $args['status'];
         if (count($args['exclude_users']) > 0) {
             $sql .= " AND $table.`user_id` NOT IN (" . sqlPlaceholder($args['exclude_users'],"%d") . ")";
@@ -169,6 +170,10 @@ class reviews {
         if (!$args['threaded']) {
             return $r;
         }
+        $replies = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE reply IN (" . sqlPlaceholder($r) . ")",array_column($r,'ID')));
+        $r = array_merge($r,$replies);
+        $replies = null;
+
         $a = [];
         foreach ($r as $v) {
             $k = &$a[$v->ID];

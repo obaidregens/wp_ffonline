@@ -1,6 +1,9 @@
 <?php
-function logging($data) {
-    file_put_contents(MAIN_DIR . '/logging.txt', json_encode($data) . "\r\n",FILE_APPEND);
+function logging(...$datas) {
+    foreach ($datas as $data ) {
+        file_put_contents(MAIN_DIR . '/logging.txt', json_encode($data) . "\r\n",FILE_APPEND);
+    }
+    file_put_contents(MAIN_DIR . '/logging.txt', "\r\n",FILE_APPEND);
 }
 function timer($logtext,$echo = false){
     global $lastlogtime;

@@ -1,0 +1,22 @@
+h2 {
+    margin-top: 0;
+}
+guide {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid var(--grey);
+    border-radius: 4px;
+    margin: 15px 0;
+    transition: background-color .2s;
+    cursor: pointer;
+}
+guide:hover {
+    background-color: var(--hover);
+}
+guide > h4 {
+    margin-top: 0;
+}
+guide > p {
+    margin: 0;
+}

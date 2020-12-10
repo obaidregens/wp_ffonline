@@ -1,6 +1,6 @@
 const logged_in = DOM.q('logged_in').getAttribute('value') === 'true';
 function im(type){
-	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container > book';
+	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container > .story-single book';
 	const attr = type === 'collections' ? 'collection_id' : 'book_id';
 	const height = window.innerHeight;
 	const objs = DOM.qa(selector);

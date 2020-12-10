@@ -58,7 +58,7 @@ function prompt_login() {
 			reCAPTCHA: grecaptcha.getResponse(widgetID),
 			data: data_submit
 		})
-		.then(response => {
+		.then(async response => {
 			submit_btn.removeAttribute('disabled');
 			grecaptcha.reset(widgetID);
 			if (response.code === 7){
@@ -71,6 +71,7 @@ function prompt_login() {
 				new toast('An error occured.');
 			}
 			else if (response.code <= 5){
+				await idbKeyval.set("ongoingTour","write-intro");
 				window.location.reload();
 			}
 		});
@@ -313,10 +314,11 @@ function prompt_email_code(existing_data) {
 					reCAPTCHA: grecaptcha.getResponse(widgetID),
 					data: existing_data
 				})
-				.then(response => {
+				.then(async response => {
 					this.removeAttribute('disabled');
 					grecaptcha.reset(widgetID);
 					if (response.code === 1){
+						await idbKeyval.set("ongoingTour","write-intro");
 						window.location.reload();
 					}
 					else if (response.code === 7){

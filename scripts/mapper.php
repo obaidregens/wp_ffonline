@@ -3,9 +3,78 @@ $maindir = rtrim(explode('content',__DIR__,2)[0],'/\\');
 define("NO_ROUTES",true);
 require ($maindir . '/content/index.php');
 
-$dir = $maindir . '/sitemap';
-if (! file_exists($dir)){
-    mkdir($dir);
+class XML_sitemap {
+    protected $fields = [];
+    protected $names = [];
+    protected $current = "";
+    function __construct($args) {
+        $args = array_replace([
+            'site'          => '',
+            'dir'           => '',
+            'sitemap_path'  => 'sitemap',
+            'cache_time'    => 60*60*24*2
+        ],$args);
+        $this->site = rtrim($args['site'],'/') . '/';
+        $this->sitemap_url = $this->site . trim($args['sitemap_path'],'/') . '/';
+        $this->dir = rtrim($args['dir'],'/') . '/';
+        mkdir ( $this->dir , 0777 , true );
+        $this->cache_time = $args['cache_time'];
+    }
+    function add($url,$last_updated,$changefreq) {
+        if (!$this->current) {
+            return false;
+        }
+        $url = rtrim($this->site . trim($url,'/'),'/');
+        $this->fields[] =
+        "<url>".
+        "<loc>$url</loc>".
+        "<lastmod>$last_updated</lastmod>".
+        "<changefreq>$changefreq</changefreq>".
+        "</url>";
+        return true;
+    }
+    function open($name) {
+        $name = strval($name);
+        if ($name !== "") {
+            $this->names[] = $name;
+        }
+        $f_this = $this->dir . $name . ".xml";
+        if ( file_exists($f_this) && (time() - filemtime($f_this)) < $this->cache_time ){
+            return false;
+        }
+        if ($this->current) {
+            file_put_contents($this->dir . $this->current . ".xml",self::wrapSitemap(implode('',$this->fields)));
+            $this->fields = [];
+        }
+        $this->current = $name;
+        // Ping
+        if (!DEV()) {
+
+        }
+        return true;
+    }
+    function index() {
+        $this->open("");
+        $index_xml = '<?xml version="1.0" encoding="UTF-8"?>';
+        $index_xml .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        foreach ($this->names as $xmlName) {
+            $index_xml .= '<sitemap><loc>' . $this->sitemap_url  . $xmlName . '.xml</loc></sitemap>';
+        }
+        $index_xml .= '</sitemapindex>';
+        file_put_contents($this->dir . "sitemap-index.xml",$index_xml);
+        $index_xml = null;
+        // Ping
+        if (!DEV()) {
+
+        }
+    }
+    protected function wrapSitemap($sitemap) {
+        return
+        '<?xml version="1.0" encoding="UTF-8"?>'.
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'.
+        $sitemap.
+        '</urlset>';
+    }
 }
 
 function f_stamp($time){
@@ -13,9 +82,6 @@ function f_stamp($time){
 }
 function f_dt($time){
     return str_replace(' ','T',$time) . '+00:00';
-}
-function u($url){
-    return "https://fanfiction.online/" . trim($url,'/') . "/";
 }
 function url_field($loc,$lastmod,$changefreq){
     $construct = '<url>';
@@ -26,28 +92,23 @@ function url_field($loc,$lastmod,$changefreq){
     return $construct;
 }
 
-// Settings
-$site = "https://fanfiction.online";
-$cache_time = 60*60*24*2; // 48 hours
+$x = new XML_sitemap([
+    'site'  => 'https://fanfiction.online',
+    'dir'           => rtrim(MAIN_DIR,'/') . '/sitemap/',
+    'sitemap_path'  => 'sitemap',
+    'cache_time'    => 60*60*24*2
+]);
+$x->open('sitemap-general');
 
-$xml = '<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 $book_query = new book_query( [] );
 $last_updated = f_dt($book_query->books[0]->post_modified);
 // Main Page
-$xml .= url_field(
-    u("/read"),
-    $last_updated,
-    'hourly'
-);
+$x->add("/",$last_updated,'hourly');
+$x->add("/read",$last_updated,'hourly');
 // Pages
 $num_pages = $book_query->pages;
 for ($i=2; $i <= $num_pages; $i++) { 
-    $xml .= url_field(
-        u("/read?page=$i"),
-        $last_updated,
-        'hourly'
-    );
+    $x->add('/read?page=$i',$last_updated,'hourly');
 }
 $book_query = null;
 
@@ -61,30 +122,20 @@ $collections_all = collection::query([
     ]
 ]);
 if (!empty($collections_all)) {
-    $xml .= url_field(
-        u("collections/"),
-        f_stamp($collections_all[0]->created),
-        'daily'
-    );    
+    $x->add('collections',f_stamp($collections_all[0]->created),'daily');
 }
-$xml .= '</urlset>';
-file_put_contents ($dir . '/sitemap-general.xml',$xml);
 
-$xml = '<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+$x->open('sitemap-fandoms');
 
 // Fandoms
 $fandoms = array_column($wpdb->get_results("SELECT `_value` FROM search_cache WHERE _key = 'fandom'"),'_value');
 foreach ( $fandoms as $fandom_id ) {
-    $xml .= url_field(
-        u("/read?fandom_included=$fandom_id"),
-        $last_updated,
-        'hourly'
-    );
+    if (!term_exists( intval($fandom_id), 'category' )){
+        continue;
+    }
+    $x->add("read?fandom_included=$fandom_id",$last_updated,'hourly');
 }
 $fandoms = null;
-$xml .= '</urlset>';
-file_put_contents($dir . '/sitemap-fandoms.xml',$xml);
 
 $book_query = new book_query( array(
     'per_page'		 => 100,
@@ -92,34 +143,21 @@ $book_query = new book_query( array(
 $num_pages = $book_query->pages;
 $book_query = null;
 for ($i=1; $i <= $num_pages; $i++) {
-    $file = $dir . '/sitemap-story-' . $i . '.xml';
-    if (file_exists($file) && (time() - filemtime($file)) < $cache_time ) {
+    if (!$x->open("sitemap-story-$i")) {
         continue;
     }
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     $books = (new book_query([
         'per_page'      => 100,
         'page'          => $i,
     ]))->books;
     foreach ($books as $book) {
-        $xml .= url_field(
-            u("story/".$book->ID),
-            f_dt($book->post_modified),
-            'weekly'
-        );
+        $x->add("story/".$book->ID,f_dt($book->post_modified),'weekly');
         //Chapters
         $chapters = published_chapters($book->ID,-1,'ids');
         foreach($chapters as $k => $chapter){
-            $xml .= url_field(
-                u("story/".$book->ID.'/'.($k+1)),
-                f_dt($book->post_modified),
-                'weekly'
-            );
+            $x->add('story/'.$book->ID.'/'.($k+1),f_dt($book->post_modified),'weekly');
         }
     }
-    $xml .= '</urlset>';
-    file_put_contents ($file,$xml);
 }
 $books = null;
 
@@ -129,23 +167,13 @@ if ($total_num % 100 === 0){
     $num_pages = intval($total_num/100);
 }
 for ($i=1; $i <= $num_pages; $i++) {
-    $file = $dir . '/sitemap-collection-' . $i . '.xml';
-    if (file_exists($file) && (time() - filemtime($file)) < $cache_time ) {
+    if (!$x->open("sitemap-collection-$i")) {
         continue;
     }
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
     $collections = array_slice($collections_all,($i*100)-100,100);
     foreach($collections as $collection){
-        $xml .= url_field(
-            rtrim(collection_helpers::link($collection), '/') . '/' ,
-            f_stamp($collection->created),
-            'weekly'
-        );
+        $x->add(rtrim(collection_helpers::link($collection), '/') . '/',f_stamp($collection->created),'weekly');
     }
-    $xml .= '</urlset>';
-    file_put_contents ($file,$xml);
 }
 $collections = null;
 $collections_all = null;
@@ -161,12 +189,9 @@ if ($total_num % 100 === 0){
     $num_pages = intval($total_num/100);
 }
 for ($i=1; $i <= $num_pages; $i++) {
-    $file = $dir . '/sitemap-author-' . $i . '.xml';
-    if (file_exists($file) && (time() - filemtime($file)) < $cache_time ) {
+    if (!$x->open("sitemap-author-$i")) {
         continue;
     }
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
     $users = (new WP_User_Query( [
         'number'    => 100,
         'paged'     => $i
@@ -183,38 +208,12 @@ for ($i=1; $i <= $num_pages; $i++) {
             continue;
         }
         $author_time = f_dt($author_books[0]->post_modified);
-        $xml .= url_field(
-            u('@'.$user->user_login),
-            $author_time,
-            'weekly'
-        );
-        $xml .= url_field(
-            u('@'.$user->user_login . '/stories'),
-            $author_time,
-            'weekly'
-        );
-        $xml .= url_field(
-            u('@'.$user->user_login . '/updates'),
-            $author_time,
-            'weekly'
-        );
-        $xml .= url_field(
-            u('@'.$user->user_login . '/collections'),
-            $author_time,
-            'weekly'
-        );
+        $x->add('@'.$user->user_login,$author_time,'weekly');
+        $x->add('@'.$user->user_login . '/stories',$author_time,'weekly');
+        $x->add('@'.$user->user_login . '/updates',$author_time,'weekly');
+        $x->add('@'.$user->user_login . '/collections',$author_time,'weekly');
     }
-    $xml .= '</urlset>';
-    file_put_contents ($file,$xml);
 }
 
 //Sitemap Index
-$index_xml = '<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-$all_files = scandir($dir);
-foreach ($all_files as $file_) {
-    if (strpos($file_,'sitemap') !== false && $file_ != 'sitemap-index.xml'){
-        $index_xml .= '<sitemap><loc>https://fanfiction.online/sitemap/' . $file_ . '</loc></sitemap>';
-    }
-}
-$index_xml .= '</sitemapindex>';
-file_put_contents ($dir . '/sitemap-index.xml',$index_xml);
+$x->index();

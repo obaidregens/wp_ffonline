@@ -92,7 +92,7 @@ tags > tag-group::before {
 }
 /* Collapse Tags */
 @media only screen and (max-width: 500px) {
-    book:not(.show) > tags {
+    .book:not(.show) tags {
         display: none;
     }
 }

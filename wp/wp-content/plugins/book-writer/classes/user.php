@@ -420,6 +420,7 @@ class GoogleAuth {
                 'user_id'   => 0
             ]
         );
+        collection_helpers::create_default($user_id);
         return $user_id;
     }
 }

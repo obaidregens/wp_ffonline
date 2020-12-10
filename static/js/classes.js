@@ -73,9 +73,9 @@ themes.all = {
         backgroundAccent: "#f7f7f7"
     },
     dark: {
-        themeColor: "#1f63a7",
+        themeColor: "#007ACC",
         textColor: "#b7bfc4",
-        backgroundColor: "#35363a",
+        backgroundColor: "#323335",
         backgroundAccent: "#2d2e30"
     },
     black: {
@@ -99,8 +99,14 @@ var frewfrewgfre = (function(){
     }
     themes.set(currentTheme);
 })();
-DOM.q('loading-shadow').classList.add('hide');
-setTimeout(() => {
-    DOM.q('loading-shadow + style').remove();
-    DOM.q('loading-shadow').remove();    
-},400);
+(() => {
+    const loading_shadow = DOM.q('loading-shadow');
+    if (!loading_shadow) {
+        return;
+    }
+    loading_shadow.classList.add('hide');
+    setTimeout(() => {
+        DOM.q('loading-shadow + style') && DOM.q('loading-shadow + style').remove();
+        loading_shadow.remove();    
+    },400);
+})();

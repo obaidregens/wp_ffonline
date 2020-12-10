@@ -28,4 +28,4 @@ h1,h2,h3,h4,h5,h6 {
         <p>These guidelines are not exhaustive, and content we find not in line with our guidelines will be removed. Fanfiction Online has the right to remove any content or suspend/ban any account without prior notice.</p>
         <p>If you think there is content on Fanfiction Online that does not adhere to our guidelines, <a href="/contact">send us a message</a> with a reference to such content and we'll look in to it.</p>
 </section>
-<p>If you have a question, you can check out the <a href="/faq">FAQ</a>. If the question has not yet been asked, you can ask it there.</p>
+<p>If you have a question, you can check out the <a href="/help/faq">FAQ</a>. If the question has not yet been asked, you can ask it there.</p>

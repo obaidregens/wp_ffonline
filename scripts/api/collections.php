@@ -88,6 +88,7 @@ function api_follow_collection(){
     if (!is_current_user($collection->author) && $collection->type === "Private") {
         return ['code'=>10];
     }
+    $collection_id = $collection->ID;
     if ($follow) {
         collection_follow::follow( $collection_id, get_current_user_id(),$_POST['landing_id'] );
         return ['code' => 1];

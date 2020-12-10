@@ -614,7 +614,7 @@ class book_query_cache extends book_query {
         $pairings = pairing::query();
         $terms = [];
         foreach ($pairings as $pairing ) {
-            $terms[$pairing->pairing_id] = implode(array_column($pairing->characters,'name'),'/');
+            $terms[$pairing->pairing_id] = implode('/',array_column($pairing->characters,'name'));
         }
         self::put(array(array(
             '_key'      => 'pairing_tag_names',

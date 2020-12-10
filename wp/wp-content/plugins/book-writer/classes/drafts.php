@@ -114,7 +114,7 @@ class draft_revision extends drafts{
         return sha1($content);
     }
     // This Static Method will noe accept change only
-    static function push($draft_id,$changes, $length = null, $FLAG = 'update') {
+    static function push($draft_id,$changes, $length = null, $FLAG = 'update',$maps = []) {
         if ($length === null) {
             $length = count($changes);
         }
@@ -134,6 +134,17 @@ class draft_revision extends drafts{
 
         // Edit Changes
         $content = json_decode($prev_draft['content'],true);
+
+        foreach ($maps as $map) {
+            if ($map['type'] === "delete") {
+                unset($content[$map['pa']]);
+            }
+            else if ($map['type'] === "insert") {
+                array_splice($content,$map['pa'],0, [[]] );
+            }
+            $content = array_values($content);
+        }
+
         foreach ($changes as $p => $change) {
             $content[$p] = $change;
         }
@@ -173,8 +184,11 @@ class draft_revision extends drafts{
             VALUES (%s,%s,%s,%s,%s)",
             [$draft_id,get_current_user_id(),$hash,$t,$content]
         );
+
         $rows = $wpdb->query($sql2);
-        $rows = $wpdb->query($sql1);
+        if (isset($sql1)) {
+            $rows = $wpdb->query($sql1);
+        }
 
         $session_last_revision = [
             'ID'        => $wpdb->insert_id,

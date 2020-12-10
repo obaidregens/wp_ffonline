@@ -9,6 +9,16 @@
 // GROUP BY stats_landings.ID
 // ORDER BY stats_actions.ID DESC
 // LIMIT 50
+
+// Recent Referrers
+// SELECT
+// 	CONCAT('fanfiction.online',request) as request,
+//     CONCAT(referrer_host,referrer_path) as referrer,
+//     COUNT(*) as count FROM `stats_landings`
+// WHERE referrer_host IS NOT NULL
+// AND referrer_host != 'local'
+// AND timestamp > (UNIX_TIMESTAMP() - 12*60*60)
+// GROUP BY referrer
 $app->bundle = global_bundle('dash-home');
 $app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');

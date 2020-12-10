@@ -21,12 +21,15 @@ window.autosaveDraft = (val,perm) => {
     }
     deBounce = setTimeout(() => {
         const title = window.draftTitle.value === '' ? 'Untitled' : window.draftTitle.value;
+
         const changes = Object.fromEntries([...new Set(window.editedBlocks)].map(i => [i,val[i]]));
+        console.log([...new Set(window.editedBlocks)],window.mapBlocks.map(({pa,type}) => type + " -> " + pa));
         api('save_draft',{
             data: {
                 draft_id: DOM.q('editor').getAttribute('draft_id'),
                 title,
                 changes,
+                maps: window.mapBlocks,
                 length: val.length,
                 perm
             }
@@ -48,8 +51,8 @@ window.autosaveDraft = (val,perm) => {
             }
             window.editedAtAll = false;
             window.editedBlocks = [];
+            window.mapBlocks = [];
             window.draftLastLength = length;
-
 
             // Time
             reRenderSaveTime(time*1000);
@@ -60,7 +63,6 @@ window.autosaveDraft = (val,perm) => {
                 DOM.q("title").innerText,
                 `/drafts/${draft_id}/edit`
             );
-
         })
         .catch(response => {
             if (document.fullscreenElement) {
@@ -96,17 +98,16 @@ window.autosaveDraft = (val,perm) => {
 })();
 // Words
 (() => {
-DOM.q('editor').appendChild(
-    DOM.create('infobar',{
-        children: [
-            DOM.create('word-count',{
-                innerText: ""
-            })
-        ]
-    }
-));
+    DOM.q('editor').appendChild(
+        DOM.create('infobar',{
+            children: [
+                DOM.create('word-count',{
+                    innerText: ""
+                })
+            ]
+        }
+    ));    
 })();
-
 // Initial Load
 (async () => {
     window.editedAtAll = false;
@@ -135,5 +136,5 @@ DOM.q('editor').appendChild(
     window.draftContent.set(content);
     window.draftTitle.set(title);
     reRenderSaveTime(time);
-    DOM.q('word-count').innerText = words;
+    DOM.q('word-count').innerText = words;    
 })();

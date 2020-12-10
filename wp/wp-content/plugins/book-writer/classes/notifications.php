@@ -252,14 +252,14 @@ class notifications_insert extends notifications {
     }
     function addReview($review_id) {
         $review = reviews::get( $review_id );
-        $parent_0 = intval($review->comment_parent) === 0;
+        $parent_0 = intval($review->reply) === 0;
         if (!$parent_0){
-            $parent_review = reviews::get( $review->comment_parent );
+            $parent_review = reviews::get( $review->reply );
             if (intval($parent_review->user_id) === 0) {
                 return false;
             }
         }
-        $chapter = get_post( $review->comment_post_ID );
+        $chapter = get_post( $review->type_id );
         if ( !$review || !$chapter || $chapter->post_type !== 'chapter' || $chapter->post_status !== 'publish') {
             return false;
         }
@@ -269,16 +269,16 @@ class notifications_insert extends notifications {
         }
         if ( 
             intval($chapter->post_author) === intval($review->user_id) &&
-            intval($review->comment_parent) === 0
+            intval($review->reply) === 0
         ) {
             return false;
         }
         $args = [
             'notification_type' => $parent_0 ? 'chapter_review' : 'review_reply',
             'type_of'           => 'review',
-            'type_of_id'        => $review->comment_ID,
+            'type_of_id'        => $review->ID,
             'type_by'           => $parent_0 ? 'chapter' : 'review',
-            'type_by_id'        => $parent_0 ? $chapter->ID : $review->comment_parent,
+            'type_by_id'        => $parent_0 ? $chapter->ID : $review->reply,
             'user_id'           => $parent_0 ? $chapter->post_author : $parent_review->user_id
         ];
         self::insert($args);

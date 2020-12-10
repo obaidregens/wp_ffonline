@@ -1,7 +1,9 @@
 .shepherd-element {
     background: var(--background-accent);
     border-radius: 5px;
-    box-shadow: var(--elevate-stack);
+    box-shadow: none;
+    --shepherd-border: 1px solid var(--text-color);
+    border: var(--shepherd-border);
     max-width: 400px;
     opacity: 0;
     outline: none;
@@ -35,7 +37,15 @@
 .shepherd-arrow:before {
     content: "";
     transform: rotate(45deg);
-    background: var(--background-accent)
+    background: var(--background-accent);
+}
+[data-popper-placement="bottom"] .shepherd-arrow:before {
+    border-left: var(--shepherd-border);
+    border-top: var(--shepherd-border);
+}
+[data-popper-placement="top"] .shepherd-arrow:before {
+    border-right: var(--shepherd-border);
+    border-bottom: var(--shepherd-border);
 }
 
 .shepherd-element[data-popper-placement^=top]>.shepherd-arrow {

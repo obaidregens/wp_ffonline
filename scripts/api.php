@@ -54,6 +54,7 @@ $import = [
     'poll',
     'offline',
     'beta',
+    'help',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

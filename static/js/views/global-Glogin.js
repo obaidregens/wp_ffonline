@@ -16,7 +16,8 @@ window.googleSignInRender = () => {
                     new toast("An error occured");
                 }
                 if (response.code === 1) {
-                    gapi.auth2.getAuthInstance().signOut();
+					gapi.auth2.getAuthInstance().signOut();
+					await idbKeyval.set("ongoingTour","write-intro");
                     window.location.reload();
                     return;
                 }
@@ -71,7 +72,8 @@ function prompt_create_username(existing_data) {
 				.then(async response => {
 					this.removeAttribute('disabled');
 					if (response.code === 1){
-                        gapi.auth2.getAuthInstance().signOut();
+						gapi.auth2.getAuthInstance().signOut();
+						await idbKeyval.set("ongoingTour","write-intro");
 						window.location.reload();
 					}
 					else if (response.code === 7){

@@ -1,7 +1,7 @@
 </main>
 <footer>
 	<nav>
-		<a href="/faq">Help</a>
+		<a href="/help">Help</a>
 		<a href="/news">News</a>
 		<a href="/rules">Rules</a>
 	</nav>

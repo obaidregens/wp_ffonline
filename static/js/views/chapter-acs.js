@@ -278,7 +278,7 @@ DOM.q('.acs-popup').addEventListener('click',function(event){
     else if (action === 'theme'){
         const theme = event.target.getAttribute('color');
         acs.set('theme',theme);
-        themes.set(theme,{temp: ['peach','pitchblack'].includes(theme) });
+        themes.set(theme,{temp: !['dark','light'].includes(theme) });
     }
     else if (action === 'font') {
         if (event.target.parentElement.tagName.toLowerCase() !== 'dropdown'){

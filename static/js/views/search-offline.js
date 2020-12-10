@@ -1,12 +1,12 @@
 const reHookOffline = () => {
-    DOM.qa('book > options > [label="Offline"]').forEach(btn => {
-        const book = btn.closest('book');
+    DOM.qa('.story-single options > [label="Offline"]').forEach(btn => {
+        const book = btn.closest('options').parentElement.previousElementSibling;
         const book_id = book.getAttribute('book_id');
         const total_chapters = parseInt(book.getAttribute('chapters'));
         offlineAPI({
             book_id,
             title: book.querySelector('.title').innerText,
-            author: book.querySelector('.author > a').innerText,
+            author: book.querySelector('.author a').innerText,
             total_chapters,
             elems: [
                 btn

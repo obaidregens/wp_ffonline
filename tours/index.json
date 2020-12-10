@@ -1,0 +1,14 @@
+[
+    {
+        "Title": "Get Started",
+        "Description": "A guide to help you get started reading on Fanfiction Online.",
+        "name": "welcome",
+        "tags": ["start","intro","introduction","begin","new"]
+    },
+    {
+        "Title": "Publish your first story",
+        "Description": "A guide that will show you how to create and edit drafts, and publish your first story.",
+        "name": "write-intro",
+        "tags": ["start","write","publish","story","stories","create","draft"]
+    }
+]
