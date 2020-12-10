@@ -30,7 +30,7 @@
             "autocomplete"
         ],
         "css_hash": "e40f144f21d9d0f5cbf9509b4b6791f3586e8cad",
-        "js_hash": "d359dff05079b204db83bc0b3e155258bfd4e38e"
+        "js_hash": "20cbc9275c4a8ce0a1b851afb2f51f32525e031f"
     },
     "beta-global": {
         "css": [
@@ -178,11 +178,11 @@
             "idb",
             "global_new",
             "intro",
-            "search-content",
-            "story-options"
+            "story-options",
+            "search-content"
         ],
-        "css_hash": "b9b6d9c829b7fb46b2bfb0a1d9c3610e8b89bd6f",
-        "js_hash": "2b0aef24dc3029a3800a123695f31d8fd1f3284b"
+        "css_hash": "8af0207bd873a9ae692df6a1796efbff43a12d53",
+        "js_hash": "7fff5bb0a2c1147b43c0671c54056de044305fc5"
     },
     "author-stories": {
         "css": [
@@ -218,7 +218,7 @@
             "autocomplete"
         ],
         "css_hash": "36654f452d50d3d1c0858997fd525e2b4e031f73",
-        "js_hash": "3c044dd70bc051e88a6272bdf05bc58a5fc91dcd"
+        "js_hash": "c0629901da01143d935aec099ab94eae04ab3c1d"
     },
     "author-updates": {
         "css": [
@@ -381,7 +381,7 @@
             "confirmation"
         ],
         "css_hash": "22d86a37128c046dbf07d9f7a92fba724ba47134",
-        "js_hash": "8c29e2b634247ecf0672c370ab0a3d551a07180c"
+        "js_hash": "5196a4c853c2893469ade3e1f7c98ffb38eedb69"
     },
     "import-stories": {
         "css": [
@@ -734,7 +734,7 @@
             "autocomplete"
         ],
         "css_hash": "1bccadfc93169a6cc40b983a40fe526bd63e9aec",
-        "js_hash": "7b25180ab4e29baab4e97ccb0d66433a7998fc00"
+        "js_hash": "00e1f54bfa0f4b2cc272551c3a201b82464c1e85"
     },
     "author-following": {
         "css": [

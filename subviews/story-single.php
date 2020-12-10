@@ -6,7 +6,7 @@ $chapters_count = count(published_chapters($book->ID,-1,'ids'));
 ?>
 <div class="swiper-container story-single">
     <div class="swiper-wrapper">
-        <a href="/story/<?= $book->ID; ?>/1#progress" class="book swiper-slide waves-effect" book_id="<?= $book->ID; ?>" chapters="<?= $chapters_count; ?>" >
+        <a href="<?= home_url('/story/' . $book->ID . '/1#progress'); ?>" class="book swiper-slide waves-effect" book_id="<?= $book->ID; ?>" chapters="<?= $chapters_count; ?>" >
             <object type="invalid/mime"><a class="more waves-effect"></a></object>
             <span class="title"><?= mark_search(htmlspecialchars($book->post_title), $search); ?></span>
             <span class="author"><object type="invalid/mime"><?= author_href($book->ID); ?></object></span>

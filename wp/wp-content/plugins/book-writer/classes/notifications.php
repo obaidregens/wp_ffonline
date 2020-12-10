@@ -109,7 +109,7 @@ class notifications {
                     return null;
                 }
                 $message = 'An anonymous reviewer left a comment for you.';
-                $link = rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-0';
+                $link = rtrim(get_permalink( $comment->type_id ),'/') . '/#reviews-0';
                 if (intval($comment->user_id) !== 0) {
                     $user_commented = get_userdata( $comment->user_id );
                     $message = "@" . $user_commented->user_login . " left a review for you.";
@@ -125,7 +125,7 @@ class notifications {
                 return [
                     'message'   => "The author replied to your review.",
                     'description'   => "",
-                    'link'      => rtrim(get_permalink( $comment->comment_post_ID ),'/') . '/#reviews-' . $comment->user_id
+                    'link'      => rtrim(get_permalink( $comment->type_id ),'/') . '/#reviews-' . $comment->user_id
                 ];
             case 'chapter_vote':
                 return [

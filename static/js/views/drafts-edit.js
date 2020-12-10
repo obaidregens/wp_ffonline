@@ -23,7 +23,7 @@ window.autosaveDraft = (val,perm) => {
         const title = window.draftTitle.value === '' ? 'Untitled' : window.draftTitle.value;
 
         const changes = Object.fromEntries([...new Set(window.editedBlocks)].map(i => [i,val[i]]));
-        console.log([...new Set(window.editedBlocks)],window.mapBlocks.map(({pa,type}) => type + " -> " + pa));
+        // console.log([...new Set(window.editedBlocks)],window.mapBlocks.map(({pa,type}) => type + " -> " + pa));
         api('save_draft',{
             data: {
                 draft_id: DOM.q('editor').getAttribute('draft_id'),

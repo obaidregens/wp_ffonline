@@ -52,7 +52,7 @@ const reChapterProgress = () => {
             const 
                 title_elem = book.querySelector('.title'),
                 title = title_elem.innerText,
-                href = book.querySelector('.title').getAttribute('href'),
+                href = book.getAttribute('href'),
                 author = book.querySelector('.author a').innerText,
                 desc = book.querySelector('.description').innerText;
             share_open({

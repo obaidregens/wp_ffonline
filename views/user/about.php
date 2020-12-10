@@ -1,8 +1,8 @@
 <?php
 $app->template('/views/user/header');
 $app->bundle->css('/css/components/divider');
-$app->bundle->mix('search-content');
 $app->bundle->mix('story-options');
+$app->bundle->mix('search-content');
 $app->bundle->css('/css/views/author-about');
 $app->bundle->css('/css/views/updates-add');
 $app->bundle->css('/css/views/updates-content');
