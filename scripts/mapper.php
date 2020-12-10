@@ -7,6 +7,12 @@ class XML_sitemap {
     protected $fields = [];
     protected $names = [];
     protected $current = "";
+    protected function ping($name = null) {
+        $name = $name === null ? $this->current : $name;
+        $sitemap_file = $this->sitemap_url  . $name . '.xml';
+        echo "Pinged Google: " . $sitemap_file;
+        file_get_contents("http://www.google.com/ping?sitemap=" . $sitemap_file);
+    }
     function __construct($args) {
         $args = array_replace([
             'site'          => '',
@@ -46,11 +52,10 @@ class XML_sitemap {
             file_put_contents($this->dir . $this->current . ".xml",self::wrapSitemap(implode('',$this->fields)));
             $this->fields = [];
         }
-        $this->current = $name;
-        // Ping
         if (!DEV()) {
-
+            $this->ping();
         }
+        $this->current = $name;
         return true;
     }
     function index() {
@@ -65,8 +70,8 @@ class XML_sitemap {
         $index_xml = null;
         // Ping
         if (!DEV()) {
-
-        }
+            $this->ping('sitemap-index');
+        }        
     }
     protected function wrapSitemap($sitemap) {
         return
