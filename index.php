@@ -1,9 +1,9 @@
 <?php
+define("BEGIN_PAGE_RENDER",microtime(true));
 function construct_page_title(... $parts) {
     return implode(" - ",$parts) . " - Fanfiction Online";
 }
 define('MAIN_DIR',dirname(__DIR__) . '/');
-require_once(__DIR__ . '/php_includes/helpers.php');
 
 define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
@@ -459,7 +459,7 @@ $app->listen('/@me/&*',function($self) {
     if (!is_user_logged_in()) {
         return;
     }
-    $u = get_userdata( get_current_user_id() );
+    $u = user::get_by( 'ID', get_current_user_id() );
     $self->redirect("/@" . $u->user_login . substr($self->request,4));
 });
 $app->listen('/@:user/collections/:collection',function($self){
@@ -685,7 +685,7 @@ $app->listen('/drafts/:draft_share',function($self){
     $self->type_id = intval($draft->ID);
     $self->draft = $draft;
     $self->header([
-        'title'         => construct_page_title($draft->title,"Shared by @" . get_userdata($draft->user_id )->user_login,"Drafts"),
+        'title'         => construct_page_title($draft->title,"Shared by @" . user::get( $draft->user_id )->user_login,"Drafts"),
     ]);
     $self->template('/views/drafts/preview');
     $self->footer();

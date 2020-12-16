@@ -26,7 +26,7 @@ $is_user_logged_in = is_user_logged_in(  );
         <book-title><?= htmlspecialchars($book->post_title); ?></book-title>
         <author><?= author_href($book); ?></author>
         <book-description><?= htmlspecialchars($book->post_excerpt); ?></book-description>
-        <?php print_book_meta($book->ID); ?>
+        <?php print_book_meta($book->ID,$book_query); ?>
         <?php print_book_tags($book->ID,$book_query); ?>
     </book-header>
     <book-more>

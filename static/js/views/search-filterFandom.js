@@ -1,18 +1,31 @@
 (async () => {
     const inst = new autocomplete(
         DOM.q('fandom-filter > input'),
-    Object.entries(tags_data.fandom).filter(([value,{count}]) => parseInt(count) > 0).map(([value,{name}]) => {
-        return {name,value};
-    }),{
-        none_found_msg: "No fandoms"
-    });
+        [],{
+            async: "load_tags",
+            async_data: {
+                tag: "fandom",
+                prev: DOM.q('prev_ss').innerText,
+                all: true
+            },
+            none_found_msg: "No fandoms",
+            preview: true,
+            name: "fandomFilter"
+        }
+    );
     inst.select = (v) => {
         inst.out();
         inst.input.blur();
-        DOM.q("select-tag[name='fandom']").setAttribute('selected',JSON.stringify({
+        const selected = {
             included: [v.value],
             excluded: []
-        }));
+        };
+        DOM.q('select-tag[name="fandom"]').innerText = JSON.stringify(selected);
         DOM.q('[label="Search"]').dispatchEvent(new Event("click"));
+        setSelectedTags('fandom',selected)
+        .then(() => {
+            const fandom_name = [...DOM.q('select-tag[name="fandom"]').children].map(tag_el => tag_el.innerText).join("/");
+            setFilterFandom(fandom_name);
+        });
     }
 })();

@@ -1,123 +1,58 @@
-(() => {
-    const setSelectedTags = (tag_name,selected) => {
-        let tags_data = _.clone(window.tags_data)[tag_name] || {};
-        const frag = document.createDocumentFragment();
-        const select_tag = DOM.q(`select-tag[name="${tag_name}"]`);
-        select_tag.setAttribute('selected',JSON.stringify(selected));
-        const url_mixed = selected.included.concat(selected.excluded);
-        for (let yb = 0; yb < url_mixed.length; yb++) {
-            const _tag = tags_data[url_mixed[yb]];
-            if (! _tag) {
-                continue;
-            }
-            const selected_tag_elem = document.createElement('tag');
-            selected_tag_elem.innerText = _tag.name + ' (' + _tag.count + ')';
-            if (selected.excluded.includes(url_mixed[yb])){
-                selected_tag_elem.setAttribute('excluded','');
-            }
-            frag.appendChild(selected_tag_elem);
+const tagNamesCacheGet = JSON.parse(localStorage.getItem('tag_names')) || {};
+const tagNamesCache = ((Date.now() - parseInt(tagNamesCacheGet.cache_time || 0)) > 30*60*1000) ? {} : tagNamesCacheGet;
+const setSelectedTags = async (tag_name,selected) => {
+    const frag = document.createDocumentFragment();
+    const select_tag = DOM.q(`select-tag[name="${tag_name}"]`);
+    select_tag.setAttribute('selected',JSON.stringify(selected));
+    const url_mixed = selected.included.concat(selected.excluded);
+    tagNamesCache.cache_time = tagNamesCache.cache_time || Date.now();
+    tagNamesCache[tag_name] = tagNamesCache[tag_name] || {};
+    const getIds = [];
+    url_mixed.forEach((id,i) => {
+        if (!tagNamesCache[tag_name][id]) {
+            getIds.push(id);
         }
-        select_tag.innerText = '';
-        select_tag.appendChild(frag);
+    });
+    if (getIds.length > 0) {
+        const {names} = await api("get_tags",{
+            data: {
+                tag: tag_name,
+                ids: getIds
+            }
+        });
+        Object.assign(tagNamesCache[tag_name],names);
     }
-    const replaceTags = (sort = 'count') => {
-        function sort_tags(tags,sort){
-            const this_tag_ids = Object.keys(tags);
-            const sortFunc = sort === 'alphabetical' ? function(a, b){
-                const nameA = tags[a].name.toUpperCase();
-                const nameB = tags[b].name.toUpperCase();
-                if (nameA < nameB) {
-                  return -1;
-                }
-                if (nameA > nameB) {
-                  return 1;
-                }
-                return 0;
-            } : function(a, b){
-                return tags[a].count - tags[b].count;
-            };
-            this_tag_ids.sort(sortFunc);
-            if (sort === 'count'){
-                this_tag_ids.reverse();
-            }
-            return this_tag_ids;
-        }
-        function tags_checkboxes_fragment(tags,tag_ids){
-            const fragment = document.createDocumentFragment();
-            for (let u = 0; u < tag_ids.length; u++) {
-                const tag_id = tag_ids[u];
-                const tag = tags[tag_id];
-                const tag_elem = DOM.create('label',{
-                    classes: ['checkbox'],
-                    children: [
-                        DOM.create('input',{
-                            attributes: {
-                                type: 'checkbox',
-                                value: tag_id,
-                            }
-                        }),
-                        DOM.create('text',{
-                            innerText: tag.name + ' (' + tag.count + ')'
-                        })
-                    ]
-                });
-                fragment.appendChild(tag_elem);
-            }
-            return fragment;
-        }
-        const current_popup = DOM.q('popup[tag-name].show');
-        if (! current_popup ){
+    url_mixed.forEach(tag_id => {
+        const _tag = tagNamesCache[tag_name][tag_id];
+        if (! _tag) {
             return;
         }
-        const tags_data = _.clone(window.tags_data);
-        const tag_name = current_popup.getAttribute('tag-name');
-        const this_tags = tags_data[tag_name] || {};
-        const this_tag_ids = sort_tags(this_tags, sort);
-        const chkbx = async_tag_names.includes(tag_name) ? document.createDocumentFragment() : tags_checkboxes_fragment(this_tags,this_tag_ids);
-        // Selection
-        const selected_raw = DOM.q(`select-tag[name="${tag_name}"]`).getAttribute('selected');
-        const selected = selected_raw ? JSON.parse(selected_raw) : {included: [],excluded: []};
-        const _mixed = selected.included.concat(selected.excluded);
-        for (let m = 0; m < _mixed.length; m++) {
-            let elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
-            if (! elem_){
-                const tag = this_tags[_mixed[m]];
-                if ( !tag ) {
-                    continue;
-                }
-                chkbx.appendChild(DOM.create('label',{
-                    classes: ['checkbox'],
-                    children: [
-                        DOM.create('input',{
-                            attributes: {
-                                type: 'checkbox',
-                                value: _mixed[m],
-                            }
-                        }),
-                        DOM.create('text',{
-                            innerText: tag.name + ' (' + tag.count + ')'
-                        })
-                    ]
-                }));
-                elem_ = chkbx.querySelector(`input[type="checkbox"][value="${_mixed[m]}"]`);
+        frag.appendChild(DOM.create('tag',{
+            innerText: `${_tag}`,
+            attributes: {
+                excluded: selected.excluded.includes(tag_id) ? "" : null
             }
-            elem_.checked = true;
-            if (selected.excluded.includes(_mixed[m])){
-                elem_.classList.add('cross');
-            }
-        }
-        let insert_into = DOM.q(`popup[tag-name="${tag_name}"] > tag_list`);
-        insert_into.innerText = '';
-        insert_into.appendChild(chkbx);
-    }
+        }));
+    });
+    select_tag.innerText = '';
+    select_tag.appendChild(frag);
+    localStorage.setItem('tag_names',JSON.stringify(tagNamesCache));
+}
+const setFilterFandom = (fandomN) => {
+    const sort_elem = DOM.q('filter-books > next-screen > div > select');
+    const fandom_showing = DOM.q('fandom-filter > showing');
+    fandom_showing.classList.add('show');
+    fandom_showing.querySelector('select').value = sort_elem.value;
+    fandom_showing.querySelector('fandom').innerText = fandomN === "" ? "All" : fandomN;
+}
+(() => {
     const saveSelectedTags = () => {
         const _pop_ = DOM.q('popup[tag-name].show');
         if (! _pop_){
             return;
         }
         const tag_name = _pop_.getAttribute('tag-name');
-        let tag_list = _pop_.querySelector('tag_list');
-        let fandom_ID = null;
+        const tag_list = _pop_.querySelector('tag_list');
         const selected = {included: [], excluded: []};
         const inputs = tag_list.querySelectorAll(' label.checkbox > input:checked');
         for (let i = 0; i < inputs.length; i++) {
@@ -126,68 +61,51 @@
             selected[loc].push(input.value);
         }
         setSelectedTags(tag_name,selected);
-        tag_list.innerText = '';
     }
-    const async_tag_names = ['pairing','character','fandom'];
-    const async_tags = () => {
-        return new Promise( async (resolve,reject) => {
-            const current_popup = DOM.q('popup[tag-name].show');
-            if (! current_popup ){
-                return;
-            }
-            current_popup.classList.remove('no-results');
-            const tags_data = _.clone(window.tags_data);
-            const tag_name = current_popup.getAttribute('tag-name');
-            const this_tags = tags_data[tag_name] || {};
-            const s = current_popup.querySelector('wrap > text-input > input').value;
-            const res = await api('load_' + tag_name,{
-                data: {s}
+    const checkboxFrag = function (list,opts) {
+        const fragment = document.createDocumentFragment();
+        list.forEach(({value,name,count,selected = null}) => {
+            const checkboxEl = DOM.create('label',{
+                classes: ['checkbox'],
+                children: [
+                    DOM.create('input',{
+                        attributes: {
+                            type: 'checkbox',
+                            value: value,
+                            checked: (selected === true || selected === false) ? "" : null
+                        },
+                        classes: selected === false ? ['cross'] : []
+                    }),
+                    DOM.create('text',{
+                        innerText: `${name} (${count})`
+                    })
+                ]
             });
-            if (s !== "" && res.tags.length === 0) {
-                current_popup.classList.add('no-results');
-            }
-            const tags_list = current_popup.querySelector('tag_list');    
-            const unchecked = tags_list.querySelectorAll('label.checkbox > input:not(:checked)');
-            const checked_ids = [...tags_list.querySelectorAll('label.checkbox > input:checked')].map(el => {
-                return el.getAttribute('value');
-            });
-            unchecked.forEach(v => v.parentElement.remove());
-            res.tags.forEach(({ID,name}) => {
-                if (checked_ids.includes(ID)){return;}
-                tags_list.appendChild(DOM.create('label',{
-                    classes: ['checkbox'],
-                    children: [
-                        DOM.create('input',{
-                            attributes: {
-                                type: 'checkbox',
-                                value: ID,
-                            }
-                        }),
-                        DOM.create('text',{
-                            innerText: `${name} (${this_tags[ID].count || 0})`
-                        }),
-                    ]
-                }));
-            });
-            resolve("");
+            fragment.appendChild(checkboxEl);
         });
+        if (opts.more) {
+            fragment.appendChild(DOM.create("text",{
+                innerText: `Search to see more.`
+            }));
+        }
+        this.drop.innerText = "";
+        this.drop.appendChild(fragment);
+        return fragment;
     }
     const create_tags_popup = (tag_name) => {
         let popup_content = DOM.create('tag_list');
         let _popup = DOM.create('popup',{
-            classes: async_tag_names.includes(tag_name) ? ['async'] : [],
+            classes: ['async'],
             attributes: {
                 "tag-name": tag_name
             },
             listeners: {
                 change: function(event){
-                    if (
-                        event.target.tagName.toLowerCase() === 'input' &&
-                        event.target.getAttribute('type') === 'checkbox'
-                    ){
+                    if (event.target.getAttribute('type') === 'checkbox'){
                         if (this.getAttribute('selection') === 'exclude'){
                             event.target.classList.add('cross');
                         }
+                        saveSelectedTags();
                     }
                 },
                 onClose: saveSelectedTags,
@@ -219,60 +137,8 @@
                             }
                         }
                     }),
-                    async_tag_names.includes(tag_name) ? null : DOM.create('button',{
-                        classes: ['dropdown'],
-                        attributes: {
-                            label: 'Sort'
-                        },
-                        children: [
-                            DOM.create('dropdown',{
-                                classes: ['right'],
-                                children: [
-                                    DOM.create('li',{
-                                        innerText: 'Count',
-                                        attributes: {
-                                            tabindex: "0"
-                                        }
-                                    }),
-                                    DOM.create('li',{
-                                        innerText: 'Alphabetical',
-                                        attributes: {
-                                            tabindex: "0"
-                                        }
-                                    })
-                                ],
-                                listeners: {
-                                    click: function(event){
-                                        this.parentElement.blur();
-                                        replaceTags(event.target.innerText.toLowerCase());
-                                    }
-                                }
-                            }),
-                        ]
-                    }),
-                    DOM.update(create_text_input({
+                    create_text_input({
                         label: 'Search'
-                    }),{
-                        listeners: {
-                            input: async_tag_names.includes(tag_name) ? _.debounce(async_tags) : function(){
-                                const _search = this.firstChild.value.toLowerCase();
-                                if (_search === ''){
-                                    return;
-                                }
-                                const _popup = this.parentElement.parentElement;
-                                const tag_name = _popup.getAttribute('tag-name');
-                                let tag_list = _popup.querySelector('tag_list');
-                                let offset = -120;
-                                const _boxes = tag_list.querySelectorAll('label.checkbox > text');
-                                for (let i = 0; i < _boxes.length; i++) {
-                                    const box = _boxes[i];
-                                    if (box.innerText.toLowerCase().search(_search) !== -1){
-                                        _popup.scrollTop = box.offsetTop + offset;
-                                        break;
-                                    }
-                                }                        
-                            }
-                        }
                     })
                 ]
             }),
@@ -348,31 +214,30 @@
             }),
         });
     }
-    words();
     const urlParams = new URLSearchParams(window.location.search);
+
+    // Words
+    words();
     const urlParamsWords = (urlParams.get('words') || '0,3000000').split(',');
     DOM.q('words-slider').noUiSlider.set([urlParamsWords[0], urlParamsWords[1]]);
 
     // Search
-    const filters_search_elem = DOM.q('filter-books > next-screen > div > text-input:first-child > input');
-    filters_search_elem.value = urlParams.get('search') || '';
-    filters_search_elem.dispatchEvent(new Event('change'));
+    const search_el = DOM.q('filter-books > next-screen > div > text-input:first-child > input');
+    search_el.value = urlParams.get('search') || '';
+    search_el.dispatchEvent(new Event('change'));
 
     // Author Search
-    const author_search_elem = DOM.q('filter-books > next-screen > div > text-input:nth-child(2) > input');
-    author_search_elem.value = urlParams.get('author') || '';
-    author_search_elem.dispatchEvent(new Event('change'));
+    const author_el = DOM.q('filter-books > next-screen > div > text-input:nth-child(2) > input');
+    author_el.value = urlParams.get('author') || '';
+    author_el.dispatchEvent(new Event('change'));
 
+    // Sort
+    const sort_el = DOM.q('filter-books > next-screen > div > select');
+    const sort_options = [...sort_el.children].map(sl => sl.getAttribute('value'));
+    sort_el.value = sort_options.includes(urlParams.get('sort')) ? urlParams.get('sort') : sort_options[0];
 
-    const filters_sort_elem = DOM.q('filter-books > next-screen > div > select');
-    const sort_options = [];
-    for (let k = 0; k < filters_sort_elem.children.length; k++) {
-        sort_options.push(filters_sort_elem.children[k].getAttribute('value'));
-    }
-    filters_sort_elem.value = sort_options.includes(urlParams.get('sort')) ? urlParams.get('sort') : sort_options[0];
     const select_tags = DOM.qa('select-tag');
-    for (let i = 0; i < select_tags.length; i++) {
-        const elem = select_tags[i];
+    select_tags.forEach(elem => {
         const tag_name = elem.getAttribute('name');
         
         const url_selected = {
@@ -383,9 +248,27 @@
         elem.addEventListener('click',function(){
             __pop = create_tags_popup(tag_name);
             popup.open(__pop);
-            setTimeout(() => replaceTags());
+            setTimeout(() => {
+                const SearchInput = __pop.querySelector('wrap text-input > input');
+                const ac = new autocomplete(SearchInput,[],{
+                    name: "filter-" + tag_name,
+                    async: "load_tags",
+                    async_data: {
+                        tag: tag_name,
+                        prev: DOM.q('prev_ss').innerText,
+                        selected: () => JSON.parse(elem.getAttribute('selected'))
+                    },
+                    select: false,
+                    outOnMove: false,
+                    renderList: function () {
+                        this.drop = __pop.querySelector('tag_list');
+                    }
+                });
+                ac.render = checkboxFrag
+                SearchInput.dispatchEvent(new Event('focus'));
+            });
         });
-    }
+    });
     // Reset
     DOM.q('filter-books > next-screen > div > button[label="Reset"]').addEventListener('click',function(){
         words('reset');
@@ -400,7 +283,7 @@
         next_screen.close();
         let search_progress_interval = 0;
         const loader = DOM.q('loader');
-        function progress_spinner(){
+        const progress_spinner = () => {
             loader.classList.add('show');
             loader.setAttribute('progress', '0%');
             search_progress_interval = setInterval(function(){
@@ -416,17 +299,18 @@
     
         const construct = [
             "words=" + words('get'),
-            'sort=' + filters_sort_elem.value
+            'sort=' + sort_el.value
         ];
-        const search = filters_search_elem.value;
+        const search = search_el.value;
         if (search !== "") {
             construct.push('search=' + search);
         }
-        const author_search = author_search_elem.value;
+        const author_search = author_el.value;
         if (author_search !== ""){
             construct.push('author=' + author_search);
         }
         const select_tags = DOM.qa('select-tag');
+
         let fandom_name = "";
         for (let i = 0; i < select_tags.length; i++) {
             const raw_selected = select_tags[i].getAttribute('selected');
@@ -436,7 +320,7 @@
             const selected = JSON.parse(raw_selected);
             const name = select_tags[i].getAttribute('name');
             if (name === "fandom") {
-                fandom_name = selected.included.map(fid => tags_data.fandom[fid].name).join("/");
+                fandom_name = [...select_tags[i].children].map(tag_el => tag_el.innerText).join("/");
             }
             if (selected.included.length > 0) {
                 construct.push(name + '_included=' + selected.included.join(','));
@@ -456,10 +340,7 @@
         .then(response => {
             // Fandom Filter
             if (construct.length > 2) {
-                const fandom_showing = DOM.q('fandom-filter > showing');
-                fandom_showing.classList.add('show');
-                fandom_showing.querySelector('select').value = filters_sort_elem.value;
-                fandom_showing.querySelector('fandom').innerText = fandom_name === "" ? "All" : fandom_name;
+                setFilterFandom(fandom_name);
             }
             else {
                 const fandom_showing = DOM.q('fandom-filter > showing');
@@ -469,7 +350,6 @@
 
             // New Data
             prev_ss.innerText = response.prev;
-            window.tags_data = response.tags_data;
             collections.book_collections = response.book_collections;
             DOM.q('pagination').innerHTML = response.paginate;
             DOM.q('books-container').innerHTML = response.output;
@@ -481,24 +361,13 @@
             document.body.scrollTop = 0; // For Safari
             document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     
-            // Re add tags count
-            for (let j = 0; j < select_tags.length; j++) {
-                const raw_selected = select_tags[j].getAttribute('selected');
-                if (! raw_selected){
-                    continue;
-                }
-                if (raw_selected === '{"included":[],"excluded":[]}'){
-                    continue;
-                }
-                setSelectedTags(select_tags[j].getAttribute('name'),JSON.parse(raw_selected));                
-            }
             reChapterProgress();
             reHookOffline();
         });
     
     }
     DOM.q('fandom-filter select').addEventListener('change',({target}) => {
-        filters_sort_elem.value = target.value;
+        sort_el.value = target.value;
         DOM.q('[label="Search"]').dispatchEvent(new Event("click"));
     });
     DOM.q('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',function(event){

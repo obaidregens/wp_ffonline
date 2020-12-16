@@ -1,0 +1,38 @@
+<?php
+$includes = array(
+	'classes/bundles',
+	'classes/stats',
+	'classes/collections',
+	'classes/notifications',
+	'classes/error',
+	'classes/chats',
+	'classes/reviews',
+	'classes/book_query',
+	'classes/user',
+	'classes/v_code',
+	'classes/c_user',
+	'classes/drafts',
+	'classes/book_stats',
+	'classes/dict',
+	'classes/updates',
+	'classes/import_stories',
+	'classes/tags',
+	'classes/follow',
+	'classes/vote',
+	'classes/questions',
+	'classes/poll',
+	'classes/offline_stats',
+	'classes/spam',
+	'classes/db',
+	'classes/story',
+	'classes/beta',
+	'classes/cache',
+	'cpt',
+	'helpers',
+	'thrown',
+	'wp_hooks',
+	'setup'
+);
+foreach($includes as $include){
+	require_once ($include . '.php');
+}

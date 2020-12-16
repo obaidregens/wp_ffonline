@@ -2,8 +2,13 @@
 // Delete Account
 
 // Online Users
-// SELECT wp_users.user_login,stats_landings.type,stats_landings.type_id, (UNIX_TIMESTAMP() - stats_actions.timestamp) as passed FROM `stats_landings`
-// INNER JOIN stats_actions ON stats_landings.ID = stats_actions.landing_id
+// SELECT
+//     wp_users.user_login,
+//     stats_landings.type,
+//     stats_landings.type_id,
+//     (UNIX_TIMESTAMP() - stats_actions.timestamp) as passed
+// FROM `stats_actions`
+// INNER JOIN stats_landings ON stats_landings.ID = stats_actions.landing_id
 // INNER JOIN wp_users ON stats_landings.user_id = wp_users.ID
 // WHERE wp_users.user_login != 'admin'
 // GROUP BY stats_landings.ID
@@ -19,6 +24,7 @@
 // AND referrer_host != 'local'
 // AND timestamp > (UNIX_TIMESTAMP() - 12*60*60)
 // GROUP BY referrer
+// ORDER BY count DESC
 $app->bundle = global_bundle('dash-home');
 $app->bundle->css('css/components/floater');
 $app->bundle->css('css/js-components/sidenav');
@@ -54,8 +60,8 @@ $online = $wpdb->get_results(
 <block label="Online Visitors" count="<?= $online[0]->online_vfs; ?>"></block>
 </overview>
 <overview>
-<block label="Users" count="<?= count(get_users()); ?>"></block>
-<block label="Published Stories" count="<?= (new book_query([]))->count; ?>"></block>
+<block label="Users" count="<?= $wpdb->get_results("SELECT COUNT(*) as c FROM wp_users WHERE user_status = 0")[0]->c; ?>"></block>
+<block label="Published Stories" count="<?= (new book_query(['per_page'=>1]))->count; ?>"></block>
 <block label="Hits" count="<?= $landings[0]->c ?>"></block>
 </overview>
 <overview>

@@ -1,6 +1,7 @@
 class autocomplete {
     constructor (input, list, opts) {
         this.opts = Object.assign({
+            name: "",
             lowercase: true,
             trim: true,
             select: true,
@@ -8,20 +9,26 @@ class autocomplete {
             preview: true,
             none_found_msg: "No options",
             maxHeight: 200,
-            async: false
+            async: false,
+            async_data: {},
+            renderList: null,
+            outOnMove: true,
+            debounceTime: 200
         },opts);
         this.input = input;
         this.list = list;
         const enterInput = async ({target}) => {
             const se = await this.search(target.value);
-            this.render(se.list,{empty_search: se.empty});
+            this.render(se.list,{empty_search: se.empty,more: se.more});
             this.change(se);
         };
-        input.addEventListener('blur',this.out.bind(this));
-        window.addEventListener('resize',this.out.bind(this));
-        window.addEventListener('scroll',this.out.bind(this));
-        input.addEventListener('focus',enterInput);
-        input.addEventListener('input',enterInput);
+        if (this.opts.outOnMove) {
+            input.addEventListener('blur',this.out.bind(this));
+            window.addEventListener('resize',this.out.bind(this));
+            window.addEventListener('scroll',this.out.bind(this));    
+        }
+        input.addEventListener('focus',_.debounce(enterInput,this.opts.debounceTime));
+        input.addEventListener('input',_.debounce(enterInput,this.opts.debounceTime));
         if (this.opts.select) {
             input.addEventListener('keydown',(event) => {
                 if (!["ArrowDown","ArrowUp"].includes(event.key)) {
@@ -31,6 +38,9 @@ class autocomplete {
                 this.focused_list = true;
                 this.drop[event.key === "ArrowDown" ? "firstChild" : "lastChild"].focus();
             });
+        }
+        if (this.opts.renderList !== null) {
+            this.renderList = this.opts.renderList.bind(this);
         }
         this.renderList();
     }
@@ -64,7 +74,7 @@ class autocomplete {
                 },
                 mousedown: event => {
                     event.preventDefault();
-                    if (event.target.tagName.toLowerCase() !== "li") {
+                    if (event.target.tagName.toLowerCase() !== 'li') {
                         return;
                     }
                     return this.select(event.target.refValue);
@@ -122,20 +132,41 @@ class autocomplete {
     async search(search) {
         this.preChange();
         let s = search;
+        
+        let res = {};
         if (this.opts.async) {
-            const {result = {}} = await api(this.opts.async,{
-                data: {
-                    search,
-                    opts: this.opts,
+            const data = {search};
+            Object.entries(this.opts.async_data).forEach(([key,value]) => {
+                if(typeof value === 'function') {
+                    data[key] = value();
+                    return;
                 }
+                data[key] = value;
             });
-            return {
+            const uniqKey = JSON.stringify(data);
+            const cached = this.getCache(uniqKey);
+            if (cached !== false) {
+                return cached;
+            }
+    
+            const {result = {}} = await api(this.opts.async,{
+                data
+            });
+            res = {
                 search,
                 exactMatch: result.exactMatch || false,
                 list: result.list || [],
+                more: result.more || false,
                 empty: (this.opts.trim ? search.trim() : search) === ""
             };
+            this.putCache(uniqKey,res);
+            return res;
         }
+        const cached = this.getCache(search);
+        if (cached !== false) {
+            return cached;
+        }
+
         if (this.opts.lowercase) {
             s = s.toLowerCase();
         }
@@ -162,12 +193,35 @@ class autocomplete {
                 break;
             }
         }
-        return {
+        res = {
             search,
             exactMatch,
             list: newList,
-            empty: s === ""
+            empty: s === "",
+            more: false
         };
+        this.putCache(search,res);
+        return res;
+    }
+    cacheKey(search) {
+        return `ac+${this.opts.name}-${search}`;
+    }
+    getCache(search) {
+        if (!this.opts.name) {
+            return false;
+        }
+        const cached = JSON.parse(localStorage.getItem(this.cacheKey(search)));
+        if (cached === null || ( (Date.now() - parseInt(cached.cache_time || 0))) > 30*60*1000 ) {
+            return false;
+        }
+        return cached;
+    }
+    putCache(search,res) {
+        if (!this.opts.name) {
+            return false;
+        }
+        res.cache_time = Date.now();
+        localStorage.setItem(this.cacheKey(search),JSON.stringify(res));
     }
     change({exactMatch,list}) {}
     preChange(search) {}

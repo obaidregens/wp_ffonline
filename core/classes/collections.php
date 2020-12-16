@@ -353,10 +353,13 @@ class collection_helpers extends collection {
         if (! is_user_logged_in(  )) {
             return [];
         }
-        $c = collection::query([
-            'title'             => 'Hidden',
-            'author_included'   => [get_current_user_id()]
-        ]);
-        return $c[0]->book_ids;
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT collection_books.book_id as b FROM collections
+            INNER JOIN collection_books ON collection_books.collection_id = collections.ID
+            WHERE collections.title = 'Hidden' AND collections.author = %d",
+            [get_current_user_id()]
+        ));
+        return empty($r) ? [] : $r[0]->b;
     }
 }

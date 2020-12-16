@@ -170,7 +170,7 @@ class reviews {
         if (!$args['threaded']) {
             return $r;
         }
-        $replies = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE reply IN (" . sqlPlaceholder($r) . ")",array_column($r,'ID')));
+        $replies = empty($r) ? [] : $wpdb->get_results($wpdb->prepare("SELECT * FROM $table WHERE reply IN (" . sqlPlaceholder($r) . ")",array_column($r,'ID')));
         $r = array_merge($r,$replies);
         $replies = null;
 

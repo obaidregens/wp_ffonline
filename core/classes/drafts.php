@@ -601,6 +601,8 @@ class draft_chapters extends drafts {
             update_post_meta( $chapter_id, 'word-count', $words );
             // Update Book Time
             wp_update_post(['ID' => $book_id]);
+            story::uncache($book_id);
+
             $inst = new notifications_insert;
             $inst->updateStory($chapter_id);    
         }

@@ -4,6 +4,23 @@ add_action( 'pre_user_query', function( $uqi ) {
     $uqi->query_where .= ' AND user_status = 0';
 });
 class user {
+    public $ID;
+    public $user_login;
+    public $user_pass;
+    public $user_nicename;
+    public $user_email;
+    public $user_url;
+    public $user_registered;
+    public $user_activation_key;
+    public $user_status;
+    public $display_name;
+
+    function __construct ($obj) {
+        $aa = get_object_vars ( $obj );
+        foreach ($aa as $k => $v) {
+            $this->{$k} = $v;
+        }    
+    }
     // Signup
     public static function signup ($email,$username) {
         $validation = (new v_user([
@@ -30,6 +47,12 @@ class user {
             )
         );
         $user_id = $wpdb->insert_id;
+
+        $c = cache::now();
+        $c->delete(self::key('ID',$user_id));
+        $c->delete(self::key('user_email',$email));
+        $c->delete(self::key('user_login',$username));
+
         mail_user::signup_mail($user_id,$code->code);
         return $code->ID;
     }
@@ -72,6 +95,12 @@ class user {
                 'ID'    => $results[0]->ID
             )
         );
+
+        $c = cache::now();
+        $c->delete(self::key('ID',$results[0]->ID));
+        $c->delete(self::key('user_email',$results[0]->user_email));
+        $c->delete(self::key('user_login',$results[0]->user_login));
+
         collection_helpers::create_default(intval($results[0]->ID));
         self::internal_login($results[0]->ID);
         return true;
@@ -136,12 +165,19 @@ class user {
     // Get
     // Duplicates WP get_user_by
     static function get_by(string $field,$value,bool $show_unverified = false) {
-        $f = in_array($field,["id","ID"]) ? "ID" : "";
-        $f = in_array($field,["email"]) ? "user_email" : $f;
-        $f = in_array($field,["login"]) ? "user_login" : $f;
-        if ($f === "") {
+        $f = in_array($field,["id","ID"]) ? "ID" : $field;
+        $f = in_array($f,["email"]) ? "user_email" : $f;
+        $f = in_array($f,["login"]) ? "user_login" : $f;
+        if (!in_array($f,['ID','user_email','user_login'])) {
             return false;
         }
+        if (!$show_unverified) {
+            $cached = cache::now()->get(user_cache::key($f,$value));
+            if ($cached !== null) {
+                return $cached;
+            }    
+        }
+
         $sql = "SELECT * FROM wp_users WHERE $f = " . ($f === "ID" ? "%d" : "%s");
         if (!$show_unverified) {
             $sql .= " AND user_status = 0";
@@ -149,9 +185,19 @@ class user {
         else {
             $sql .= " AND user_status IN (0,1)";
         }
+        $sql .= " LIMIT 1";
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare($sql,[$value]));
-        return empty($r) ? false : $r[0];
+        $user = empty($r) ? false : new user($r[0]);
+
+        if (!$show_unverified) {
+            user_cache::add($user);
+        }
+
+        return $user;
+    }
+    static function get($ID) {
+        return user::get_by('ID',$ID);
     }
 }
 class user_settings extends user {
@@ -185,6 +231,15 @@ class user_settings extends user {
                 'ID'                => get_current_user_id()
             ]
         );
+        $c = cache::now();
+        $id_key = self::key('ID',get_current_user_id());
+        $cached = $c->get($id_key);
+        if ($cached !== null) {
+            $c->delete($id_key);
+            $c->delete(self::key('user_email',$cached->user_email));
+            $c->delete(self::key('user_login',$cached->user_login));    
+        }
+
         return true;
     }
     public static function get ($setting, $user = null) {
@@ -412,6 +467,12 @@ class GoogleAuth {
             ]
         );
         $user_id = intval($wpdb->insert_id);
+
+        $c = cache::now();
+        $c->delete(self::key('ID',$user_id));
+        $c->delete(self::key('user_email',$exists->email));
+        $c->delete(self::key('user_login',$username));
+
         $wpdb->update(
             self::$table,[
                 'user_id'   => $user_id,
@@ -422,5 +483,27 @@ class GoogleAuth {
         );
         collection_helpers::create_default($user_id);
         return $user_id;
+    }
+}
+class user_cache {
+    static function key ($field, $value) {
+        if (in_array($field,['ID','user_email','user_login'])) {
+            return 'User_' . $field . '_' . $value;
+        }
+        $f = in_array($field,["id","ID"]) ? "ID" : $field;
+        $f = in_array($f,["email"]) ? "user_email" : $f;
+        $f = in_array($f,["login"]) ? "user_login" : $f;    
+        return 'User_' . $field . '_' . $value;
+    }
+    static function add ($obj) {
+        $c = cache::now();
+        $id_key = self::key('ID',$obj->ID);
+        $c->set($id_key,$obj);
+        $c->ref(self::key('user_login',$obj->user_login),$id_key);
+        $c->ref(self::key('user_email',$obj->user_email),$id_key);
+    }
+    static function delete($id) {
+        $c = cache::now();
+        $c->delete(self::key('ID',$id));
     }
 }

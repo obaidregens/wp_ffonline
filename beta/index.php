@@ -1,25 +1,27 @@
 <?php
-if (!is_user_logged_in() && beta::is()) {
-    $app->type = 'beta-login';
-    $app->type_id = 0;
-    $app->login();
-}
-if (!beta::can() && beta::is() ) {
-    $expired = beta::expired();
-    if ($expired) {
-        $app->type = "beta-expired";
+if(!(defined("NO_ROUTES") && NO_ROUTES === true)) {
+    if (!is_user_logged_in() && beta::is() ) {
+        $app->type = 'beta-login';
         $app->type_id = 0;
-        $app->last_beta = $expired;
-        $app->header([
-            'title'     => construct_page_title("Invite Expired")
-        ]);
-        $app->template("/views/beta/expired");
-        $app->footer();
-        exit();
+        $app->login();
     }
-    else {
-        $app->redirect("https://fanfiction.online/" . trim($self->request,"/"));
-    }
+    if ( beta::is() && !beta::can() ) {
+        $expired = beta::expired();
+        if ($expired) {
+            $app->type = "beta-expired";
+            $app->type_id = 0;
+            $app->last_beta = $expired;
+            $app->header([
+                'title'     => construct_page_title("Invite Expired")
+            ]);
+            $app->template("/views/beta/expired");
+            $app->footer();
+            exit();
+        }
+        else {
+            $app->redirect("https://fanfiction.online/" . trim($self->request,"/"));
+        }
+    }    
 }
 if (beta::is()) {
     add_filter( 'home_url', function($url,$path) {

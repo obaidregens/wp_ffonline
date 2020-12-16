@@ -50,7 +50,7 @@ function get_data($book_id = 'new'){
 			'categories'	=> $categories
 		),
 		'selected' => array(
-			'username'	=> '@' . get_userdata( get_current_user_id() )->user_login
+			'username'	=> '@' . user::get_by( 'ID', get_current_user_id() )->user_login
 		)
 	);
 	//Other Tags
@@ -178,18 +178,70 @@ function get_data($book_id = 'new'){
 	}
     return $data;
 }
-function get_autosaves($book_id,$chapter_id){
-	global $wpdb;
-	$table_name = "custom_autosaves";
-	$result = $wpdb->get_results ( "
-		SELECT * FROM $table_name
-			WHERE chapter_id = $chapter_id
-			AND book_id = $book_id
-			ORDER BY timestamp DESC
-	" );
-	$return = array();
-	foreach ($result as $value) {
-		$return[$value->timestamp] = $value->content;
+function published_chapters($book_id,$limit = -1,$fields = 'all'){
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
+	$chapters = (new WP_Query(array(
+        'post_parent'   => $book_id,
+        'post_type'		=> 'chapter',
+        'post_status'	=> array('publish'),
+        'meta_key'		=> 'chapter_order',
+        'orderby'		=> 'meta_value_num',
+        'order'			=> 'ASC',
+        'fields'        => $fields,
+        'posts_per_page'=> $limit
+    )))->posts;
+    return $chapters;
+}
+function draft_chapters($book_id,$limit = -1,$fields = 'all'){
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
+	$chapters = (new WP_Query(array(
+        'post_parent'   => $book_id,
+        'post_type'		=> 'chapter',
+        'post_status'	=> array('draft'),
+        'fields'        => $fields,
+        'posts_per_page'=> $limit
+    )))->posts;
+    return $chapters;
+}
+function all_chapters($book_id,$limit = -1,$fields = 'all'){
+    if ($book_id === false || $book_id === 'new'){
+        return array();
+    }
+    $chapters = (new WP_Query(array(
+        'post_parent'   => $book_id,
+        'post_type'		=> 'chapter',
+        'post_status'	=> array('publish','draft','future'),
+        'fields'        => $fields,
+        'posts_per_page'=> $limit
+    )))->posts;
+    return $chapters;
+}
+function type_args($args,$placeholder){
+	global $app;
+	if ($placeholder['type'] === 'read'){}
+	else if ($placeholder['type'] === 'collection'){
+		$collection_books =
+			array_column(collection_books::query_by('collection_id',$placeholder['type_id']),'book_id');
+		$args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;
 	}
-	return $return;
+	else if ($placeholder['type'] === 'author-stories') {
+		$args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
+	}
+	else if ($placeholder['type'] === 'ffn_author-stories') {
+		$args['included']['ffn_author'] = isset($args['included']['ffn_author']) ? a_intersect($args['included']['ffn_author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
+	}
+	else{
+		$error = new err();
+		$error->add('type','Unknown type for search: ' . $placeholder['type']);
+		return $error;
+	}
+	if (!($placeholder['type'] === 'collection' && collection::get_by('ID',$placeholder['type_id'])->title === 'Hidden')) {
+		$hidden = collection_helpers::get_hidden();
+		$args['exclude_ids'] = array_merge($args['exclude_ids'] ?? [],$hidden);
+	}
+	return $args;
 }

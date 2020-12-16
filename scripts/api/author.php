@@ -66,7 +66,7 @@ function api_update_bio() {
 function api_change_password () {
     required_login();
     required_params('pass','confirm_pass');
-    $user = get_userdata( get_current_user_id() );
+    $user = user::get( get_current_user_id() );
     $d = &$_POST['data'];
     $pass = $d['pass'];
     $confirm_pass = $d['confirm_pass'];
@@ -87,7 +87,7 @@ function api_change_username() {
     required_login();
     required_params('new_username');
     $new_username = $_POST['data']['new_username'];
-    $current_user = get_userdata(get_current_user_id());
+    $current_user = user::get(get_current_user_id());
     if ($current_user->user_login === $new_username) {
         return [
             'code'      => 10,
@@ -110,7 +110,7 @@ function api_change_username() {
 function api_follow_user() {
     required_login();
     required_params('user_id');
-    $user = get_userdata( $_POST['data']['user_id'] );
+    $user = user::get( $_POST['data']['user_id'] );
     if (! $user) {
         return ['code'  => 9];
     }

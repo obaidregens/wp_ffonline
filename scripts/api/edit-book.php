@@ -44,6 +44,8 @@ function api_edit_book() {
             'post_status'       => 'draft',
             'post_title'        => $d['title']
         ]);
+        story::uncache($d['book_id']);
+
     }
     $book = story::get($d['book_id'],true,false);
     if ( !$book ){
@@ -246,6 +248,7 @@ function api_edit_book() {
             'ID'                =>  $d['book_id']
         ]
     );
+    story::uncache($d['book_id']);
     // Anonymous Reviews
     update_post_meta( $d['book_id'], 'anon_review', $anon_review ? 'true' : 'false' );
 

@@ -66,7 +66,7 @@ class notifications {
                     return null;
                 }
                 if ($collection->type === 'Favorites'){
-                    $collection_author = get_userdata( $collection->author );
+                    $collection_author = user::get_by( 'ID', $collection->author );
                     $message = "@" . $collection_author->user_login . ' favorited your story "' . $story->post_title . '".';
                 }
                 else if ($collection->type === 'Public'){
@@ -111,7 +111,7 @@ class notifications {
                 $message = 'An anonymous reviewer left a comment for you.';
                 $link = rtrim(get_permalink( $comment->type_id ),'/') . '/#reviews-0';
                 if (intval($comment->user_id) !== 0) {
-                    $user_commented = get_userdata( $comment->user_id );
+                    $user_commented = user::get( $comment->user_id );
                     $message = "@" . $user_commented->user_login . " left a review for you.";
                     $link = substr($link,0,strlen($link)-1) . $user_commented->ID;
                 }
@@ -134,7 +134,7 @@ class notifications {
                     'link'      => get_permalink( $row->type_of_id ),
                 ];
             case 'user_update':
-                $user = get_userdata( $row->type_by_id );
+                $user = user::get( $row->type_by_id );
                 $udisplay = "@" . $user->user_login;
                 return [
                     'message'   => $udisplay . " just posted an update!",
@@ -354,8 +354,8 @@ class notifications_insert extends notifications {
         self::insert($args);
     }
     function followUser($user_id,$by_user_id) {
-        $user = get_userdata($user_id);
-        $by_user = get_userdata( $by_user_id );
+        $user = user::get($user_id);
+        $by_user = user::get( $by_user_id );
         if (! $user || !$by_user ) {
             return false;
         }
@@ -374,7 +374,7 @@ class notifications_insert extends notifications {
     }
     function followCollection($collection_id,$by_user) {
         $collection = collection::get_by('ID',$collection_id);
-        $by_user = get_userdata( $by_user );
+        $by_user = user::get( $by_user );
         if (! $collection || !$by_user ) {
             return false;
         }

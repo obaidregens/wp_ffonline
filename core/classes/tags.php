@@ -7,10 +7,13 @@ class pairing {
         if (count($characters) < 2) {
             return false;
         }
-        global $wpdb;
-        $r = $wpdb->get_results("SELECT * FROM character_pairings");
         $characters = array_map('strval',$characters);
         sort($characters);
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM character_pairings WHERE character_id IN(" . sqlPlaceholder($characters,'%d') . ")",
+            $characters
+        ));
         $n = [];
         foreach ($r as $k => $row) {
             $n[$row->pairing_id] = $n[$row->pairing_id] ?? [];

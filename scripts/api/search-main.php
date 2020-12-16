@@ -14,10 +14,10 @@ function api_search() {
         $book_query->args_from_url($_POST['data']['search']);
         $book_query->args = type_args($book_query->args,ctrk_decrypt($_POST['placeholder'],true));
     }
+    $book_query->args['is_search'] = true;
     $book_query->query();
     $response = array(
         'prev'              => ctrk_encrypt($book_query->args),
-        'tags_data'         => tags_data($book_query),
         'book_collections'  => collection_helpers::query_by_book(array_column($book_query->books,'ID'))
     );
     ob_start();
@@ -39,86 +39,70 @@ function api_search() {
     $response['query'] = $book_query;
     return $response;
 }
-function api_load_character() {
-    required_params('s');
+function api_load_tags() {
+    required_params('prev','tag','search');
     $d = &$_POST['data'];
-    $s = (string) "%" . $d['s'] . "%";
-    if ($s === "%%") {
-        return ['code'=>1,'tags'=>[]];
+    $s = (string) $d['search'];
+
+    $args = ctrk_decrypt($d['prev'],true);
+    $args['per_page'] = 1;
+    $book_query = new book_query($args);    
+
+    $d['selected']['included'] = (array) ($d['selected']['included'] ?? []);
+    $d['selected']['excluded'] = (array) ($d['selected']['excluded'] ?? []);
+
+    $terms =
+    (new tag_query($d['tag'], $book_query->ids))
+    ->search($s)
+    ->select($d['selected'])
+    ->sort()
+    ->get();
+
+    if (!($d['all'] ?? false)) {
+        $more = count($terms) > 30;
+        array_splice($terms,30);    
     }
-    global $wpdb;
-    $sql =
-    "SELECT a.term_id as ID,CONCAT('General', ' > ', a.name ) as name FROM wp_terms as a
-    INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
-    WHERE b.taxonomy = 'character'
-    AND b.parent = 0
-    AND b.count > 0
-    AND a.name LIKE %s";
-    $prepared = $wpdb->prepare($sql,[$s]);
-    $r1 = $wpdb->get_results(
-        $prepared
-    );
-    $sql =
-    "SELECT a.term_id as ID,CONCAT(c.name, ' > ', a.name ) as name FROM wp_terms as a
-    INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
-    INNER JOIN wp_terms as c ON b.parent = c.term_id
-    WHERE b.taxonomy = 'character'
-    AND b.count > 0
-    AND (
-        a.name LIKE %s OR
-        c.name LIKE %s
-    )";
-    $prepared = $wpdb->prepare($sql,[$s,$s]);
-    $r2 = $wpdb->get_results(
-        $prepared
-    );
-    return ['code'=>1,'tags'=>array_merge($r1,$r2)];
-}
-function api_load_pairing() {
-    required_params('s');
-    $d = &$_POST['data'];
-    $s = (string) $d['s'];
-    if ($s === "") {
-        return ['code'=>1,'tags'=>[]];
-    }
-    $sql = "SELECT * FROM search_cache WHERE _key = 'pairing_tag_names'";
-    global $wpdb;
-    $prepared = $wpdb->prepare($sql,[$s,$s]);
-    $r = $wpdb->get_results(
-        $prepared
-    );
-    $e = unserialize($r[0]->ids);
-    $tags = [];
-    foreach ($e as $id => $name) {
-        if (stripos($name, $s) === false) {continue;}
-        $tags[] = [
-            'ID'    => $id,
-            'name'  => $name
+
+    $list = [];
+    foreach ($terms as $k => $term ) {
+        $list[] = [
+            'value'     => $term['ID'],
+            'name'      => $term['name'],
+            'count'     => $term['count'],
+            'selected'  => $term['selected'] ?? null
         ];
     }
-    return ['code'=>1,'tags'=>$tags];
+    return [
+        'code'      => 1,
+        'result'    => [
+            'list'      => $list,
+            'more'      => $more ?? false
+        ]
+    ];
 }
-function api_load_fandom() {
-    required_params('s');
+function api_get_tags() {
+    required_params('tag','ids');
     $d = &$_POST['data'];
-    $s = (string) "%" . $d['s'] . "%";
-    if ($s === "%%") {
-        return ['code'=>1,'tags'=>[]];
+    
+    if (!in_array($d['tag'],book_query::$taxonomies)){
+        return ['code'=>8,'names'=>[]];
     }
-    $sql =
-    "SELECT a.term_id as ID,CONCAT(c.name, ' > ', a.name ) as name FROM wp_terms as a
-    INNER JOIN wp_term_taxonomy as b ON a.term_id = b.term_id
-    INNER JOIN wp_terms as c ON b.parent = c.term_id
-    WHERE b.taxonomy = 'category'
-    AND b.count > 0
-    AND (
-        a.name LIKE %s OR
-        c.name LIKE %s
-    )";
+
     global $wpdb;
-    $prepared = $wpdb->prepare($sql,[$s,$s]);
-    $r = $wpdb->get_results(
-        $prepared
+    $sql = $wpdb->prepare(
+        "SELECT ids FROM `search_cache` WHERE (`_key`,`_value`) = (%s,%s)",
+        ['tag_names',$d['tag']]
     );
-    return ['code'=>1,'tags'=>$r];
+    $r = $wpdb->get_results($sql);
+    $ids = empty($r) ? [] : unserialize($r[0]->ids);
+    $r = [];
+    $d['ids'] = (array) $d['ids'];
+    foreach ($d['ids'] as $id ) {
+        $r[$id] = $ids[$id] ?? false;
+    }
+
+    return [
+        'code'      => 1,
+        'names'     => $r
+    ];
 }

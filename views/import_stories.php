@@ -11,7 +11,10 @@ $pending = c_user::pending();
 if (is_string($pending)){ $pending = htmlspecialchars($pending); }
 if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 
-if ($pending !== false) {
+if (1===1) {
+    ?><span>Importing stories from Fanfiction.Net is currently disabled. Read more <a href="/@admin">here</a>.</span><?php
+}
+else if ($pending !== false) {
     ?>
     <important>
         Verification is pending. After linking, you'll be able to import all your stories with a single tap.

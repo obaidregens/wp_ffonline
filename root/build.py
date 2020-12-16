@@ -37,9 +37,9 @@ def main():
 
 
     # Paths
-    current_path = "C:/wamp64/www/ffonline/"
-    onedrive_path = "C:/Users/obaid/OneDrive/FFONLINE_backups/"
-    github_path = "C:/Users/obaid/OneDrive/Documents/GitHub/wp_ffonline/"
+    current_path = "/Users/obaid/Documents/serve/"
+    onedrive_path = "/Users/obaid/OneDrive/FFONLINE_backups/"
+    github_path = "/Users/obaid/Documents/wp_ffonline/"
 
     # Bundle Write
     startTime = time.time()
@@ -87,6 +87,7 @@ def main():
                     shouldEdit = True
             except:
                 shouldEdit = True
+                pass
         if shouldEdit:
             return urls
         return False
@@ -116,7 +117,8 @@ def main():
             index[bundle_name][filetype + "_hash"] = hashed
             try:
                 os.remove(static_path + "bundles/" + bundle_name + "-" + bundle.get(filetype + "_hash","") + "." + filetype)
-            except:
+            except Exception as e:
+                print(e)
                 pass
             with open(static_path + "bundles/" + bundle_name + "-" + hashed + "." + filetype, "w+",encoding="utf8") as dump:
                 dump.write(minified)
@@ -238,5 +240,5 @@ def main():
 try:
     main()
 except Exception as e:
-    print(e)
+    raise e
     input("Exit?")

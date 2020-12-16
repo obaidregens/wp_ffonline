@@ -2,7 +2,7 @@
 global $book_query;
 global $book;
 $search = $book_query->args['search'];
-$chapters_count = count(published_chapters($book->ID,-1,'ids'));
+// $chapters_count = count(published_chapters($book->ID,-1,'ids'));
 ?>
 <div class="swiper-container story-single">
     <div class="swiper-wrapper">
@@ -11,7 +11,7 @@ $chapters_count = count(published_chapters($book->ID,-1,'ids'));
             <span class="title"><?= mark_search(htmlspecialchars($book->post_title), $search); ?></span>
             <span class="author"><object type="invalid/mime"><?= author_href($book->ID); ?></object></span>
             <div class="description"><?= mark_search(htmlspecialchars($book->post_excerpt), $search); ?></div>
-            <?php print_book_meta($book->ID); ?>
+            <?php print_book_meta($book->ID,$book_query); ?>
             <object type="invalid/mime"><?php print_book_tags($book->ID,$book_query); ?></object>
             <reading-progress></reading-progress>
         </a>

@@ -29,8 +29,8 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "e40f144f21d9d0f5cbf9509b4b6791f3586e8cad",
-        "js_hash": "20cbc9275c4a8ce0a1b851afb2f51f32525e031f"
+        "css_hash": "b64a8c667b3fa8372fcd74640415c3fe10248cb1",
+        "js_hash": "346763163c38cabf67302ddfdfb0904a67057baa"
     },
     "beta-global": {
         "css": [
@@ -217,8 +217,8 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "36654f452d50d3d1c0858997fd525e2b4e031f73",
-        "js_hash": "c0629901da01143d935aec099ab94eae04ab3c1d"
+        "css_hash": "ab81c67daa9f94596e9abcb24c223b69c576b53c",
+        "js_hash": "c7f48a996358d08f56724b3716348258248bfcc4"
     },
     "author-updates": {
         "css": [
@@ -449,7 +449,7 @@
             "autocomplete"
         ],
         "css_hash": "13a900caf82b5335b20e1b83d1a4d6405cc5f2ce",
-        "js_hash": "d0d6b6645b5479e4359112b2876fdea19106c697"
+        "js_hash": "6ad0c1b5e95856ff48f3a0070ec1acf4dd2a3f87"
     },
     "faq": {
         "css": [
@@ -733,8 +733,8 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "1bccadfc93169a6cc40b983a40fe526bd63e9aec",
-        "js_hash": "00e1f54bfa0f4b2cc272551c3a201b82464c1e85"
+        "css_hash": "0fd274392c437c0fb1bf0c020d630e6fc06212e4",
+        "js_hash": "6a20d20561aa4a8f443e54ab2f73fd79fe1d9e66"
     },
     "author-following": {
         "css": [
@@ -831,7 +831,7 @@
             "intro"
         ],
         "css_hash": "98a2213482182d67a3c2872c3e53367b5a164687",
-        "js_hash": "7b46ca618d902af3e4adb0239f25cf1b107d7dc0"
+        "js_hash": "fb9422da1a2711e0bba83122a3681b394a7af635"
     },
     "guides-home": {
         "css": [

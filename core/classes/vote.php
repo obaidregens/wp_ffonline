@@ -59,15 +59,13 @@ class vote {
         global $wpdb;
         if ($type === 'story' && $field = 'type_id') {
             $sql = 
-            "
-            SELECT votes.type,votes.type_id,votes.user_id,votes.landing_id,voted_time
+            "SELECT votes.type,votes.type_id,votes.user_id,votes.landing_id,voted_time
             FROM votes
             INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
             WHERE votes.type = 'chapter'
             AND wp_posts.post_parent = %d
             AND wp_posts.post_type = 'chapter'
-            AND wp_posts.post_status = 'publish'
-            ";
+            AND wp_posts.post_status = 'publish'";
             return $wpdb->get_results($wpdb->prepare($sql,[$value]));
         }
         $e->one_of('$type',$type,self::$types ?? []);

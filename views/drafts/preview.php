@@ -9,7 +9,7 @@ $app->bundle->css('css/views/drafts-preview');
 $app->bundle->js('js/views/drafts-preview');
 $app->bundle->css('css/components/folders');
 $draft = $app->draft;
-$user = get_userdata( $draft->user_id );
+$user = user::get( $draft->user_id );
 $draft_read = drafts_json::read($draft->content);
 ?>
 <share-link hidden><?= $draft->share; ?></share-link>

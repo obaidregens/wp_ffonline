@@ -170,6 +170,13 @@ tag_list > label.checkbox {
 tag_list > label.checkbox:hover {
     background-color: var(--hover);
 }
+tag_list > text {
+    width: 100%;
+    display: flex;
+    padding: 10px 5px;
+    padding-bottom: 15px;
+    font-size: 0.9rem;
+}
 /* Async popup */
 popup[tag-name="fandom"].async tag_list:empty::before {
     content: "Start typing to see fandoms";

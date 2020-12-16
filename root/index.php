@@ -1,8 +1,10 @@
 <?php
-function handle_all_breaking_errors($a = 1) {
+function handle_all_breaking_errors($a = 1,$errstr = "Called By Self",$errfile = null,$errline = null) {
     if (!in_array($a,[1,4,16,64,256,4096])) {
+        file_put_contents('warning.log',$errstr . "\n" . "Line $errline in $errfile");
         return;
     }
+    file_put_contents('error.log',$errstr . "\n" . "Line $errline in $errfile");
     http_response_code(503);
     header("x-is-still-in-temp: true");
     ?>

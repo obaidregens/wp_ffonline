@@ -43,7 +43,7 @@ class bundle {
         $i = array_search($file,$this->bundle[$type]);
         if ($i !== false){
             unset($this->bundle[$type][$i]);
-            $this->bundle[$type] = array_values($this->bundle[$type][$i]);
+            $this->bundle[$type] = array_values($this->bundle[$type]);
         }
         $this->bundle[$type][] = $file;
     }
@@ -52,7 +52,7 @@ class bundle {
         $i = array_search($file,$this->bundle[$type]);
         if ($i !== false){
             unset($this->bundle[$type][$i]);
-            $this->bundle[$type] = array_values($this->bundle[$type][$i]);
+            $this->bundle[$type] = array_values($this->bundle[$type]);
         }
         $this->bundle[$type][] = $file;
     }

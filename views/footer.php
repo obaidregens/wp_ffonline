@@ -30,5 +30,10 @@ if (!is_user_logged_in()) {
     font-display: block;
 }
 </style>
+<?php
+if (isset($_GET['debug'])) {
+	query_log($_GET['debug'] === "true");
+}
+?>
 </body>
 </html>

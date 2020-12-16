@@ -2,16 +2,20 @@
 // Find Args from Url
 global $book_query;
 $book_query = $app->book_query;
-$tags_data = tags_data($book_query);
+$a = $book_query->args['included']['fandom'];
+$terms = empty($a) ? [] : get_terms([
+    'taxonomy'  => 'category',
+    'include'   => $book_query->args['included']['fandom']
+]);
 $fandoms = [];
-foreach(($book_query->args['included']['fandom'] ?? []) as $fandom_id ) {
-    $fandoms[] = $tags_data['fandom'][$fandom_id]['name'];
+foreach( $terms as $term ) {
+    if (intval($term->parent) === 0) {
+        continue;
+    }
+    $fandoms[] = $term->name;
 }
 $fandoms = implode('/',$fandoms);
 ?>
-<script>
-    window.tags_data = <?= script_json(json_encode($tags_data)); ?>;
-</script>
 <prev_ss hidden><?= ctrk_encrypt($book_query->args); ?></prev_ss>
 
 <loader xl></loader>

@@ -3,6 +3,7 @@ if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
 $landing = new _landing();
+$app->landing_id = $landing_id;
 $landing_key = $landing->encrypt();
 
 //Nonce
@@ -12,7 +13,7 @@ if (! isset($_SESSION['nonce']) || ! is_array($_SESSION['nonce'])){
 }
 $_SESSION['nonce'][] = $nonce;
 $is_user_logged_in = is_user_logged_in();
-$current_user = get_userdata( get_current_user_id() );
+$current_user = user::get( get_current_user_id() );
 ?>
 <!DOCTYPE html>
 <html lang="en" >

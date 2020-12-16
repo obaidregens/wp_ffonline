@@ -1,7 +1,11 @@
 <?php
+function is_current_user($user_id) {
+	return intval($user_id) === intval(get_current_user_id());
+}
 function setup_book_query() {
 	$query = new book_query;
-    $query->args_from_url();
+	$query->args_from_url();
+	$query->args['is_search'] = true;
     $placeholder = _landing::get_type();
     $query->args = type_args($query->args,$placeholder);
     if (err::is($query->args)){
@@ -78,14 +82,6 @@ function number_abbr($num) {
 	}
 	return false;
 }
-
-remove_filter( 'pre_term_name', 'sanitize_text_field' );
-remove_filter( 'pre_term_name', 'wp_filter_kses' );
-remove_filter( 'pre_term_name', '_wp_specialchars', 30 );
-
-function script_string($str) {
-	return "'" . str_replace('/','\/',addslashes($str)) . "'";
-}
 function script_json($json) {
 	$json = json_encode(json_decode($json));
 	return $json;
@@ -96,13 +92,6 @@ function sqlPlaceholder($a,$type = '%s') {
 function millitime(){
 	return round(microtime(true) * 1000);
 }
-// Author Link
-add_filter( 'author_link', function($link,$author_id,$author_nicename){
-	return home_url( '@' ) . get_the_author_meta( 'user_login', $author_id );
-}, 10, 3 );
-
-add_filter('flush_rewrite_rules_hard','__return_false');
-
 function mark_search($in, $search, $trim = null) {
 	$should_trim = ! ($trim === null || strlen($in) <= $trim);
 	$unmarked_trim = $should_trim ? substr($in, 0, $trim) . '...' : $in;
@@ -166,13 +155,10 @@ function print_book_tags($book_id,$book_query) {
 	</tags>
 	<?php
 }
-function print_book_meta($book_id) {
-	$collections = collection_books::query_by('book_id',$book_id);
-	$collections = collection::query([
-		'id_included'	=> array_column($collections,'collection_id'),
-		'types'			=> ['Favorites','Public'],
-	]);
-	$words = get_post_meta($book_id,'word-count',true);
+function print_book_meta($book_id,$book_query) {
+	$story = story::get($book_id,false);
+	$ref = $book_query->book_metas[$book_id];
+	$words = $ref['words'];
 	if (current_user_can( 'administrator' )) {
 		global $wpdb;
 		$r = $wpdb->get_results($wpdb->prepare("SELECT * FROM import_stories WHERE story_id = %d",[$book_id]));
@@ -187,10 +173,10 @@ function print_book_meta($book_id) {
 	}
 	?>
 	<book-meta>
-		<span tooltip-top="Updated"><?= get_the_time('',$book_id); ?></span>
+		<span tooltip-top="Updated"><?= human_time_diff(strtotime($story->post_modified)); ?></span>
 		<span tooltip-top="<?= number_format($words) ?> Words"><?= number_abbr($words); ?></span>
-		<span tooltip-top="Collections"><?= count($collections); ?></span>
-		<span tooltip-top="Votes"><?= count(vote::query_by('story','type_id',$book_id)); ?></span>
+		<span tooltip-top="Collections"><?= $ref['collections']; ?></span>
+		<span tooltip-top="Votes"><?= $ref['votes']; ?></span>
 	</book-meta>
 	<?php
 }
@@ -205,6 +191,8 @@ function a_intersect($arrayOne, $arrayTwo){
 function author_href($_post_id){
 	$book = story::get($_post_id,false,false);
 	$_author = intval($book->post_author);
+	$user = user::get($_author);
+
 	$a_href = "";
 	if ($_author === 37){
 		// Author Name
@@ -214,12 +202,12 @@ function author_href($_post_id){
 
 		$new_link = get_post_meta( $book->ID,'ffn_author_id',true );
 		if ($new_link !== ''){
-			return "<a href=\"/ffn@$new_link\">$tname</a>";
+			return "<a href='/ffn@$new_link'>$tname</a>";
 		}
 		$old_link = get_post_meta( $book->ID,'source_author_link',true );
-		return "<a rel=\"nofollow\" href=\"$old_link\">$tname</a>";
+		return "<a rel='nofollow' href='$old_link'>$tname</a>";
 	}
-	$a_href .= '<a href="' . get_author_posts_url($_author) . '">' . get_the_author_meta( 'display_name', $_author ) . '</a>';
+	$a_href .= '<a href="/@' . $user->user_login . '">' . $user->display_name . '</a>';
 	return $a_href;
 }
 function author_name_single($_post_id){
@@ -235,31 +223,6 @@ function author_name_single($_post_id){
 	return $ffonline_name;
 }
 
-function username_regex_valid($string){
-	if (strlen(preg_replace ('/(\d)|(\.)|(_)|([A-Z])+/i','',$string)) > 0){
-		return false;
-	}
-	return true;
-}
-function title_regex_valid($string){
-	if (strlen(preg_replace ('/(\d)|(\.)|( )|(\-)|(\?)|(\_)|([A-Z])+/i','',$string)) > 0){
-		return false;
-	}
-	return true;
-}
-
-function username_possible($username){
-	if (strlen($username) < 5 || strlen($username) > 20){
-		return false;
-	}
-	if (! username_regex_valid($username)){
-		return false;
-	}
-	if (username_exists($username)){
-		return false;
-	}
-	return true;
-}
 function verify_reCAPTCHA($response){
     $postdata = http_build_query(
         array(
@@ -278,19 +241,119 @@ function verify_reCAPTCHA($response){
     $result = json_decode(file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context),true);
 	return $result;
 }
-
-
-
-function time_format_change($time,$format,$post)
-{
-	return human_time_diff(get_post_modified_time('U',false,$post));
+function logging(...$datas) {
+    foreach ($datas as $data ) {
+        file_put_contents(MAIN_DIR . '/logging.txt', json_encode($data) . "\r\n",FILE_APPEND);
+    }
+    file_put_contents(MAIN_DIR . '/logging.txt', "\r\n",FILE_APPEND);
 }
-add_filter( 'get_date', "time_format_change", 100, 3);
-add_filter( 'get_the_date', "time_format_change", 100, 3);
-add_filter( 'get_the_time', "time_format_change", 100, 3);
-add_filter( 'post_date_column_time' , 'time_format_change', 100, 3);
-function time_form($status)
-{
-	return "Updated";
+function timer($logtext,$echo = false){
+    global $lastlogtime;
+    $now = microtime(true);
+    $diff = $now - ($lastlogtime ?? $now);
+	file_put_contents(MAIN_DIR . '/content/time_logger.txt', $logtext . ": " . $diff . "\r\n", FILE_APPEND );
+	if ($echo === true){
+		echo $logtext . ": " . $diff . "<br>";
+	}
+    $lastlogtime = microtime(true);
 }
-add_filter( 'post_date_column_status', 'time_form', 99);
+class arr {
+    public static function non_empty ($arr,$reindex = true){
+        foreach($arr as $k => $v){
+            if ($v === ''){
+                unset($arr[$k]);
+            }
+        }
+        return $reindex ? array_values($arr) : $arr;
+    }
+    static function remove(&$arr,$val,bool $strict = false,bool $reindex = true) {
+        $i = array_search($val,$arr,$strict);
+        if ($i === false){
+            return;
+        }
+        unset($arr[$i]);
+        return array_values($arr);
+    }
+}
+class str {
+    static function is_lower($txt) {
+        return strtolower($txt) === $txt;
+    }
+}
+function roundToNextHour($stamp) {
+    $date = new DateTime( );
+    $date->setTimestamp( intval($stamp) );
+
+    $minutes = $date->format('i');
+    if ($minutes > 0) {
+        $date->modify("+1 hour");
+        $date->modify('-'.$minutes.' minutes');
+    }
+    return intval($date->getTimestamp());
+}
+function DEV() {
+    return defined('GLOBAL_ENV') && GLOBAL_ENV === 'DEV';
+}
+function STATIC_URL() {
+    return defined("STATIC_URL") ? rtrim(STATIC_URL,'/') . '/' : "https://static.fanfiction.online/";
+}
+function is_test_story($id) {
+    $a = get_post($id);
+    if ($a->post_type === "chapter") {
+        $a = get_post($a->post_parent);
+    }
+    $admin = intval(user::get_by('login','admin')->ID);
+    return
+        intval($a->post_author) === $admin &&
+        $a->post_type === "book" &&
+        $a->post_status === "draft" &&
+        $a->post_title === "Test Story";
+}
+function query_log($display_all = false) {
+    if (!current_user_can('administrator')) {
+        return false;
+    }
+    global $wpdb;
+    if ($display_all) {
+        ?>
+        <style>#query-log{white-space:break-spaces !important;}</style>
+        <pre id="query-log"><?php print_r($wpdb->queries); ?></pre><?php
+	}
+	$c = 0;
+	foreach ($wpdb->queries as $q ) {
+		if (strpos($q[2],'book_metas') !== false) {
+			$c += $q[1];
+		}
+	}
+	echo "Meta Time: $c<br>";
+	echo "DB Calls on this page: " . $wpdb->num_queries . "<br>";
+	$queries_time = array_sum(array_column($wpdb->queries,1)); 
+	echo "Total DB Query Time: $queries_time<br>";
+	$page_load = (microtime(true) - BEGIN_PAGE_RENDER);
+	echo "Total Page Load: $page_load<br>";
+	echo "Without Page Query: " . ($page_load - $queries_time) . "<br>";
+	global $app;
+	echo "Book Query Time: " . ($app->book_query->query_time ?? null) . "<br>";
+}
+function out($var,$dump = false) {
+	?>
+	<style>#id-output{white-space: break-spaces !important;}</style>
+	<pre id="id-output"><?php
+	if ($dump) {
+		var_dump($var);
+	} else {
+		print_r($var);
+	}
+	?></pre>
+	<?php
+}
+function column_sort($a,$column) {
+	$counts = array_combine(array_keys($a),array_column($a,$column));
+	asort($counts);
+	$correctly_indexed_keys = array_keys($counts);
+	$new_array = [];
+	foreach($correctly_indexed_keys as $k) {
+		$new_array[$k] = $a[$k];
+	}
+	return $new_array;
+}

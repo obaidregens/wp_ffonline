@@ -188,11 +188,16 @@ class _landing extends stats {
         $table_name = self::$landing_table;
         global $wpdb;
         if( isset($_COOKIE['vfs'])) {
-            $result = $wpdb->get_results( $wpdb->prepare( "
-                SELECT * FROM $table_name WHERE vfs = %s LIMIT 1
-            ",$_COOKIE['vfs']));
-            if (! is_null($result) && ! empty($result)){
-                $vfs = $result[0]->vfs;
+            if( !empty($_SESSION['valid_vfs']) && $_SESSION['valid_vfs'] === $_COOKIE['vfs'] ) {
+                $vfs = $_COOKIE['vfs'];
+            } else {
+                $result = $wpdb->get_results( $wpdb->prepare( "
+                    SELECT * FROM $table_name WHERE vfs = %s LIMIT 1
+                ",$_COOKIE['vfs']));
+                $vfs = $result[0]->vfs ?? null;
+            }
+            if ( !is_null($vfs) ){
+                $_SESSION['valid_vfs'] = $vfs;
                 stats::set_cookie($vfs);
                 return $vfs;
             }
