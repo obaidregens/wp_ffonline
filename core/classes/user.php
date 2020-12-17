@@ -49,9 +49,9 @@ class user {
         $user_id = $wpdb->insert_id;
 
         $c = cache::now();
-        $c->delete(self::key('ID',$user_id));
-        $c->delete(self::key('user_email',$email));
-        $c->delete(self::key('user_login',$username));
+        $c->delete(user_cache::key('ID',$user_id));
+        $c->delete(user_cache::key('user_email',$email));
+        $c->delete(user_cache::key('user_login',$username));
 
         mail_user::signup_mail($user_id,$code->code);
         return $code->ID;
@@ -97,9 +97,9 @@ class user {
         );
 
         $c = cache::now();
-        $c->delete(self::key('ID',$results[0]->ID));
-        $c->delete(self::key('user_email',$results[0]->user_email));
-        $c->delete(self::key('user_login',$results[0]->user_login));
+        $c->delete(user_cache::key('ID',$results[0]->ID));
+        $c->delete(user_cache::key('user_email',$results[0]->user_email));
+        $c->delete(user_cache::key('user_login',$results[0]->user_login));
 
         collection_helpers::create_default(intval($results[0]->ID));
         self::internal_login($results[0]->ID);
@@ -232,12 +232,12 @@ class user_settings extends user {
             ]
         );
         $c = cache::now();
-        $id_key = self::key('ID',get_current_user_id());
+        $id_key = user_cache::key('ID',get_current_user_id());
         $cached = $c->get($id_key);
         if ($cached !== null) {
             $c->delete($id_key);
-            $c->delete(self::key('user_email',$cached->user_email));
-            $c->delete(self::key('user_login',$cached->user_login));    
+            $c->delete(user_cache::key('user_email',$cached->user_email));
+            $c->delete(user_cache::key('user_login',$cached->user_login));    
         }
 
         return true;
@@ -347,7 +347,10 @@ class v_user extends user {
         return $error;
     }
     protected static function exists($user_obj){
-        if ($user_obj->data) {
+        if (!$user_obj) {
+            return false;
+        }
+        if (isset($user_obj->data)) {
             $user_obj = $user_obj->data;
         }
         return 
@@ -469,9 +472,9 @@ class GoogleAuth {
         $user_id = intval($wpdb->insert_id);
 
         $c = cache::now();
-        $c->delete(self::key('ID',$user_id));
-        $c->delete(self::key('user_email',$exists->email));
-        $c->delete(self::key('user_login',$username));
+        $c->delete(user_cache::key('ID',$user_id));
+        $c->delete(user_cache::key('user_email',$exists->email));
+        $c->delete(user_cache::key('user_login',$username));
 
         $wpdb->update(
             self::$table,[
@@ -496,6 +499,9 @@ class user_cache {
         return 'User_' . $field . '_' . $value;
     }
     static function add ($obj) {
+        if (!$obj) {
+            return false;
+        }
         $c = cache::now();
         $id_key = self::key('ID',$obj->ID);
         $c->set($id_key,$obj);

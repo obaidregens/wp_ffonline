@@ -1,10 +1,16 @@
 <?php
 function handle_all_breaking_errors($a = 1,$errstr = "Called By Self",$errfile = null,$errline = null) {
+    $txt = $errstr . "\n" . "Line $errline in $errfile\n";
+    ob_start();
+    debug_print_backtrace();
+    // $txt.= ob_get_contents();
+    ob_end_clean();
+    $txt .= "\n\n";
     if (!in_array($a,[1,4,16,64,256,4096])) {
-        file_put_contents('warning.log',$errstr . "\n" . "Line $errline in $errfile");
+        file_put_contents('warning.log',$txt,FILE_APPEND);
         return;
     }
-    file_put_contents('error.log',$errstr . "\n" . "Line $errline in $errfile");
+    file_put_contents('error.log',$txt,FILE_APPEND);
     http_response_code(503);
     header("x-is-still-in-temp: true");
     ?>
