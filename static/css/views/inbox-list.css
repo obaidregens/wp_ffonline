@@ -34,6 +34,7 @@ chat-list > chat {
     padding: 5px 15px;
     border-radius: 7px;
     position: relative;
+    min-height: 70px;
 }
 chat-list > chat[active] {
     pointer-events: none;

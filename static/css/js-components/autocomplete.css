@@ -22,6 +22,7 @@ ul[autocomplete] > li,ul[autocomplete] > text {
     padding: 10px;
     width: 100%;
     transition: background-color .2s;
+    min-height: fit-content;
 }
 ul[autocomplete] > li:focus,
 ul[autocomplete] > li:hover {
