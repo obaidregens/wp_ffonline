@@ -5,7 +5,7 @@ You can signup with the code below:
 
 ###CODE###
 
-This code is valid for only 30 minutes. 
+This code is valid for only 60 minutes. 
 
 You can set your password from settings after signing up.
 

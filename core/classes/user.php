@@ -267,7 +267,7 @@ class mail_user extends user {
                 '###SUBJECT###' => 'Welcome to Fanfiction Online!',
                 '###SETTINGS_URL###' => "https://fanfiction.online/" . '@' . $user->user_login . '/settings',
                 '###USERNAME###'=> '@' . $user->user_login,
-                '###CODE###'    => $code,
+                '###CODE###'    => strtoupper($code),
             ],
         ] );
     }
@@ -279,7 +279,7 @@ class mail_user extends user {
             'params'    => [
                 '###SUBJECT###' => 'Here\'s your One-Time PIN',
                 '###USERNAME###'=> "@" . $user->user_login,
-                '###CODE###'    => $code,
+                '###CODE###'    => strtoupper($code),
             ],
         ] );
     }

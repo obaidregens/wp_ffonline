@@ -26,7 +26,7 @@ class dcache {
         $this->dir = MAIN_DIR . '/cached/';
         mkdir ( $this->dir , 0777 , true );
     }
-    function set($key,$value,$expire_in_hour = 0.5) {
+    function set($key,$value,$expire_in_hour = 1) {
         // Overriding Value for memory 
         $value = [
             'cached'    => time(),

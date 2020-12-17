@@ -2,7 +2,7 @@
 
 class v_code {
     public static $table = 'verification_codes';
-    protected static $hours = 0.5;
+    protected static $hours = 1;
     function __construct(){
         $code = bin2hex(random_bytes(4));
         global $wpdb;

@@ -4,6 +4,6 @@ Login with this One-Time PIN:
 
 ###CODE###
 
-This code is valid for only 30 minutes. 
+This code is valid for only 60 minutes. 
 
 Fanfiction Online
