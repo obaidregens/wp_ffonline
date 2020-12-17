@@ -11,7 +11,7 @@ $pending = c_user::pending();
 if (is_string($pending)){ $pending = htmlspecialchars($pending); }
 if (is_string($connected)){ $connected = htmlspecialchars($connected); }
 
-if (1===1) {
+if (1===2) {
     ?><span>Importing stories from Fanfiction.Net is currently disabled. Read more <a href="/@admin">here</a>.</span><?php
 }
 else if ($pending !== false) {

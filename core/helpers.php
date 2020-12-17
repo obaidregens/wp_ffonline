@@ -1,4 +1,15 @@
 <?php
+function proxy_get_contents($url,$proxy) {
+	$aContext = [
+		'http' => [
+			'proxy'           => "tcp://$proxy",
+			'request_fulluri' => true,
+		],
+	];
+	$cxContext = stream_context_create($aContext);
+	
+	return file_get_contents($url, false, $cxContext);
+}
 function is_current_user($user_id) {
 	return intval($user_id) === intval(get_current_user_id());
 }

@@ -1,7 +1,6 @@
 <?php
 function api_import_stories() {
     required_login();
-    return ['code'=>21];
     $re = import_stories::import_request($_POST['data']['storyIds'] ?? []);
     if ($re === false) {
         return ['code' => 9];
@@ -11,7 +10,6 @@ function api_import_stories() {
 function api_import_status() {
     required_login();
     required_params("action","story_id");
-    return ['code'=>21];
     $a = $_POST['data']['action'];
     $story = story::get($_POST['data']['story_id'],true,false);
     if ( !$story ) {

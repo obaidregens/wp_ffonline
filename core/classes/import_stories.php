@@ -43,7 +43,12 @@ class import_stories {
         }
     }
     protected static function get_from_ffn($ffn_author) {
-        $html = file_get_contents("https://www.fanfiction.net/u/" . $ffn_author);
+        $cache_key = "ffn_stories-$ffn_author";
+        $cached = dcache::now()->get($cache_key);
+        if ($cached !== null) {
+            return $cached;
+        }
+        $html = proxy_get_contents("https://www.fanfiction.net/u/" . $ffn_author,IMPORT_PROXY);
         if (! $html) {return [];}
         ob_start();
         $gzip = gzdecode($html);
@@ -71,6 +76,7 @@ class import_stories {
                 'title'     => $title
             ];
         }
+        dcache::now()->set($cache_key,$return,2);
         return $return;
     }
     static function view_all ($author_id) {

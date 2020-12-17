@@ -3,7 +3,7 @@ $app->bundle = global_bundle('connections-home');
 $app->bundle->css('css/components/notices');;
 $app->bundle->css('css/views/connections-home');
 $app->bundle->js('js/views/connections-home');
-if (1===1) {
+if (1===2) {
     ?><span>Importing stories from Fanfiction.Net is currently disabled. Read more <a href="/@admin">here</a>.</span><?php
 } else {
     $connected = c_user::current();

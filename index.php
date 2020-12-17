@@ -739,7 +739,7 @@ $app->listen('/drafts/:draft_id/export/ffn/download',function($self){
     }
     $self->type = 'drafts-download-ffn';
     $self->type_id = intval($draft->ID);
-    $file = MAIN_DIR . '/download/draft-' . $draft->ID . '.html';
+    $file = MAIN_DIR . '/download/draft-' . $draft->ID . '.temp';
     $html = drafts_json::output_html($draft->content);
     $dir = dirname ( $file );
     if (! is_dir($dir)) {

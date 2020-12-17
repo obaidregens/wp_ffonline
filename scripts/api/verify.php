@@ -2,7 +2,6 @@
 function api_verify_user () {
     required_login();
     required_params('source','id');
-    return ['code'=>21];
     $d = &$_POST['data'];
     $ffn_id = $d['id'];
     if (c_user::current() !== false || c_user::pending() !== false) {
@@ -21,7 +20,6 @@ function api_verify_user () {
     ];
 }
 function api_cancel_pending_verification() {
-    return ['code'=>21];
     required_login();
     required_params('source');
     $d = &$_POST['data'];
