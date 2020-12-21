@@ -311,22 +311,18 @@ const setFilterFandom = (fandomN) => {
         }
         const select_tags = DOM.qa('select-tag');
 
-        let fandom_name = "";
         for (let i = 0; i < select_tags.length; i++) {
             const raw_selected = select_tags[i].getAttribute('selected');
             if (! raw_selected){
                 continue;
             }
-            const selected = JSON.parse(raw_selected);
+            const _selected = JSON.parse(raw_selected);
             const name = select_tags[i].getAttribute('name');
-            if (name === "fandom") {
-                fandom_name = [...select_tags[i].children].map(tag_el => tag_el.innerText).join("/");
+            if (_selected.included.length > 0) {
+                construct.push(name + '_included=' + _selected.included.join(','));
             }
-            if (selected.included.length > 0) {
-                construct.push(name + '_included=' + selected.included.join(','));
-            }
-            if (selected.excluded.length > 0) {
-                construct.push(name + '_excluded=' + selected.excluded.join(','));
+            if (_selected.excluded.length > 0) {
+                construct.push(name + '_excluded=' + _selected.excluded.join(','));
             }
         }
         const prev_ss = DOM.q('prev_ss');
@@ -340,6 +336,7 @@ const setFilterFandom = (fandomN) => {
         .then(response => {
             // Fandom Filter
             if (construct.length > 2) {
+                const fandom_name = [...DOM.q('select-tag[name="fandom"]').children].map(tag_el => tag_el.innerText).join("/");
                 setFilterFandom(fandom_name);
             }
             else {

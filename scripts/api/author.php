@@ -88,14 +88,6 @@ function api_change_username() {
     required_params('new_username');
     $new_username = $_POST['data']['new_username'];
     $current_user = user::get(get_current_user_id());
-    if ($current_user->user_login === $new_username) {
-        return [
-            'code'      => 10,
-            'errors'    => [
-                'username'  => 'What\'s the new username?'
-            ]
-        ];
-    }
     $v = user_settings::change_username($new_username);
     if (err::is($v)) {
         return [
@@ -106,6 +98,56 @@ function api_change_username() {
     wp_cache_delete($current_user->user_login, 'userlogins');
     user::internal_login($current_user->ID);
     return ['code'  => 1];
+}
+function api_change_email() {
+    required_login();
+    required_params('new_email');
+    $new_username = $_POST['data']['new_email'];
+    $current_user = user::get(get_current_user_id());
+    $v = user_settings::change_email($new_username);
+    if (err::is($v)) {
+        return [
+            'code'          => 10,
+            'errors'        => array_column($v->errors,'error','name')
+        ];
+    }
+    return [
+        'code'=>1,
+        'token' => ctrk_encrypt([
+            'token' => anon_token($v)
+        ])
+    ];
+}
+function api_change_email_confirm() {
+    required_login();
+    required_params("token","code","email");
+    $d = &$_POST['data'];
+
+    $ID = get_anon_token(ctrk_decrypt($d['token'])->token);
+    $code = $d['code'];
+    
+    if (!v_code::is($ID,$code)) {
+        return ['code'=>9,new err()];
+    }
+    $current_user = user::get(get_current_user_id());
+
+    $email = get_user_meta( $current_user->ID, "email_change-$ID", true );
+    if ($email === "") {
+        return ['code'=>9];
+    }
+    if ($d['email'] !== $email) {
+        return ['code'=>9];
+    }
+
+    $e = user_settings::confirm_change_email($email);
+    if (err::is($e)) {
+        return ['code'=>10,'errors'=>$e->k_array()];
+    }
+
+    delete_user_meta( $current_user->ID, "email_change-$ID" );
+
+    return ['code'=>1];
+
 }
 function api_follow_user() {
     required_login();

@@ -18,13 +18,8 @@ function api_login_with_code(){
     if (substr($username,0,1) === "@"){
         $username = substr($username,1);
     }
-    $start = microtime(true);
     $return = user::send_code($username);
-    $sleep = 7 - (microtime(true) - $start);
     $tok = anon_token($return);
-    if ($sleep > 0) {
-        usleep($sleep*1000000);
-    }
     return [
         'code' => 1,
         'token'     => ctrk_encrypt(array(

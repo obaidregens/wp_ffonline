@@ -1,9 +1,20 @@
 <?php
 function api_get_chat(){
     required_login();
-    required_params('username');
+    if (($_POST['data']['username'] ?? "") === "") {
+        return [
+            'username'      => "",
+            'messages'      => [],
+            'blocked'       => false,
+            'chat_blocked'  => false
+        ];
+    }
+    $username = $_POST['data']['username'];
+    if (substr($username,0,1) === "@") {
+        $username = substr($username,1);
+    }
 
-    $user = user::get_by( 'login', $_POST['data']['username'] );
+    $user = user::get_by( 'login', $username );
     if ($user === false) {
         return ['code'=>8];
     }
@@ -15,7 +26,9 @@ function api_get_chat(){
         return ['code'=>9];
     }
     $chats = chats::query([
-        'users_included'  => $users_in_chat
+        'users_included'  => $users_in_chat,
+        'order'           => 'ASC',
+        'per_page'        => -1
     ]);
     $set_to_read = [];
     $chats_f = [];
@@ -23,6 +36,7 @@ function api_get_chat(){
     foreach ( $chats as $chat ) {
         $chat_author = intval($chat->from);
         $this_chat_obj = [
+            'ID'        => $chat->ID,
             'from'      => $users_in_chat[0] === $chat_author ? 'my' : 'other',
             'time'      => $chat->milli_timestamp,
             'message'   => $chat->message,
@@ -46,16 +60,23 @@ function api_get_chat(){
     }
     
     return [
-        'username'      => $user->user_login,
-        'messages'      => array_reverse($chats_f),
+        'username'      => "@".$user->user_login,
+        'messages'      => $chats_f,
         'blocked'       => chats_blocking::is_blocked($users_in_chat[1]),
         'chat_blocked'  => chats_blocking::is_chat_blocked($users_in_chat)
     ];
 }
+function api_chats_with() {
+    return ['with' => chats::with()];
+}
 function api_send_message(){
     required_login();
     required_params('message','to');
-    $user = user::get_by( 'login', $_POST['data']['to'] );
+    $username = $_POST['data']['to'];
+    if (substr($username,0,1) === "@") {
+        $username = substr($username,1);
+    }
+    $user = user::get_by( 'login', $username );
     if ($user === false){
         return ['sent'=>false];
     }
@@ -70,7 +91,18 @@ function api_send_message(){
 function api_block () {
     required_login();
     required_params('block','username');
-    $user = user::get_by( 'login', $_POST['data']['username'] );
-    $_POST['data']['block'] === true ? chats_blocking::block($user->user_login) : chats_blocking::unblock($user->user_login);
+    $username = $_POST['data']['username'];
+    if (substr($username,0,1) === "@") {
+        $username = substr($username,1);
+    }
+    $block = (bool) $_POST['data']['block'];
+    $user = user::get_by( 'login', $username );
+    if (!$user) {
+        return ['code'=>9];
+    }
+    $block ?
+        chats_blocking::block($user->user_login) :
+        chats_blocking::unblock($user->user_login);
+    
     return ['code'  => 1];
 }

@@ -295,7 +295,6 @@ function prompt_email_code(existing_data) {
 			}
 		}));
 	}
-	window.cc = code_singles;
 	const code_input = DOM.create('code-input',{
 		children: code_singles
 	});

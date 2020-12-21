@@ -887,7 +887,7 @@ class tag_query extends book_query{
         $filtered = [];
         foreach($this->terms as $term) {
             $n = strtolower($term['name']);
-            if (similar_text($n,$s) < 3 && strpos($n,$s) === false ) {
+            if (stripos($n,$s) === false ) {
                 continue;
             }
             $filtered[$term['ID']] = $term;

@@ -116,6 +116,8 @@ $reCAPTCHA_apis = [
     'contact',
     'publish_review',
     'ask_question',
+    'change_email',
+    'change_email_confirm'
 ];
 if ( in_array($_POST['action'] ?? [],$reCAPTCHA_apis) ){
     if (! isset($_POST['reCAPTCHA']) || verify_reCAPTCHA($_POST['reCAPTCHA'])['success'] != true){

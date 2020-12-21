@@ -86,6 +86,7 @@ _.interact(function(event){
 			DOM.q('.notification-pulse').classList.add('show')
 		}
 		if (response.new_messages.unread > 0) {
+			window.dispatchEvent(new Event("new-messages"));
 			notificationsWrapper.appendChild(DOM.create('a',{
 				classes: ['new-messages'],
 				innerText: `You have ${response.new_messages.unread} unread message${response.new_messages.unread > 1 ? "s" : ""}.`,

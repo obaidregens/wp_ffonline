@@ -59,6 +59,7 @@ $current_user = user::get( get_current_user_id() );
 		<!-- Verifications -->
 		<meta name="google-signin-client_id" content="<?= GOOGLE_CLIENT_ID ?>.apps.googleusercontent.com">
 		
+		<?php if (!DEV() && ($app->dont_load_analytics ?? false) !== true) { ?>
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-WY1MXBDBJ1"></script>
 		<script>
 		window.dataLayer = window.dataLayer || [];
@@ -67,6 +68,7 @@ $current_user = user::get( get_current_user_id() );
 
 		gtag('config', 'G-WY1MXBDBJ1');
 		</script>
+		<?php } ?>
     </head>
     <body>
 		<loading-shadow>

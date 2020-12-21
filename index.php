@@ -9,7 +9,7 @@ define('WP_USE_THEMES', false);
 require(__DIR__ . '/wp/wp-load.php');
 
 require_once(__DIR__ . '/php_includes/mail/mail.php');
-require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
+// require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
 class Router {
     public $request;
     private $r;
@@ -153,6 +153,7 @@ class Router {
     }
     function admin() {
         if (current_user_can( 'administrator' )){
+            $this->dont_load_analytics = true;
             return;
         }
         $this->_404();

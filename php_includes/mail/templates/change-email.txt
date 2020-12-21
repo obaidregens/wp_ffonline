@@ -1,0 +1,11 @@
+###SUBJECT###
+
+Hi ###USERNAME###!
+
+You recently requested that your email be changed. Here's the pin to confirm it:
+
+###CODE###
+
+This code is valid for only 60 minutes. 
+
+Fanfiction Online

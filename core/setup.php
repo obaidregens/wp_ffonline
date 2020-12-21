@@ -360,6 +360,17 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;");
 
+	dbDelta("CREATE TABLE change_logs (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`user_id`			BIGINT NOT NULL ,
+		`type`				VARCHAR(100) NOT NULL ,
+		`old_value`			TEXT NOT NULL,
+		`new_value`			TEXT NOT NULL,
+		`landing_id`		BIGINT UNSIGNED NOT NULL ,
+		`changed`			BIGINT UNSIGNED NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
+
 
 	//Create Default Collections for users
 	$users = get_users(array(

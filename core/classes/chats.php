@@ -97,7 +97,7 @@ class chats {
             $prep[] = $args['date']['to']*1000;
         }
         $args['order'] = in_array($args['order'] ?? 'M',['DESC','ASC']) ? $args['order'] : 'DESC';
-        $sql .= ' ORDER BY milli_timestamp ' . $args['order'];
+        $sql .= ' ORDER BY ID ' . $args['order'];
         global $wpdb;
         $r = $wpdb->get_results($wpdb->prepare($sql,$prep));
         if ( ($args['per_page'] ?? 0) === -1 ) {
@@ -113,7 +113,7 @@ class chats {
         $table = self::$table;
         $current_user_id = intval(get_current_user_id());
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT * FROM $table WHERE `from` = %s OR `to` = %s",[$current_user_id,$current_user_id]);
+        $sql = $wpdb->prepare("SELECT * FROM $table WHERE `from` = %s OR `to` = %s ORDER BY ID DESC",[$current_user_id,$current_user_id]);
         $messages = $wpdb->get_results($sql);
         $usernames = array_column($wpdb->get_results("SELECT ID,user_login FROM wp_users"),'user_login','ID');
 

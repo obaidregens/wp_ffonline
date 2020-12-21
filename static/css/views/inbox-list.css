@@ -1,78 +1,115 @@
+/* Main */
 html {
     overflow: hidden;
 }
 header {
     margin-bottom: 0;
 }
-main {
-    display: flex;
+main,chats-container {
     padding: 0;
     max-width: unset;
+}
+chats-container {
+    height: calc(100vh - 53px);
+    display: flex;
 }
 footer {
     display: none;
 }
 chat-list {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     overflow: auto;
-    height: calc(100vh - 53px);
-    padding: 10px;
-    width: 30vw;
+    padding: 8px;
     border-right: 1px solid var(--grey);
-}
-chat-list.show ~ user-info,
-chat-list.show ~ messages,
-chat-list.show ~ send-message,
-chat-list.show ~ loader {
-    display: none;
+    width: 30vw;
+    max-width: 250px;
 }
 chat-list > chat {
+    padding: 5px;
+    color: var(--darkgrey);
     cursor: pointer;
     display: flex;
-    height: 70px;
-    padding: 5px 15px;
-    border-radius: 7px;
+    align-items: center;
+    border-radius: 3px;
     position: relative;
-    min-height: 70px;
+    min-height: 40px;
+    height: 40px;
+}
+chat-list > chat:hover {
+    background-color: rgba(var(--background-accent-v),0.7);
 }
 chat-list > chat[active] {
+    background-color: var(--background-accent);
+    transition: background-color var(--theme-change);
     pointer-events: none;
-    background-color: var(--hover);
+    color: var(--text-color);
 }
 chat-list > chat::before {
     font-size: 0.9rem;
     content: attr(username);
+    word-break: keep-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* First */
-chat-list > chat:first-child {
-    margin-bottom: auto;
+chats {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
-chat-list chat:last-child {
-    margin-top: 10px;
+chats > preview{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    padding: 0 20px;
+    margin-bottom: 25%;
+}
+chats > preview > h3{
+    display: flex;
+    align-items: center;
+    white-space: break-spaces;
+}
+chats > preview ~ * {
+    display: none;
+}
+.message-icon {
+    margin: 0 2.5px;
+}
+.message-icon::before {
+    color: var(--theme-color);
+    font-family: 'icons';
+    content: "\e937";
+    display: inline-block;
+    transform: translateY(3px);
 }
 /* Unread */
-chat:not([unread="0"])::after {
-    content: attr(unread) " unread";
+chat::after {
+    font-family: 'icons';
+    content: "\e903";
     position: absolute;
-    bottom: 7px;
-    right: 7px;
+    right: 5px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    border-radius: 100px;
-    font-size: 0.8rem;
-    color: var(--lightblack);
+}
+chat:not(:hover):not([active])::after {
+    opacity: 0;
+}
+chat:not([unread="0"]):not(:hover)::after {
+    opacity: 1;
+    font-family: 'Varela Round';
+    content: attr(unread) " unread";
+    font-size: 0.7rem;
 }
 /* User Info */
 user-info {
-    position: fixed;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    left: 30vw;
-    top: 53px;
-    width: 70vw;
     height: 50px;
     background-color: var(--background-accent);
     transition: background-color var(--theme-change);
@@ -111,15 +148,18 @@ user-info > button.block::before {
 messages {
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    padding-top: 15px;
-    width: 70vw;
-    overflow: auto;
-    position: relative;
-    top: 50px;
-    height: calc(100vh - 53px - 50px - 90px);
 }
-messages > new-messages {
+messages {
+    flex: 1 1 auto;
+    height: 0;
+}
+messages  {
+    position: relative;
+    padding-top: 15px;
+    padding: 20px;
+    overflow: auto;
+}
+messages new-messages {
     width: 100%;
     height: 1px;
     display: block;
@@ -139,149 +179,109 @@ new-messages::before {
     transition: background-color var(--theme-change);
     padding: 0 16px;
 }
-messages > message {
+messages message {
     display: block;
     padding: 15px 12px;
-    margin: 35px 0;
+    margin: 20px 0;
     width: fit-content;
     max-width: 80%;
     position: relative;
     min-width: 80px;
     font-size: 0.9rem;
 }
-/* messages > message[time="Just Now"]:after {
+/* messages message[time="Just Now"]:after {
     left: 70px;
     top: -24px;
 } */
-messages > message:last-child {
-    margin-bottom: 10px;
-}
-messages > message::before {
+messages message::before {
     white-space: nowrap;
-    top: -24px;
+    top: -20px;
     position: absolute;
     content: attr(time);
     color: grey;
     left: 0;
+    font-size: 0.8rem;
 }
-/* messages > message:after {
-    position: absolute;
-    top: -25px;
-    left: 165px;
-    font-family: 'icons';
-    content: '\e901';
-    color: #9c9c9c;
-    font-weight: bold;
-}
-messages > message[other]::after {
-    left: unset;
-    right: 165px;
-}
-messages > message[status="read"]::after {
-    color: var(--theme-color);
-} */
-messages > message[other]::before {
+messages message[other]::before {
     left: unset;
     right: 0;
 }
-messages > message[my] {
+messages message[my] {
     border-radius: 0px 10px 10px 40px;
     background-color: var(--theme-color);
     transition: background-color var(--theme-change);
     color: var(--white);
     opacity: 0.85;
 }
-messages > message[other] {
+messages message[other] {
     border-radius: 10px 0px 40px 10px;
     background-color: rgb(214 214 214 / 67%);
     color: black;
     margin-left: auto;
 }
-/* New Messages Prompt */
-new-messages-prompt {
-    position: fixed;
-    display: block;
-    bottom: calc(-100vh - 300px);
-    width: 182px;
-    left: calc(30vw + 35vw - 91px);
-    background-color: var(--theme-color);
-    color: var(--white);
-    padding: 10px 25px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: bottom .2s, background-color var(--theme-change);
-}
-new-messages-prompt.show {
-    bottom: 110px;
-}
-new-messages-prompt::before {
-    font-family: 'icons';
-    content: '\e904';
-    margin-right: 15px;
-    display: inline-block;
-    transform: scale(1.5) translateY(1px);
-}
-new-messages-prompt::after {
-    content: 'New Messages';
-}
-/* Loader */
-messages ~ loader {
-    opacity: 0;
-    pointer-events: none;
-    position: fixed;
-    top: 35%;
-    left: calc(50% - 60px);
-    transition: opacity 0.4s;
-}
-messages.loading ~ loader {
-    opacity: 1;
-}
+/* Send */
 send-message {
     display: flex;
-    position: fixed;
-    width: 70vw;
-    bottom: 0;
-    height: 90px;
-    left: 30vw;
-    padding: 5px 15px;
-    background-color: var(--background-color);
-    border-top: 1px solid var(--grey);
+    align-items: center;
+    height: 40px;
+    background-color: var(--background-accent);
+    transition: background-color var(--theme-change);
+    padding: 0 5px;
+    margin: 10px;
+    border-radius: 3px;
+    border: 1px solid (var(--text-color));
 }
-send-message > text-input{
+send-message > input {
+    display: flex;
     flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-color );
+    text-overflow: ellipsis;
+}
+send-message > input[disabled] {
+    opacity: 0.5;
 }
 send-message > button::before {
+    display: inline-block;
     font-family: 'icons';
-    content: '\e903';
-    display: block;
-    transform: scale(1.6);
+    content: '\e960';
+    transform: scale(1.4);
 }
 send-message > button {
-    margin: auto 15px;
-    transform: scale(1.1);
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    width: 35px;
+    transform: scale(1) !important;
+    border: none !important;
+    color: var(--theme-color);
+}
+send-message > button:hover {
+    background-color: var(--hover) !important;
+    color: var(--theme-color) !important;
+}
+send-message > button[disabled] {
+    opacity: 1;
+    background-color: transparent;
+    color: rgba(var(--text-color-v),0.3);
 }
 @media only screen and (max-width: 500px) {
     /* Adjust Sizes */
-    chat-list,messages,send-message,user-info {
-        width: 100vw;
-    }
-    send-message,user-info {
-        left: unset;
-    }
     chat-list {
+        max-width: unset;
+        width: 100%;
         border-right: none;
         display: none;
     }
-    user-info {
-        top: 0;
-    }
-    send-message {
-        bottom: 53px
-    }
     chat-list.show {
-        display: block;
+        display: flex;
     }
-    chat-list.show ~ messages,chat-list.show ~ send-message,chat-list.show ~ user-info {
+    chat-list.show ~ chats {
         display: none;
     }
     /* Bring back Back Button */

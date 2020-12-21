@@ -204,6 +204,68 @@ class user_settings extends user {
     protected static $default_usettings = [
         "features"  => true
     ];
+    public static function change_email($new_email) {
+        $validation = (new v_user([
+            'email'  => $new_email,
+        ],['email']))->return;
+        if (err::is($validation)) {
+            return $validation;
+        }
+
+        $current_user = user::get(get_current_user_id());
+
+        if ($current_user->user_email === $new_email) {
+            return (new err())->add('email',"What's the new email?");
+        }
+
+        $v = new v_code;
+
+        update_user_meta( $current_user->ID, "email_change-" . $v->ID, $new_email );
+        
+        mail_user::change_email($current_user->ID,$new_email,$v->code);
+
+        return $v->ID;
+
+    }
+    public static function confirm_change_email($new_email) {
+        $validation = (new v_user([
+            'email'  => $new_email,
+        ],['email']))->return;
+        if (err::is($validation)) {
+            return $validation;
+        }
+
+        $current_user = user::get(get_current_user_id());
+
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->users,
+            [
+                'user_email'        => $new_email
+            ],
+            [
+                'ID'                => $current_user->ID
+            ]
+        );
+        change_logs::new(
+            'email',
+            $current_user->user_email,
+            $new_email,
+            $_POST['landing_id']
+        );
+
+        $c = cache::now();
+        $id_key = user_cache::key('ID',$current_user->ID);
+        $cached = $c->get($id_key);
+        if ($cached !== null) {
+            $c->delete($id_key);
+            $c->delete(user_cache::key('user_email',$cached->user_email));
+            $c->delete(user_cache::key('user_login',$cached->user_login));    
+        }
+        $c->delete(user_cache::key('user_email',$new_email));
+
+        return true;
+    }
     public static function change_username($new_username) {
         $validation = (new v_user([
             'username'  => $new_username,
@@ -212,13 +274,20 @@ class user_settings extends user {
             return $validation;
         }
 
+        $current_user = user::get_by('ID',get_current_user_id());
+
         $meta_name = 'last_change_username';
-        $change_username_meta = get_user_meta( get_current_user_id(), $meta_name, true );
+        $change_username_meta = get_user_meta( $current_user->ID, $meta_name, true );
         $change_username = $change_username_meta === "" ? 1 : (intval($change_username_meta) > time() - 60*60*24*30 ? 0 : 1);
         if ($change_username < 1) {
             return (new err())->add('username','No username change is available.');
         }
-        update_user_meta( get_current_user_id(), $meta_name, time() );
+        if ($current_user->user_login === $new_username) {
+            return (new err())->add('username',"What's the new username?");
+        }
+
+        update_user_meta( $current_user->ID, $meta_name, time() );
+
         global $wpdb;
         $wpdb->update(
             $wpdb->users,
@@ -228,17 +297,26 @@ class user_settings extends user {
                 'display_name'      => "@" . $new_username
             ],
             [
-                'ID'                => get_current_user_id()
+                'ID'                => $current_user->ID
             ]
         );
+        change_logs::new(
+            'username',
+            $current_user->user_login,
+            $new_username,
+            $_POST['landing_id']
+        );
+
         $c = cache::now();
-        $id_key = user_cache::key('ID',get_current_user_id());
+        $id_key = user_cache::key('ID',$current_user->ID);
         $cached = $c->get($id_key);
         if ($cached !== null) {
             $c->delete($id_key);
             $c->delete(user_cache::key('user_email',$cached->user_email));
             $c->delete(user_cache::key('user_login',$cached->user_login));    
         }
+
+        $c->delete(user_cache::key('user_login',$new_username));
 
         return true;
     }
@@ -282,6 +360,20 @@ class mail_user extends user {
                 '###CODE###'    => strtoupper($code),
             ],
         ] );
+    }
+    public static function change_email($user_id,$new_email,$code) {
+        $user = user::get($user_id);
+        $a = [
+            'to'        => $new_email,
+            'template'  =>'change-email',
+            'subject'   => "Confirm your email change",
+            'params'    => [
+                '###SUBJECT###' => "Confirm your email change",
+                '###USERNAME###'=> "@" . $user->user_login,
+                '###CODE###'    => strtoupper($code),
+            ],
+        ];
+        email( $a );
     }
 }
 class v_user extends user {

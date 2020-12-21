@@ -386,12 +386,13 @@ class drafts_json extends drafts {
     }
     public static function toJSON($xml) {
         $d = new DOMDocument();
-        $r = $d->loadXML('<content>' . $xml . '</content>');
+
+        $r = $d->loadHTML('<?xml encoding="utf-8" ?><content>' . $xml . '</content>');
         if (! $r) {
             return;
         }
         $json = [];
-        foreach ($d->firstChild->childNodes as $node) {
+        foreach ($d->getElementsByTagName('content')[0]->childNodes as $node) {
             if (!$node instanceof DOMElement || !in_array($node->tagName,['p','hr']) ) {continue;}
             $block = [
                 'children' => []
