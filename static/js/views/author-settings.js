@@ -164,6 +164,7 @@ DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(3) > button').addEventListe
             });
             popup.create(pop);
             popup.open(pop);
+            new toast("A verification code has been sent to your new email.");
             init_reCAPTCHA();
         }
         else if (response.code === 10) {

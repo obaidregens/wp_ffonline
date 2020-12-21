@@ -1,4 +1,14 @@
 class _ {
+    static offsetTop(el) {
+        const prev = el.style.position;
+        el.style.position = 'static';
+        const offset = el.offsetTop;
+        el.style.position = prev;
+        return offset;
+    }
+    static scrollBottom(el) {
+        return el.offsetHeight+el.scrollTop;
+    }
     static isSame(a,b) {
         return JSON.stringify(a) === JSON.stringify(b);
     }

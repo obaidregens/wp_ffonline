@@ -161,18 +161,22 @@ messages  {
 }
 messages new-messages {
     width: 100%;
+    min-height: 1px;
     height: 1px;
     display: block;
     background-color: var(--grey);
-    margin: 10px 0;
-    position: relative;
+    margin: 15px 0;
+    position: sticky;
+    bottom: -15px;
+    cursor: pointer;
 }
 new-messages::before {
+    font-size: 0.9rem;
     content: 'New Messages';
     display: block;
     position: absolute;
-    left: calc(50% - 70px);
-    width: 140px;
+    left: calc(50% - 65px);
+    width: 130px;
     height: 24px;
     top: -12px;
     background-color: var(--background-color);

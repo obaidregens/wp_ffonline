@@ -19,9 +19,16 @@
         return <span className="message-icon"></span>;
     }
     const {useCallback,useState,createRef,useEffect} = React;
-    let refreshChatsWith,loadChat,send,scrl,unScopedUsername,unScopedChatlist;
+    let refreshChatsWith,
+        loadChat,
+        send,
+        scrl,
+        unScopedUsername,
+        unScopedChatlist,
+        messagesUpdateOn;
     const pendingChanges = {};
     let new_message_key = 0;
+
     function Chat () {
         const [chat_list,setChatList] = useState([]);
         const [message,setMessage] = useState("");
@@ -34,20 +41,31 @@
         unScopedUsername = username;
         unScopedChatlist = chat_list;
     
-        scrl = () => {
+
+        scrl = useCallback((mode = "normal") => {
             const msw = messagesWrapper.current;
+            const fuzz = 150;
+            if (mode === "fuzzed" && (msw.scrollHeight - _.scrollBottom(msw) > fuzz)) {
+                return;
+            }
             const newMsg = msw.querySelector('new-messages');
             if (newMsg) {
-                const messagesHeight = parseInt(getComputedStyle(msw).getPropertyValue('height'));
-                if (msw.scrollTop >= (newMsg.offsetTop - messagesHeight) ){
-                    return;
-                }
-                msw.scrollTop = newMsg.offsetTop-20;
+                msw.scrollTop = _.offsetTop(newMsg)-20;
                 return;
             }
             msw.scrollTop = msw.scrollHeight;
-        }
-        useEffect(scrl, [messages]);
+        });
+        useEffect(useCallback(() => {
+            if (messagesUpdateOn === "send") {
+                scrl("bottom");
+            }
+            else if (messagesUpdateOn === "changeChat") {
+                scrl();
+            }
+            else if (messagesUpdateOn === "refreshChat") {
+                scrl("fuzzed");
+            }
+        }), [messages]);
         loadChat = useCallback(async (userN = null) => {
             if (userN === null) {
                 userN = unScopedUsername;
@@ -66,6 +84,8 @@
             if (Object.keys(pendingChanges).length > 0) {
                 return;
             }
+            
+            messagesUpdateOn = userN === unScopedUsername ? "refreshChat" : "changeChat";
             setUsername(res.username);
             setBlocked(res.blocked);
             setBlockedChat(res.chat_blocked);
@@ -85,6 +105,7 @@
                     message
                 }
             });
+            messagesUpdateOn = "send";
             setMessages(messages.concat([{
                 ID: "new-" + new_message_key,
                 from: "my",
@@ -98,7 +119,11 @@
         for (let i = 0; i < messages.length; i++) {
             const msg = messages[i];
             if (msg.new){
-                msgEl.push(<new-messages/>);
+                msgEl.push(
+                    <new-messages
+                    onClick={scrl}
+                    />
+                );
             }
             const attr = {
                 time: msg.time ? _t.local(new Date(parseInt(msg.time))) : "Just Now"
@@ -197,7 +222,7 @@
     _.interact(_.debounce(() => {
         clearInterval(refreshChatId);
         refreshChatId = null;
-    },0.1*60*1000));
+    },5*60*1000));
     _.interact(() => {
         if (refreshChatId !== null) {
             return;

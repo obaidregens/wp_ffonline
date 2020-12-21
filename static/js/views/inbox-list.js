@@ -39,7 +39,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
     createRef,
     useEffect
   } = React;
-  let refreshChatsWith, loadChat, send, scrl, unScopedUsername, unScopedChatlist;
+  let refreshChatsWith, loadChat, send, scrl, unScopedUsername, unScopedChatlist, messagesUpdateOn;
   const pendingChanges = {};
   let new_message_key = 0;
 
@@ -53,26 +53,32 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
     const messagesWrapper = createRef();
     unScopedUsername = username;
     unScopedChatlist = chat_list;
-
-    scrl = () => {
+    scrl = useCallback((mode = "normal") => {
       const msw = messagesWrapper.current;
+      const fuzz = 150;
+
+      if (mode === "fuzzed" && msw.scrollHeight - _.scrollBottom(msw) > fuzz) {
+        return;
+      }
+
       const newMsg = msw.querySelector('new-messages');
 
       if (newMsg) {
-        const messagesHeight = parseInt(getComputedStyle(msw).getPropertyValue('height'));
-
-        if (msw.scrollTop >= newMsg.offsetTop - messagesHeight) {
-          return;
-        }
-
-        msw.scrollTop = newMsg.offsetTop - 20;
+        msw.scrollTop = _.offsetTop(newMsg) - 20;
         return;
       }
 
       msw.scrollTop = msw.scrollHeight;
-    };
-
-    useEffect(scrl, [messages]);
+    });
+    useEffect(useCallback(() => {
+      if (messagesUpdateOn === "send") {
+        scrl("bottom");
+      } else if (messagesUpdateOn === "changeChat") {
+        scrl();
+      } else if (messagesUpdateOn === "refreshChat") {
+        scrl("fuzzed");
+      }
+    }), [messages]);
     loadChat = useCallback(async (userN = null) => {
       if (userN === null) {
         userN = unScopedUsername;
@@ -96,6 +102,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
         return;
       }
 
+      messagesUpdateOn = userN === unScopedUsername ? "refreshChat" : "changeChat";
       setUsername(res.username);
       setBlocked(res.blocked);
       setBlockedChat(res.chat_blocked);
@@ -116,6 +123,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
           message
         }
       });
+      messagesUpdateOn = "send";
       setMessages(messages.concat([{
         ID: "new-" + new_message_key,
         from: "my",
@@ -131,7 +139,9 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       const msg = messages[i];
 
       if (msg.new) {
-        msgEl.push( /*#__PURE__*/React.createElement("new-messages", null));
+        msgEl.push( /*#__PURE__*/React.createElement("new-messages", {
+          onClick: scrl
+        }));
       }
 
       const attr = {
@@ -203,7 +213,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
   _.interact(_.debounce(() => {
     clearInterval(refreshChatId);
     refreshChatId = null;
-  }, 0.1 * 60 * 1000));
+  }, 5 * 60 * 1000));
 
   _.interact(() => {
     if (refreshChatId !== null) {
