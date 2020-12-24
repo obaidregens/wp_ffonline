@@ -180,3 +180,44 @@ function api_beta_session_create() {
     }
     return ['code'=>1,'beta_id'=>$beta_id];
 }
+function api_verify_confirm() {
+    required_admin();
+    required_params("id");
+    $d = $_POST['data'];
+
+    global $wpdb;
+
+    $sql = 
+    "SELECT `user_id`,`connection_user` as `ffn_user` FROM user_connections
+    WHERE ID = %s AND status = 'unverified'";
+    $sql = $wpdb->prepare($sql,[$d['id']]);
+    $a = $wpdb->get_results($sql);
+    if (empty($a)) {
+        return ['code'=>9];
+    }
+    $a = $a[0];
+
+    $wpdb->update(
+        "user_connections",[
+            'status'            => 'verified',
+            'link_timestamp'    => time(),
+        ],[
+            'ID'                => $d['id']
+        ]
+    );
+    $wpdb->insert(
+        'notifications',[
+            'user_id'               => $a->user_id,
+            'notification_type'     => 'account_verified',
+            'type_of'               => 'user',
+            'type_of_id'            => $a->user_id,
+            'type_by'               => 'ffn_user',
+            'type_by_id'            => $a->ffn_user,
+            'email_status'          => 'none',
+            'timestamp'             => microtime(true)
+        ]
+    );
+
+
+    return ['code'=>1];
+}

@@ -296,6 +296,17 @@ $app->listen('/dash/beta',function($self){
     $self->footer();
     exit();
 },true);
+$app->listen('/dash/linking',function($self){
+    $self->admin();
+    $self->type = 'dash-linking';
+    $self->type_id = 0;
+    $self->header([
+        'title'     => construct_page_title("Dash Linking")
+    ]);
+    $self->template('/views/dash/linking');
+    $self->footer();
+    exit();
+});
 $app->listen('/manage',function($self){
     $self->admin();
     $self->type = 'manage';

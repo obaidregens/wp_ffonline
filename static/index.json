@@ -867,5 +867,26 @@
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
         "js_hash": "d92f10d23567931a6c41bc40a2133c7e7868b1fa"
+    },
+    "dash-linking": {
+        "css": [
+            "css/components/floater",
+            "css/js-components/sidenav",
+            "css/components/index"
+        ],
+        "js": [
+            "service",
+            "js/components/sidenav",
+            "js/views/dash-main",
+            "js/views/dash-linking"
+        ],
+        "mix": [
+            "idb",
+            "global_new",
+            "intro",
+            "confirmation"
+        ],
+        "css_hash": "700a9051bc19fe9d90cdd2a084a5d32337e440b8",
+        "js_hash": "69915dd5cd9cf6c3a4b2d1b00ff9f336ffd04b51"
     }
 }
