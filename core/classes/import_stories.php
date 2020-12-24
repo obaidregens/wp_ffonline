@@ -8,14 +8,21 @@ class import_stories {
         }
         $table = self::$table;
         global $wpdb;
-        $rsql = "SELECT import_story FROM $table WHERE import_user = %s AND import_from = %s ";
-        $sql = $wpdb->prepare($rsql,[$current,'ffn']);
+        $rsql =
+        "SELECT import_story FROM $table
+        WHERE import_user = %s
+        AND import_from = %s
+        AND import_status = %s";
+        $sql = $wpdb->prepare($rsql,[$current,'ffn','pending']);
         $existing = array_column($wpdb->get_results($sql),'import_story');    
         $remove_requests = array_diff($existing,$stories);
         $new_requests = array_diff($stories,$existing);
         foreach ($remove_requests as $storyId ) {
-            $wpdb->delete(
+            $wpdb->update(
                 self::$table,
+                [
+                    'import_status'     => 'not_imported'
+                ],
                 [
                     'import_story'      => $storyId,
                     'import_from'       => 'ffn',
@@ -24,60 +31,20 @@ class import_stories {
             );
         }
         foreach ($new_requests as $storyId ) {
-            $wpdb->insert(
+            $wpdb->update(
                 $table,
                 [
-                    'import_user'   => $current,
-                    'import_from'   => 'ffn',
-                    'user_id'       => get_current_user_id(),
-                    'story_id'      => 0,
-                    'import_story'  => $storyId,
-                    'import_status' => 'pending',
                     'request_time'  => time(),
-                    'import_time'   => 0,
-                    'viewed_time'   => 0,
-                    'import_favs'   => 0,
-                    'import_follows'=> 0
+                    'import_user'   => $current,
+                    'user_id'       => get_current_user_id(),
+                    'import_status' => 'pending',
+                ],
+                [
+                    'import_status' => 'not_imported',
+                    'import_story'  => $storyId,
                 ]
             );    
         }
-    }
-    protected static function get_from_ffn($ffn_author) {
-        $cache_key = "ffn_stories-$ffn_author";
-        $cached = dcache::now()->get($cache_key);
-        if ($cached !== null) {
-            return $cached;
-        }
-        $html = proxy_get_contents("https://www.fanfiction.net/u/" . $ffn_author,IMPORT_PROXY);
-        if (! $html) {return [];}
-        ob_start();
-        $gzip = gzdecode($html);
-        ob_end_clean();
-        if ($gzip !== false){
-            $html = $gzip;
-            $gzip = null;
-        }
-        $doc = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $r = $doc->loadHTML($html);
-        $html = null;
-        if (!$r){
-            return [];
-        }
-        $XPath = new DOMXPath ($doc);
-        $nodes = ($XPath->query('//div[@class="z-list mystories"]/a[@class="stitle"]'));
-        $return = [];
-        foreach ($nodes as $node ) {
-            $title = $node->textContent;
-            $href = $node->attributes->getNamedItem("href")->value;
-            $id = arr::non_empty(explode('/',$href))[1];
-            $return[] = [
-                'ID'        => intval($id),
-                'title'     => $title
-            ];
-        }
-        dcache::now()->set($cache_key,$return,2);
-        return $return;
     }
     static function view_all ($author_id) {
         $r = c_user::get($author_id);
@@ -86,17 +53,25 @@ class import_stories {
         }
         $table = self::$table;
         global $wpdb;
-        $sql = $wpdb->prepare("SELECT import_story,import_status,story_id FROM $table WHERE import_user = %s",[$author_id]);
-        $results = $wpdb->get_results($sql);
-        $r = array_column($results,'import_status','import_story');
-        $ids = array_column($results,'story_id','import_story');
-        $stories = self::get_from_ffn($author_id);
-        foreach ($stories as $k => $story ) {
-            $s = &$stories[$k];
-            $s['status'] = $r[strval($s['ID'])] ?? 'not_imported';
-            $s['storyID'] = $ids[strval($s['ID'])] ?? 0;
+        $sql = $wpdb->prepare(
+            "SELECT
+                `import_story` as `ID`,
+                `import_status` as `status`,
+                `story_id` as `storyID`,
+                `import_title` as `title`
+            FROM $table
+            WHERE import_user = %s",
+            [$author_id]
+        );
+        $results = $wpdb->get_results($sql,ARRAY_A);
+        foreach ($results as $k => $story) {
+            if (intval($story['storyID']) !== 0 && $story['title'] === "") {
+                $s = story::get($story['storyID'],false,false);
+                if (!$s) {continue;}
+                $results[$k]['title'] = $s->post_title;
+            }
         }
-        return $stories;
+        return $results;
     }
     static function get_status ($storyId) {
         $table = self::$table;

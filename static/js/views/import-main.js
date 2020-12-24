@@ -1,11 +1,11 @@
-DOM.q('input[check-all]').addEventListener('change',event => {
+DOM.q('input[check-all]') && (DOM.q('input[check-all]').addEventListener('change',event => {
     const cBool = event.target.checked;
     const chks = DOM.qa('label.checkbox > input:not([check-all])');
     for (let i = 0; i < chks.length; i++) {
         chks[i].checked = cBool;
         
     }
-});
+}));
 DOM.q('button[label="Import"]').addEventListener('click',event => {
     const inputChecked = DOM.qa('label.checkbox > input:checked:not([check-all])');
     storyIds = [];

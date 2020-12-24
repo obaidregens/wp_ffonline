@@ -30,10 +30,17 @@ else {
 $remote_stories = import_stories::view_all($connected);
 ?>
 <h2>Stories to Import</h2>
-<label class="checkbox">
-    <input type="checkbox" check-all>
-    <text>Select All</text>
-</label>
+<?php
+$statuses = array_count_values(array_column($remote_stories,'status'));
+if ( ($statuses['pending'] ?? 0) + ($statuses['not_imported'] ?? 0) > 0 ) {
+    ?>
+    <label class="checkbox">
+        <input type="checkbox" check-all>
+        <text>Select All</text>
+    </label>
+    <?php
+}
+?>
 <?php foreach($remote_stories as $story) { ?>
 <?php if ( in_array($story['status'],['imported','live','reimport']) ) { ?>
 <label class="imported">
@@ -60,6 +67,13 @@ $remote_stories = import_stories::view_all($connected);
 </label>
 <?php } ?>
 <?php } ?>
+<?php
+if (empty($remote_stories)) {
+    ?>
+    <p>We're pulling your stories up. Check back soon.</p>
+    <?php
+}
+?>
 <button label="Import"></button>
 <?php
 }

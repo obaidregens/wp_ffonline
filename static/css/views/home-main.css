@@ -47,6 +47,7 @@ main > section {
     align-items: center;
     flex-direction: column;
     background: var(--background-color) !important;
+    transition: background-color var(--theme-change);
     height: 100vh;
     scroll-snap-align: start;
     -ms-scroll-snap-align: start;

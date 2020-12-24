@@ -131,6 +131,7 @@ function run_at_activation(){
 		`user_id` 		BIGINT NOT NULL ,
 		`story_id`	  	BIGINT NOT NULL ,
 		`import_story`	BIGINT NOT NULL ,
+		`import_title` 	VARCHAR(150) NOT NULL ,
 		`import_status`	VARCHAR(20) NOT NULL ,
 		`request_time`	BIGINT NOT NULL ,
 		`import_time`	BIGINT NOT NULL ,
