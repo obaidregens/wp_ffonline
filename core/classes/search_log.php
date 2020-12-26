@@ -55,17 +55,15 @@ class search_log {
         $psql .= ";";
         $sql = $wpdb->prepare($psql,$prep);
 
-        if (count($prep) > 3) {
-            $mysqli = &$wpdb->dbh;
+        $mysqli = &$wpdb->dbh;
 
-            if ( $mysqli->multi_query( $sql ) ) {
-                do {
-                    if ($result = $mysqli->store_result()) {
-                        $result->free_result();
-                    }
+        if ( $mysqli->multi_query( $sql ) ) {
+            do {
+                if ($result = $mysqli->store_result()) {
+                    $result->free_result();
                 }
-                while ($mysqli->next_result());
-            }    
-        }
+            }
+            while ($mysqli->next_result());
+        }    
     }
 }
