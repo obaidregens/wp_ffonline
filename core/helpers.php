@@ -22,7 +22,6 @@ function setup_book_query() {
     if (err::is($query->args)){
         $app->_404();
     }
-	$query->query();
 	global $app;
     $app->book_query = $query;
 }
@@ -346,17 +345,23 @@ function query_log($display_all = false) {
 	global $app;
 	echo "Book Query Time: " . ($app->book_query->query_time ?? null) . "<br>";
 }
-function out($var,$dump = false) {
-	?>
-	<style>#id-output{white-space: break-spaces !important;}</style>
-	<pre id="id-output"><?php
-	if ($dump) {
-		var_dump($var);
-	} else {
-		print_r($var);
+function out($var,$dump = false,$array_as_1 = false) {
+	$var = (array) $var;
+	if ($array_as_1) {
+		$var = [$var];
 	}
-	?></pre>
-	<?php
+	foreach ($var as $v) {
+		?>
+		<style>#id-output{white-space: break-spaces !important;}</style>
+		<pre id="id-output"><?php
+		if ($dump) {
+			var_dump($v);
+		} else {
+			print_r($v);
+		}
+		?></pre>
+		<?php			
+	}
 }
 function column_sort($a,$column) {
 	$counts = array_combine(array_keys($a),array_column($a,$column));

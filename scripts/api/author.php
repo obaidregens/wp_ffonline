@@ -164,7 +164,7 @@ function api_follow_user() {
         follow::new([
             'type'      => 'user',
             'type_id'   => $user->ID,
-            'landing_id'=> $_POST['landing_id']
+            'landing_id'=> landing_id()
         ]);
         return ['code'=>1];
     }
@@ -182,7 +182,7 @@ function api_user_settings() {
             follow::new([
                 'type'      => 'user',
                 'type_id'   => $admin,
-                'landing_id'=> $_POST['landing_id']
+                'landing_id'=> landing_id()
             ]);
             return ['code'=>1,'set'=>true];
         }

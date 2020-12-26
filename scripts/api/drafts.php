@@ -162,7 +162,7 @@ function api_compare_single_revision () {
 }
 function api_get_synonym() {
     required_params('word');
-    $dict = new dict($_POST['data']['word'],$_POST['landing_id']);
+    $dict = new dict($_POST['data']['word'],landing_id());
     return ['code' => 1,'synonyms' => $dict->synonym()];
 }
 function api_get_stories() {

@@ -20,13 +20,13 @@ function api_publish_review(){
     }
 
     if ( strlen(strip_tags($d['content'])) < $len ) {
-        spam::add("html_tags_in_review",$_POST['landing_id'],$d['content']);
+        spam::add("html_tags_in_review",landing_id(),$d['content']);
     }
     if (intval($d['review_id']) === 0){
         reviews::new([
             'type'          => 'chapter',
             'type_id'       => $d['chapter_id'],
-            'landing_id'    => $_POST['landing_id'],
+            'landing_id'    => landing_id(),
             'quote'         => $quote,
             'review'        => $d['content']
         ]);
@@ -35,7 +35,7 @@ function api_publish_review(){
     reviews::new([
         'type'          => 'chapter',
         'type_id'       => $d['chapter_id'],
-        'landing_id'    => $_POST['landing_id'],
+        'landing_id'    => landing_id(),
         'reply'         => $d['review_id'],
         'review'        => $d['content']
     ]);

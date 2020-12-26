@@ -14,6 +14,7 @@ class Router {
     public $request;
     private $r;
     private $called = [];
+    private $landing_id;
     function __construct($url){
         $parsed = parse_url($url);
         $path = $parsed ? $parsed['path'] : '/';
@@ -159,6 +160,18 @@ class Router {
         $this->_404();
         exit();
     }
+    function landing_id() {
+        global $app;
+        return $app->landing_id;
+    }
+    function set_landing_id($landing_id) {
+        global $app;
+        $app->landing_id = $landing_id;
+    }
+}
+function landing_id(){
+    global $app;
+    return $app->landing_id();
 }
 global $app;
 $app = new Router($_SERVER['REQUEST_URI']);

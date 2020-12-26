@@ -13,7 +13,7 @@ function api_offline() {
         offline_stats::new([
             'type'          => $a,
             'key'           => $key,
-            'landing_id'    => $_POST['landing_id'],
+            'landing_id'    => landing_id(),
             'story_id'      => $book->ID,
             'stat_millitime'=> millitime(),
         ]);
@@ -91,7 +91,7 @@ function api_offline() {
             'chapter_num'       => 0,
             'added_millitime'   => millitime(),
             'stat_millitime'    => millitime(),
-            'landing_id'        => $_POST['landing_id'],
+            'landing_id'        => landing_id(),
             'key'               => $re['key'],
         ]);
         foreach (['update','delete'] as $a) {

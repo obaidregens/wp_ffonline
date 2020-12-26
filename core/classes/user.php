@@ -251,7 +251,7 @@ class user_settings extends user {
             'email',
             $current_user->user_email,
             $new_email,
-            $_POST['landing_id']
+            landing_id()
         );
 
         $c = cache::now();
@@ -304,7 +304,7 @@ class user_settings extends user {
             'username',
             $current_user->user_login,
             $new_username,
-            $_POST['landing_id']
+            landing_id()
         );
 
         $c = cache::now();

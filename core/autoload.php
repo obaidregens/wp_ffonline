@@ -28,6 +28,7 @@ $includes = array(
 	'classes/beta',
 	'classes/cache',
 	'classes/change_logs',
+	'classes/search_log',
 	'cpt',
 	'helpers',
 	'thrown',

@@ -11,7 +11,7 @@ function api_ask_question() {
     }
     $e = questions::new([
         'email'         => $email,
-        'landing_id'    => $_POST['landing_id'],
+        'landing_id'    => landing_id(),
         'for_user'      => 12,
         'question'      => $d['question'],
     ]);

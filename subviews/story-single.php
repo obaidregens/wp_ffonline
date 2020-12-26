@@ -2,7 +2,7 @@
 global $book_query;
 global $book;
 $search = $book_query->args['search'];
-// $chapters_count = count(published_chapters($book->ID,-1,'ids'));
+$chapters_count = count(published_chapters($book->ID,-1,'ids'));
 ?>
 <div class="swiper-container story-single">
     <div class="swiper-wrapper">

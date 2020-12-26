@@ -148,6 +148,8 @@ if (! function_exists('api_' . $_POST['action'])){
     ));
     exit();
 }
+global $app;
+$app->set_landing_id($_POST['landing_id']);
 $b = call_user_func('api_' . $_POST['action']);
 if ($b) {
     echo json_encode($b);

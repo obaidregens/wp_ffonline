@@ -2,9 +2,13 @@
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
-$landing = new _landing();
-$app->landing_id = $landing_id;
+$landing = new _landing;
+$app->set_landing_id($landing->landing_id);
 $landing_key = $landing->encrypt();
+
+if (isset($app->book_query)) {
+	$app->book_query->query();
+}
 
 //Nonce
 $nonce = sha1(bin2hex(random_bytes(14)) . time());

@@ -85,7 +85,7 @@ function api_vote_chapter() {
         $return = vote::new([
             'type'      => 'chapter',
             'type_id'   => $chapter->ID,
-            'landing_id'=> $_POST['landing_id']
+            'landing_id'=> landing_id()
         ]);
         if (err::is($return)) {
             return ['code'=>7];

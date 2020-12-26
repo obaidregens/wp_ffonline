@@ -144,6 +144,10 @@ class book_query{
         $args = array_replace_recursive(book_query::$default_args,$args);
         $this->args = $args;
         $this->core_args = $this->core_args();
+        
+        new search_log($this->core_args);
+        
+
         if ($args['is_search']) {
             $included = $this->from_cache();
         }

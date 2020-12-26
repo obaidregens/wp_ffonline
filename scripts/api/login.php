@@ -85,7 +85,7 @@ function api_verify_code(){
 function api_google_signin() {
     required_params("token");
     $token = $_POST['data']['token'];
-    $r = GoogleAuth::login($token,$_POST['landing_id']);
+    $r = GoogleAuth::login($token,landing_id());
     if (!$r) {
         return ['code'=>10];
     }
