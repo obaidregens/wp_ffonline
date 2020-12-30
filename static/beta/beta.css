@@ -5,8 +5,8 @@ beta-bar {
     top: 53px;
     width: 100%;
     background-color: #bfe5ff;
-    z-index: 53;
     height: 30px;
+    z-index: 52;
 }
 
 @media only screen and (max-width: 500px) {
