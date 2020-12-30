@@ -145,7 +145,9 @@ class book_query{
         $this->args = $args;
         $this->core_args = $this->core_args();
         
-        new search_log($this->core_args);
+        if ($args['is_search']) {
+            new search_log($this->core_args);
+        }
         
 
         if ($args['is_search']) {
