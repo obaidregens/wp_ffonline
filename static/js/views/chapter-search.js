@@ -29,9 +29,7 @@ async function paraFromHash(){
         return;
     }
     const paraTo = DOM.q(`chapter > content > p:nth-of-type(${paraNum})`);
-    paraTo.scrollIntoView();
-    const ht = DOM.q('html');
-    ht.scrollTop = ht.scrollTop - 55;
+    _scroll.to(paraTo);
 }
 window.addEventListener('hashchange',paraFromHash);
 paraFromHash();

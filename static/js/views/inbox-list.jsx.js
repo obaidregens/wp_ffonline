@@ -45,12 +45,12 @@
         scrl = useCallback((mode = "normal") => {
             const msw = messagesWrapper.current;
             const fuzz = 150;
-            if (mode === "fuzzed" && (msw.scrollHeight - _.scrollBottom(msw) > fuzz)) {
+            if (mode === "fuzzed" && (msw.scrollHeight - _scroll.Bottom(msw) > fuzz)) {
                 return;
             }
             const newMsg = msw.querySelector('new-messages');
             if (newMsg) {
-                msw.scrollTop = _.offsetTop(newMsg)-20;
+                msw.scrollTop = _scroll.offsetTop(newMsg)-20;
                 return;
             }
             msw.scrollTop = msw.scrollHeight;

@@ -57,14 +57,14 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
       const msw = messagesWrapper.current;
       const fuzz = 150;
 
-      if (mode === "fuzzed" && msw.scrollHeight - _.scrollBottom(msw) > fuzz) {
+      if (mode === "fuzzed" && msw.scrollHeight - _scroll.Bottom(msw) > fuzz) {
         return;
       }
 
       const newMsg = msw.querySelector('new-messages');
 
       if (newMsg) {
-        msw.scrollTop = _.offsetTop(newMsg) - 20;
+        msw.scrollTop = _scroll.offsetTop(newMsg) - 20;
         return;
       }
 

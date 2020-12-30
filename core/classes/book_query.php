@@ -276,7 +276,10 @@ class book_query{
 
         // Page
         $paged_ids = $included;
-        if ($args['per_page'] !== 'all'){
+        if ($args['page'] < 1) {
+            $paged_ids = [];
+        }
+        else if ($args['per_page'] !== 'all'){
             $paged_ids = array_slice(
                 $included,
                 ($args['page']-1)*$args['per_page'],
@@ -287,7 +290,7 @@ class book_query{
         $this->ids = $included;
         $included = null;
         $this->count = count($this->ids);
-        $this->page = 1;
+        $this->page = $args['page'];
         if ($args['per_page'] !== "all") {
             $this->pages = ($this->count % $args['per_page'] > 0) ? (intval($this->count / $args['per_page'])+1) : (intval($this->count / $args['per_page']));
         }
@@ -428,8 +431,8 @@ class book_query{
                     $args['orderby'] = in_array($array[0],array('updated','words','votes','date','top')) ? $array[0] : 'updated';
                     $args['order'] = in_array($array[1],array('DESC','ASC')) ? $array[1] : 'DESC';
                 }
-                else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
-                    $args['page'] = intval($arr[1]);
+                else if ($arr[0] === 'page' ){
+                    $args['page'] = is_numeric($arr[1]) ? intval($arr[1]) : 0;
                 }
                 else if ($arr[0] === 'search'){
                     $args['search'] = $arr[1];
