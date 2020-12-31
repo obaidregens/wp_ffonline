@@ -602,8 +602,10 @@ class book_query_cache extends book_query {
                 AND wp_posts.post_status = 'publish'
                 ORDER BY c DESC
             "),'s');
-            $non_imported_voted_ids = array_column($wpdb->get_results("
-                SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
+            $all_voted_ids = array_column($wpdb->get_results("
+                SELECT
+                    wp_posts.post_parent as story,
+                    COUNT(wp_posts.post_parent) as c
                 FROM votes
                 INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
                 WHERE votes.type = 'chapter'
@@ -612,20 +614,20 @@ class book_query_cache extends book_query {
                 GROUP BY wp_posts.post_parent
                 ORDER BY c DESC
             "),'story');
-            $non_votes = array_merge($imported_ids,$non_imported_voted_ids);
-            $non_imported_no_votes = empty($non_votes) ? [] : array_column($wpdb->get_results(
+            $voted_or_imported = array_unique(array_merge($imported_ids,$all_voted_ids));
+            $non_imported_no_votes = empty($voted_or_imported) ? [] : array_column($wpdb->get_results(
                 $wpdb->prepare("
                     SELECT ID as story
                     FROM wp_posts
                     WHERE post_type = 'book'
                     AND post_status = 'publish'
-                    AND ID NOT IN (" . sqlPlaceholder($non_votes) . ")
+                    AND ID NOT IN (" . sqlPlaceholder($voted_or_imported) . ")
                     ",
-                    $non_votes
+                    $voted_or_imported
                 )
             ),'story');
             shuffle($non_imported_no_votes);
-            $non_imported = array_merge($non_imported_voted_ids,$non_imported_no_votes);
+            $non_imported = array_merge($all_voted_ids,$non_imported_no_votes);
             $inserts = [];
             foreach ($non_imported as $id ) {
                 $inserts[] = mt_rand(0, ceil(count($imported_ids)/4));
@@ -634,6 +636,7 @@ class book_query_cache extends book_query {
             foreach($non_imported as $k => $id){
                 array_splice($imported_ids, $inserts[$k], 0, $id);
             }
+            $imported_ids = array_unique($imported_ids);
             self::put([
                 [
                     '_key'      => 'sort',

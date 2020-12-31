@@ -3,17 +3,22 @@ text-input {
     display: block;
     position: relative;
 }
-text-input > input, text-input > textarea{
+text-input > input,
+text-input > textarea{
+    /* Unset */
     width: 100%;
     outline: none;
-    border: none;
-    border-bottom: 1px solid var(--darkgrey);
     background-color: transparent;
+
+    border: 1px solid var(--grey);
     color: var(--text-color);
-    padding: 15px 10px 10px 4px;
+    padding: 11px 10px;
+    border-radius: 4px;
+    position: relative;
+
+    /* Transitions */
     transition: border-color .2s;
     will-change: border-color;
-    position: relative;
 }
 text-input > textarea {
     overflow: hidden;
@@ -24,16 +29,18 @@ text-input > textarea {
     height: 43px;
 }
 text-input > label {
+    background-color: var(--background-color);
     user-select: none;
     -moz-user-select: none;
     pointer-events: none;
     color: var(--darkgrey);
     position: absolute;
-    top: 12px;
-    left: 3px;
+    padding: 0 7px;
+    top: 9px;
+    left: 6px;
     transform-origin: left;
-    transition: top .2s, transform .2s, color .2s;
-    will-change: transform, top, color;
+    transition: transform .2s, color .2s;
+    will-change: transform, color;
 }
 text-input > input:focus,
 text-input > textarea:focus{
@@ -47,8 +54,7 @@ text-input > input:focus ~ label,
 text-input > input.filled ~ label,
 text-input > textarea:focus ~ label,
 text-input > textarea.filled ~ label{
-    top: -12px;
-    transform: scale(0.75);
+    transform: scale(0.75) translateY(-28px) translateX(1px);
 }
 /* Helper */
 text-input[helper]::after {

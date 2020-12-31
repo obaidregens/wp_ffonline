@@ -16,6 +16,28 @@ $app->bundle->js('js/views/home-main');
     Scroll down to see why you've come to the right place
     </mini-description>
 </section>
+<!-- Find Stories -->
+<section>
+    <section-description>
+    Find Stories
+    </section-description>
+    <mini-description>
+    Find stories you like easily with our robust filters. Filter by fandom, genre, characters, pairings, or anything at all!
+    <br>
+    <a href="/read">Start Reading</a>
+    </mini-description>
+</section>
+<!-- Customize Reading -->
+<section>
+    <section-description>
+    Customize Reading
+    </section-description>
+    <mini-description>
+    Customize your reading experience and make your eyes happy! Change text size, themes, fonts and much more.
+    <br>
+    <a href="/read">Start Reading</a>
+    </mini-description>
+</section>
 <!-- Write -->
 <section>
     <div class="glide">
@@ -69,29 +91,7 @@ $app->bundle->js('js/views/home-main');
         </div>
     </div>
 </section>
-<!-- Find Stories -->
-<section>
-    <section-description>
-    Find Stories
-    </section-description>
-    <mini-description>
-    Find stories you like easily with our robust filters. Filter by fandom, genre, characters, pairings, or anything at all!
-    <br>
-    <a href="/read">Start Reading</a>
-    </mini-description>
-</section>
-<!-- Customize Reading -->
-<section>
-    <section-description>
-    Customize Reading
-    </section-description>
-    <mini-description>
-    Customize your reading experience and make your eyes happy! Change text size, themes, fonts and much more.
-    <br>
-    <a href="/read">Start Reading</a>
-    </mini-description>
-</section>
-<!-- Customize Reading -->
+<!-- Save Offline -->
 <section>
     <section-description>
     Read Offline
