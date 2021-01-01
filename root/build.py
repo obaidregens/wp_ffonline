@@ -106,7 +106,7 @@ def main():
                 css_input += dump.read()
         with open(current_path + "temp_input.css","w+",encoding="utf8") as dump:
             dump.write(css_input)
-        cmd = "cssnano < " + current_path + "temp_input.css" + " > " + current_path + "temp.css"
+        cmd = "cssnano --no-zindex < " + current_path + "temp_input.css" + " > " + current_path + "temp.css"
         subprocess.call(cmd,shell=True)
 
         # Put Minified In

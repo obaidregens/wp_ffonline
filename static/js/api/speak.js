@@ -92,7 +92,7 @@ const speak = class {
             if (this.version !== current_version || window.onUnloadCancelSpeech) {break;}
             this.current = i;
             const para = this.paras[i];
-            _.scrollTo(para);
+            _scroll.to(para);
             para.classList.add(speak.classAdd);
             const [oath,utterance] = speak.speak(para.textContent);
             this.utterance = utterance;

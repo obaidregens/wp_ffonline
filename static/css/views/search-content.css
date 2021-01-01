@@ -14,6 +14,10 @@ books-container {
         font-size: 0.95rem;
     }
 }
+.swiper-wrapper {
+    height: fit-content;
+    display: flex;
+}
 /* Book */
 a.book {
     display: flex;
@@ -22,6 +26,7 @@ a.book {
     user-select: none;
     padding: 20px;
     color: unset;
+    position: relative;
 }
 a.book .more {
     color: unset;

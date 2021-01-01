@@ -216,7 +216,7 @@ function userReviewsFromHash() {
     return false;
   }
 
-  DOM.q(`reviews-wrapper`).scrollIntoView();
+  _scroll.to(DOM.q(`reviews-wrapper`));
   const excl_users = [];
   ReviewStates.userItems[0].forEach(v => {
     if (parseInt(v.key) !== userId) {

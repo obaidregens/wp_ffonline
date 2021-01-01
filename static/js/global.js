@@ -1,6 +1,6 @@
 const logged_in = DOM.q('logged_in').getAttribute('value') === 'true';
-function im(type){
-	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container > .story-single book';
+const im = type => {
+	const selector = type === 'collections' ? 'collections-container > collection' : 'books-container .book';
 	const attr = type === 'collections' ? 'collection_id' : 'book_id';
 	const height = window.innerHeight;
 	const objs = DOM.qa(selector);
@@ -24,11 +24,11 @@ _.interact(function(event){
 	if (! event || event.isTrusted !== true){
 		return;
 	}
-	im_books = _.array_unique(im_books.concat(im('books')));
-	im_collections = _.array_unique(im_collections.concat(im('collections')));
 	if (Date.now() - lastSend < 15000){
         return;
 	}
+	im_books = _.array_unique(im_books.concat(im('books')));
+	im_collections = _.array_unique(im_collections.concat(im('collections')));
 	lastSend = Date.now();
 	api('poll',{
 		data: {

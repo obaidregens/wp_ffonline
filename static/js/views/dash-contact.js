@@ -18,7 +18,7 @@ DOM.q('with').addEventListener('click',({target}) => {
         }));
     }
     DOM.q('with').classList.remove('show');
-    window.scrollTo(0,document.body.scrollHeight);
+    _scroll.documentTop = _scroll.documentHeight;
 });
 DOM.q('button[label="Reply"]').addEventListener('click',() => {
     const to = DOM.q('message-box').getAttribute('from');

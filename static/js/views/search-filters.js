@@ -271,6 +271,9 @@ const setFilterFandom = (fandomN) => {
     });
     // Reset
     DOM.q('filter-books > next-screen > div > button[label="Reset"]').addEventListener('click',function(){
+        search_el.value = "";
+        author_el.value = "";
+        sort_el.value = sort_options[0];
         words('reset');
         for (let i = 0; i < select_tags.length; i++) {
             const select_tag = select_tags[i];
@@ -278,25 +281,7 @@ const setFilterFandom = (fandomN) => {
             select_tag.innerText = '';
         }
     });
-    // Search
-    const trigger_search = (page = false) => {
-        next_screen.close();
-        let search_progress_interval = 0;
-        const loader = DOM.q('loader');
-        const progress_spinner = () => {
-            loader.classList.add('show');
-            loader.setAttribute('progress', '0%');
-            search_progress_interval = setInterval(function(){
-                const prev = parseInt(loader.getAttribute('progress'));
-                if (prev >= 100){
-                    clearInterval(search_progress_interval);
-                    return;
-                }
-                loader.setAttribute('progress',(prev + 1) + '%');
-            },100);
-        }
-        progress_spinner();
-    
+    const searchURL = () => {
         const construct = [
             "words=" + words('get'),
             'sort=' + sort_el.value
@@ -325,13 +310,32 @@ const setFilterFandom = (fandomN) => {
                 construct.push(name + '_excluded=' + _selected.excluded.join(','));
             }
         }
-        const prev_ss = DOM.q('prev_ss');
+        return construct.join('&');
+    }
+    // Search
+    const trigger_search = () => {
+        loading_page = true;
+        next_screen.close();
+
+        let search_progress_interval = 0;
+        const loader = DOM.q('loader');
+        const progress_spinner = () => {
+            loader.classList.add('show');
+            loader.setAttribute('progress', '0%');
+            search_progress_interval = setInterval(function(){
+                const prev = parseInt(loader.getAttribute('progress'));
+                if (prev >= 100){
+                    clearInterval(search_progress_interval);
+                    return;
+                }
+                loader.setAttribute('progress',(prev + 1) + '%');
+            },100);
+        }
+        progress_spinner();
+    
+        const construct = searchURL();
         api('search',{
-            data: {
-                search: construct.join('&'),
-                page,
-                prev: prev_ss.innerText
-            }
+            data: { search: searchURL() }
         })
         .then(response => {
             // Fandom Filter
@@ -346,36 +350,30 @@ const setFilterFandom = (fandomN) => {
             }
 
             // New Data
-            prev_ss.innerText = response.prev;
             collections.book_collections = response.book_collections;
-            DOM.q('pagination').innerHTML = response.paginate;
+            DOM.q('prev_ss').innerText = response.prev;
             DOM.q('books-container').innerHTML = response.output;
-            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct.join("&"));
+            DOM.q('books-container').setAttribute('pages',response.pages);
+            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct);
             
             // Styling
             clearInterval(search_progress_interval);
             loader.classList.remove('show');
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+            _scroll.documentTop = 0;
     
             reChapterProgress();
             reHookOffline();
+            page_ids = {1: response.ids};
+            loading_page = false;
         });
     
     }
     DOM.q('fandom-filter select').addEventListener('change',({target}) => {
         sort_el.value = target.value;
-        DOM.q('[label="Search"]').dispatchEvent(new Event("click"));
-    });
-    DOM.q('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',function(event){
-        event.preventDefault();
         trigger_search();
     });
-    DOM.q('pagination').addEventListener('click',function(event){
+    DOM.q('filter-books > next-screen > div > button[label="Search"]').addEventListener('click',event => {
         event.preventDefault();
-        const to = parseInt(event.target.getAttribute('paginate'));
-        if (to){
-            trigger_search(to);
-        }
+        trigger_search();
     });
 })();

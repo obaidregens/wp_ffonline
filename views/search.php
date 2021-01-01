@@ -65,8 +65,7 @@ $fandoms = implode('/',$fandoms);
     <input type="text" placeholder="Filter by fandom">
     </fandom-filter>
 </filter-books>
-
-<books-container>
+<books-container page="<?=$book_query->page;?>" pages="<?=$book_query->pages;?>">
 <?php
 if ( $book_query->has() ){
     global $book;
@@ -79,9 +78,6 @@ else {
 }
 ?>
 </books-container>
-<pagination>
-<?php $app->template( '/subviews/paginate-stories' ); ?>
-</pagination>
 <?php
 if (! isset($app->bundle)){
     $app->bundle = global_bundle('search');
@@ -105,3 +101,4 @@ $app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js("js/views/search-offline");
 $app->bundle->css('css/views/search-filterFandom');
 $app->bundle->js("js/views/search-filterFandom");
+$app->bundle->js("js/views/search-autoload");

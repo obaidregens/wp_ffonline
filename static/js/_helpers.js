@@ -1,14 +1,9 @@
 class _ {
-    static offsetTop(el) {
-        const prev = el.style.position;
-        el.style.position = 'static';
-        const offset = el.offsetTop;
-        el.style.position = prev;
-        return offset;
-    }
-    static scrollBottom(el) {
-        return el.offsetHeight+el.scrollTop;
-    }
+    static middle (arr) {
+        const mid = Math.floor(arr.length / 2),
+        nums = [...arr];
+        return nums[mid];
+    };
     static isSame(a,b) {
         return JSON.stringify(a) === JSON.stringify(b);
     }
@@ -33,11 +28,6 @@ class _ {
             el = el.previousElementSibling;
         }
         return ii;
-    }
-    static scrollTo (el) {
-        const ht = DOM.q('html');
-        el.scrollIntoView();
-        ht.scrollTop = ht.scrollTop - 60;
     }
     static clone (obj) {
         return JSON.parse(JSON.stringify(obj));
@@ -103,13 +93,6 @@ class _ {
     static camelToHyphen(key) {
         return key.replace( /([A-Z])/g, "-$1").toLowerCase();
     }
-    static scrollEnd(func) {
-        let scrollingTimer = 0;
-        window.addEventListener('scroll', function ( event ) {
-            clearTimeout( scrollingTimer );
-            scrollingTimer = setTimeout(func, 100);
-        }, {capture: false,passive: true});
-    }
     static interact (func){
         if (! func){
             return false;
@@ -122,14 +105,7 @@ class _ {
         return true;
     }
     static array_unique(array){
-        let to_return = [];
-        for (let bb = 0; bb < array.length; bb++) {
-            const element = array[bb];
-            if (! to_return.includes(element)){
-                to_return.push(element);
-            }
-        }
-        return to_return;
+        return [...new Set(array)];
     }
     static selectText(node) {    
         if (document.body.createTextRange) {
@@ -210,3 +186,36 @@ class _t {
         return _t.local(time);    
     }
 }
+class _scroll {
+    static set documentTop (v) {
+        document.body.scrollTop = v;
+        document.documentElement.scrollTop = v;
+    }
+    static get documentTop () {
+        return Math.max(document.body.scrollTop,document.documentElement.scrollTop);
+    }
+    static get documentHeight () {
+        return Math.max(document.body.scrollHeight,document.documentElement.scrollHeight);
+    }
+    static offsetTop(el) {
+        const prev = el.style.position;
+        el.style.position = 'static';
+        const offset = el.offsetTop;
+        el.style.position = prev;
+        return offset;
+    }
+    static Bottom(el) {
+        return el.offsetHeight+el.scrollTop;
+    }
+    static to (el) {
+        el.scrollIntoView();
+        _scroll.documentTop = _scroll.documentTop - 60;
+    }
+    static scrollEndEvent(func) {
+        let scrollingTimer = 0;
+        window.addEventListener('scroll', function ( event ) {
+            clearTimeout( scrollingTimer );
+            scrollingTimer = setTimeout(func, 100);
+        }, {capture: false,passive: true});
+    }
+} 

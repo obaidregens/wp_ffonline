@@ -20,7 +20,7 @@ window.addEventListener('load',async () => {
         timestamp: Date.now()
     }));
     setTimeout(() => {
-        _.scrollEnd(async () => {
+        _scroll.scrollEndEvent(async () => {
             const paras = DOM.qa('chapter > content > p');
             let paraI = null;
             for (let i = 0; i < paras.length; i++) {

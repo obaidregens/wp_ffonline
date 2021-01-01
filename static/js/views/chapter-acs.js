@@ -69,8 +69,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 classes: ['reviews'],
                 listeners: {
                     click: () => {
-                        DOM.q('reviews-wrapper').scrollIntoView();
-                        document.documentElement.scrollTop = document.documentElement.scrollTop - 60;
+                        _scroll.to(DOM.q('reviews-wrapper'));
                     }
                 }
             }),

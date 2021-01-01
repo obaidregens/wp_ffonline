@@ -145,7 +145,9 @@ class book_query{
         $this->args = $args;
         $this->core_args = $this->core_args();
         
-        new search_log($this->core_args);
+        if ($args['is_search']) {
+            new search_log($this->core_args);
+        }
         
 
         if ($args['is_search']) {
@@ -186,15 +188,9 @@ class book_query{
             }
             $results = null;
             // Words
-            $included = array_merge(
-                array_diff(
-                    $results_['words=' . $args['words']['from']],
-                    $results_['words=' . $args['words']['to']]
-                ),
-                a_intersect(
-                    $results_['words=' . $args['words']['from']],
-                    $results_['words=' . $args['words']['to']]
-                )
+            $included = array_diff(
+                $results_['words=' . $args['words']['from']],
+                $results_['words=' . $args['words']['to']]
             );
             //Included
             foreach ($args['included'] as $key => $ids) {
@@ -276,7 +272,10 @@ class book_query{
 
         // Page
         $paged_ids = $included;
-        if ($args['per_page'] !== 'all'){
+        if ($args['page'] < 1) {
+            $paged_ids = [];
+        }
+        else if ($args['per_page'] !== 'all'){
             $paged_ids = array_slice(
                 $included,
                 ($args['page']-1)*$args['per_page'],
@@ -287,7 +286,7 @@ class book_query{
         $this->ids = $included;
         $included = null;
         $this->count = count($this->ids);
-        $this->page = 1;
+        $this->page = $args['page'];
         if ($args['per_page'] !== "all") {
             $this->pages = ($this->count % $args['per_page'] > 0) ? (intval($this->count / $args['per_page'])+1) : (intval($this->count / $args['per_page']));
         }
@@ -428,8 +427,8 @@ class book_query{
                     $args['orderby'] = in_array($array[0],array('updated','words','votes','date','top')) ? $array[0] : 'updated';
                     $args['order'] = in_array($array[1],array('DESC','ASC')) ? $array[1] : 'DESC';
                 }
-                else if ($arr[0] === 'page' && is_numeric($arr[1]) ){
-                    $args['page'] = intval($arr[1]);
+                else if ($arr[0] === 'page' ){
+                    $args['page'] = is_numeric($arr[1]) ? intval($arr[1]) : 0;
                 }
                 else if ($arr[0] === 'search'){
                     $args['search'] = $arr[1];
@@ -597,8 +596,10 @@ class book_query_cache extends book_query {
                 AND wp_posts.post_status = 'publish'
                 ORDER BY c DESC
             "),'s');
-            $non_imported_voted_ids = array_column($wpdb->get_results("
-                SELECT wp_posts.post_parent as story, COUNT(wp_posts.post_parent) as c
+            $all_voted_ids = array_column($wpdb->get_results("
+                SELECT
+                    wp_posts.post_parent as story,
+                    COUNT(wp_posts.post_parent) as c
                 FROM votes
                 INNER JOIN wp_posts ON votes.type_id = wp_posts.ID
                 WHERE votes.type = 'chapter'
@@ -607,20 +608,20 @@ class book_query_cache extends book_query {
                 GROUP BY wp_posts.post_parent
                 ORDER BY c DESC
             "),'story');
-            $non_votes = array_merge($imported_ids,$non_imported_voted_ids);
-            $non_imported_no_votes = empty($non_votes) ? [] : array_column($wpdb->get_results(
+            $voted_or_imported = array_unique(array_merge($imported_ids,$all_voted_ids));
+            $non_imported_no_votes = empty($voted_or_imported) ? [] : array_column($wpdb->get_results(
                 $wpdb->prepare("
                     SELECT ID as story
                     FROM wp_posts
                     WHERE post_type = 'book'
                     AND post_status = 'publish'
-                    AND ID NOT IN (" . sqlPlaceholder($non_votes) . ")
+                    AND ID NOT IN (" . sqlPlaceholder($voted_or_imported) . ")
                     ",
-                    $non_votes
+                    $voted_or_imported
                 )
             ),'story');
             shuffle($non_imported_no_votes);
-            $non_imported = array_merge($non_imported_voted_ids,$non_imported_no_votes);
+            $non_imported = array_merge($all_voted_ids,$non_imported_no_votes);
             $inserts = [];
             foreach ($non_imported as $id ) {
                 $inserts[] = mt_rand(0, ceil(count($imported_ids)/4));
@@ -629,6 +630,7 @@ class book_query_cache extends book_query {
             foreach($non_imported as $k => $id){
                 array_splice($imported_ids, $inserts[$k], 0, $id);
             }
+            $imported_ids = array_unique($imported_ids);
             self::put([
                 [
                     '_key'      => 'sort',

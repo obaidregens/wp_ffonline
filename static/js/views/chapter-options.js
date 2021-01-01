@@ -38,7 +38,7 @@
                     reply_el.setAttribute('review_id',"0");
                     const quote_el = DOM.q('write-review > quote');
                     quote_el.innerText = menu_instance.getCurrentSelection().trim();
-                    _.scrollTo(quote_el);
+                    _scroll.to(quote_el);
                 }
             }
         })

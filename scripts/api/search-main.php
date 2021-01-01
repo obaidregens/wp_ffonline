@@ -18,7 +18,8 @@ function api_search() {
     $book_query->query();
     $response = array(
         'prev'              => ctrk_encrypt($book_query->args),
-        'book_collections'  => collection_helpers::query_by_book(array_column($book_query->books,'ID'))
+        'book_collections'  => collection_helpers::query_by_book(array_column($book_query->books,'ID')),
+        'pages'             => $book_query->pages
     );
     ob_start();
 	if ( $book_query->has() ){
@@ -32,11 +33,7 @@ function api_search() {
     }
 	$response['output'] = ob_get_contents();
     ob_end_clean();
-	ob_start();
-    $app->template( '/subviews/paginate-stories' );
-	$response['paginate'] = ob_get_contents();
-    ob_end_clean();
-    $response['query'] = $book_query;
+    $response['ids'] = array_column($book_query->books,'ID');
     return $response;
 }
 function api_load_tags() {
