@@ -188,15 +188,9 @@ class book_query{
             }
             $results = null;
             // Words
-            $included = array_merge(
-                array_diff(
-                    $results_['words=' . $args['words']['from']],
-                    $results_['words=' . $args['words']['to']]
-                ),
-                a_intersect(
-                    $results_['words=' . $args['words']['from']],
-                    $results_['words=' . $args['words']['to']]
-                )
+            $included = array_diff(
+                $results_['words=' . $args['words']['from']],
+                $results_['words=' . $args['words']['to']]
             );
             //Included
             foreach ($args['included'] as $key => $ids) {
