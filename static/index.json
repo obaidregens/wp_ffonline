@@ -31,7 +31,7 @@
             "autocomplete"
         ],
         "css_hash": "0c671a53a85e356953162667ad94a1db8a71ab3d",
-        "js_hash": "6e8b104dc8ce75917f0fd9f5415d7bbbf9ebe044"
+        "js_hash": "92a64d1c7cc4de75eb515bafbfcbfd07cb6d7dbc"
     },
     "beta-global": {
         "css": [
@@ -219,7 +219,7 @@
             "autocomplete"
         ],
         "css_hash": "fcc0b71ebf2aa45c5500ba248c8f7645ceabc4f6",
-        "js_hash": "a50c8b80b5f7069dad6137e9d9258172bfed2421"
+        "js_hash": "cf0963d430ecea55aa479eb9803f7f2812894727"
     },
     "author-updates": {
         "css": [
@@ -736,7 +736,7 @@
             "autocomplete"
         ],
         "css_hash": "8b86792f9596505c60a81cd1ec30e4106b3931d3",
-        "js_hash": "71b57e688a28188b7390c6b4af45b5b7100fb50c"
+        "js_hash": "628e2d80e9ecf7ac90320856ea9926378639948d"
     },
     "author-following": {
         "css": [

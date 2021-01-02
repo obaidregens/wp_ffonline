@@ -45,6 +45,7 @@ const setFilterFandom = (fandomN) => {
     fandom_showing.querySelector('select').value = sort_elem.value;
     fandom_showing.querySelector('fandom').innerText = fandomN === "" ? "All" : fandomN;
 }
+let trigger_search;
 (() => {
     const saveSelectedTags = () => {
         const _pop_ = DOM.q('popup[tag-name].show');
@@ -313,7 +314,7 @@ const setFilterFandom = (fandomN) => {
         return construct.join('&');
     }
     // Search
-    const trigger_search = () => {
+    trigger_search = (page = null) => {
         loading_page = true;
         next_screen.close();
 
@@ -334,19 +335,28 @@ const setFilterFandom = (fandomN) => {
         progress_spinner();
     
         const construct = searchURL();
+        const s_data = { search: searchURL() };
+        if (page !== null) {
+            s_data.page = page;
+            s_data.prev = DOM.q('prev_ss').innerText;
+        }
         api('search',{
-            data: { search: searchURL() }
+            data: s_data
         })
         .then(response => {
-            // Fandom Filter
-            if (construct.length > 2) {
-                const fandom_name = [...DOM.q('select-tag[name="fandom"]').children].map(tag_el => tag_el.innerText).join("/");
-                setFilterFandom(fandom_name);
-            }
-            else {
-                const fandom_showing = DOM.q('fandom-filter > showing');
-                fandom_showing.classList.remove('show');
-                DOM.q('fandom-filter > input').value = "";
+            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct);
+            
+            if (page === null) {
+                // Fandom Filter
+                if (construct.length > 2) {
+                    const fandom_name = [...DOM.q('select-tag[name="fandom"]').children].map(tag_el => tag_el.innerText).join("/");
+                    setFilterFandom(fandom_name);
+                }
+                else {
+                    const fandom_showing = DOM.q('fandom-filter > showing');
+                    fandom_showing.classList.remove('show');
+                    DOM.q('fandom-filter > input').value = "";
+                }
             }
 
             // New Data
@@ -354,7 +364,6 @@ const setFilterFandom = (fandomN) => {
             DOM.q('prev_ss').innerText = response.prev;
             DOM.q('books-container').innerHTML = response.output;
             DOM.q('books-container').setAttribute('pages',response.pages);
-            window.history.pushState("object or string", DOM.q("title").innerText,'?' + construct);
             
             // Styling
             clearInterval(search_progress_interval);
