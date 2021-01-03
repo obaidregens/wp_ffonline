@@ -2,7 +2,7 @@
 // Find Args from Url
 global $book_query;
 $book_query = $app->book_query;
-$a = $book_query->args['included']['fandom'];
+$a = $book_query->args['included']['fandom'] ?? [];
 $terms = empty($a) ? [] : get_terms([
     'taxonomy'  => 'category',
     'include'   => $book_query->args['included']['fandom']

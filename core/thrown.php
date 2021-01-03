@@ -220,28 +220,3 @@ function all_chapters($book_id,$limit = -1,$fields = 'all'){
     )))->posts;
     return $chapters;
 }
-function type_args($args,$placeholder){
-	global $app;
-	if ($placeholder['type'] === 'read'){}
-	else if ($placeholder['type'] === 'collection'){
-		$collection_books =
-			array_column(collection_books::query_by('collection_id',$placeholder['type_id']),'book_id');
-		$args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;
-	}
-	else if ($placeholder['type'] === 'author-stories') {
-		$args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
-	}
-	else if ($placeholder['type'] === 'ffn_author-stories') {
-		$args['included']['ffn_author'] = isset($args['included']['ffn_author']) ? a_intersect($args['included']['ffn_author'],array($placeholder['type_id'])) : array($placeholder['type_id']);
-	}
-	else{
-		$error = new err();
-		$error->add('type','Unknown type for search: ' . $placeholder['type']);
-		return $error;
-	}
-	if (!($placeholder['type'] === 'collection' && collection::get_by('ID',$placeholder['type_id'])->title === 'Hidden')) {
-		$hidden = collection_helpers::get_hidden();
-		$args['exclude_ids'] = array_merge($args['exclude_ids'] ?? [],$hidden);
-	}
-	return $args;
-}

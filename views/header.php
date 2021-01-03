@@ -2,8 +2,10 @@
 if (! headers_sent() && ! isset($_SESSION) ){
 	session_start();
 }
-$landing = new _landing;
-$app->set_landing_id($landing->landing_id);
+$landing = new landing;
+$_SESSION['landing_cache'] = $_SESSION['landing_cache'] ?? [];
+$_SESSION['landing_cache'][$landing->ID] = $landing;
+
 $landing_key = $landing->encrypt();
 
 if (isset($app->book_query)) {

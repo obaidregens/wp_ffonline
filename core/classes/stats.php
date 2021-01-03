@@ -1,97 +1,4 @@
 <?php
-//Takes in $args,$fields,$base_sql
-//Gives out $error or $sql
-function query_mec($fields,$args,$base_sql){
-    $error = new err();
-
-    $scale_fields = array();
-    foreach ($fields as $key => $field ) {
-        if ($field['type'] === 'scale'){
-            $scale_fields[] = $field;
-            unset($fields[$key]);
-        }
-    }
-    sort($fields);
-    $base_sql .= ' WHERE 1';
-    $prepare = array();
-    $text_protocol = (isset($args['text_search_protocol']) && $args['text_search_protocol'] === 'lenient') ? '%' : '';
-    foreach ($fields as $field) {
-        $data_type = $field['data_type'] === 'int' ? '%d' : '%s';
-        if ($field['type'] === 'option'){
-            $value = isset($args[$field['arg']]) ? $args[$field['arg']] : null;
-            $value = isset($args['include_' . $field['arg']]) ? $args['include_' . $field['arg']] : $value;
-            if (isset($value)){
-                $value = (array) $value;
-                if (empty($value)){
-                    return array();
-                }
-                $fill = implode(', ',array_fill(0,count($value),$data_type));
-                $base_sql .= ' AND ' . $field['field'] . ' IN (' . $fill . ')';
-                $prepare = array_merge($prepare,$value);
-            }
-
-            $arg = 'exclude_' . $field['arg'];
-            $value = isset($args[$arg]) ? (array) $args[$arg] : array();
-            if (! empty($value)){
-                $fill = implode(', ',array_fill(0,count($value),$data_type));
-                $base_sql .= ' AND ' . $field['field'] . ' NOT IN (' . $fill . ')';
-                $prepare = array_merge($prepare,$value);
-            }
-    
-        }
-        else if ($field['type'] === 'text'){
-            $arg = $field['arg'];
-            if (isset($args[$arg])){
-                $base_sql .= ' AND ' . $field['field'] . ' LIKE %s';
-                $args[$arg] = (string) $args[$arg];
-                $prepare[] = $text_protocol . $args[$arg] . $text_protocol;
-            }   
-        }
-    }
-
-    $base_sql .= ' HAVING 1';
-    foreach ($scale_fields as $field) {
-        $arg = $field['arg'];
-        if (isset($args[$arg])){
-            $base_sql .= ' AND ' . $field['field'] . ' >= ' . $data_type . ' AND ' . $field['field'] . ' <= ' . $data_type;
-            $prepare[] = isset($args[$arg]['from']) ? intval($args[$arg]['from']) : $field['default_from'];
-            $prepare[] = isset($args[$arg]['to']) ? intval($args[$arg]['to']) : $field['default_to'];
-        }
-    }
-    $args['orderby'] = isset($args['orderby']) ? $args['orderby'] : 'ID';
-    $args['order'] = isset($args['order']) ? strtoupper(strval($args['order'])) : 'ASC';
-    $base_sql .= ' ORDER BY ' . $args['orderby'] . ' ' . $args['order'];
-    if (! in_array($args['orderby'],array_column($fields,'field')) &&
-        ! in_array($args['orderby'],array_column($scale_fields,'field'))){
-        $error->add('orderby','Field doesn\'t exist.');
-    }
-    if (! in_array($args['order'],array('ASC','DESC'))){
-        $error->add('order','Pass ASC or DESC.');
-    }
-
-    $args['limit'] = isset($args['limit']) ? intval($args['limit']) : 10;
-    $base_sql .= ' LIMIT %d';
-    $prepare[] = $args['limit'];
-
-    $args['page'] = isset($args['page']) ? intval($args['page']) : 1;
-    $base_sql .= ' OFFSET %d';
-    $prepare[] = ($args['page'] - 1) * $args['limit'];
-
-    if ( isset($args['unique']) ) {
-        $base_sql = 'SELECT * FROM ( ' . $base_sql . ') AS sub';
-        $base_sql .= ' GROUP BY ' . $args['unique'];
-        if ( ! in_array($args['unique'],array_column($fields,'field')) ){
-            $error->add('unique','Unknown Field passed.');
-        }
-    }
-
-    if ($error->has()){
-        return $error;
-    }
-    global $wpdb;
-    $sql = $wpdb->prepare( $base_sql, $prepare );
-    return $sql;
-}
 class stats {
     protected static $landing_table = 'stats_landings';
     protected static $actions_table = 'stats_actions';
@@ -104,64 +11,62 @@ class stats {
     protected static function set_cookie($vfs){
         setcookie('vfs', $vfs, time() + (86400 * 5475), "/");
     }
-    public static function last_online($args = array()){
-        unset($args['orderby']);
-        unset($args['order']);
-        unset($args['limit']);
-
-        $args = array_merge(array(
-            'order'             => 'DESC',
-            'orderby'           => 'timestamp',
-            'limit'             => 1
-        ),$args);
-        $query = _action::query($args);
-        return empty($query) ? 0 : intval($query[0]['timestamp']);
-    }
 }
-class _landing extends stats {
-    function __construct(){
-        $error = new err();
-        $error->merge($this->type());
-        if ($error->has()){
-            return $error;
-        }
-        $error->merge($this->validate());
-        if ($error->has()){
-            return $error;
-        }
-
-        $this->ip = $_SERVER['REMOTE_ADDR'];
-        $this->vfs = _landing::vfs();
-        $this->referrer = _landing::referrer();
-        $this->log();
+class landing extends stats {
+    protected static $now = null;
+    static function now() {
+        return self::$now;
     }
-    public static function get_type(){
+    function __construct($use_landing = null){
+        $this->error = new err;
+        if ($use_landing !== null) {
+            if (!is_object($use_landing)) {
+                return $this->error->add('$use_landing','$use_landing is not a object');
+            }
+            $a = get_object_vars($use_landing);
+            if ($use_landing instanceof landing) {
+                foreach ($a as $k => $v) {
+                    $this->{$k} = $v;
+                }
+            }
+            else {
+                if ( !array_key_exists('referrer_host',$a) || !array_key_exists('referrer_path',$a) ) {
+                    return $this->error->add('$use_landing','$use_landing does not have referrer.');
+                }
+                $keys = ["ID","IP","vfs","type","type_id","request"];
+                foreach ($keys as $key) {
+                    if (!isset($a[$key])) {
+                        return $this->error->add('$use_landing','$use_landing is not a similar object.');
+                    }
+                    $k = $key === "IP" ? "ip" : $key;
+                    $this->{$k} = $a[$key];
+                }
+                $this->referrer = [
+                    'host'      => $a['referrer_host'],
+                    'path'      => $a['referrer_path']
+                ];
+                $this->landing_id = $this->ID;
+            }
+            self::$now = $this;
+            return;
+        }
         global $app;
-        return array(
-            'type'      => $app->type,
-            'type_id'   => $app->type_id
-        );
-    }
-    private function type(){
-        $error = new err();
-        $get_type = _landing::get_type();
-        $error->merge($get_type);
-        if ($error->has()){
-            return $error;
-        }
-        $this->type    = $get_type['type'];
-        $this->type_id = $get_type['type_id'];
-        return true;
-    
+        $this->type = $app->type;
+        $this->type_id = $app->type_id;
+        $this->ip = $_SERVER['REMOTE_ADDR'];
+        $this->vfs = self::vfs();
+        $this->referrer = self::referrer();
+        $this->request = $app->request;
+        $this->log();
+        self::$now = $this;
     }
     private function log(){
-        global $app;
-        $error = new err();
-        $input_data = array(
+        $error = new err;
+        $input_data = [
             'type'                  => $this->type,
             'type_id'               => $this->type_id,
-            'timestamp'             => current_time('timestamp',true),
-            'request'               => $app->request,
+            'timestamp'             => time(),
+            'request'               => $this->request,
             'user_id'               => get_current_user_id(),
             'IP'                    => $this->ip,
             'vfs'                   => $this->vfs,
@@ -171,7 +76,7 @@ class _landing extends stats {
             'browser'               => 'Not Implemented',
             'browser_version'       => 'Not Implemented',
             'host'                  => beta::is() ? "beta" : ""
-        );
+        ];
         global $wpdb;
         $response = $wpdb->insert(
             self::$landing_table,
@@ -181,10 +86,23 @@ class _landing extends stats {
             $error->add('db_error',$wpdb->last_error);
             return $error;
         }
+        $this->ID = $wpdb->insert_id;
         $this->landing_id = $wpdb->insert_id;
         return $wpdb->insert_id;
     }
-    public static function vfs(){
+    function encrypt(){
+        return ctrk_encrypt([
+            'type'          => $this->type,
+            'type_id'       => $this->type_id,
+            'landing_id'    => $this->landing_id
+        ]);
+    }
+    public static function decrypt($hash){
+        return ctrk_decrypt($hash);
+    }
+    // Helpers
+    // To Obtain VFS
+    private static function vfs(){
         $table_name = self::$landing_table;
         global $wpdb;
         if( isset($_COOKIE['vfs'])) {
@@ -198,7 +116,7 @@ class _landing extends stats {
             }
             if ( !is_null($vfs) ){
                 $_SESSION['valid_vfs'] = $vfs;
-                stats::set_cookie($vfs);
+                self::set_cookie($vfs);
                 return $vfs;
             }
         }
@@ -208,7 +126,7 @@ class _landing extends stats {
             ",get_current_user_id()));
             if (! is_null($result) && ! empty($result)){
                 $vfs = $result[0]->vfs;
-                stats::set_cookie($vfs);
+                self::set_cookie($vfs);
                 return $vfs;
             }
         }
@@ -217,13 +135,14 @@ class _landing extends stats {
         ",$_SERVER['REMOTE_ADDR']));
         if (! is_null($result) && ! empty($result)){
             $vfs = $result[0]->vfs;
-            stats::set_cookie($vfs);
+            self::set_cookie($vfs);
             return $vfs;
         }
         $vfs = bin2hex(random_bytes(39));
-        stats::set_cookie($vfs);
+        self::set_cookie($vfs);
         return $vfs;
     }
+    // Parse Referrer
     private static function referrer(){
         if (! isset($_SERVER['HTTP_REFERER'])){
             return array(
@@ -232,21 +151,38 @@ class _landing extends stats {
             );
         }
         $referrer = parse_url($_SERVER['HTTP_REFERER']);
-        if ($referrer['host'] == 'fanfiction.online' || $referrer['host'] == '192.168.100.33'){
+        if ($referrer['host'] == 'fanfiction.online' || strpos($referrer['host'],"localhost") !== false ){
             $referrer['host'] = 'local';
         }
         return $referrer;
     }
-    function encrypt(){
-        return ctrk_encrypt(array(
-            'type'          => $this->type,
-            'type_id'       => $this->type_id,
-            'landing_id'    => $this->landing_id
+    public static function use($landing_or_landing_id) {
+        if (!is_numeric($landing_or_landing_id)) {
+            $l = new landing($landing_or_landing_id);
+            if ($l->error->has()) {
+                return $l->error;
+            }
+            return $l;
+        }
+        $e = new err;
+        $table = stats::$landing_table;
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $table WHERE ID = %d",
+            [$landing_or_landing_id]
         ));
+        if (empty($r)) {
+            (new err)->add("landing_id","Doesn't exist.");
+        }
+        $l = new landing($r[0]);
+        if ($l->error->has()) {
+            return $l->error;
+        }
+        return $l;
     }
-    public static function decrypt($hash){
-        return ctrk_decrypt($hash);
-    }
+}
+function landing_id() {
+    return landing::now()->ID;
 }
 class _action extends stats {
     function __construct($landing_id){
@@ -335,60 +271,6 @@ class _action extends stats {
             return $error;
         }
         return $wpdb->insert_id;
-    }
-    public static function query($args = array()){
-        $fields = array(
-            array(
-                'field'     => 'ID',
-                'type'      => 'option',
-                'arg'       => 'ids',
-                'data_type' => 'int',
-            ),
-            array(
-                'field'     => 'landing_id',
-                'type'      => 'option',
-                'arg'       => 'landing_ids',
-                'data_type' => 'int',
-            ),
-            array(
-                'field'     => 'type',
-                'type'      => 'option',
-                'arg'       => 'types',
-                'data_type' => 'string',
-            ),
-            array(
-                'field'     => 'type_id',
-                'type'      => 'option',
-                'arg'       => 'type_ids',
-                'data_type' => 'int',
-            ),
-            array(
-                'field'     => 'stat',
-                'type'      => 'option',
-                'arg'       => 'stats',
-                'data_type' => 'string',
-            ),
-            array(
-                'field'         => 'timestamp',
-                'type'          => 'scale',
-                'arg'           => 'timestamp',
-                'data_type'     => 'int',
-                'default_from'  => 0,
-                'default_to'    => current_time('timestamp',true)
-            ),
-        );
-        $error = new err();
-        $base_sql =
-        "SELECT *
-        FROM " . stats::$actions_table;
-        $sql = query_mec($fields,$args,$base_sql);
-        $error->merge($sql);
-        if ($error->has()){
-            return $error;
-        }
-        global $wpdb;
-        $results = $wpdb->get_results( $sql ,ARRAY_A );
-        return $results;
     }
 }
 class reports extends stats {

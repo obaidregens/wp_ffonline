@@ -14,7 +14,6 @@ class Router {
     public $request;
     private $r;
     private $called = [];
-    private $landing_id;
     function __construct($url){
         $parsed = parse_url($url);
         $path = $parsed ? $parsed['path'] : '/';
@@ -160,18 +159,6 @@ class Router {
         $this->_404();
         exit();
     }
-    function landing_id() {
-        global $app;
-        return $app->landing_id;
-    }
-    function set_landing_id($landing_id) {
-        global $app;
-        $app->landing_id = $landing_id;
-    }
-}
-function landing_id(){
-    global $app;
-    return $app->landing_id();
 }
 global $app;
 $app = new Router($_SERVER['REQUEST_URI']);
@@ -219,7 +206,7 @@ $app->listen('/read',function($self){
     $title = "Read Fanfiction Online";
     $desc =  "Discover & read the top fanfics free on Fanfiction Online.";
     $fandom = $self->book_query->is_only_fandom();
-    $fandom_count = count($fandom);
+    $fandom_count = count($fandom ?: []);
     if ($fandom && $fandom_count === 1) {
         $term = get_term( $fandom[0], 'category' );
         $title = "Read " . $term->name . " Fanfictions on Fanfiction Online";
@@ -317,17 +304,6 @@ $app->listen('/dash/linking',function($self){
         'title'     => construct_page_title("Dash Linking")
     ]);
     $self->template('/views/dash/linking');
-    $self->footer();
-    exit();
-});
-$app->listen('/manage',function($self){
-    $self->admin();
-    $self->type = 'manage';
-    $self->type_id = 0;
-    $self->header([
-        'title'     => construct_page_title("Manage")
-    ]);
-    $self->template('/views/manage');
     $self->footer();
     exit();
 });

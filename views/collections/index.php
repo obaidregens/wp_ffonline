@@ -19,12 +19,12 @@ $args = array(
         'from'  => 1
     ]
 );
-$type = _landing::get_type();
-if ($type['type'] === 'author-collections'){
-    $args['author_included'] = array($type['type_id']);
+$landing = landing::now();
+if ($landing->type === 'author-collections'){
+    $args['author_included'] = [$landing->type_id];
     $args['types'] = array('Public','Favorites');
     unset($args['count']);
-    if (is_current_user($type['type_id'])){
+    if (is_current_user($landing->type_id)){
         $args['types'] = array('Public','Favorites','Private','Unlisted');
     }
 }

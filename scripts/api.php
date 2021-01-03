@@ -6,36 +6,9 @@ if (!is_array($json_raw)) {
     $json_raw = [];
 }
 $_POST = $json_raw;
-function api_poll(){
-    $types = _landing::decrypt($_POST['placeholder']);
-    $d = &$_POST['data'];
-    $d['im_books'] = isset($d['im_books']) ? $d['im_books'] : array();
-    $d['im_collections'] = isset($d['im_collections']) ? $d['im_collections'] : array();
-    
-    $instance = new _action($types->landing_id);
-    if ($instance->error->has()) {
-        return ['code'=>993];
-    }
-    foreach ($d['im_books'] as $key => $book_id) {
-        $instance->log_impression('story',$book_id);
-    }
-    foreach ($d['im_collections'] as $key => $collection_id) {
-        $instance->log_impression('collection',$collection_id);
-    }
-    $instance->log_view($types->type,$types->type_id);
-    if (intval($d['lastOpen']) > 0) {
-        $t = max(intval($d['lastOpen']),time() - 60);
-        $instance->log_notifications($types->type,$types->type_id,$t);
-    }
-    $notifications = notifications::get();
-    return [
-        'code' => 1,
-        'notifications' => $notifications['notifications'],
-        'unread'        => $notifications['unread'],
-        'new_messages'  => chats::unread(),
-    ];
-}
+
 $import = [
+    'global',
     'author',
     'chapter',
     'collections',
@@ -59,7 +32,7 @@ $import = [
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');
 }
-if(! headers_sent() && ! isset($_SESSION) ){ 
+if( !headers_sent() && !isset($_SESSION) ){ 
     session_start(); 
 }
 function required_params(...$params){
@@ -148,8 +121,17 @@ if (! function_exists('api_' . $_POST['action'])){
     ));
     exit();
 }
-global $app;
-$app->set_landing_id($_POST['landing_id']);
+$_SESSION['landing_cache'] = $_SESSION['landing_cache'] ?? [];
+$lref = &$_SESSION['landing_cache'][$_POST['landing_id']];
+$lref = $lref ?? null;
+$landing = landing::use($lref ?: $_POST['landing_id']);
+if (err::is($landing)) {
+    echo json_encode([
+        'code'      => 992
+    ]);
+    exit();
+}
+$lref = $landing;
 $b = call_user_func('api_' . $_POST['action']);
 if ($b) {
     echo json_encode($b);

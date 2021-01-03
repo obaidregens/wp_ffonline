@@ -14,15 +14,15 @@ function is_current_user($user_id) {
 	return intval($user_id) === intval(get_current_user_id());
 }
 function setup_book_query() {
+	global $app;
+
 	$query = new book_query;
 	$query->args_from_url();
 	$query->args['is_search'] = true;
-    $placeholder = _landing::get_type();
-    $query->args = type_args($query->args,$placeholder);
+	$query->args = book_query::type_args($query->args,$app->type,$app->type_id);
     if (err::is($query->args)){
         $app->_404();
     }
-	global $app;
     $app->book_query = $query;
 }
 

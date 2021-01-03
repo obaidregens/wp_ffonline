@@ -360,6 +360,6 @@ class collection_helpers extends collection {
             WHERE collections.title = 'Hidden' AND collections.author = %d",
             [get_current_user_id()]
         ));
-        return empty($r) ? [] : $r[0]->b;
+        return empty($r) ? [] : array_column($r,'b');
     }
 }

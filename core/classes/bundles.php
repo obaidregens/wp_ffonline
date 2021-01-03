@@ -15,10 +15,8 @@ class bundle {
     ];
     function __construct ($name) {
         // Statics
-        $this->static_url       = self::$static_url;
-        $this->static_dir       = self::$static_dir;
-        $this->bundles_url      = $this->static_url . 'bundles/';
-        $this->bundles_dir      = $this->static_dir . 'bundles/';
+        $this->bundles_url      = self::$static_url . 'bundles/';
+        $this->bundles_dir      = self::$static_dir . 'bundles/';
 
         $this->name = $name;
         if (! file_exists($this->bundles_dir)){
@@ -62,7 +60,7 @@ class bundle {
     protected function close() {
         self::$index[$this->name] = $this->bundle;
         if (DEV()) {
-            file_put_contents($this->static_dir . '/index.json',json_encode(self::$index,JSON_PRETTY_PRINT));
+            file_put_contents(self::$static_dir . '/index.json',json_encode(self::$index,JSON_PRETTY_PRINT));
         }
     }
     function print(){
@@ -72,13 +70,13 @@ class bundle {
         if (DEV()){
             foreach ($raw_urls['css'] as $i => $filename) {
                 $name = 'bundle_' . $this->name . '_css_' . $i;
-                $url_loc = substr($filename ,0,3) === '://' ? 'https' : $this->static_url;
+                $url_loc = substr($filename ,0,3) === '://' ? 'https' : self::$static_url;
                 $url = $url_loc . $filename . '.css';
                 ?><link rel="stylesheet" name="<?= $name; ?>" href="<?= $url; ?>"><?php
             }
             foreach ($raw_urls['js'] as $i => $filename) {
                 $name = 'bundle_' . $this->name . '_js_' . $i;
-                $url_loc = substr($filename ,0,3) === '://' ? 'https' : $this->static_url;
+                $url_loc = substr($filename ,0,3) === '://' ? 'https' : self::$static_url;
                 $url = $url_loc . $filename . '.js';
                 ?><script <?= $type; ?> name="<?= $name; ?>" src="<?= $url; ?>"></script><?php
             }

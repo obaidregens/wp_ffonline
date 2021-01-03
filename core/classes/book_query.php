@@ -313,6 +313,9 @@ class book_query{
         $core_args = [];
         $ignore = ['include_ids','exclude_ids','is_search','page','per_page'];
         foreach (self::$default_args as $k => $v) {
+            if (!isset($this->args[$k])) {
+                continue;
+            }
             $arg = $this->args[$k];
             if (in_array($k,$ignore)) {
                 continue;
@@ -477,6 +480,32 @@ class book_query{
             return false;
         }
         return array_values($orig['included']['fandom']);
+    }
+    public static function type_args($args,$type,$type_id) {
+        $l = landing::now();
+
+        if ($type === 'read'){}
+        else if ($type === 'collection'){
+            $collection_books =
+                array_column(collection_books::query_by('collection_id',$type_id),'book_id');
+            $args['include_ids'] = isset($args['include_ids']) ? a_intersect($args['include_ids'],$collection_books) : $collection_books;
+        }
+        else if ($type === 'author-stories') {
+            $args['included']['author'] = isset($args['included']['author']) ? a_intersect($args['included']['author'],array($type_id)) : array($type_id);
+        }
+        else if ($type === 'ffn_author-stories') {
+            $args['included']['ffn_author'] = isset($args['included']['ffn_author']) ? a_intersect($args['included']['ffn_author'],array($type_id)) : array($type_id);
+        }
+        else{
+            $error = new err();
+            $error->add('type','Unknown type for search: ' . $type);
+            return $error;
+        }
+        if (!($type === 'collection' && collection::get_by('ID',$type_id)->title === 'Hidden')) {
+            $hidden = collection_helpers::get_hidden();
+            $args['exclude_ids'] = array_merge($args['exclude_ids'] ?? [],$hidden);
+        }
+        return $args;
     }
 }
 class book_query_cache extends book_query {
