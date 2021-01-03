@@ -464,19 +464,19 @@ class book_query{
         return (isset($this->books) && ! empty($this->books));
     }
     function is_only_fandom() {
-        if ($this->args == self::$default_args) {
+        $orig = $this->core_args();
+        $clone = $orig;
+        if (empty($clone)) {
             return false;
         }
-        $clone = $this->args;
         unset($clone['included']['fandom']);
-        if (empty($clone['exclude_ids'])) {
-            unset($clone['exclude_ids']);
+        if (empty($clone['included'])) {
+            unset($clone['included']);
         }
-        ?><style>pre{white-space:break-spaces !important;}</style><?php
-        if ($clone != self::$default_args){
+        if (!empty($clone)) {
             return false;
         }
-        return array_values($this->args['included']['fandom']);
+        return array_values($orig['included']['fandom']);
     }
 }
 class book_query_cache extends book_query {
