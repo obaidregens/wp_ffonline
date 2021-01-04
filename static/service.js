@@ -93,3 +93,35 @@
         syncUpdates();
     }
 })();
+
+// Transfer Local to Backend & Sync Offline Progress
+(async () => {
+    const ported = [];
+    const toDelete = [];
+    const idbKeys = await idbKeyval.keys();
+    for (let i = 0; i < idbKeys.length; i++) {
+        const keyStart = idbKeys[i].substr(0,14);
+        if (!['chapter_track-','offline_track-'].includes(keyStart)) {
+            continue;
+        }
+        const chap = _json.parse(await idbKeyval.get(idbKeys[i]));
+        toDelete.push(idbKeys[i]);
+        if (!chap) {
+            continue;
+        }
+        ported.push(keyStart === "offline_track-" ? chap : {
+            story: idbKeys[i].substr(14),
+            num: chap.chapter_num,
+            para: chap.paragraph
+        });
+    }
+    let response = {code: 1};
+    if (ported.length > 0) {
+        response = await api('track_chapter',{
+            data: {track: ported}
+        });    
+    }
+    if (response.code <= 5) {
+        toDelete.forEach(keyName => idbKeyval.del(keyName));
+    }
+})();

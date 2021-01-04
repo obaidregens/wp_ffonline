@@ -29,6 +29,7 @@ $includes = array(
 	'classes/cache',
 	'classes/change_logs',
 	'classes/search_log',
+	'classes/track_reading',
 	'cpt',
 	'helpers',
 	'thrown',

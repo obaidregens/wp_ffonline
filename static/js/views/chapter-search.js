@@ -15,24 +15,6 @@ window.addEventListener('keydown',function(event){
     }
     popup.open(search_popup);
 });
-async function paraFromHash(){
-    const rawHash = window.location.hash.substr(1);
-    if (rawHash === "progress") {
-        const Track = JSON.parse(await idbKeyval.get('chapter_track-' + book_id));
-        if (Track === null) {
-            return;
-        }
-        window.location.href = `/story/${book_id}/${Track.chapter_num}#${Track.paragraph}`;
-    }
-    const paraNum = parseInt(rawHash);
-    if (! paraNum){
-        return;
-    }
-    const paraTo = DOM.q(`chapter > content > p:nth-of-type(${paraNum})`);
-    _scroll.to(paraTo);
-}
-window.addEventListener('hashchange',paraFromHash);
-paraFromHash();
 DOM.q('popup.search-story > form').addEventListener('submit',function(event){
     event.preventDefault();
 	if (window.is_online === false) {

@@ -32,7 +32,7 @@ $collections = collection::query($args);
 ?>
 <collection-bar>
 <button label="Create New"></button>
-<?php if ($type['type'] !== 'author-collections') { ?>
+<?php if ($landing->type !== 'author-collections') { ?>
 <button label="My Collections"></button>
 <?php } ?>
 </collection-bar>

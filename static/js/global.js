@@ -16,6 +16,8 @@ const im = type => {
 	return im__;
 }
 
+const PollFilters = [];
+
 let im_books = [];
 let im_collections = [];
 let lastSend = Date.now() - 40000;
@@ -30,12 +32,16 @@ _.interact(function(event){
 	im_books = _.array_unique(im_books.concat(im('books')));
 	im_collections = _.array_unique(im_collections.concat(im('collections')));
 	lastSend = Date.now();
+	let datal = {
+		im_books,
+		im_collections,
+		lastOpen
+	};
+	for (let i = 0; i < PollFilters.length; i++) {
+		datal = PollFilters[i](datal);		
+	}
 	api('poll',{
-		data: {
-			im_books,
-			im_collections,
-			lastOpen
-		}
+		data: datal
 	})
 	.then(response => {
 		let notificationsWrapper = DOM.q('next-screen[notifications] > notifications');

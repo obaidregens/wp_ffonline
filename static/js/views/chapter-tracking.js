@@ -1,28 +1,8 @@
-window.addEventListener('load',async () => {
-    let Track = JSON.parse(await idbKeyval.get('chapter_track-' + book_id));
-    // HasBeenLeft => 10 min
-    let cStory = {};
-    try {
-        cStory = JSON.parse(await idbKeyval.get('chapter_track_follow')) || {};
-    } catch { cStory = {}; }
-    const chapter_num = DOM.q('chapter').getAttribute('num');
-    if (Track !== null) {
-        const hasBeenLeft = (Date.now() - Math.max(parseInt(cStory.timestamp || 0),parseInt(Track.timestamp)) ) > 1000*60*10;
-        if (  ( hasBeenLeft || (cStory.book_id || 0).toString() !== book_id.toString() ) ){
-            confirmation("Do you want to continue reading where you left off?").then(v => {
-                if (!v){return;}
-                window.location.href = "/story/" + book_id + "/" + Track.chapter_num + "#" + Track.paragraph
-            });
-        }    
-    }
-    await idbKeyval.set('chapter_track_follow',JSON.stringify({
-        book_id,
-        timestamp: Date.now()
-    }));
+window.addEventListener('load',() => {
     setTimeout(() => {
-        _scroll.scrollEndEvent(async () => {
-            const paras = DOM.qa('chapter > content > p');
-            let paraI = null;
+        PollFilters.push(datal => {
+            const paras = DOM.qa('chapter > content > *:not(author-notes)');
+            let paraI = paras.length;
             for (let i = 0; i < paras.length; i++) {
                 const co = paras[i].getBoundingClientRect().y+100;
                 if (co > 0){
@@ -30,16 +10,29 @@ window.addEventListener('load',async () => {
                     break;
                 }
             }
-            await idbKeyval.set('chapter_track_follow',JSON.stringify({
-                book_id,
-                timestamp: Date.now()
-            }));
-            await idbKeyval.set('chapter_track-' + book_id,JSON.stringify({
-                chapter_num,
-                paragraph: paraI,
-                timestamp: Date.now(),
-                chapterProgress: parseFloat(( (chapter_num/DOM.qa('popup.chapter-index chapter-index > a').length)*100 ).toFixed(1))
-            }));
+            track_obj = {
+                chapter: chapter_id,
+                para: paraI
+            };
+            if (!window.is_online) {
+                const perc = (parseInt(DOM.q('chapter').getAttribute("num"))/DOM.qa("chapter-index > a").length*100).toFixed(1) + "%";
+                track_obj.progress = perc;
+                idbKeyval.set(`offline_track-${book_id}`,track_obj);
+                return datal;
+            }
+            datal.track = [track_obj];
+            return datal;
         });    
-    },10000);
+    },7000);
+    async function paraFromHash(){
+        const rawHash = window.location.hash.substr(1);
+        const paraNum = parseInt(rawHash);
+        if (! paraNum){
+            return;
+        }
+        const paraTo = DOM.qa(`chapter > content > *:not(author-notes)`)[paraNum-1];
+        _scroll.to(paraTo);
+    }
+    window.addEventListener('hashchange',paraFromHash);
+    paraFromHash();
 });

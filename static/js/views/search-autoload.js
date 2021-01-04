@@ -91,7 +91,9 @@ let loading_page = false;
     const loading_component = `<autoload-wrapper><autoloader><div class="dot-loader"></div><div class="dot-loader dot-loader--2"></div><div class="dot-loader dot-loader--3"></div></autoloader><style>autoloader{display:flex;justify-content:center;margin: 10px 0}.dot-loader{height:20px;width:20px;border-radius:50%;background-color:var(--theme-color);position:relative;-webkit-animation:1.2s grow ease-in-out infinite;animation:1.2s grow ease-in-out infinite}.dot-loader--2{-webkit-animation:1.2s grow ease-in-out infinite .15555s;animation:1.2s grow ease-in-out infinite .15555s;margin:0 20px}.dot-loader--3{-webkit-animation:1.2s grow ease-in-out infinite .3s;animation:1.2s grow ease-in-out infinite .3s}@-webkit-keyframes grow{0%,100%,40%{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}@keyframes grow{0%,100%,40%{-webkit-transform:scale(0);transform:scale(0)}40%{-webkit-transform:scale(1);transform:scale(1)}}</style></autoload-wrapper>`;
     
     DOM.q('nav > a[href="/read"]').addEventListener('click',event => {
-        event.preventDefault();
-        trigger_search(1);
+        if (_scroll.documentTop !== 0) {
+            event.preventDefault();
+            trigger_search(1);    
+        }
     });
 })();

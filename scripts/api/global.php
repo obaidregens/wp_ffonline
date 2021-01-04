@@ -18,7 +18,10 @@ function api_poll(){
     $instance->log_view($landing->type,$landing->type_id);
     if (intval($d['lastOpen']) > 0) {
         $t = max(intval($d['lastOpen']),time() - 60);
-        $instance->log_notifications($types->type,$types->type_id,$t);
+        $instance->log_notifications($landing->type,$landing->type_id,$t);
+    }
+    if (isset($d['track'])) {
+        api_track_chapter();
     }
     $notifications = notifications::get();
     return [

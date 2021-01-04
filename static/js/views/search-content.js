@@ -1,19 +1,12 @@
 const reChapterProgress = () => {
-    const books_container = DOM.q('books-container');
-    if (!books_container){
-        return;
-    }
-    books_container.querySelectorAll(`a.book`).forEach(async el => {
-        const sid = el.getAttribute('book_id');
-        const item = JSON.parse(await idbKeyval.get('chapter_track-' + sid));
-        if (item === null || !item.chapterProgress) {
-            return;
-        }
-        el.querySelector('reading-progress').style.setProperty('--perc',item.chapterProgress + "%");
-    });
     // A
-    DOM.qa('.story-single').forEach(el => {
+    DOM.qa('.story-single').forEach(async el => {
         const book = el.querySelector('.book');
+        const book_id = book.getAttribute('book_id');
+        const track = _json.parse(await idbKeyval.get(`offline_track-${book_id}`));
+        if (track) {
+            book.querySelector("reading-progress").style.setProperty("--perc",track.progress);
+        }
         const instSwipe = new Swiper(el);
         el.querySelector('.more').addEventListener('click',E => {
             E.preventDefault();
@@ -52,7 +45,7 @@ const reChapterProgress = () => {
             const 
                 title_elem = book.querySelector('.title'),
                 title = title_elem.innerText,
-                href = book.getAttribute('href'),
+                href = book.getAttribute('link'),
                 author = book.querySelector('.author a').innerText,
                 desc = book.querySelector('.description').innerText;
             share_open({

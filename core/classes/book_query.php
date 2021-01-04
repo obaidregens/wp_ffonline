@@ -86,6 +86,7 @@ class book_query{
             return [];
         }
         $ids = array_column($this->books,'ID');
+        track_reading::cache($ids);
         $placeholder = sqlPlaceholder($ids,'%d');
         global $wpdb;
         $votes = array_column($wpdb->get_results($wpdb->prepare(
@@ -121,12 +122,23 @@ class book_query{
             AND wp_posts.ID IN (" . $placeholder . ")",
             $ids
         )),'words','book_id');
+        $chapters = array_column($wpdb->get_results($wpdb->prepare(
+            "SELECT
+                post_parent as book_id,
+                COUNT(*) as chapters
+            FROM wp_posts
+            WHERE post_parent IN ($placeholder)
+            GROUP BY post_parent",
+            $ids
+        )),'chapters','book_id');
+
         $a = [];
         foreach ($words as $book_id => $word_count ) {
             $a[$book_id] = [
                 'votes'         => $votes[$book_id] ?? 0,
                 'collections'   => $collections[$book_id] ?? 0,
-                'words'         => $word_count
+                'words'         => $word_count,
+                'chapters'      => intval($chapters[$book_id])
             ];
         }
         return $a;

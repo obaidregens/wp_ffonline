@@ -389,6 +389,17 @@ function run_at_activation(){
 		PRIMARY KEY (`ID`)
 	) $charset_collate;");
 
+	dbDelta("CREATE TABLE track_reading (
+		`ID`				BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ,
+		`user_id`			BIGINT UNSIGNED NOT NULL ,
+		`story_id`			BIGINT UNSIGNED NOT NULL ,
+		`chapter_id`		BIGINT UNSIGNED NOT NULL ,
+		`para`				BIGINT UNSIGNED NOT NULL ,
+		`landing_id`		BIGINT UNSIGNED NOT NULL ,
+		`millitime`			BIGINT UNSIGNED NOT NULL ,
+		PRIMARY KEY (`ID`)
+	) $charset_collate;");
+
 
 	//Create Default Collections for users
 	$users = get_users(array(

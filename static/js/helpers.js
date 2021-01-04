@@ -32,6 +32,9 @@ function api(action,{data,reCAPTCHA = null} = {}){
                 window.is_online = false;
                 return;
             }
+            if (!window.is_online){
+                onlineTrigger();
+            }
             window.is_online = true;
             if (xhr.status !== 200) {
                 rej(xhr.response);
@@ -48,3 +51,15 @@ function api(action,{data,reCAPTCHA = null} = {}){
         };
     });
 }
+let registerOnlineListener,onlineTrigger;
+(() => {
+    const OnlineHooks = [];
+    registerOnlineListener = func => {
+        const pushIndex = OnlineHooks.length;
+        const hookContext = {
+            remove: () => OnlineHooks.splice(pushIndex,1)
+        };
+        OnlineHooks[pushIndex] = func.bind(hookContext);
+    };
+    onlineTrigger = () => OnlineHooks.forEach(hitFunc => hitFunc());
+})();

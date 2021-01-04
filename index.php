@@ -37,10 +37,10 @@ class Router {
             if ($m === '&*'){
             break;
             }
-            $portion = $this->r[$i];
-            if (! isset($portion)){
+            if (! isset($this->r[$i])){
                 return false;
             }
+            $portion = $this->r[$i];
             if ($m === '*'){
             break;
             }

@@ -95,3 +95,20 @@ function api_vote_chapter() {
     vote::unvote('chapter',$chapter->ID);
     return ['code'=>2];
 }
+function api_track_chapter() {
+    required_login();
+    required_params('track');
+    
+    foreach ($_POST['data']['track'] as $chapter) {
+        if (isset($chapter['num'])) {
+            track_reading::record_by_num(
+                $chapter['story'] ?? 0,
+                $chapter['num'],
+                $chapter['para']
+            );
+            continue;
+        }
+        track_reading::record($chapter['chapter'],$chapter['para']);
+    }
+    return ['code'=>1];
+}

@@ -160,6 +160,19 @@ const _a = class {
         });
     }
 }
+class _json {
+    static parse(json) {
+        try {
+            const obj = JSON.parse(json);
+            return obj;
+        } catch (error) {
+            return null;
+        }
+    }
+    static stringify(obj) {
+        return JSON.stringify(obj);
+    }
+}
 class _t {
     static isToday ( someDate ) {
         const today = new Date();
