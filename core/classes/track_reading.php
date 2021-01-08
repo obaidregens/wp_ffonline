@@ -3,6 +3,9 @@ class track_reading {
     public static $table = "track_reading";
     protected static $cache = [];
     static function record($chapter_id,$para) {
+        if (intval($para) < 1) {
+            return false;
+        }
         $chapter = get_post( $chapter_id );
         if (!$chapter || $chapter->post_type !== "chapter") {
             return false;
@@ -28,6 +31,9 @@ class track_reading {
         return intval($wpdb->insert_id);
     }
     static function record_by_num($story,$num,$para) {
+        if (intval($para) < 1) {
+            return false;
+        }
         global $wpdb;
 
         $rsql =
@@ -63,6 +69,44 @@ class track_reading {
 
         
     }
+    static function finish($story) {
+        $story = story::get( $story, false );
+        if (!$story) {
+            return false;
+        }
+        $sql =
+        "SELECT
+            wp_posts.ID as chapter_id,
+            wp_postmeta.meta_value as chapter_num FROM wp_posts
+        INNER JOIN wp_postmeta ON wp_postmeta.post_id = wp_posts.ID
+        WHERE wp_posts.post_type = 'chapter'
+        AND wp_posts.post_status = 'publish'
+        AND wp_posts.post_parent = %d
+        AND wp_postmeta.meta_key = 'chapter_order'
+        ORDER BY CAST(wp_postmeta.meta_value as unsigned) DESC
+        LIMIT 1";
+        
+        global $wpdb;
+        $r = $wpdb->get_results($wpdb->prepare($sql,[$story->ID]));
+
+        if (empty($r)) {
+            return false;
+        }
+
+        $wpdb->insert(
+            self::$table,
+            [
+                'user_id'       => get_current_user_id(),
+                'story_id'      => $story->ID,
+                'chapter_id'    => $r[0]->chapter_id,
+                'chapter_num'   => $r[0]->chapter_num,
+                'para'          => 0,
+                'landing_id'    => landing_id(),
+                'millitime'     => millitime()
+            ]
+        );
+        return intval($wpdb->insert_id);
+    }
     protected static function remove_cache($story) {
         unset(self::$cache[$story]);
     }
@@ -78,13 +122,11 @@ class track_reading {
             "SELECT
                 $table.`story_id`,
                 $table.`chapter_id`,
-                $table.`para`,
-                wp_postmeta.`meta_value` as chapter_num
+                $table.`chapter_num`,
+                $table.`para`
             FROM $table
-            INNER JOIN wp_postmeta ON $table.`chapter_id` = wp_postmeta.`post_id`
             WHERE $table.`user_id` = %d
             AND $table.`story_id` IN ($placeholder)
-            AND wp_postmeta.meta_key = 'chapter_order'
             ORDER BY $table.`ID` ASC",
         array_merge([get_current_user_id()],$story_ids));
         $r = $wpdb->get_results($sql);
@@ -92,9 +134,9 @@ class track_reading {
         $ee = [];
         foreach ($r as $row) {
             $ee[$row->story_id] = [
-                'chapter'   => $row->chapter_id,
-                'para'      => $row->para,
-                'num'       => $row->chapter_num
+                'chapter'   => intval($row->chapter_id),
+                'para'      => intval($row->para),
+                'num'       => intval($row->chapter_num)
             ];
         }
         foreach (array_diff($story_ids,array_keys($ee)) as $id) {

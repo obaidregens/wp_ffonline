@@ -189,22 +189,40 @@ main > loader.show ~ pagination{
     pointer-events: none;
 }
 /* Reading Progress */
-reading-progress,reading-progress::after {
+reading-progress:not(.finished),reading-progress:not(.finished)::after {
     display: flex;
     height: 5px;
     border-radius: 100px;
 }
-reading-progress {
+reading-progress:not(.finished) {
     margin: 10px 20px;
     background-color: var(--grey);
 }
-reading-progress::after {
+reading-progress:not(.finished)::after {
     content: "";
     background-color: var(--theme-color);
     width: var(--perc);
 }
-reading-progress:not([style]),reading-progress[style=""] {
+reading-progress:not([style]):not(.finished),reading-progress[style=""]:not(.finished) {
     display: none;
+}
+/* Finished Reading */
+reading-progress.finished {
+    display: flex;
+    color: var(--theme-color);
+    font-weight: bold;
+    font-size: 1rem;
+}
+reading-progress.finished::before {
+    display: inline-block;
+    margin-right: 10px;
+    font-family: 'icons';
+    content: "\e901";
+    transform: scale(1.4) translateY(-0.5px);
+} 
+reading-progress.finished::after {
+    content: "Finished Reading";
+    text-transform: uppercase;
 }
 /* Offline Progress */
 li[label="Offline"][progress] {

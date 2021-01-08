@@ -100,6 +100,12 @@ function api_track_chapter() {
     required_params('track');
     
     foreach ($_POST['data']['track'] as $chapter) {
+        if (isset($chapter['story']) && ($chapter['finished'] ?? false) === true) {
+            track_reading::finish(
+                $chapter['story']
+            );
+            continue;
+        }
         if (isset($chapter['num'])) {
             track_reading::record_by_num(
                 $chapter['story'] ?? 0,

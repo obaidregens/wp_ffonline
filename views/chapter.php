@@ -50,6 +50,9 @@ $query = (new WP_Query(array(
 )))->posts;
 $next_chapter_link = empty($query) ? false : get_permalink( $query[0]->ID );
 $is_test = $app->type === "test-chapter";
+
+$track = track_reading::get($book->ID);
+$finished = $track['num'] === count($all_chapters) && $track['para'] === 0 && !$next_chapter_link;
 ?>
 <chapter class="<?= $is_test ? "test-story" : ""; ?>" chapter_id="<?= $chapter->ID; ?>" num="<?= $next_chapter_num-1 ?>">
 	<chapter-header tabindex="1" >
@@ -62,7 +65,7 @@ $is_test = $app->type === "test-chapter";
 	</chapter-header>
 	<chapter-title><?= htmlspecialchars($chapter->post_title); ?></chapter-title>
 	<content class="acs-elem"><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'pre_author_note', true )); ?></author-notes><?= $chapter->post_content; ?><author-notes><?= htmlspecialchars(get_post_meta( $chapter->ID, 'post_author_note', true )); ?></author-notes></content>
-	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter"></a>
+	<a <?= $next_chapter_link ? 'href="' . $next_chapter_link . '"': ""; ?> theme class="button next-chapter <?= $finished ? "finished" : "" ?>"></a>
 	<book-options>
 		<button <?= is_current_user($chapter->post_author) ? 'disabled' : ''; ?> class="book-vote <?= vote::exists('chapter',$chapter->ID) ? 'active' : '' ?>"></button>
 		<button <?= $is_test ? "disabled" : "" ?> class="book-collections"></button>

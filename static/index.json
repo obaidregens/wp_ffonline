@@ -30,7 +30,7 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "0c671a53a85e356953162667ad94a1db8a71ab3d",
+        "css_hash": "dc8b6aa61a7e742e6fbc42d7e918df37f09214cb",
         "js_hash": "9034c880ec5d54a7a8a92ae5747eff5478012969"
     },
     "beta-global": {
@@ -182,7 +182,7 @@
             "story-options",
             "search-content"
         ],
-        "css_hash": "dea27bf0a1a932b3d2d8560326dc8639807d7ce5",
+        "css_hash": "804a93814008250c72baddeddd997c1d180e9c1d",
         "js_hash": "6519350ec757824377c0a0823a8e009a46355c12"
     },
     "author-stories": {
@@ -218,7 +218,7 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "fcc0b71ebf2aa45c5500ba248c8f7645ceabc4f6",
+        "css_hash": "19c895755b489c998fa13361bec4f56eed77c669",
         "js_hash": "9b30c21da6f0fd1e94360552e0f1cda8461413e2"
     },
     "author-updates": {
@@ -631,8 +631,8 @@
             "confirmation",
             "story-options"
         ],
-        "css_hash": "b924b811641939c287a9f4562182a1726b26dc65",
-        "js_hash": "a5ea679de54f9650af40456fdea41530ccbca397"
+        "css_hash": "33931c5e7db6e6463975cf6bd66cdd07f26d6afd",
+        "js_hash": "89dc4b42a2b9e602024ef6e1aaf3e761c84d5bf8"
     },
     "book": {
         "css": [
@@ -656,7 +656,7 @@
             "story-options",
             "confirmation"
         ],
-        "css_hash": "a194055765e69353f74351bc683198dddb984473",
+        "css_hash": "e2a5a245783fd5f9049db66337af8d301ad9f8c0",
         "js_hash": "7102b476dfadded3e34fc1d5b313ae3af4a7493f"
     },
     "story-stats": {
@@ -735,7 +735,7 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "8b86792f9596505c60a81cd1ec30e4106b3931d3",
+        "css_hash": "d521ef14fe244119a7f117d2858ac1b3196b6221",
         "js_hash": "d53bb75ed08b1855c5b0cb0d024c8f130753404a"
     },
     "author-following": {

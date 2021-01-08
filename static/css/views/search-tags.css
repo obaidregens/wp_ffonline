@@ -90,9 +90,3 @@ tags > tag-group::before {
     font-weight: bold;
     content: attr(name) ": ";
 }
-/* Collapse Tags */
-@media only screen and (max-width: 500px) {
-    .book:not(.show) tags {
-        display: none;
-    }
-}

@@ -79,13 +79,17 @@ chapter > .next-chapter[href]::after {
     margin-top: -1px;
     margin-left: 10px;
 }
-chapter > .next-chapter:not([href]) {
-	cursor: default;
-}
 chapter > .next-chapter:not([href]):hover {
 	box-shadow: none !important;
 }
 chapter > .next-chapter:not([href])::before {
+	content: 'Mark as Finished';
+}
+chapter > .next-chapter.finished:not([href]) {
+	cursor: default;
+	pointer-events: none;
+}
+chapter > .next-chapter.finished:not([href])::before {
 	content: 'Finished Reading';
 }
 /* Book Options */
