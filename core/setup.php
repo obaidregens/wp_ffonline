@@ -394,6 +394,7 @@ function run_at_activation(){
 		`user_id`			BIGINT UNSIGNED NOT NULL ,
 		`story_id`			BIGINT UNSIGNED NOT NULL ,
 		`chapter_id`		BIGINT UNSIGNED NOT NULL ,
+		`chapter_num`   	BIGINT UNSIGNED NOT NULL ,
 		`para`				BIGINT UNSIGNED NOT NULL ,
 		`landing_id`		BIGINT UNSIGNED NOT NULL ,
 		`millitime`			BIGINT UNSIGNED NOT NULL ,

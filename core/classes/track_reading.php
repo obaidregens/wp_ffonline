@@ -16,12 +16,13 @@ class track_reading {
         $wpdb->insert(
             self::$table,
             [
-                'user_id'   => get_current_user_id(),
-                'story_id'  => $story->ID,
-                'chapter_id'=> $chapter->ID,
-                'para'      => intval($para),
-                'landing_id'=> landing_id(),
-                'millitime' => millitime()
+                'user_id'       => get_current_user_id(),
+                'story_id'      => $story->ID,
+                'chapter_id'    => $chapter->ID,
+                'chapter_num'   => get_post_meta( $chapter->ID, 'chapter_order', true ),
+                'para'          => intval($para),
+                'landing_id'    => landing_id(),
+                'millitime'     => millitime()
             ]
         );
         return intval($wpdb->insert_id);
@@ -49,12 +50,13 @@ class track_reading {
         $wpdb->insert(
             self::$table,
             [
-                'user_id'   => get_current_user_id(),
-                'story_id'  => $story,
-                'chapter_id'=> $r[0]->chapter_id,
-                'para'      => intval($para),
-                'landing_id'=> landing_id(),
-                'millitime' => millitime()
+                'user_id'       => get_current_user_id(),
+                'story_id'      => $story,
+                'chapter_id'    => $r[0]->chapter_id,
+                'chapter_num'   => $num,
+                'para'          => intval($para),
+                'landing_id'    => landing_id(),
+                'millitime'     => millitime()
             ]
         );
         return intval($wpdb->insert_id);
