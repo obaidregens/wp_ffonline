@@ -49,3 +49,6 @@ index > *[head] {
 index > *:not([head]):hover {
     background-color: var(--hover);
 }
+index > *:not([head]):active {
+    background-color: var(--active);
+}

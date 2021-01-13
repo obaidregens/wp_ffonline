@@ -95,27 +95,6 @@ review > review-content {
 	white-space: pre-wrap;
 	margin-bottom: 40px;
 }
-review > button.dropdown::before {
-	font-family: 'icons';
-	content: '\e904'
-}
-review > button.dropdown {
-	padding: 0;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 100px;
-    top: 0;
-    right: 0;
-	background-color: transparent;
-	border: none;
-}
-review > button.dropdown:hover {
-    color: var(--text-color);
-}
 review > button.dropdown > dropdown > *::after {
 	content: attr(label);
 }
@@ -134,8 +113,4 @@ review > button.dropdown > dropdown > [label="Pin"]::before {
 review > button.dropdown > dropdown > [label="Reply"]::before {
 	font-size: 110%;
 	content: '\e919';
-}
-review > button.dropdown:hover {
-	border: none;
-	background-color: var(--hover);
 }

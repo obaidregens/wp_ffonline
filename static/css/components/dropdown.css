@@ -28,6 +28,8 @@ button.dropdown:active {
     transform: scale(0);
     transition: transform .2s;
     will-change: transform;
+
+    border-radius: 5px;
 }
 .dropdown:focus-within > dropdown{
     transform: scale(1);
@@ -36,16 +38,20 @@ button.dropdown:active {
     transform: scale(1);
 }
 .dropdown > dropdown > *{
-    color: var(--text-color);
+    color: rgba(var(--text-color-v),0.8);
     width: auto;
     min-height: 1.5rem;
     display:flex;
     align-items: center;
     height: 40px;
     padding: 0.75rem;
+    transition: background-color .3s;
 }
 .dropdown > dropdown > *:hover{
     background-color: var(--hover);
+}
+.dropdown > dropdown > *:active{
+    background-color: var(--active);
 }
 .dropdown > dropdown:not(.right) {
     left: -1px;

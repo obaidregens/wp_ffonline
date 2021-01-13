@@ -26,3 +26,6 @@ stories-list > a.story::after {
 stories-list > a.story:hover {
     background-color: var(--hover);
 }
+stories-list > a.story:active {
+    background-color: var(--active);
+}

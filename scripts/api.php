@@ -28,6 +28,7 @@ $import = [
     'offline',
     'beta',
     'help',
+    'feed',
 ];
 foreach ($import as $filename) {
     require_once(__DIR__ . '/api/' . $filename . '.php');

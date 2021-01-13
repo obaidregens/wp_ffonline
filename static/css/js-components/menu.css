@@ -26,6 +26,9 @@ options-menu > li {
 options-menu > li:hover {
     background-color: var(--hover);
 }
+options-menu > li:active {
+    background-color: var(--active);
+}
 /* Icons */
 options-menu > li::before {
     font-family: 'icons';

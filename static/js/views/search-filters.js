@@ -1,3 +1,5 @@
+const singleSelectTags = ['rating','language','status'];
+
 const tagNamesCacheGet = JSON.parse(localStorage.getItem('tag_names')) || {};
 const tagNamesCache = ((Date.now() - parseInt(tagNamesCacheGet.cache_time || 0)) > 30*60*1000) ? {} : tagNamesCacheGet;
 const setSelectedTags = async (tag_name,selected) => {
@@ -102,12 +104,22 @@ let trigger_search;
             },
             listeners: {
                 change: function(event){
-                    if (event.target.getAttribute('type') === 'checkbox'){
-                        if (this.getAttribute('selection') === 'exclude'){
-                            event.target.classList.add('cross');
-                        }
-                        saveSelectedTags();
+                    if (event.target.getAttribute('type') !== 'checkbox') {
+                        return;
                     }
+                    const change_to = (
+                        (this.getAttribute('selection') === 'exclude')
+                        ? "add" : "remove"
+                    );
+                    event.target.classList[change_to]('cross');
+                    if (event.target.checked && change_to === "remove" && singleSelectTags.includes(tag_name) ) {
+                        this.querySelectorAll("tag_list input[type='checkbox']:not(.cross)").forEach(chx => {
+                            if (!chx.isSameNode(event.target)) {
+                                chx.checked = false;
+                            }
+                        });
+                    }
+                    saveSelectedTags();
                 },
                 onClose: saveSelectedTags,
                 onAfterClose: function() {

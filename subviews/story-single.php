@@ -5,7 +5,7 @@ $search = $book_query->args['search'];
 $chapters_count = $book_query->book_metas[$book->ID]['chapters'];
 $track = track_reading::get($book->ID);
 $track_percentage = $track ? round($track['num']/$chapters_count*100,1) : false;
-$finished = $track['num'] === $chapters_count && $track['para'] === 0;
+$finished = ($track['num'] ?? 0) === $chapters_count && ($track['para'] ?? -1) === 0;
 ?>
 <div class="swiper-container story-single waves-effect">
     <div class="swiper-wrapper">

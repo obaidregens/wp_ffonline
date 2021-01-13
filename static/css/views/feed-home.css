@@ -1,0 +1,36 @@
+ul.tab {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    user-select: none;
+    margin-bottom: 20px;
+}
+ul.tab > li {
+    display: flex;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    width: 100%;
+    justify-content: center;
+    color: var(--theme-color);
+    cursor: pointer;
+    font-weight: bold;
+    padding: 10px;
+    position: relative;
+}
+ul.tab > li[disabled] {
+    pointer-events: none;
+    opacity: 0.7;
+}
+ul.tab > li.active {
+    pointer-events: none;
+}
+ul.tab > li.active::after {
+    content: "";
+    height: 3px;
+    width: 100%;
+    background-color: var(--theme-color);
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    border-radius: 100px;
+}

@@ -14,6 +14,9 @@ guide {
 guide:hover {
     background-color: var(--hover);
 }
+guide:active {
+    background-color: var(--active);
+}
 guide > h4 {
     margin-top: 0;
 }

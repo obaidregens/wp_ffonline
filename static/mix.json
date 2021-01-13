@@ -61,6 +61,8 @@
             "css\/normalize",
             "css\/style",
             "css\/helpers",
+            "css\/fonts\/fonts",
+            "css\/components\/waves-hover",
             "css\/js-components\/recaptcha",
             "css\/components\/buttons",
             "css\/components\/dropdown",
@@ -99,7 +101,8 @@
             "css\/views\/search-content"
         ],
         "js": [
-            "js\/views\/search-content"
+            "js\/views\/search-content",
+            "js\/views\/search-offline"
         ]
     },
     "search-filters": {
@@ -119,6 +122,7 @@
         "js": [
             "external\/tiny-swiper\/tiny-swiper",
             "js\/components\/switch",
+            "js\/views\/story-offlineAPI",
             "js\/views\/story-options",
             "js\/views\/global-collections"
         ]
@@ -191,6 +195,15 @@
         "js": [
             "js\/api\/speak",
             "js\/views\/global-speak"
+        ]
+    },
+    "updates-content": {
+        "css": [
+            "css\/components\/options",
+            "css\/views\/updates-content"
+        ],
+        "js": [
+            "js\/views\/updates-content"
         ]
     }
 }

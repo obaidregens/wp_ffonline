@@ -14,7 +14,6 @@ $books = (new WP_Query([
     <a href="/my-stories/new" class="button new-book">New Story</a>
 </actions>
 <?php foreach ($books as $book) { ?>
-<?php $stat = $book_stat_instances[$book->ID]; ?>
 <book>
     <a href="/my-stories/<?= $book->ID; ?>" class="book">
         <book-title><?= htmlspecialchars($book->post_title); ?></book-title>

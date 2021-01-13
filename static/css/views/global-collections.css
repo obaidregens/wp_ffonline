@@ -39,14 +39,21 @@ popup.collections > collection,popup.collections > a.new-collection {
     display: flex;
     position: relative;
 }
-popup.collections > collection > label, popup.collections > a.new-collection{
+popup.collections > collection > label,
+popup.collections > a.new-collection{
     width: 100%;
     display: flex;
     border-bottom: 1px solid rgba(125, 125, 125, 0.7);
     padding: 15px 10px;
+    transition: background-color .3s;
 }
-popup.collections > collection > label:hover,popup.collections > a.new-collection:hover {
+popup.collections > collection > label:hover,
+popup.collections > a.new-collection:hover {
     background-color: var(--hover);
+}
+popup.collections > collection > label:active,
+popup.collections > a.new-collection:active {
+    background-color: var(--active);
 }
 popup.collections > collection > collection-options {
     position: absolute;

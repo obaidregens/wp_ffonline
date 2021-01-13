@@ -133,43 +133,7 @@ a.book > .description {
 .story-single options > *::after {
     content: attr(label);
 }
-/* Pagination */
-pagination {
-    display: flex;
-    justify-content: center;
-    transition: opacity var(--show-books-loader-time);
-    will-change: opacity;
-}
-pagination > a {
-    user-select: none;
-    text-align: center;
-    margin: 0 5px;
-    padding: 5px 10px;
-    min-width: 1rem;
-    border-radius: 2px;
-}
-pagination > a[paginate]:empty:not([previous]):not([next])::before {
-    content: attr(paginate);
-}
-pagination > a[paginate]:hover {
-    background-color: var(--hover);
-}
-pagination > a[active] {
-    background-color: var(--theme-color);
-    color: var(--white);
-}
-pagination > a:not([paginate]) {
-    cursor: default;
-}
-pagination > a[previous]::before,pagination > a[next]::before {
-    font-family: 'icons';
-}
-pagination > a[previous]::before {
-    content: '\e902';
-}
-pagination> a[next]::before {
-    content: '\e903';
-}
+
 /* Loader */
 main > loader {
     opacity: 0;
@@ -212,10 +176,11 @@ reading-progress.finished {
     color: var(--theme-color);
     font-weight: bold;
     font-size: 1rem;
+    margin: 0px 10px;
 }
 reading-progress.finished::before {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 8px;
     font-family: 'icons';
     content: "\e901";
     transform: scale(1.4) translateY(-0.5px);

@@ -38,9 +38,11 @@ function api_get_help_results() {
     global $wpdb;
     $faqs = $wpdb->get_results($wpdb->prepare(
         "SELECT * FROM questions
-        WHERE question LIKE %s
-        OR answer LIKE %s
-        WHERE status = 'public'",
+        WHERE (
+            question LIKE %s
+            OR answer LIKE %s
+        )
+        AND status = 'public'",
         ["%" . $s . "%","%" . $s . "%"]
     ));
     foreach ($faqs as $faq) {

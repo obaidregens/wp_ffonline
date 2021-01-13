@@ -202,7 +202,7 @@ class user {
 }
 class user_settings extends user {
     protected static $default_usettings = [
-        "features"  => true
+        "features"          => true
     ];
     public static function change_email($new_email) {
         $validation = (new v_user([

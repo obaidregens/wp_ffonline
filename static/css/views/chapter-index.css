@@ -11,6 +11,9 @@ chapter-index > a {
 chapter-index > a:hover {
     background-color: var(--hover);
 }
+chapter-index > a:active {
+    background-color: var(--active);
+}
 chapter-index > a > chapter-title {
     font-size: 1.1rem;
     margin-bottom: 3px;

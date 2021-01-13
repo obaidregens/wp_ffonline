@@ -1,0 +1,22 @@
+.feedback-index {
+    display: flex;
+    flex-direction: column; 
+}
+.feedback-index > div {
+    display: flex;
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: rgba(var(--text-color-v),0.07);
+    cursor: pointer;
+    transition: background-color .3s;
+}
+.feedback-index > div:hover {
+    background-color: rgba(var(--text-color-v),0.1);
+}
+@media only screen and (min-width: 800px) {
+    .feedback-index {
+        width: 35%;
+    }
+}

@@ -10,7 +10,6 @@ $app->bundle->css('css/views/chapter-index');
 $app->bundle->css('css/views/search-tags');
 $app->bundle->js('js/views/book-main');
 $app->bundle->css('css/views/book-main');
-$app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/book-offline');
 
 $book = $app->story;

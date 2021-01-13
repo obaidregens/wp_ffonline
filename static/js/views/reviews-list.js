@@ -1,3 +1,5 @@
+"use strict";
+
 function Checkbox(props) {
   return /*#__PURE__*/React.createElement("label", {
     class: "checkbox"
@@ -17,7 +19,7 @@ function Dropdown(props) {
   return /*#__PURE__*/React.createElement("button", {
     label: props.label,
     theme: props.theme,
-    className: "dropdown"
+    className: `dropdown ${props.className || ""}`
   }, /*#__PURE__*/React.createElement("dropdown", {
     className: props.right ? 'right' : ''
   }, props.children));
@@ -70,6 +72,7 @@ function Review(props) {
     className: "author" + (props.self ? ' book-author' : '')
   }, props.name), /*#__PURE__*/React.createElement("review-time", null, props.time), /*#__PURE__*/React.createElement("quote", null, props.quote), /*#__PURE__*/React.createElement("review-content", null, props.content), /*#__PURE__*/React.createElement(Dropdown, {
     right: true,
+    className: "options",
     children: fill
   }), props.replies);
 }
@@ -217,6 +220,7 @@ function userReviewsFromHash() {
   }
 
   _scroll.to(DOM.q(`reviews-wrapper`));
+
   const excl_users = [];
   ReviewStates.userItems[0].forEach(v => {
     if (parseInt(v.key) !== userId) {

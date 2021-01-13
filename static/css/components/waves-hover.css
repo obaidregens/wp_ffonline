@@ -1,0 +1,9 @@
+.waves-hover {
+    transition: background-color .3s;
+}
+.waves-hover:hover {
+    background-color: var(--hover);
+}
+.waves-hover:active {
+    background-color: var(--active);
+}

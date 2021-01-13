@@ -20,6 +20,9 @@ sidenav > a {
 sidenav > a:hover {
     background-color: var(--hover);
 }
+sidenav > a:focus {
+    background-color: var(--focus);
+}
 `
 const si = DOM.create('sidenav',{
     children: [

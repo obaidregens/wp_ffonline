@@ -26,3 +26,6 @@ overview > block::after {
 overview > block:hover {
     background-color: var(--hover)
 }
+overview > block:active {
+    background-color: var(--active)
+}

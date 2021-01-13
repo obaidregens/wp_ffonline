@@ -47,3 +47,6 @@ next-screen > cross-button:before {
 next-screen > cross-button:hover {
     background-color: var(--hover);
 }
+next-screen > cross-button:active {
+    background-color: var(--activ:active);
+}

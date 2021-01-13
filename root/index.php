@@ -1,6 +1,6 @@
 <?php
 function handle_all_breaking_errors($a = 1,$errstr = "Called By Self",$errfile = null,$errline = null) {
-    $txt = $errstr . "\n" . "Line $errline in $errfile\n";
+    $txt = $errstr . "\n" . "$errfile:$errline\n";
     ob_start();
     debug_print_backtrace();
     // $txt.= ob_get_contents();

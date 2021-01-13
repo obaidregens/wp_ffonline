@@ -1,0 +1,177 @@
+div {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+feed-form {
+    position: fixed;
+    background-color: var(--background-color);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: block;
+    z-index: 54;
+    padding: 15px;
+    overflow: auto;
+    transition: transform .3s;
+    transform: translateY(-100%);
+}
+feed-form + cancel {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background-color: var(--background-accent);
+    border: 1px solid var(--grey);
+    border-radius: 30px;
+    top: -12px;
+    left: calc(50% - 20px);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 54;
+}
+feed-form + cancel::before {
+    font-family: 'icons';
+    content: '\e932';
+    display: inline-block;
+    transform: translateY(5px);
+}
+feed-form.open + cancel::before {
+    content: '\e900';
+    transform: scale(0.95) translateY(5px);
+}
+feed-form.open {
+    transform: translateY(0);
+}
+feed-form > button {
+    display: block;
+    margin-left: auto;
+}
+.fandom,
+.rating,
+.language {
+    margin: 15px 0;
+}
+.fandom {
+    margin-top: 0;
+}
+
+.fandom::before,
+.rating::before,
+.language::before {
+    font-size: 1.4em;
+    display: flex;
+    margin-bottom: 5px;
+}
+select-tag {
+    position: relative;
+    display: block;
+    padding: 12px 9px 6px;
+}
+select-tag:empty::after {
+    color: var(--darkgrey);
+    font-size: 0.9rem;
+}
+select-tag > tag {
+    display: inline-flex;
+    font-size: 0.8rem;
+    color: rgba(0,0,0,.6);
+    line-height: 27px;
+    border-radius: 16px;
+    background-color: #f0f8ff;
+    margin-bottom: 5px;
+    margin-right: 5px;
+    overflow: hidden;
+}
+select-tag > tag[excluded] {
+    background-color: #fcd7d7;
+}
+tag > tag-text {
+    padding-left: 11px;
+    padding-right: 4px;
+}
+tag > tag-cancel {
+    padding: 0 2px;
+    padding-right: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+tag > tag-cancel::before {
+    font-family: 'icons';
+    content: '\e900';
+    display: inline-block;
+    transform: scale(0.8);
+}
+tag > tag-cancel:hover {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+/* Input */
+text-input > input {
+    border: 1px solid var(--grey) !important;
+    border-radius: 4px;
+    padding-left: 10px;
+    padding-bottom: 15px;
+}
+text-input > label {
+    background-color: var(--background-color);
+    padding: 0 8px;
+    left: 6px;
+}
+.select-list {
+    max-height: 200px;
+    border: 1px solid var(--grey);
+    border-radius: 5px;
+}
+.select-list > * {
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color .2s;
+    border-radius: 5px;
+}
+.select-list > *:not(:first-child)::before {
+    content: "";
+    display: flex;
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid;
+    position: relative;
+    top: -10px;
+    border-color: var(--grey);
+    transition: border-color .2s;
+}
+.select-list > *:hover {
+    background-color: var(--hover);
+}
+.select-list > *:active {
+    background-color: var(--active);
+}
+.select-list > *:hover::before,
+.select-list > *:hover + *::before {
+    border-color: transparent;
+}
+
+.fandom::before {
+    content: "Select Fandoms";
+}
+.fandom select-tag:empty::after {
+    content: "No fandoms selected yet.";
+}
+.rating::before {
+    content: "Select Ratings";
+}
+.rating select-tag:empty::after {
+    content: "No ratings selected yet.";
+}
+.language::before {
+    content: "Select Languages";
+}
+.language select-tag:empty::after {
+    content: "No language selected yet.";
+}

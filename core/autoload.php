@@ -30,6 +30,7 @@ $includes = array(
 	'classes/change_logs',
 	'classes/search_log',
 	'classes/track_reading',
+	'classes/feed',
 	'cpt',
 	'helpers',
 	'thrown',

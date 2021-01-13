@@ -160,22 +160,20 @@ class book_query{
         if ($args['is_search']) {
             new search_log($this->core_args);
         }
-        
-
         if ($args['is_search']) {
             $included = $this->from_cache();
         }
         global $wpdb;
         if (empty($included)) {
             $all_tags = array_merge_recursive($args['included'],$args['excluded']);
-            $prepared = array(
+            $prepared = [
                 'sort',
                 $args['orderby'] . '/' . $args['order'],
                 'words',
                 $args['words']['from'],
                 'words',
                 $args['words']['to']
-            );
+            ];
             // Meant when cache for searching is enabled
             // if ($args['search'] !== ''){
             //     $prepared[] = 'search';
@@ -188,10 +186,7 @@ class book_query{
                 }
             }
             $fill = implode(',',array_fill(0,count($prepared)/2,'(%s,%s)'));
-            $query =
-            "SELECT * FROM " . book_query::$table . " WHERE (`_key`, `_value`) IN (
-                " . $fill . " 
-            );";
+            $query = "SELECT * FROM " . book_query::$table . " WHERE (`_key`, `_value`) IN ($fill);";
             $full_query = $wpdb->prepare($query,$prepared);
             $results = $wpdb->get_results($full_query);
             $results_ = array();
@@ -282,27 +277,47 @@ class book_query{
             $included = array_diff($included,$args['exclude_ids']);
         }
 
-        // Page
-        $paged_ids = $included;
-        if ($args['page'] < 1) {
-            $paged_ids = [];
-        }
-        else if ($args['per_page'] !== 'all'){
-            $paged_ids = array_slice(
-                $included,
-                ($args['page']-1)*$args['per_page'],
-                $args['per_page']
-            );    
-        }
         $this->is_default = empty($this->core_args);
+
         $this->ids = $included;
         $included = null;
-        $this->count = count($this->ids);
-        $this->page = $args['page'];
-        if ($args['per_page'] !== "all") {
-            $this->pages = ($this->count % $args['per_page'] > 0) ? (intval($this->count / $args['per_page'])+1) : (intval($this->count / $args['per_page']));
+
+        $this->query_paged();
+    }
+    function query_from_ids($ids,$page = 1) {
+        $this->init_time = microtime(true);
+        $this->core_args = [];
+        $this->args = book_query::$default_args;
+        $this->args['page'] = intval($page);
+        $this->is_default = false;
+        $this->ids = $ids;
+        $this->query_paged();
+    }
+    protected function query_paged() {
+        global $wpdb;
+        if ($this->args['page'] < 1) {
+            $paged_ids = [];
         }
-        $this->books = array();
+        else if ($this->args['per_page'] === 'all') {
+            $paged_ids = [];
+        }
+        else {
+            $paged_ids = array_slice(
+                $this->ids,
+                ($this->args['page']-1)*$this->args['per_page'],
+                $this->args['per_page']
+            );    
+        }
+        $this->count = count($this->ids);
+        $this->page = $this->args['page'];
+        if ($this->args['per_page'] !== "all") {
+            $this->pages = (
+                ($this->count % $this->args['per_page'] > 0) ?
+                (intval($this->count / $this->args['per_page'])+1) :
+                (intval($this->count / $this->args['per_page']))    
+            );
+        }
+        $this->books = [];
         if (! empty($paged_ids)){
             $fill = implode(',',array_fill(0,count($paged_ids),'%d'));
             $this->books = $wpdb->get_results(
@@ -978,5 +993,8 @@ class tag_query extends book_query{
     }
     function get() {
         return array_values($this->terms);
+    }
+    function get_ids() {
+        return array_column($this->get(),'ID');
     }
 }

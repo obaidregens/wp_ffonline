@@ -27,6 +27,10 @@ author-bio > content {
     color: var(--theme-color);
     background-color: var(--hover);
 }
+.edit-about:empty:active::before {
+    color: var(--theme-color);
+    background-color: var(--active);
+}
 .edit-about:empty {
     float: right;
 }

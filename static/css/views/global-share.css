@@ -43,6 +43,9 @@ popup.share > share-options > * {
 popup.share > share-options > *:hover {
     background-color: var(--hover);
 }
+popup.share > share-options > *:active {
+    background-color: var(--active);
+}
 popup.share > share-options > *::before {
     font-size: 30px;
     line-height: 1;

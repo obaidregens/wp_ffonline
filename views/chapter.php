@@ -4,6 +4,7 @@ $app->bundle->mix('speak');
 $app->bundle->mix('confirmation');
 $app->bundle->mix('story-options');
 $app->bundle->js('external/nosleep/NoSleep');
+$app->bundle->css('css/components/options');
 $app->bundle->css('css/js-components/checkbox');
 $app->bundle->css('css/components/loader');
 $app->bundle->css('css/components/tooltips');
@@ -20,7 +21,6 @@ $app->bundle->css('css/views/chapter-search');
 $app->bundle->js('js/views/chapter-search');
 $app->bundle->js('js/views/reviews-list');
 $app->bundle->js('js/views/chapter-tracking');
-$app->bundle->js('js/views/story-offlineAPI');
 $app->bundle->js('js/views/chapter-offline');
 
 // Options

@@ -33,6 +33,9 @@ folder,file {
 folder:hover,file:hover {
     background-color: var(--hover);
 }
+folder:active,file:active {
+    background-color: var(--active);
+}
 folder.selected,file.selected {
     pointer-events: none;
     background-color: var(--theme-color);

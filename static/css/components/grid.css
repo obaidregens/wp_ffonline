@@ -48,6 +48,10 @@
     color: var(--theme-color);
     background-color: var(--hover);
 }
+.grid-item > button.options:active {
+    color: var(--theme-color);
+    background-color: var(--active);
+}
 .grid-item > button.options:before {
     display: inline-block;
     font-family: 'icons';

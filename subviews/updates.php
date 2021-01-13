@@ -15,7 +15,7 @@ $updates = $updates_query->updates;
             <update class="divider" <?= is_sticky( $update->ID ) ? 'pinned' : '' ?> update_id="<?= $update->ID; ?>">
                 <update-time><?= get_the_time( 'G', $update ); ?> ago</update-time>
                 <?php if ($is_current_author) { ?>
-                    <button class="dropdown">
+                    <button class="dropdown options">
                         <dropdown class="right">
                             <li tabindex="0" label="Pin"></li>
                             <li tabindex="0" label="Delete"></li>

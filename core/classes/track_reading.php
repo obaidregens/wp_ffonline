@@ -153,4 +153,62 @@ class track_reading {
         }
         return self::$cache[$story_id];
     }
+    static function get_all_current() {
+        if (!is_user_logged_in()) {
+            return false;
+        }
+        global $wpdb;
+
+        $table = self::$table;
+        $sql = $wpdb->prepare(
+            "SELECT
+                $table.`story_id`,
+                $table.`chapter_id`,
+                $table.`chapter_num`,
+                $table.`para`
+            FROM $table
+            WHERE $table.`user_id` = %d
+            ORDER BY $table.`ID` ASC",
+        [get_current_user_id()]);
+        $r = $wpdb->get_results($sql);
+
+        $ee = [];
+        foreach ($r as $row) {
+            $ee[$row->story_id] = [
+                'chapter'   => intval($row->chapter_id),
+                'para'      => intval($row->para),
+                'num'       => intval($row->chapter_num)
+            ];
+        }
+        self::$cache = array_replace(self::$cache,$ee);
+
+        // Now Extract Currently Reading
+        $story_ids = array_keys($ee);
+        if (empty($story_ids)) {
+            return [];
+        }
+
+        // Find Chapter Count of Each
+        $placeholder = sqlPlaceholder($story_ids);
+        $sql = (
+            "SELECT post_parent,COUNT(post_parent) AS c FROM wp_posts
+            WHERE post_parent IN ($placeholder)
+            AND post_type = 'chapter'
+            AND post_status = 'publish'
+            GROUP BY post_parent"
+        );
+        $sql = $wpdb->prepare($sql,$story_ids);
+        $story_chapters = array_column($wpdb->get_results($sql),'c','post_parent');
+        
+        $story_ids = [];
+        foreach ($story_chapters as $story_id => $chapters) {
+            $num = $ee[$story_id]['num'];
+            $para = $ee[$story_id]['para'];
+            if (!($num === intval($chapters) && $para === 0)) {
+                $story_ids[] = $story_id;
+            }
+        }
+
+        return $story_ids;
+    }
 }

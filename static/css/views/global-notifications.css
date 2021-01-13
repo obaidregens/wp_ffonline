@@ -43,6 +43,9 @@ next-screen[notifications] > notifications > a::after {
 next-screen[notifications] > notifications > a:hover {
     background-color: var(--hover);
 }
+next-screen[notifications] > notifications > a:active {
+    background-color: var(--active);
+}
 /* Pulse */
 button.notification-pulse:not(.show) {
     display: none;
@@ -64,6 +67,10 @@ button.notification-pulse {
 }
 button.notification-pulse:hover {
     background-color: var(--hover);
+    color: var(--text-color);
+}
+button.notification-pulse:active {
+    background-color: var(--active);
     color: var(--text-color);
 }
 button.notification-pulse::before {

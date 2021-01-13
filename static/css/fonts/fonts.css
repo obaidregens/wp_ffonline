@@ -1,0 +1,28 @@
+smiley {
+    margin: 0 1px;
+    position: relative;
+    display: inline;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+
+    /* Better Rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+smiley::before,smiley::after {
+    font-family: 'icons';
+    left: 0;
+}
+smiley::before {
+    content: "\e90a";
+    color: rgb(255, 204, 77);
+}
+smiley::after {
+    position: absolute;
+    left: 0;
+    content: "\e90b";
+    color: rgb(102, 69, 0);
+}  

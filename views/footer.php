@@ -24,7 +24,7 @@ if (!is_user_logged_in()) {
 <style>
 @font-face {
     font-family: 'icons';
-    src: url('<?= rtrim(STATIC_URL,'/') ?>/css/fonts/icons.woff?v=u412') format('woff');
+    src: url('<?= rtrim(STATIC_URL,'/') ?>/css/fonts/icons.woff?v=u413') format('woff');
     font-weight: normal;
     font-style: normal;
     font-display: block;

@@ -272,7 +272,7 @@ class drafts_dir extends drafts {
                 $put_draft = [
                     'ID'        => intval($s->ID),
                     'title'     => $s->title,
-                    'time'      => intval($s->updated)
+                    'time'      => intval($s->created)
                 ];
                 if ($words) {
                     $put_draft['words'] = str_word_count( drafts_json::simpleText( $revisions[$s->ID] ) );
@@ -457,6 +457,9 @@ class drafts_json extends drafts {
     public static function simpleText($json,$direct = false) {
         if (!$direct) {
             $json = json_decode($json,true);
+        }
+        if (!$json) {
+            return "";
         }
         $text = '';
         foreach ($json as $k => $para) {

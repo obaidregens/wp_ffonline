@@ -22,9 +22,13 @@ popup.search-story > results > a[result] {
     border: 1px solid grey;
     border-radius: 4px;
     padding: 15px;
+    transition: background-color .2s;
 }
 popup.search-story > results > a[result]:hover {
     background-color: var(--hover);
+}
+popup.search-story > results > a[result]:active {
+    background-color: var(--active);
 }
 
 popup.search-story > results > a[result] > result-title {

@@ -10,6 +10,7 @@ require(__DIR__ . '/wp/wp-load.php');
 
 require_once(__DIR__ . '/php_includes/mail/mail.php');
 // require_once(__DIR__ . '/php_includes/GeoIP/geoip.php');
+
 class Router {
     public $request;
     private $r;
@@ -904,6 +905,28 @@ $app->listen('/help/guides',function($self){
     $self->footer();
     exit();
 });
+// $app->listen('/feed',function($self){
+//     $self->login();
+//     $self->type = 'feed';
+//     $self->type_id = 0;
+//     $self->header([
+//         'title'         => construct_page_title("Feed")
+//     ]);
+//     $self->template('/views/feed/home');
+//     $self->footer();
+//     exit();
+// });
+// // Feedback
+// $app->listen('/feedback/&*',function($self){
+//     $self->type = 'feedback';
+//     $self->type_id = 0;
+//     $self->header([
+//         'title'         => construct_page_title("Feedback")
+//     ]);
+//     $self->template('/views/feedback/home');
+//     $self->footer();
+//     exit();
+// });
 // Manifest
 $app->listen('/sw.js',function($self) {
     $self->static('/content/manifest/sw.js');

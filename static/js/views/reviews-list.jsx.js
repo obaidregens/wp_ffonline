@@ -11,7 +11,7 @@ function Dropdown (props) {
         return null;
     }
     return (
-        <button label={props.label} theme={props.theme} className="dropdown">
+        <button label={props.label} theme={props.theme} className={`dropdown ${props.className || ""}` }>
             <dropdown className={props.right ? 'right' : ''}>
                 {props.children}
             </dropdown>
@@ -59,7 +59,7 @@ function Review (props) {
             <review-time>{props.time}</review-time>
             <quote>{props.quote}</quote>
             <review-content>{props.content}</review-content>
-            <Dropdown right children={fill}/>
+            <Dropdown right className="options" children={fill}/>
             {props.replies}
         </review>
     )
