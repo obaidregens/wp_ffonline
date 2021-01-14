@@ -101,7 +101,6 @@ $current_user = user::get( get_current_user_id() );
 						Me
 						<dropdown class="right">
 							<a tabindex="0" class="notifications">Notifications</a>
-							<a tabindex="0" href="/feed">My Feed</a>
 							<a tabindex="0" href="/inbox">Inbox</a>
 							<a tabindex="0" href="/@<?= $current_user->user_login; ?>">Profile</a>
 							<a tabindex="0" href="/@<?= $current_user->user_login; ?>/settings">Settings</a>
