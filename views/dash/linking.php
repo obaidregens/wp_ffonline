@@ -13,9 +13,11 @@ $r = $wpdb->get_results(
     "SELECT
         user_connections.`ID` as `ID`,
         user_connections.`connection_user` as `ffn_user`,
-        wp_users.`display_name` as `name`
+        wp_users.`display_name` as `name`,
+        verification_codes.`code` as `code`
     FROM user_connections
     INNER JOIN wp_users ON wp_users.ID = user_connections.user_id
+    INNER JOIN verification_codes ON user_connections.verification_ID = verification_codes.ID
     WHERE status = 'unverified'"
 );
 ?>
@@ -29,7 +31,10 @@ foreach ($r as $row) {
     <single>
         <cell><?= $row->name; ?></cell>
         <cell>
-            <a rel="nofollow" href="https://fanfiction.net/u/<?= $row->ffn_user ?>"><?= $row->ffn_user; ?></a>
+            <a rel="nofollow noreferrer" href="https://fanfiction.net/u/<?= $row->ffn_user ?>"><?= $row->ffn_user; ?></a>
+        </cell>
+        <cell>
+            <?= $row->code; ?>
         </cell>
         <cell>
             <a cid="<?=$row->ID; ?>">Confirm</a>

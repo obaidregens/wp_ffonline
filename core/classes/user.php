@@ -171,6 +171,9 @@ class user {
         if (!in_array($f,['ID','user_email','user_login'])) {
             return false;
         }
+        if (!$value) {
+            return false;
+        }
         if (!$show_unverified) {
             $cached = cache::now()->get(user_cache::key($f,$value));
             if ($cached !== null) {

@@ -191,7 +191,8 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
     }, msgEl), /*#__PURE__*/React.createElement("send-message", null, /*#__PURE__*/React.createElement("input", {
       value: message,
       placeholder: "Message " + username,
-      onChange: e => setMessage(e.target.value),
+      maxlength: 250,
+      onChange: e => setMessage(e.target.value.substr(0, 250)),
       onKeyDown: e => {
         if (e.key.toLowerCase() === "enter") {
           send();

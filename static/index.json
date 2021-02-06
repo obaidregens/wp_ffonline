@@ -48,7 +48,7 @@
             "idb"
         ],
         "css_hash": "3d4d0085187165da1c923170b6d89c06adaeb672",
-        "js_hash": "ab2238d4de1978c2b92e9c216edb816bfb6f8d6e"
+        "js_hash": "0030ea9af095491447d48390acf29dbbe78dcbdb"
     },
     "my-books": {
         "css": [
@@ -304,7 +304,7 @@
             "confirmation"
         ],
         "css_hash": "07f0449cb356e3255aeefa4a6879c4ba2a9709a5",
-        "js_hash": "366493360cbf7081e0de30ae4d344579120c9150"
+        "js_hash": "2de438a4f5c50e9e5fb47a1328f226cca829263b"
     },
     "drafts-index": {
         "css": [
@@ -780,7 +780,7 @@
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-        "js_hash": "2bbd7c23d45ad78c2aa2fde27498933d230792fd"
+        "js_hash": "e5382e82b0059a9b48f59d84c3073104b57294f1"
     },
     "book-edit-dev1": {
         "css": [],

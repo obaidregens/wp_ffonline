@@ -194,7 +194,8 @@
                         <input
                         value={message}
                         placeholder={"Message " + username}
-                        onChange={e => setMessage(e.target.value)}
+                        maxlength={250}
+                        onChange={e => setMessage(e.target.value.substr(0,250))}
                         onKeyDown={e => {
                             if (e.key.toLowerCase() === "enter") {
                                 send();

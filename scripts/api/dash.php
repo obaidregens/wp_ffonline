@@ -188,7 +188,8 @@ function api_verify_confirm() {
     global $wpdb;
 
     $sql = 
-    "SELECT `user_id`,`connection_user` as `ffn_user` FROM user_connections
+    "SELECT `user_id`,`connection_user` as `ffn_user`
+    FROM user_connections
     WHERE ID = %s AND status = 'unverified'";
     $sql = $wpdb->prepare($sql,[$d['id']]);
     $a = $wpdb->get_results($sql);
@@ -205,19 +206,6 @@ function api_verify_confirm() {
             'ID'                => $d['id']
         ]
     );
-    $wpdb->insert(
-        'notifications',[
-            'user_id'               => $a->user_id,
-            'notification_type'     => 'account_verified',
-            'type_of'               => 'user',
-            'type_of_id'            => $a->user_id,
-            'type_by'               => 'ffn_user',
-            'type_by_id'            => $a->ffn_user,
-            'email_status'          => 'none',
-            'timestamp'             => microtime(true)
-        ]
-    );
-
 
     return ['code'=>1];
 }

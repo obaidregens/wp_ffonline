@@ -7,7 +7,7 @@
         },
         children: [
             create_text_input({label: "Message @beta",attributes: {
-                maxlength: 150
+                maxlength: 250
             },keydown: ({target,key}) => {
                 if (key.toLowerCase() !== "enter") {
                     return;

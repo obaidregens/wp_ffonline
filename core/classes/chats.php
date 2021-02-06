@@ -18,7 +18,7 @@ class chats {
         if (trim($message) === ''){
             return $this->error->add('Message','What message?');
         }
-        $max_chars = 150;
+        $max_chars = 250;
         if (strlen($message) > $max_chars){
             return $this->error->add('Message',"Message cannot be of more than $max_chars characters.");
         }
