@@ -2,3 +2,4 @@ static/bundles
 *.jsonl
 sitemap
 *.log
+*.DS_Store
