@@ -86,15 +86,15 @@ next-screen > div > button[label="Close"] {
     }    
 }
 /* Popup[tag-name] */
-popup[tag-name] {
+popup_s[tag-name] {
     padding: 0;
     max-width: 450px;
     max-height: 90%;
 }
-popup[tag-name].show {
+popup_s[tag-name].show {
     top: 5%;
 }
-popup[tag-name] > wrap {
+popup_s[tag-name] > wrap {
     padding: 10px;
     position: sticky;
     left: 0;
@@ -105,24 +105,24 @@ popup[tag-name] > wrap {
     background-color: var(--background-accent);
     box-shadow: var(--shadow-light);
 }
-popup[tag-name] > wrap:first-child {
+popup_s[tag-name] > wrap:first-child {
     top: 0;
     padding-bottom: 5px;
 }
-popup[tag-name] > wrap:last-child {
+popup_s[tag-name] > wrap:last-child {
     bottom: 0;
 }
-popup[tag-name] > wrap > button.include::before {
+popup_s[tag-name] > wrap > button.include::before {
     content: 'Include';
 }
-popup[tag-name] > wrap > button.exclude::before {
+popup_s[tag-name] > wrap > button.exclude::before {
     content: 'Exclude';
 }
-popup[tag-name] > wrap > button.exclude.active, popup[tag-name] > wrap > button.exclude:hover {
+popup_s[tag-name] > wrap > button.exclude.active, popup_s[tag-name] > wrap > button.exclude:hover {
     background-color: #f44336;
 }
 
-popup[tag-name] > wrap >  button {
+popup_s[tag-name] > wrap >  button {
     font-size: 10px;
     width: min-content;
     width: -moz-min-content;
@@ -131,23 +131,23 @@ popup[tag-name] > wrap >  button {
     margin-bottom: 10px;
 }
 @media only screen and (max-width: 400px) {
-    popup[tag-name] > wrap >  button {
+    popup_s[tag-name] > wrap >  button {
         font-size: 7.5px;
     }
 }
-popup[tag-name] > wrap:first-child > button {
+popup_s[tag-name] > wrap:first-child > button {
     padding: 0 9px;
 }
 @media only screen and (max-width: 400px) {
-    popup[tag-name] > wrap:first-child > button {
+    popup_s[tag-name] > wrap:first-child > button {
         padding: 0 8px;
     }
 }
-popup[tag-name] > wrap > text-input {
+popup_s[tag-name] > wrap > text-input {
     width: 100%;
     margin: 5px;
 }
-popup[tag-name] > wrap > button[label="OK"], popup[tag-name] > wrap > button[label="Sort"] {
+popup_s[tag-name] > wrap > button[label="OK"], popup_s[tag-name] > wrap > button[label="Sort"] {
     margin-left: auto;
 }
 tag_list {
@@ -177,16 +177,16 @@ tag_list > text {
     padding-bottom: 15px;
     font-size: 0.9rem;
 }
-/* Async popup */
-popup[tag-name="fandom"].async tag_list:empty::before {
+/* Async popup_s */
+popup_s[tag-name="fandom"].async tag_list:empty::before {
     content: "Start typing to see fandoms";
 }
-popup[tag-name="character"].async tag_list:empty::before {
+popup_s[tag-name="character"].async tag_list:empty::before {
     content: "Start typing to see characters";
 }
-popup[tag-name="pairing"].async tag_list:empty::before {
+popup_s[tag-name="pairing"].async tag_list:empty::before {
     content: "Start typing to see pairings";
 }
-popup.async.no-results tag_list:empty::before {
+popup_s.async.no-results tag_list:empty::before {
     content: "No tags found";
 }

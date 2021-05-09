@@ -41,26 +41,26 @@ input[placeholder="Title"]:focus {
     outline: none;
 }
 /* Share Draft */
-popup[share_draft] {
+popup_s[share_draft] {
     max-width: 450px;
 }
-popup[share_draft] > p {
+popup_s[share_draft] > p {
     margin-top: 0;
 }
-popup[share_draft] > button[label="Create Link"] {
+popup_s[share_draft] > button[label="Create Link"] {
     margin: 0;
     float: right;
 }
-popup[share_draft] > button[label="Create Link"] > loader{
+popup_s[share_draft] > button[label="Create Link"] > loader{
     display: none;
     position: absolute;
     left: 8px;
     top: 6px;
 }
-popup[share_draft] > button[label="Create Link"]:disabled {
+popup_s[share_draft] > button[label="Create Link"]:disabled {
     padding-left: 30px;
 }
-popup[share_draft] > button[label="Create Link"]:disabled > loader {
+popup_s[share_draft] > button[label="Create Link"]:disabled > loader {
     display: inline-block;
 }
 /* Share Link */
@@ -87,17 +87,17 @@ share-link > button{
     padding: 0 6px;
 }
 /* Hide */
-popup[share_draft] > share-link:not(.copy) {
+popup_s[share_draft] > share-link:not(.copy) {
     display: none;
 }
-popup[share_draft] > share-link.copy ~ button[label="Create Link"]:hover {
+popup_s[share_draft] > share-link.copy ~ button[label="Create Link"]:hover {
     background-color: var(--red);
 }
-popup[share_draft] > share-link.copy ~ button[label="Create Link"]::before {
+popup_s[share_draft] > share-link.copy ~ button[label="Create Link"]::before {
     content: 'Disable Sharing';
 }
 /* Folder Listing */
-popup[prompt_location_save] button[label="Save"] {
+popup_s[prompt_location_save] button[label="Save"] {
     display: block;
     margin-top: 20px;
     float: right;

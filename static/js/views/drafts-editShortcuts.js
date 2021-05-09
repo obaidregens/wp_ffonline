@@ -7,11 +7,11 @@
                 if (document.fullscreenElement) {
                     document.exitFullscreen();
                 }        
-                popup.open(shortcut_popup);
+                popup_s.open(shortcut_popup);
             }
         }
     }));
-    const shortcut_popup = document.documentElement.appendChild(DOM.create('popup',{
+    const shortcut_popup = document.documentElement.appendChild(DOM.create('popup_s',{
         attributes: {
             shortcuts: ""
         },

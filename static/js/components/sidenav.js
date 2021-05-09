@@ -28,7 +28,7 @@ const sidenav = class {
         over.addEventListener('click',sidenav.close);
     }
     static open (_sidenav) {
-        popup.close();
+        popup_s.close();
         sidenav.close();
         _sidenav.classList.add('show');
         const sidenav_overlay = sidenav.overlay;
@@ -48,7 +48,7 @@ const sidenav = class {
         _sidenav.dispatchEvent(new Event('onClose'));
         _sidenav.classList.remove('show');
         DOM.q('body').classList.remove('sidenav-collapse');
-        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
+        if (DOM.qa('popup_s.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
     }

@@ -1,19 +1,19 @@
 /* Popup */
-popup.search-story > form > text-input:first-child {
+popup_s.search-story > form > text-input:first-child {
     display: inline-block;
     width: calc(100% - 68px);
 }
-popup.search-story > form > button:nth-child(2)::before {
+popup_s.search-story > form > button:nth-child(2)::before {
     font-family: 'icons';
     content: '\e927';
 }
-popup.search-story > results:empty::before {
+popup_s.search-story > results:empty::before {
     content: 'No results found.';
 }
-popup.search-story > results.exceeded::after {
+popup_s.search-story > results.exceeded::after {
     content: 'Some results aren\'t shown because your search was too broad.';
 }
-popup.search-story > results > a[result] {
+popup_s.search-story > results > a[result] {
     width: 100%;
     display: block;
     position: relative;
@@ -24,27 +24,27 @@ popup.search-story > results > a[result] {
     padding: 15px;
     transition: background-color .2s;
 }
-popup.search-story > results > a[result]:hover {
+popup_s.search-story > results > a[result]:hover {
     background-color: var(--hover);
 }
-popup.search-story > results > a[result]:active {
+popup_s.search-story > results > a[result]:active {
     background-color: var(--active);
 }
 
-popup.search-story > results > a[result] > result-title {
+popup_s.search-story > results > a[result] > result-title {
     position: absolute;
     background: linear-gradient(to bottom, var(--background-accent) 10px, transparent 20px);
     top: -12px;
     padding: 0 10px;
 }
 
-popup.search-story > results + loader {
+popup_s.search-story > results + loader {
     display: none;
 }
-popup.search-story > results.loading {
+popup_s.search-story > results.loading {
     display: none;
 }
-popup.search-story > results.loading + loader {
+popup_s.search-story > results.loading + loader {
     display: block;
     margin: 30px auto;
 }

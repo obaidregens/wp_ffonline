@@ -117,7 +117,7 @@ DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(3) > button').addEventListe
                 children: code_singles
             });
             const reCAPTCHA_elem = DOM.create('recaptcha');
-            const pop = DOM.create('popup',{
+            const pop = DOM.create('popup_s',{
                 children: [
                     code_input,
                     reCAPTCHA_elem,
@@ -162,8 +162,8 @@ DOM.q('h2[label="Account"] ~ collapsible:nth-of-type(3) > button').addEventListe
                     }
                 }
             });
-            popup.create(pop);
-            popup.open(pop);
+            popup_s.create(pop);
+            popup_s.open(pop);
             new toast("A verification code has been sent to your new email.");
             init_reCAPTCHA();
         }

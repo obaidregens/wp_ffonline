@@ -1,15 +1,15 @@
 if (DOM.q('.add-update')){
     DOM.q('.add-update').addEventListener('click',function(){
-        let __pop = DOM.q('popup[add-update]');
+        let __pop = DOM.q('popup_s[add-update]');
         if (__pop){
-            popup.open(__pop);
+            popup_s.open(__pop);
             return;
         }
         const txt_update = create_text_input({
             type: "textarea",
             label: 'Add Update'
         });
-        __pop = DOM.create('popup',{
+        __pop = DOM.create('popup_s',{
             attributes: {
                 "add-update": ""
             },
@@ -38,7 +38,7 @@ if (DOM.q('.add-update')){
                 })
             ]
         });
-        popup.create(__pop);
-        popup.open(__pop);
+        popup_s.create(__pop);
+        popup_s.open(__pop);
     });
 }

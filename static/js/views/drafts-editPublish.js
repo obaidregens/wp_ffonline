@@ -1,8 +1,8 @@
 // Publish Button
 DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
-    let pop = DOM.q('popup[publish_to_story]');
+    let pop = DOM.q('popup_s[publish_to_story]');
     if (! pop){
-        pop = DOM.create('popup',{
+        pop = DOM.create('popup_s',{
             attributes: {
                 publish_to_story: ""
             },
@@ -34,10 +34,10 @@ DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
                 DOM.create('stories-list')
             ]
         });
-        popup.create(pop);    
+        popup_s.create(pop);    
     }
     api('get_stories').then(response => {
-        const story_pop = DOM.q('popup[publish_to_story] > stories-list');
+        const story_pop = DOM.q('popup_s[publish_to_story] > stories-list');
         story_pop.innerText = "";
         for (let i = 0; i < response.stories.length; i++) {
             const story = response.stories[i];
@@ -48,7 +48,7 @@ DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
                 listeners: {
                     click: ({target}) => {
                         const draft_id = DOM.q('editor').getAttribute('draft_id');
-                        const chapter_title = DOM.q('popup[publish_to_story] > text-input > input').value;
+                        const chapter_title = DOM.q('popup_s[publish_to_story] > text-input > input').value;
                         if (draft_id === 'new'){
                             new toast('This draft hasn\'t been saved.');
                             return;
@@ -61,7 +61,7 @@ DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
                             if (! v) {
                                 return;
                             }
-                            popup.close();
+                            popup_s.close();
                             api('publish_to_story',{
                                 data: {
                                     chapter_title,
@@ -89,5 +89,5 @@ DOM.q('button[label="Publish"]').addEventListener('click', ({target}) => {
             }));
         }
     });
-    popup.open(pop);
+    popup_s.open(pop);
 });

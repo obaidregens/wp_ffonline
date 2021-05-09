@@ -16,8 +16,8 @@ $app->bundle->js('js/views/drafts-indexActions');
 <floater>
     <button class="new"></button>
 </floater>
-<popup new-action>
+<popup_s new-action>
     <a label="Draft" href="/drafts/new"></a>
     <a label="Folder"></a>
-</popup>
+</popup_s>
 <folder-listing></folder-listing>

@@ -1,29 +1,29 @@
-popup[update_collection] {
+popup_s[update_collection] {
     max-width: 600px;
 }
-popup[update_collection] > button[label="Save"],popup[update_collection] > button[label="Delete"] {
+popup_s[update_collection] > button[label="Save"],popup_s[update_collection] > button[label="Delete"] {
     margin-bottom: 10px;
     margin-right: 0;
 }
-popup[update_collection] > button[label="Save"] {
+popup_s[update_collection] > button[label="Save"] {
     float: right;
 }
-popup[update_collection][collection_id="new"] > button[label="Save"]::before {
+popup_s[update_collection][collection_id="new"] > button[label="Save"]::before {
     content: 'Create';
 }
-popup[update_collection] > button[label="Delete"] {
+popup_s[update_collection] > button[label="Delete"] {
     background-color: var(--red);
     float: right;
 }
-popup[update_collection][collection_id="new"] > button[label="Delete"],
-popup[update_collection] > button[label="Delete"]:disabled {
+popup_s[update_collection][collection_id="new"] > button[label="Delete"],
+popup_s[update_collection] > button[label="Delete"]:disabled {
     pointer-events: none;
 
     border: none;
     background-color: #b17070;
     color: #d0d0d0;
 }
-popup[update_collection] > a.back::before{
+popup_s[update_collection] > a.back::before{
     font-size: 85%;
     font-weight: bold;
     content: 'Back to Collections';
@@ -32,30 +32,30 @@ popup[update_collection] > a.back::before{
 
 /* AAA */
 /* Collections Popup */
-popup.collections {
+popup_s.collections {
     max-width: 600px;
 }
-popup.collections > collection,popup.collections > a.new-collection {
+popup_s.collections > collection,popup_s.collections > a.new-collection {
     display: flex;
     position: relative;
 }
-popup.collections > collection > label,
-popup.collections > a.new-collection{
+popup_s.collections > collection > label,
+popup_s.collections > a.new-collection{
     width: 100%;
     display: flex;
     border-bottom: 1px solid rgba(125, 125, 125, 0.7);
     padding: 15px 10px;
     transition: background-color .3s;
 }
-popup.collections > collection > label:hover,
-popup.collections > a.new-collection:hover {
+popup_s.collections > collection > label:hover,
+popup_s.collections > a.new-collection:hover {
     background-color: var(--hover);
 }
-popup.collections > collection > label:active,
-popup.collections > a.new-collection:active {
+popup_s.collections > collection > label:active,
+popup_s.collections > a.new-collection:active {
     background-color: var(--active);
 }
-popup.collections > collection > collection-options {
+popup_s.collections > collection > collection-options {
     position: absolute;
     display: block;
     width: max-content;
@@ -72,7 +72,7 @@ popup.collections > collection > collection-options {
     transition: opacity 0.3s, left 0.3s;
     will-change: pointer-events, opacity, left;
 }
-popup.collections > collection:hover > collection-options {
+popup_s.collections > collection:hover > collection-options {
     pointer-events: all;
     opacity: 1;
     left: 25%;

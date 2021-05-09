@@ -3,12 +3,12 @@ function prompt_login() {
 		new toast("You're offline.");
 		return;
 	}
-	let login_popup = DOM.q('popup[login]');
+	let login_popup = DOM.q('popup_s[login]');
 	if (login_popup) {
-		popup.open(login_popup);
+		popup_s.open(login_popup);
 		return;
 	}
-	login_popup = DOM.create('popup',{
+	login_popup = DOM.create('popup_s',{
 		attributes: {
 			login: ""
 		}
@@ -86,19 +86,19 @@ function prompt_login() {
 	login_popup.appendChild(forgot_btn);
 	login_popup.appendChild(signup_btn);
 
-	popup.create(login_popup);
+	popup_s.create(login_popup);
 	init_reCAPTCHA();
-	popup.close();
-	popup.open(login_popup);
+	popup_s.close();
+	popup_s.open(login_popup);
 }
 function prompt_signup() {
-	let signup_popup = DOM.q('popup[signup]');
+	let signup_popup = DOM.q('popup_s[signup]');
 	if (signup_popup) {
-		popup.close();
-		popup.open(signup_popup);
+		popup_s.close();
+		popup_s.open(signup_popup);
 		return;
 	}
-	signup_popup =  DOM.create('popup');
+	signup_popup =  DOM.create('popup_s');
 	signup_popup.setAttribute('signup','');
 	const form = DOM.create('form');
 
@@ -177,20 +177,20 @@ function prompt_signup() {
 	signup_popup.appendChild(form);
 	signup_popup.appendChild(login_btn);
 
-	popup.create(signup_popup);
+	popup_s.create(signup_popup);
 	init_text_input();
 	init_reCAPTCHA();
-	popup.close();
-	popup.open(signup_popup);
+	popup_s.close();
+	popup_s.open(signup_popup);
 }
 function prompt_forgot() {
-	let forgot_popup = DOM.q('popup[forgot]');
+	let forgot_popup = DOM.q('popup_s[forgot]');
 	if (forgot_popup) {
-		popup.close();
-		popup.open(forgot_popup);
+		popup_s.close();
+		popup_s.open(forgot_popup);
 		return;
 	}
-	forgot_popup = DOM.create('popup');
+	forgot_popup = DOM.create('popup_s');
 	forgot_popup.setAttribute('forgot','');
 	const form = DOM.create('form');
 	const login_input = DOM.update(create_text_input({
@@ -239,16 +239,16 @@ function prompt_forgot() {
 	forgot_popup.appendChild(form);
 	forgot_popup.appendChild(login_btn);
 
-	popup.create(forgot_popup);
+	popup_s.create(forgot_popup);
 	init_text_input();
 	init_reCAPTCHA();
-	popup.close();
-	popup.open(forgot_popup);
+	popup_s.close();
+	popup_s.open(forgot_popup);
 }
 function prompt_email_code(existing_data) {
-	let code_popup = DOM.q('popup[email_code]');
+	let code_popup = DOM.q('popup_s[email_code]');
 	if (code_popup) {
-		popup.open(code_popup);
+		popup_s.open(code_popup);
 		return;
 	}
 	const code_singles = [];
@@ -330,7 +330,7 @@ function prompt_email_code(existing_data) {
 			}
 		}
 	});
-	code_popup = DOM.create('popup',{
+	code_popup = DOM.create('popup_s',{
 		attributes: {
 			email_code: ""
 		},
@@ -344,9 +344,9 @@ function prompt_email_code(existing_data) {
 			})
 		]
 	});
-	popup.create(code_popup);
+	popup_s.create(code_popup);
 	init_reCAPTCHA();
-	popup.open(code_popup);
+	popup_s.open(code_popup);
 }
 window.expose = window.expose || {};
 window.expose.prompt_login = prompt_login;

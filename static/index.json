@@ -1,24 +1,24 @@
 {
     "search": {
         "css": [
-            "css/components/loader",
-            "css/components/tooltips",
-            "css/js-components/checkbox",
-            "external/noUiSlider/nouislider",
-            "css/views/search-tags",
-            "css/views/search-content",
-            "css/views/search-filters",
-            "css/views/search-filterFandom"
+            "css\/components\/loader",
+            "css\/components\/tooltips",
+            "css\/js-components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "css\/views\/search-tags",
+            "css\/views\/search-content",
+            "css\/views\/search-filters",
+            "css\/views\/search-filterFandom"
         ],
         "js": [
             "service",
-            "js/components/checkbox",
-            "external/noUiSlider/nouislider",
-            "js/views/search-content",
-            "js/views/search-filters",
-            "js/views/search-offline",
-            "js/views/search-filterFandom",
-            "js/views/search-autoload"
+            "js\/components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "js\/views\/search-content",
+            "js\/views\/search-filters",
+            "js\/views\/search-offline",
+            "js\/views\/search-filterFandom",
+            "js\/views\/search-autoload"
         ],
         "mix": [
             "idb",
@@ -29,30 +29,30 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "da881beb368840e62547f0bd8e4cad74c5cdd9af",
-        "js_hash": "0599c4543f999edeaa776844feaee675e2c596a2"
+        "css_hash": "5d63b5dc40da8056d9da8f83731d3ae630666c3d",
+        "js_hash": "5948e190eb7b97a36be1ce95e9cee6cf238a38b4"
     },
     "beta-global": {
         "css": [
-            "beta/beta"
+            "beta\/beta"
         ],
         "js": [
-            "js/DOM",
-            "js/helpers",
-            "js/components/text-input",
-            "js/components/popup",
-            "js/components/toast",
-            "beta/beta"
+            "js\/DOM",
+            "js\/helpers",
+            "js\/components\/text-input",
+            "js\/components\/popup_s",
+            "js\/components\/toast",
+            "beta\/beta"
         ],
         "mix": [
             "idb"
         ],
-        "css_hash": "3d4d0085187165da1c923170b6d89c06adaeb672",
-        "js_hash": "0030ea9af095491447d48390acf29dbbe78dcbdb"
+        "css_hash": "1c73e6edba6f5103faa1820eb70e12a0844c77ba",
+        "js_hash": "0e43a82c046eadfd8f8fac3b2bea5d9059747a65"
     },
     "my-books": {
         "css": [
-            "css/views/my-books"
+            "css\/views\/my-books"
         ],
         "js": [
             "service"
@@ -62,39 +62,39 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "fdc018cac4b56d807cc8e798709b964eaa1e471e",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "a7113a9112e7dce6a0cdb938470bdedbedf79449",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "collection-index": {
         "css": [
-            "css/components/grid",
-            "css/components/tooltips",
-            "css/components/select",
-            "css/views/collection-content",
-            "css/views/collection-options",
-            "css/views/global-collections"
+            "css\/components\/grid",
+            "css\/components\/tooltips",
+            "css\/components\/select",
+            "css\/views\/collection-content",
+            "css\/views\/collection-options",
+            "css\/views\/global-collections"
         ],
         "js": [
             "service",
-            "js/views/collection-options",
-            "js/views/collection-content",
-            "js/views/global-collections"
+            "js\/views\/collection-options",
+            "js\/views\/collection-content",
+            "js\/views\/global-collections"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "7dde9c89ca387c57d823c20085e47f16a3821a44",
-        "js_hash": "c530e80a2720262bab09deb4fc25e56a4c913600"
+        "css_hash": "71d84d106235a52bba4644e9bc23732ddcfd53a6",
+        "js_hash": "245c1f948a78efc32d3da5bca2f370284d3d205e"
     },
     "home": {
         "css": [
-            "css/views/home-main"
+            "css\/views\/home-main"
         ],
         "js": [
             "service",
-            "js/views/home-main"
+            "js\/views\/home-main"
         ],
         "mix": [
             "idb",
@@ -102,13 +102,13 @@
             "intro",
             "glide_js"
         ],
-        "css_hash": "5cfa182a4bbc3d2ada4a40e8305a8e881ca68938",
-        "js_hash": "ba1d8d7e750438366022c8cf81ec81e6f4c14671"
+        "css_hash": "47f3a5d4f13bfaaedc6b100d3770514cbb41401e",
+        "js_hash": "2aa27ae1836b4d7aef9358d514ffc05e9208cc18"
     },
     "react-select-ps": {
         "css": [],
         "js": [
-            "external/react-select/react-select"
+            "external\/react-select\/react-select"
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -116,33 +116,33 @@
     },
     "edit-book": {
         "css": [
-            "css/components/notices",
-            "css/components/select",
-            "css/components/collapsible",
-            "css/js-components/switch",
-            "css/components/index",
-            "css/js-components/ask",
-            "css/components/folders",
-            "css/components/tooltips",
-            "css/views/drafts-index",
-            "css/views/book-edit",
-            "css/views/book-edit-submit"
+            "css\/components\/notices",
+            "css\/components\/select",
+            "css\/components\/collapsible",
+            "css\/js-components\/switch",
+            "css\/components\/index",
+            "css\/js-components\/ask",
+            "css\/components\/folders",
+            "css\/components\/tooltips",
+            "css\/views\/drafts-index",
+            "css\/views\/book-edit",
+            "css\/views\/book-edit-submit"
         ],
         "js": [
             "service",
-            "external/draggable/draggable.bundle",
-            "js/components/ask",
-            "js/views/drafts-index",
-            "js/views/book-edit-submit",
-            "js/views/book-edit"
+            "external\/draggable\/draggable.bundle",
+            "js\/components\/ask",
+            "js\/views\/drafts-index",
+            "js\/views\/book-edit-submit",
+            "js\/views\/book-edit"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "671f695a709c3de82b602fd9503cb575ddef6dc9",
-        "js_hash": "43becc3a57bce31304e79fb6e6b909436726e18a"
+        "css_hash": "88d1b8d31289a4ed4de18d3dbdb4c82161e71009",
+        "js_hash": "408430d917c6d95c7fe8f7c8a570ec2f950c5c24"
     },
     "global": {
         "css": [],
@@ -154,23 +154,23 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "8e87f17fb70fd72a9828afd104cc9223accadaf8",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "fc0c7dd5c1fd48dd8da5ad597e22a987667d78c5",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "author-about": {
         "css": [
-            "css/views/author-header",
-            "css/components/tooltips",
-            "css/components/floater",
-            "/css/components/divider",
-            "/css/views/author-about",
-            "/css/views/updates-add"
+            "css\/views\/author-header",
+            "css\/components\/tooltips",
+            "css\/components\/floater",
+            "\/css\/components\/divider",
+            "\/css\/views\/author-about",
+            "\/css\/views\/updates-add"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "/js/views/author-about",
-            "/js/views/updates-add"
+            "js\/views\/author-header",
+            "\/js\/views\/author-about",
+            "\/js\/views\/updates-add"
         ],
         "mix": [
             "idb",
@@ -180,31 +180,31 @@
             "search-content",
             "updates-content"
         ],
-        "css_hash": "9e6f7b8c62beb94e05608829101c47c5367ecc5c",
-        "js_hash": "a82d9e6bcc91765154d3d3c3f93295af5213705b"
+        "css_hash": "8461986405c62ad1c0a206ead491e03c76f936a0",
+        "js_hash": "f50e9bc44fa8c077ffecdc33318fda5ba7d8a78b"
     },
     "author-stories": {
         "css": [
-            "css/views/author-header",
-            "css/components/floater",
-            "css/components/loader",
-            "css/components/tooltips",
-            "css/js-components/checkbox",
-            "external/noUiSlider/nouislider",
-            "css/views/search-tags",
-            "css/views/search-content",
-            "css/views/search-filters",
-            "css/views/search-filterFandom"
+            "css\/views\/author-header",
+            "css\/components\/floater",
+            "css\/components\/loader",
+            "css\/components\/tooltips",
+            "css\/js-components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "css\/views\/search-tags",
+            "css\/views\/search-content",
+            "css\/views\/search-filters",
+            "css\/views\/search-filterFandom"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "js/components/checkbox",
-            "external/noUiSlider/nouislider",
-            "js/views/search-content",
-            "js/views/search-filters",
-            "js/views/search-offline",
-            "js/views/search-filterFandom"
+            "js\/views\/author-header",
+            "js\/components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "js\/views\/search-content",
+            "js\/views\/search-filters",
+            "js\/views\/search-offline",
+            "js\/views\/search-filterFandom"
         ],
         "mix": [
             "idb",
@@ -215,20 +215,20 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "21791462a3f948be89d14e8cdf41a3fcd7167832",
-        "js_hash": "974e3cba0ab39739dd4d14513600c572fafb5e68"
+        "css_hash": "c4ab8b570320ca15a5b7ca96f7f105e23835532d",
+        "js_hash": "7a4e9f1482c51b4f7be9937a29dcae33b2dc3c64"
     },
     "author-updates": {
         "css": [
-            "css/views/author-header",
-            "css/components/tooltips",
-            "css/components/floater",
-            "/css/views/updates-add"
+            "css\/views\/author-header",
+            "css\/components\/tooltips",
+            "css\/components\/floater",
+            "\/css\/views\/updates-add"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "/js/views/updates-add"
+            "js\/views\/author-header",
+            "\/js\/views\/updates-add"
         ],
         "mix": [
             "idb",
@@ -236,66 +236,66 @@
             "intro",
             "updates-content"
         ],
-        "css_hash": "2a8e563d514f551a37946968b5f257e48e02fc04",
-        "js_hash": "59132be4d88972b0ff9a5fc8f3e4f293687178b2"
+        "css_hash": "34897442fc7a401922ef2b800ae8ac0a6234bdeb",
+        "js_hash": "6febd232d334bbadedefc184f45915d1d83e9031"
     },
     "author-collections": {
         "css": [
-            "css/views/author-header",
-            "css/components/floater",
-            "css/components/grid",
-            "css/components/tooltips",
-            "css/components/select",
-            "css/views/collection-content",
-            "css/views/collection-options",
-            "css/views/global-collections"
+            "css\/views\/author-header",
+            "css\/components\/floater",
+            "css\/components\/grid",
+            "css\/components\/tooltips",
+            "css\/components\/select",
+            "css\/views\/collection-content",
+            "css\/views\/collection-options",
+            "css\/views\/global-collections"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "js/views/collection-options",
-            "js/views/collection-content",
-            "js/views/global-collections"
+            "js\/views\/author-header",
+            "js\/views\/collection-options",
+            "js\/views\/collection-content",
+            "js\/views\/global-collections"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "e4a8a73145be3fd163883160616bf6a83f9f48bc",
-        "js_hash": "249e2119300112715789fa94667ec9bf389942ee"
+        "css_hash": "b9ee00d360b2346bb998a4891c14ef3a26934d13",
+        "js_hash": "c17f499b8f0b7c64a6e77cb4b68f897624c0b9a6"
     },
     "author-settings": {
         "css": [
-            "css/views/author-header",
-            "css/components/tooltips",
-            "css/components/floater",
-            "/css/components/collapsible",
-            "/css/js-components/switch",
-            "/css/views/author-settings"
+            "css\/views\/author-header",
+            "css\/components\/tooltips",
+            "css\/components\/floater",
+            "\/css\/components\/collapsible",
+            "\/css\/js-components\/switch",
+            "\/css\/views\/author-settings"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "/js/components/switch",
-            "/js/views/author-settings"
+            "js\/views\/author-header",
+            "\/js\/components\/switch",
+            "\/js\/views\/author-settings"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "e6860490592b997dec7745af98ab6f7719ecbc2e",
-        "js_hash": "06b1e0e52504512868842e64064ce16698a0cbea"
+        "css_hash": "8d065661d7fdd525d9d40beb6c52b44ebbad4ccf",
+        "js_hash": "ae4d03892c0940c41c618162f0ccabd14526182f"
     },
     "inbox": {
         "css": [
-            "css/components/tooltips",
-            "css/views/inbox-list"
+            "css\/components\/tooltips",
+            "css\/views\/inbox-list"
         ],
         "js": [
             "service",
-            "js/views/inbox-list"
+            "js\/views\/inbox-list"
         ],
         "mix": [
             "idb",
@@ -303,25 +303,25 @@
             "intro",
             "confirmation"
         ],
-        "css_hash": "07f0449cb356e3255aeefa4a6879c4ba2a9709a5",
-        "js_hash": "2de438a4f5c50e9e5fb47a1328f226cca829263b"
+        "css_hash": "7f662deec96d9c538b93717d0a28ac63afca1b46",
+        "js_hash": "ecd10f65875a124fec0225169195b842328bf0ca"
     },
     "drafts-index": {
         "css": [
-            "css/js-components/ask",
-            "css/components/folders",
-            "css/components/floater",
-            "css/views/drafts-index",
-            "css/views/drafts-indexNew",
-            "css/views/drafts-indexActions"
+            "css\/js-components\/ask",
+            "css\/components\/folders",
+            "css\/components\/floater",
+            "css\/views\/drafts-index",
+            "css\/views\/drafts-indexNew",
+            "css\/views\/drafts-indexActions"
         ],
         "js": [
             "service",
-            "external/draggable/draggable.bundle",
-            "js/components/ask",
-            "js/views/drafts-index",
-            "js/views/drafts-indexNew",
-            "js/views/drafts-indexActions"
+            "external\/draggable\/draggable.bundle",
+            "js\/components\/ask",
+            "js\/views\/drafts-index",
+            "js\/views\/drafts-indexNew",
+            "js\/views\/drafts-indexActions"
         ],
         "mix": [
             "idb",
@@ -329,8 +329,8 @@
             "intro",
             "confirmation"
         ],
-        "css_hash": "829dfeb39befc369c77f33f3255bc532de2c5df5",
-        "js_hash": "4e09cc9593cc4d27297b4e4269adf44a04ca6f42"
+        "css_hash": "cb4aaa170eac9bbcdfe49d0a68b19ee7f085bad8",
+        "js_hash": "48f8d657da80675bf7fa31370a4261eac7b8496f"
     },
     "drafts-editSlate-ps": {
         "css": [],
@@ -345,31 +345,31 @@
     },
     "drafts-edit": {
         "css": [
-            "css/components/notices",
-            "css/components/index",
-            "css/components/collapsible",
-            "css/components/loader",
-            "css/js-components/sidenav",
-            "css/views/drafts-edit",
-            "css/views/drafts-editThesaurus",
-            "css/views/drafts-editRevisions",
-            "css/views/drafts-editButtons",
-            "css/views/drafts-editPublish",
-            "css/views/story-content",
-            "css/views/drafts-editShortcuts"
+            "css\/components\/notices",
+            "css\/components\/index",
+            "css\/components\/collapsible",
+            "css\/components\/loader",
+            "css\/js-components\/sidenav",
+            "css\/views\/drafts-edit",
+            "css\/views\/drafts-editThesaurus",
+            "css\/views\/drafts-editRevisions",
+            "css\/views\/drafts-editButtons",
+            "css\/views\/drafts-editPublish",
+            "css\/views\/story-content",
+            "css\/views\/drafts-editShortcuts"
         ],
         "js": [
             "service",
-            "external/timeago/timeago",
-            "js/components/sidenav",
-            "js/views/drafts-editReact",
-            "js/views/drafts-edit",
-            "js/views/drafts-editThesaurus",
-            "js/views/drafts-editRevisions",
-            "js/views/drafts-editButtons",
-            "js/views/drafts-editPost",
-            "js/views/drafts-editPublish",
-            "js/views/drafts-editShortcuts"
+            "external\/timeago\/timeago",
+            "js\/components\/sidenav",
+            "js\/views\/drafts-editReact",
+            "js\/views\/drafts-edit",
+            "js\/views\/drafts-editThesaurus",
+            "js\/views\/drafts-editRevisions",
+            "js\/views\/drafts-editButtons",
+            "js\/views\/drafts-editPost",
+            "js\/views\/drafts-editPublish",
+            "js\/views\/drafts-editShortcuts"
         ],
         "mix": [
             "idb",
@@ -377,18 +377,18 @@
             "intro",
             "confirmation"
         ],
-        "css_hash": "6a55e9b317b65656ae77db9e91fea9b0427d62a5",
-        "js_hash": "83e319b45254fd85ce00216ff4d96d76aa873773"
+        "css_hash": "c307295532da714c7d685e6f6a10181d4c7e680e",
+        "js_hash": "c938db5a72f7a185f915cb16578a6e5f1121afbc"
     },
     "import-stories": {
         "css": [
-            "css/js-components/checkbox",
-            "css/components/notices",
-            "css/views/import-main"
+            "css\/js-components\/checkbox",
+            "css\/components\/notices",
+            "css\/views\/import-main"
         ],
         "js": [
             "service",
-            "js/views/import-main"
+            "js\/views\/import-main"
         ],
         "mix": [
             "idb",
@@ -396,48 +396,48 @@
             "intro",
             "confirmation"
         ],
-        "css_hash": "8b9567035e93eda7526256e55de07a35bb9b9079",
-        "js_hash": "b7bb96e08be2d760adf4c64a86bb44fc77346d7b"
+        "css_hash": "9429fbeb231039a0818a65d9093001065fb97311",
+        "js_hash": "e8ff750744129163df4b7939450e9ce7bdeb2dcb"
     },
     "contact": {
         "css": [],
         "js": [
             "service",
-            "js/views/contact-main"
+            "js\/views\/contact-main"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "8e87f17fb70fd72a9828afd104cc9223accadaf8",
-        "js_hash": "d7b60fd6be89f7cfdff3fda24b7209ac9bd8b483"
+        "css_hash": "fc0c7dd5c1fd48dd8da5ad597e22a987667d78c5",
+        "js_hash": "91156ec679d64cc5d5bcf4c3709d6d01d36d23bf"
     },
     "connections-home": {
         "css": [
-            "css/components/notices",
-            "css/views/connections-home"
+            "css\/components\/notices",
+            "css\/views\/connections-home"
         ],
         "js": [
             "service",
-            "js/views/connections-home"
+            "js\/views\/connections-home"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "bac83d419a58a1e6fc5787aaf66cd645b068328c",
-        "js_hash": "ebf95d795da9a6787a5f9b9de617ceaffa96dbf0"
+        "css_hash": "b8197c1e042bd07d7c445f29f17ecf55b90aed21",
+        "js_hash": "8a2eecafb06aff41c72bf455338f3873f141124b"
     },
     "create-fandom": {
         "css": [
-            "css/components/select",
-            "css/views/createFandom-main"
+            "css\/components\/select",
+            "css\/views\/createFandom-main"
         ],
         "js": [
             "service",
-            "js/views/createFandom-main"
+            "js\/views\/createFandom-main"
         ],
         "mix": [
             "idb",
@@ -445,131 +445,131 @@
             "intro",
             "autocomplete"
         ],
-        "css_hash": "115aa19c11c794ea0e50536e3340c97fc97ae32a",
-        "js_hash": "7d3ef0c0eddc746324e2bae6ecec34cff7d456ed"
+        "css_hash": "d239c05dab615d3085e54cf2aa567971d45ff7da",
+        "js_hash": "b4d9a4edd76c00ab21d4360da19c292d06ca6cce"
     },
     "faq": {
         "css": [
-            "css/components/collapsible",
-            "css/views/faq-main"
+            "css\/components\/collapsible",
+            "css\/views\/faq-main"
         ],
         "js": [
             "service",
-            "js/views/faq-main"
+            "js\/views\/faq-main"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "064c0db0ef924b8bd3e5e4395aeaee357f319f30",
-        "js_hash": "9646f81b14828f57867d8dd1da92d37623c6cd36"
+        "css_hash": "d7fa1e43750da45227188a4c62032eb19252e152",
+        "js_hash": "4df18338a698b3f64b3c19be1caad4d038c0cc6a"
     },
     "dash-home": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/views/dash-home"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/views\/dash-home"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "2dc141193bd9e6d9d2475dfa59459839272015bc",
-        "js_hash": "d07ff270a703cc3ede15fb1b7011fe0baeff7cd5"
+        "css_hash": "65a11426aa321b70848b2de4fe337596cf17ca68",
+        "js_hash": "e1ea802e65128e7b95e1d8d7e32878ebaa09e81d"
     },
     "dash-faq": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/views/dash-faq"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/views\/dash-faq"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-faq"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-faq"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "2488743f53cc7da1c4bb3e7e4aaf02817e994d2e",
-        "js_hash": "cfe672ebce94534d88e7d0814309025bd2fbda7e"
+        "css_hash": "4f90646905c81fc9bcb2216d4cab36adf6f78685",
+        "js_hash": "2ba18ddfcfb5ded7f51cc1e5d96a8b1eab817fca"
     },
     "dash-tags": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/components/select",
-            "css/components/index",
-            "css/views/dash-tags"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/components\/select",
+            "css\/components\/index",
+            "css\/views\/dash-tags"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-tags"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-tags"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "76c060121d0e6c9c81dc5b75e397f18f50323186",
-        "js_hash": "f97ded3c3e7074dadd33d4b050ae503e2a5c8346"
+        "css_hash": "2bf9efe7c84770054c01fe0f4e7c230d3d4a3bc9",
+        "js_hash": "fce9efa2a578a8222fc8e08fb1517d86f8fca550"
     },
     "dash-contact": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/views/dash-contact"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/views\/dash-contact"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-contact"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-contact"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "3da76fefe818c182088f5bac2aa54d8ef96c8424",
-        "js_hash": "1d1601d5f61a17db1be704f4d475103fb0bb8714"
+        "css_hash": "4ee2cd83fb3ae6e2971f0a2ef508b71c0f196150",
+        "js_hash": "f28e8ea8f9edd4d0d98a67fb99e52a83ae7857a8"
     },
     "dash-reimport": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/components/index"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/components\/index"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-reimport"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-reimport"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "699ad3374e045f35e8ce3f64b97226860d1a1396",
-        "js_hash": "4845782bd13fc95660c2e5500eea9d185eb21b62"
+        "css_hash": "a20624013c67c4bce28abf2505b8d9107c10d1e5",
+        "js_hash": "0eecc69b1ee03bad8706efcd57cb726282382420"
     },
     "manage": {
         "css": [
-            "css/components/collapsible",
-            "css/components/index"
+            "css\/components\/collapsible",
+            "css\/components\/index"
         ],
         "js": [
             "service"
@@ -579,8 +579,8 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "467829ac20a2e2d14e6433cec647287457f88002",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "8e6eaef5da94c452ccdeadb856a01c4b0c96050a",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "react-ps": {
         "css": [],
@@ -593,31 +593,31 @@
     },
     "chapters": {
         "css": [
-            "css/components/options",
-            "css/js-components/checkbox",
-            "css/components/loader",
-            "css/components/tooltips",
-            "css/components/slider",
-            "css/views/chapter-index",
-            "css/views/chapter-main",
-            "css/views/chapter-reviews",
-            "css/views/chapter-writeReview",
-            "css/views/chapter-acs",
-            "css/views/chapter-search",
-            "css/js-components/menu"
+            "css\/components\/options",
+            "css\/js-components\/checkbox",
+            "css\/components\/loader",
+            "css\/components\/tooltips",
+            "css\/components\/slider",
+            "css\/views\/chapter-index",
+            "css\/views\/chapter-main",
+            "css\/views\/chapter-reviews",
+            "css\/views\/chapter-writeReview",
+            "css\/views\/chapter-acs",
+            "css\/views\/chapter-search",
+            "css\/js-components\/menu"
         ],
         "js": [
             "service",
-            "external/nosleep/NoSleep",
-            "js/views/chapter-reviews",
-            "js/views/chapter-main",
-            "js/views/chapter-acs",
-            "js/views/chapter-search",
-            "js/views/reviews-list",
-            "js/views/chapter-tracking",
-            "js/views/chapter-offline",
-            "js/components/menu",
-            "js/views/chapter-options"
+            "external\/nosleep\/NoSleep",
+            "js\/views\/chapter-reviews",
+            "js\/views\/chapter-main",
+            "js\/views\/chapter-acs",
+            "js\/views\/chapter-search",
+            "js\/views\/reviews-list",
+            "js\/views\/chapter-tracking",
+            "js\/views\/chapter-offline",
+            "js\/components\/menu",
+            "js\/views\/chapter-options"
         ],
         "mix": [
             "idb",
@@ -627,22 +627,22 @@
             "confirmation",
             "story-options"
         ],
-        "css_hash": "1d4627b70eec12808cd4cdce429187472d6830ef",
-        "js_hash": "4d19bcd3d0e85d7b16cbb2f8a748b06107bcb69f"
+        "css_hash": "7a5be620c18b9a8df7a7bc4fd5bbf93bab22aeeb",
+        "js_hash": "55ab5815b6a790c4b9b51932ae4f66ad3ee7273a"
     },
     "book": {
         "css": [
-            "css/components/collapsible",
-            "css/components/tooltips",
-            "/css/components/floater",
-            "css/views/chapter-index",
-            "css/views/search-tags",
-            "css/views/book-main"
+            "css\/components\/collapsible",
+            "css\/components\/tooltips",
+            "\/css\/components\/floater",
+            "css\/views\/chapter-index",
+            "css\/views\/search-tags",
+            "css\/views\/book-main"
         ],
         "js": [
             "service",
-            "js/views/book-main",
-            "js/views/book-offline"
+            "js\/views\/book-main",
+            "js\/views\/book-offline"
         ],
         "mix": [
             "idb",
@@ -651,15 +651,15 @@
             "story-options",
             "confirmation"
         ],
-        "css_hash": "8a3745198551daa5af1a2cdb2578b3e55a23463b",
-        "js_hash": "30fd5f1bf03b7f9d9da6bb907bb3e6751ab38e43"
+        "css_hash": "bfa45ec703a810a516254aa3415986529920c4ad",
+        "js_hash": "4f7a60c954487f00d41fc6adb6c69ed9bce0e80f"
     },
     "story-stats": {
         "css": [
-            "css/components/index",
-            "css/components/collapsible",
-            "css/components/overview",
-            "css/views/book-stats"
+            "css\/components\/index",
+            "css\/components\/collapsible",
+            "css\/components\/overview",
+            "css\/views\/book-stats"
         ],
         "js": [
             "service"
@@ -669,21 +669,21 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "582c8c4840e2d2e2fd56f6ef1d3272930cf86fb2",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "40ec2206fb0df8c0cbe79ca9eb7dee5e196c095a",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "drafts-preview": {
         "css": [
-            "css/views/chapter-acs",
-            "css/views/drafts-index",
-            "css/views/drafts-preview",
-            "css/components/folders"
+            "css\/views\/chapter-acs",
+            "css\/views\/drafts-index",
+            "css\/views\/drafts-preview",
+            "css\/components\/folders"
         ],
         "js": [
             "service",
-            "js/views/chapter-acs",
-            "js/views/drafts-index",
-            "js/views/drafts-preview"
+            "js\/views\/chapter-acs",
+            "js\/views\/drafts-index",
+            "js\/views\/drafts-preview"
         ],
         "mix": [
             "idb",
@@ -691,34 +691,34 @@
             "intro",
             "speak"
         ],
-        "css_hash": "f85f5e4f9c6c57c6745e0505200248e3a7568e47",
-        "js_hash": "9fa5aee86f5be8a606ef24c02a5befff492bec55"
+        "css_hash": "e5300adae445b07a20346c3b197405bf854aff89",
+        "js_hash": "b18b9b86a13a2342295a3ed4f03c2e668a2163e7"
     },
     "collection-single": {
         "css": [
-            "css/components/grid",
-            "css/views/collection-content",
-            "css/views/collection-single",
-            "css/components/loader",
-            "css/components/tooltips",
-            "css/js-components/checkbox",
-            "external/noUiSlider/nouislider",
-            "css/views/search-tags",
-            "css/views/search-content",
-            "css/views/search-filters",
-            "css/views/search-filterFandom"
+            "css\/components\/grid",
+            "css\/views\/collection-content",
+            "css\/views\/collection-single",
+            "css\/components\/loader",
+            "css\/components\/tooltips",
+            "css\/js-components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "css\/views\/search-tags",
+            "css\/views\/search-content",
+            "css\/views\/search-filters",
+            "css\/views\/search-filterFandom"
         ],
         "js": [
             "service",
-            "js/views/collection-options",
-            "js/views/collection-content",
-            "js/components/checkbox",
-            "external/noUiSlider/nouislider",
-            "js/views/search-content",
-            "js/views/search-filters",
-            "js/views/search-offline",
-            "js/views/search-filterFandom",
-            "js/views/search-autoload"
+            "js\/views\/collection-options",
+            "js\/views\/collection-content",
+            "js\/components\/checkbox",
+            "external\/noUiSlider\/nouislider",
+            "js\/views\/search-content",
+            "js\/views\/search-filters",
+            "js\/views\/search-offline",
+            "js\/views\/search-filterFandom",
+            "js\/views\/search-autoload"
         ],
         "mix": [
             "idb",
@@ -729,58 +729,58 @@
             "story-options",
             "autocomplete"
         ],
-        "css_hash": "074c070718d2958ba5726df919b63a462a3aaab6",
-        "js_hash": "c1b8ea23b3ae0e37e3d5c47634d09c1945dc8399"
+        "css_hash": "9cdfab82767c1677aa924cd474d48044502371a8",
+        "js_hash": "aaae3220d490ffae7652be1b6223f830bdcc9cb4"
     },
     "author-following": {
         "css": [
-            "css/views/author-header",
-            "css/components/tooltips",
-            "css/components/floater",
-            "/css/views/author-following"
+            "css\/views\/author-header",
+            "css\/components\/tooltips",
+            "css\/components\/floater",
+            "\/css\/views\/author-following"
         ],
         "js": [
             "service",
-            "js/views/author-header",
-            "/js/views/author-following"
+            "js\/views\/author-header",
+            "\/js\/views\/author-following"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "334ffb0608f4c7bb8561a6a098181588e40b80fa",
-        "js_hash": "b37a5134b1dcb01d230564476ac6026ef03cb6a4"
+        "css_hash": "1fd8948375ed803260aae141029322a6b377793b",
+        "js_hash": "930bb2cb6669ae20a36e037f8524bcb7adf2a5da"
     },
     "dash-beta": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/components/overview",
-            "css/components/index"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/components\/overview",
+            "css\/components\/index"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-beta"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-beta"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "ea137e3cc3e325a5279f2ab1a4509faf66a0677f",
-        "js_hash": "e5382e82b0059a9b48f59d84c3073104b57294f1"
+        "css_hash": "81dc2a0a946a2cd2a38acb517b22658191be79d0",
+        "js_hash": "92a443bcf50572f7dc149802e33a63c98aa451b6"
     },
     "book-edit-dev": {
         "css": [],
         "js": [
-            "js/views/book-edit.jsx"
+            "js\/views\/book-edit.jsx"
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
-        "js_hash": "e5382e82b0059a9b48f59d84c3073104b57294f1"
+        "js_hash": "92a443bcf50572f7dc149802e33a63c98aa451b6"
     },
     "book-edit-dev1": {
         "css": [],
@@ -804,7 +804,7 @@
     "drafts-editSlateDev1": {
         "css": [],
         "js": [
-            "js/views/drafts-editReact.jsx"
+            "js\/views\/drafts-editReact.jsx"
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -812,38 +812,38 @@
     },
     "help-home": {
         "css": [
-            "css/js-components/menu",
-            "css/js-components/autocomplete",
-            "css/views/help-home"
+            "css\/js-components\/menu",
+            "css\/js-components\/autocomplete",
+            "css\/views\/help-home"
         ],
         "js": [
             "service",
-            "js/components/autocomplete",
-            "js/views/help-home"
+            "js\/components\/autocomplete",
+            "js\/views\/help-home"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "3749f20f350c55081d283933f5ad6c13c157f813",
-        "js_hash": "57f40b0024ae77f5667e564334c7dce545e4420f"
+        "css_hash": "35cfd31a4b76cbe5ce2c62bd8390f0df0683b7d1",
+        "js_hash": "fbb04bdb100dd941323521feb4f7ca3bac47b4e2"
     },
     "guides-home": {
         "css": [
-            "css/views/guides-home"
+            "css\/views\/guides-home"
         ],
         "js": [
             "service",
-            "js/views/guides-home"
+            "js\/views\/guides-home"
         ],
         "mix": [
             "idb",
             "global_new",
             "intro"
         ],
-        "css_hash": "74e58064daac4a2383c7a5ba1fc186c02c07712b",
-        "js_hash": "364998f41eb6af9999489f9914f9b1b87a026dac"
+        "css_hash": "df1533d0c1ca0c8a41a72d387f0d8aeaeb79edc4",
+        "js_hash": "e3ec15a6bd092e585e59319dd5b9f998d83dc963"
     },
     "inbox-dev": {
         "css": [],
@@ -858,7 +858,7 @@
     "inbox-dev2": {
         "css": [],
         "js": [
-            "js/views/inbox-list.jsx"
+            "js\/views\/inbox-list.jsx"
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -866,15 +866,15 @@
     },
     "dash-linking": {
         "css": [
-            "css/components/floater",
-            "css/js-components/sidenav",
-            "css/components/index"
+            "css\/components\/floater",
+            "css\/js-components\/sidenav",
+            "css\/components\/index"
         ],
         "js": [
             "service",
-            "js/components/sidenav",
-            "js/views/dash-main",
-            "js/views/dash-linking"
+            "js\/components\/sidenav",
+            "js\/views\/dash-main",
+            "js\/views\/dash-linking"
         ],
         "mix": [
             "idb",
@@ -882,8 +882,8 @@
             "intro",
             "confirmation"
         ],
-        "css_hash": "6981afde4d44ff802c0c8f8b550579c2fddf8ad2",
-        "js_hash": "022362600a96225df07b9c10ed1ed003f63975a5"
+        "css_hash": "1c2d295ea2e77a397fb8479817aa88fc3344a105",
+        "js_hash": "dc0683cbf035c23f0b244573f10fde34d6e4f425"
     },
     "feedback-home": {
         "css": [],
@@ -895,8 +895,8 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "8e87f17fb70fd72a9828afd104cc9223accadaf8",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "fc0c7dd5c1fd48dd8da5ad597e22a987667d78c5",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "feedback-dev": {
         "css": [],
@@ -911,7 +911,7 @@
     "feedback-dev2": {
         "css": [],
         "js": [
-            "js/views/feedback-react.jsx"
+            "js\/views\/feedback-react.jsx"
         ],
         "mix": [],
         "css_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
@@ -919,9 +919,9 @@
     },
     "feedback": {
         "css": [
-            "css/components/loader",
-            "css/views/feedback-index",
-            "css/views/feedback-topic"
+            "css\/components\/loader",
+            "css\/views\/feedback-index",
+            "css\/views\/feedback-topic"
         ],
         "js": [
             "service"
@@ -931,20 +931,20 @@
             "global_new",
             "intro"
         ],
-        "css_hash": "7c89c12e329e6b4c5cbb4a5ad5facf89044ecef7",
-        "js_hash": "d1dd9c8cd8215d0c5ed533dae239d5830413d85d"
+        "css_hash": "d2641553ceaa380b293c9a8a94e81555bd6ec2b6",
+        "js_hash": "eeff5b3f1080d7717fd43c641d8a1fced2e68650"
     },
     "feed-home": {
         "css": [
-            "css/js-components/checkbox",
-            "css/views/feed-form",
-            "css/views/feed-home"
+            "css\/js-components\/checkbox",
+            "css\/views\/feed-form",
+            "css\/views\/feed-home"
         ],
         "js": [
             "service",
-            "js/views/feed-autoload",
-            "js/views/feed-form",
-            "js/views/feed-home"
+            "js\/views\/feed-autoload",
+            "js\/views\/feed-form",
+            "js\/views\/feed-home"
         ],
         "mix": [
             "idb",
@@ -954,7 +954,7 @@
             "story-options",
             "search-content"
         ],
-        "css_hash": "42b8df8bac7057434c037b8e488fe35b1c33d40a",
-        "js_hash": "6b6bc6f8ae2171c56512eb38b0be9bb4aaf3c4bc"
+        "css_hash": "d3fa20b7beabb63cb6c843fe22dc198d37c3c570",
+        "js_hash": "483c9ac0b88ab544015402ba84f64dac6a2b2167"
     }
 }

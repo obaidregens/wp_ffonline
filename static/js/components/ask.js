@@ -30,7 +30,7 @@ function ask(string,options = null,isRequired = true,prompt = 'Enter',maxlength 
                 }
             }))
         }
-        const _p = DOM.create('popup',{
+        const _p = DOM.create('popup_s',{
             attributes: {
                 ask: ''
             },
@@ -61,12 +61,12 @@ function ask(string,options = null,isRequired = true,prompt = 'Enter',maxlength 
                 }),
             ]
         });
-        popup.create(_p,{
+        popup_s.create(_p,{
             onAfterClose: () => {
                 reject(false);
                 setTimeout(() => _p.remove());
             }
         });
-        popup.open(_p);
+        popup_s.open(_p);
     });
 }

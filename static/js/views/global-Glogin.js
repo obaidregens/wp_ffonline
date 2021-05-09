@@ -31,9 +31,9 @@ window.googleSignInRender = () => {
     return signInEl;
 };
 function prompt_create_username(existing_data) {
-	let code_popup = DOM.q('popup[create_username]');
+	let code_popup = DOM.q('popup_s[create_username]');
 	if (code_popup) {
-		popup.open(code_popup);
+		popup_s.open(code_popup);
 		return;
 	}
 	const username_input = DOM.update(create_text_input({
@@ -86,7 +86,7 @@ function prompt_create_username(existing_data) {
 			}
 		}
 	});
-	code_popup = DOM.create('popup',{
+	code_popup = DOM.create('popup_s',{
 		attributes: {
 			create_username: ""
 		},
@@ -99,6 +99,6 @@ function prompt_create_username(existing_data) {
 			})
 		]
 	});
-	popup.create(code_popup);
-	popup.open(code_popup);
+	popup_s.create(code_popup);
+	popup_s.open(code_popup);
 };

@@ -45,10 +45,10 @@ beta-bar > button::before {
     transform: scale(1.6);
 }
 /* About */
-popup[about] > p {
+popup_s[about] > p {
     white-space: break-spaces;
 }
 /* Feedback */
-popup[feedback] button{
+popup_s[feedback] button{
     float: right;
 }

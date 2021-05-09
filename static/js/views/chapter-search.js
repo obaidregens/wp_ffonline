@@ -1,4 +1,4 @@
-const search_popup = DOM.q('popup.search-story');
+const search_popup = DOM.q('popup_s.search-story');
 search_popup.addEventListener('onOpen',() => {
     window.acsSwipeEnabled = false;
     search_popup.querySelector('form > text-input:first-child > input').focus();
@@ -10,18 +10,18 @@ window.addEventListener('keydown',function(event){
     }
     event.preventDefault();
     if (search_popup.classList.contains('show')){
-        popup.close();
+        popup_s.close();
         return;
     }
-    popup.open(search_popup);
+    popup_s.open(search_popup);
 });
-DOM.q('popup.search-story > form').addEventListener('submit',function(event){
+DOM.q('popup_s.search-story > form').addEventListener('submit',function(event){
     event.preventDefault();
 	if (window.is_online === false) {
 		new toast("You're offline.");
 		return;
     }
-    const results_elem = DOM.q('popup.search-story > results');
+    const results_elem = DOM.q('popup_s.search-story > results');
     results_elem.classList.add('loading');
     api('search_book_contents',{
 		data: {

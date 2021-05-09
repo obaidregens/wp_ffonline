@@ -27,6 +27,6 @@ collection-bar > [label="Create New"]::after {
         padding-left: 26px;
     }
 }
-popup[update_collection] > a.back {
+popup_s[update_collection] > a.back {
     display: none;
 }

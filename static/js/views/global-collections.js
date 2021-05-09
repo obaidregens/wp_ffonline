@@ -1,10 +1,10 @@
 const collections = class {
     static get open_popup () {
-        let cp = DOM.q('popup.collections');
+        let cp = DOM.q('popup_s.collections');
         if (cp) {
             return cp;
         }
-        return document.documentElement.appendChild(DOM.create("popup",{
+        return document.documentElement.appendChild(DOM.create("popup_s",{
             classes: ['collections'],
             children: Object.values(collections.collections_data).map(collection => DOM.create('collection',{
                 children: [
@@ -38,7 +38,7 @@ const collections = class {
                                     "disabled": ['Favorites','Hidden'].includes(collection.title) ? "" : null
                                 },
                                 listeners: {
-                                    click: ({target}) => collections.edit(collection.ID,target.closest('popup').getAttribute('book_id'))
+                                    click: ({target}) => collections.edit(collection.ID,target.closest('popup_s').getAttribute('book_id'))
                                 }
                             })
                         ]
@@ -50,7 +50,7 @@ const collections = class {
                     innerText: "Create Collection",
                     listeners: {
                         click: ({target}) => {
-                            collections.edit('new',target.closest('popup').getAttribute('book_id'))
+                            collections.edit('new',target.closest('popup_s').getAttribute('book_id'))
                         }
                     }
                 })
@@ -62,7 +62,7 @@ const collections = class {
                     }
                     collections.api_add(
                         target.getAttribute('collection_id'),
-                        target.closest('popup').getAttribute('book_id'),
+                        target.closest('popup_s').getAttribute('book_id'),
                         target.checked
                     );
                 }
@@ -70,11 +70,11 @@ const collections = class {
         }))
     }
     static get edit_popup () {
-        let cp = DOM.q('popup[update_collection]');
+        let cp = DOM.q('popup_s[update_collection]');
         if (cp) {
             return cp;
         }
-        return document.documentElement.appendChild(DOM.create("popup",{
+        return document.documentElement.appendChild(DOM.create("popup_s",{
             attributes: {
                 update_collection: "",
             },
@@ -117,9 +117,9 @@ const collections = class {
                     classes: ['back'],
                     listeners: {
                         click: ({target}) => {
-                            const prev_book_id = target.closest('popup').getAttribute('prev_book_id');
+                            const prev_book_id = target.closest('popup_s').getAttribute('prev_book_id');
                             if (prev_book_id === 0) {
-                                popup.close();
+                                popup_s.close();
                                 return;
                             } 
                             collections.open(prev_book_id);
@@ -157,7 +157,7 @@ const collections = class {
         pop_c.querySelectorAll('label.switch > input').forEach(el => {
             el.checked = collections.book_collections[book_id].includes(el.getAttribute('collection_id'));
         } );
-        popup.open(pop_c);
+        popup_s.open(pop_c);
     }
     static edit(id,prev_book_id = 0) {
         if (!logged_in) {
@@ -172,10 +172,10 @@ const collections = class {
             pop_c.querySelector('text-input > input').dispatchEvent(new Event('change'));
             pop_c.querySelector('select').value = collections.collections_data[id].type;
         }
-        popup.open(pop_c);
+        popup_s.open(pop_c);
     }
     static async submit ({target}) {
-        const cc_popup = target.closest('popup');
+        const cc_popup = target.closest('popup_s');
         const to_delete = target.getAttribute('label') === 'Delete';
         const collection_id = cc_popup.getAttribute('collection_id') || 'new';
         const title = cc_popup.querySelector('text-input > input').value;
@@ -193,8 +193,8 @@ const collections = class {
             return;
         }
         new toast(notice);
-        if (DOM.q('popup.collections')) {
-            DOM.q('popup.collections').remove();
+        if (DOM.q('popup_s.collections')) {
+            DOM.q('popup_s.collections').remove();
         }
         collections.collections_data = collections_data;
         const ur = window.location.pathname.split('/').filter(v => v !== "");
@@ -216,9 +216,9 @@ const collections = class {
             }
             window.location.reload();
         }
-        const prev_book_id = target.closest('popup').getAttribute('prev_book_id');
+        const prev_book_id = target.closest('popup_s').getAttribute('prev_book_id');
         if (parseInt(prev_book_id) === 0) {
-            popup.close();
+            popup_s.close();
             return;
         }
         collections.open(prev_book_id);

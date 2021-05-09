@@ -81,13 +81,13 @@ function reAddChapters() {
         innerText: 'New Chapter',
         listeners: {
             click: () => {
-                const pnc = DOM.q('popup[new_chapter]');
+                const pnc = DOM.q('popup_s[new_chapter]');
                 pnc.querySelectorAll('textarea, input').forEach(el => {
                     el.value = "";
                     el.dispatchEvent(new Event('change'));
                     el.dispatchEvent(new Event('input'));
                 });
-                popup.open(pnc);
+                popup_s.open(pnc);
             }
         }
     }));
@@ -132,7 +132,7 @@ function createChapterDraggableLi(chapter) {
                         },
                         listeners: {
                             click: ({target}) => {
-                                const pnc = DOM.q('popup[new_chapter]');
+                                const pnc = DOM.q('popup_s[new_chapter]');
 
                                 const row = target.parentElement.parentElement;
                                 pnc.querySelector('text-input > input').value = row.querySelector('cell:nth-child(2)').innerText;
@@ -144,7 +144,7 @@ function createChapterDraggableLi(chapter) {
                                     el.dispatchEvent(new Event('input'));
                                 } );
                                 pnc.setAttribute('edit-chapter',chapter.ID);
-                                popup.open(pnc);
+                                popup_s.open(pnc);
                             }
                         }
                     })
@@ -178,7 +178,7 @@ function createChapterDraggableLi(chapter) {
     });
 }
 function new_chapter_popup_create() {
-    const p = DOM.create('popup',{
+    const p = DOM.create('popup_s',{
         attributes: {
             new_chapter: ''
         },
@@ -270,11 +270,11 @@ function new_chapter_popup_create() {
                 else {
                     DOM.q(`page[page-num="4"] > index > li[chapter_id="${chapter_id}"]`).replaceWith(Li);
                 }
-                popup.close();
+                popup_s.close();
             }
         }
     }));
-    popup.create(p);
+    popup_s.create(p);
     rootDraftsIndex('folder-listing',{OPT_REMOVE_FILES_CLICK: true,OPT_NEW_DRAFT_IN_NEW_TAB: true, WITH_WORDS: true});
 }
 new_chapter_popup_create();
@@ -316,8 +316,8 @@ DOM.q('submit > [label="Save"]').addEventListener('click',({target}) => {
             return;
         }
         selected = response.selected;
-        if (DOM.q('popup[new_chapter]')) {
-            DOM.q('popup[new_chapter]').remove();
+        if (DOM.q('popup_s[new_chapter]')) {
+            DOM.q('popup_s[new_chapter]').remove();
             new_chapter_popup_create();
         }
         reAddChapters();

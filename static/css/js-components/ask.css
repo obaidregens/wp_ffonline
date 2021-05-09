@@ -1,10 +1,10 @@
-popup[ask] {
+popup_s[ask] {
     max-width: 450px;
 }
-popup[ask] > p {
+popup_s[ask] > p {
     margin-top: 0;
 }
-popup[ask] > button {
+popup_s[ask] > button {
     margin-right: 0;
     float: right;
 }

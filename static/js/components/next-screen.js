@@ -36,7 +36,7 @@ const next_screen = class {
         }    
     }
     static open (_next) {
-        popup.close();
+        popup_s.close();
         next_screen.close();
         if (typeof sidenav !== 'undefined') {
             sidenav.close();
@@ -52,7 +52,7 @@ const next_screen = class {
         }
         _next.dispatchEvent(new Event('onClose'));
         _next.classList.remove('show');
-        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
+        if (DOM.qa('popup_s.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
     }

@@ -2,13 +2,13 @@ floater > button.new::before {
     transform: scale(1.2);
     content: '\e916';
 }
-popup[new-action] {
+popup_s[new-action] {
     max-width: 270px;
     height: 120px;
     display: flex;
     justify-content: space-around;
 }
-popup[new-action] > * {
+popup_s[new-action] > * {
     position: relative;
     flex-direction: column;
     width: 80px;
@@ -20,25 +20,25 @@ popup[new-action] > * {
     transition: background-color .3s, color .3s;
     color: var(--lightblack);
 }
-popup[new-action] > *:hover {
+popup_s[new-action] > *:hover {
     color: var(--theme-color);
     background-color: var(--hover);
 }
-popup[new-action] > *::before {
+popup_s[new-action] > *::before {
     font-family: 'icons';
     display: inline-block;
     transform: scale(1.5);
 }
-popup[new-action] > [label="Draft"]::before {
+popup_s[new-action] > [label="Draft"]::before {
     content: '\e941';
 }
-popup[new-action] > [label="Folder"]::before {
+popup_s[new-action] > [label="Folder"]::before {
     content: '\e940';
 }
-popup[new-action] > *::after {
+popup_s[new-action] > *::after {
     content: attr(label);
 }
-popup[ask] > p {
+popup_s[ask] > p {
     font-weight: bold;
     font-size: 1.1rem;
 }

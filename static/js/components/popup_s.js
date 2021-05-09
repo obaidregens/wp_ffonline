@@ -1,8 +1,8 @@
-const popup = class {
+const popup_s = class {
     static get overlay () {
-        let popup_overlay = DOM.q('popup-overlay');
+        let popup_overlay = DOM.q('popup_s-overlay');
         if (! popup_overlay){
-            popup_overlay = document.createElement("popup-overlay");
+            popup_overlay = document.createElement("popup_s-overlay");
             document.documentElement.appendChild(popup_overlay);            
         }
         return popup_overlay;
@@ -19,25 +19,25 @@ const popup = class {
         }
     }
     static init () {
-        const overlay = popup.overlay;
-        overlay.addEventListener('click',popup.close);
-        document.documentElement.addEventListener('click', popup.initTriggers);
+        const overlay = popup_s.overlay;
+        overlay.addEventListener('click',popup_s.close);
+        document.documentElement.addEventListener('click', popup_s.initTriggers);
     }
     static initTriggers (event) {
         if (event.target.classList.contains('popup_close')){
-            popup.close();
+            popup_s.close();
             return;
         }
         const _popup = event.target.nextElementSibling;
-        if (! event.target.classList.contains('popup') || _popup.tagName.toLowerCase() !== 'popup' ) {
+        if (! event.target.classList.contains('popup_s') || _popup.tagName.toLowerCase() !== 'popup_s' ) {
             return;
         }
-        popup.open(_popup);
+        popup_s.open(_popup);
     }
     static open (_popup) {
         setTimeout(() => {
-            popup.close();
-            const popup_overlay = popup.overlay;
+            popup_s.close();
+            const popup_overlay = popup_s.overlay;
             _popup.classList.add('show');
             popup_overlay.classList.add('show');
             document.documentElement.style.overflow = 'hidden';    
@@ -45,20 +45,20 @@ const popup = class {
         });
     }
     static close () {
-        const popup_overlay = popup.overlay;
-        const _popup = DOM.q('popup.show');
+        const popup_overlay = popup_s.overlay;
+        const _popup = DOM.q('popup_s.show');
         if ( ! _popup ){
             return;
         }
         _popup.dispatchEvent(new Event('onClose'));
         _popup.classList.remove('show');
-        if (DOM.qa('popup.show, next-screen.show, sidenav.show').length === 0){
+        if (DOM.qa('popup_s.show, next-screen.show, sidenav.show').length === 0){
             document.documentElement.style.overflow = 'auto';
         }
-        if (DOM.qa('popup.show').length === 0){
+        if (DOM.qa('popup_s.show').length === 0){
             popup_overlay.classList.remove('show');
         }
         _popup.dispatchEvent(new Event('onAfterClose'));
     }
 }
-popup.init();
+popup_s.init();

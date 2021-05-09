@@ -15,7 +15,7 @@ document.documentElement.appendChild(DOM.create('link',{
                     listeners: {
                         click: () => {
                             htmlEl.classList.remove('show-acs');
-                            popup.open(DOM.q('popup.search-story'));
+                            popup_s.open(DOM.q('popup_s.search-story'));
                         }
                     }
                 }),
@@ -37,7 +37,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 listeners: {
                     click: () => {
                         htmlEl.classList.remove('show-acs');
-                        popup.open(acs_popup);
+                        popup_s.open(acs_popup);
                     }
                 }
             }),
@@ -46,7 +46,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 listeners: {
                     click: () => {
                         htmlEl.classList.remove('show-acs');
-                        popup.open(acs_popup);
+                        popup_s.open(acs_popup);
                     }
                 }
             }),
@@ -61,7 +61,7 @@ document.documentElement.appendChild(DOM.create('link',{
                 listeners: {
                     click: () => {
                         htmlEl.classList.remove('show-acs');
-                        popup.open(DOM.q('popup.chapter-index'));
+                        popup_s.open(DOM.q('popup_s.chapter-index'));
                     }
                 }
             }),
@@ -79,15 +79,15 @@ document.documentElement.appendChild(DOM.create('link',{
     DOM.q('main').addEventListener('click',() => {
         if ( (Date.now() - timeLastClicked) < 300 ) {
             htmlEl.classList.remove('show-acs');
-            popup.open(acs_popup);
+            popup_s.open(acs_popup);
             return;
         }
         timeLastClicked = Date.now();
         htmlEl.classList.toggle('show-acs');
     });    
 })();
-const acs_popup = DOM.create('popup',{
-    classes: ['acs-popup'],
+const acs_popup = DOM.create('popup_s',{
+    classes: ['acs-popup_s'],
    children: [
        DOM.create('change-options',{
            attributes: {
@@ -210,7 +210,7 @@ const acs_popup = DOM.create('popup',{
         })
    ],
 });
-popup.create(acs_popup);
+popup_s.create(acs_popup);
 
 const min_max_acs = {
     fontSize: {
@@ -245,12 +245,12 @@ for (let i = 0; i < acs_entries.length; i++) {
     }
     else if (['fontSize','lineHeight','paragraphHeight','width'].includes(acs_.key)){
         const new_style = parseInt(acs_.value);
-        _.prop(DOM.q('.acs-popup change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
-        _.prop(DOM.q('.acs-popup change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
+        _.prop(DOM.q('.acs-popup_s change-options[action="' + acs_.key + '"] > button:last-child'), 'disabled', new_style === min_max_acs[acs_.key].max ? true : false);
+        _.prop(DOM.q('.acs-popup_s change-options[action="' + acs_.key + '"] > button:first-child'), 'disabled', new_style === min_max_acs[acs_.key].min ? true : false);
         chapter_content.style.setProperty('--' + acs_.key,new_style);
     }
 }
-DOM.q('.acs-popup').addEventListener('click',function(event){
+DOM.q('.acs-popup_s').addEventListener('click',function(event){
     const closest_change_options = event.target.closest('change-options');
     if (! closest_change_options) {
         return;

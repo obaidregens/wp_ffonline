@@ -24,7 +24,7 @@ const shareAPI = ({
         .catch(console.error);
         return;
     }
-    const share_popup = DOM.create('popup',{
+    const share_popup = DOM.create('popup_s',{
         classes: ['share'],
         children: [
             DOM.create('h1',{
@@ -74,6 +74,6 @@ const shareAPI = ({
         share_options_elem.appendChild(opt_elem);
     });
     share_popup.appendChild(share_options_elem);
-    popup.create(share_popup);
-    setTimeout(() => popup.open(share_popup));
+    popup_s.create(share_popup);
+    setTimeout(() => popup_s.open(share_popup));
 }

@@ -1,4 +1,4 @@
-const pi = DOM.create('popup',{
+const pi = DOM.create('popup_s',{
     attributes: {
         change_question: ""
     },
@@ -13,13 +13,13 @@ const pi = DOM.create('popup',{
                     DOM.q('reply > blockquote').innerText =
                     target.previousElementSibling.querySelector('textarea').value;
                     target.previousElementSibling.querySelector('textarea').dispatchEvent(new Event('change'));
-                    popup.close();
+                    popup_s.close();
                 }
             }
         })
     ]
 });
-popup.create(pi);
+popup_s.create(pi);
 DOM.qa('question-wrapper > options > a:nth-of-type(1)').forEach(el => {
     el.addEventListener('click',({target}) => {
         DOM.q('reply').classList.add('show');
@@ -42,7 +42,7 @@ DOM.qa('question-wrapper > options > a:nth-of-type(3)').forEach(el => {
     });
 });
 DOM.q('reply > a').addEventListener('click',({target}) => {
-    popup.open(pi);
+    popup_s.open(pi);
     pi.querySelector('textarea').value = target.previousElementSibling.innerText;
     pi.querySelector('textarea').dispatchEvent(new Event('change'));
 });

@@ -50,7 +50,7 @@ const setFilterFandom = (fandomN) => {
 let trigger_search;
 (() => {
     const saveSelectedTags = () => {
-        const _pop_ = DOM.q('popup[tag-name].show');
+        const _pop_ = DOM.q('popup_s[tag-name].show');
         if (! _pop_){
             return;
         }
@@ -97,7 +97,7 @@ let trigger_search;
     }
     const create_tags_popup = (tag_name) => {
         let popup_content = DOM.create('tag_list');
-        let _popup = DOM.create('popup',{
+        let _popup = DOM.create('popup_s',{
             classes: ['async'],
             attributes: {
                 "tag-name": tag_name
@@ -182,7 +182,7 @@ let trigger_search;
                 ]
             })
         ]);
-        popup.create(_popup);
+        popup_s.create(_popup);
         return _popup;
     }
     const words = (action = 'set',words) => {
@@ -260,7 +260,7 @@ let trigger_search;
         setSelectedTags(tag_name,url_selected);
         elem.addEventListener('click',function(){
             __pop = create_tags_popup(tag_name);
-            popup.open(__pop);
+            popup_s.open(__pop);
             setTimeout(() => {
                 const SearchInput = __pop.querySelector('wrap text-input > input');
                 const ac = new autocomplete(SearchInput,[],{

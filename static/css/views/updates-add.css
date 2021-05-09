@@ -11,10 +11,10 @@ author-updates > button.add-update {
 author-updates[empty] > button.add-update {
     margin-top: 50px;
 }
-popup[add-update] {
+popup_s[add-update] {
     max-width: 500px;
 }
-popup[add-update] > button {
+popup_s[add-update] > button {
     margin-left: auto;
     display: block;
 }

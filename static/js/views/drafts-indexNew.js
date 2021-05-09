@@ -1,4 +1,4 @@
-DOM.q('button.new').addEventListener('click',() => popup.open(DOM.q('popup[new-action]')))
+DOM.q('button.new').addEventListener('click',() => popup_s.open(DOM.q('popup_s[new-action]')))
 DOM.q('[label="Folder"]').addEventListener('click',() => {
     if (current_path.split('/').length >= 3) {
         new toast('Only two subfolders are allowed');

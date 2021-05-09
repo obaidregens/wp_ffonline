@@ -14,10 +14,10 @@ $draft_read = drafts_json::read($draft->content);
 ?>
 <share-link hidden><?= $draft->share; ?></share-link>
 <button draft_id="<?= $draft->ID; ?>" class="edit-draft"></button>
-<button label="Compare" class="popup"></button>
-<popup>
+<button label="Compare" class="popup_s"></button>
+<popup_s>
 <folder-listing></folder-listing>
-</popup>
+</popup_s>
 <!-- Draft -->
 <?php if ($app->type === 'drafts-share') { ?>
     <draft-meta>Shared by <a href="<?= get_author_posts_url( $user->ID ); ?>">@<?= $user->user_login ?></a></draft-meta>

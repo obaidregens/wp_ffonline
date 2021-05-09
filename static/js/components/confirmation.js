@@ -1,6 +1,6 @@
 function confirmation(string) {
     return new Promise((resolve, reject) => {
-        _p = DOM.create('popup',{
+        _p = DOM.create('popup_s',{
             attributes: {
                 confirmation: ''
             },
@@ -33,7 +33,7 @@ function confirmation(string) {
                 })
             ]
         });
-        popup.create(_p);
-        popup.open(_p);
+        popup_s.create(_p);
+        popup_s.open(_p);
     });
 }

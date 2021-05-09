@@ -1,6 +1,6 @@
 (async () => {
     // Feedback
-    const feedback_pop = DOM.create('popup',{
+    const feedback_pop = DOM.create('popup_s',{
         classes: ['bottom'],
         attributes: {
             feedback: ""
@@ -20,7 +20,7 @@
                 },
                 listeners: {
                     click: async ({target}) => {
-                        popup.close();
+                        popup_s.close();
                         const message_input = target.previousElementSibling.querySelector('input');
                         const {code} = await api('send_beta_feedback',{
                             data: {
@@ -41,9 +41,9 @@
             onOpen: ({target}) => target.querySelector('input').focus()
         }
     });
-    popup.create(feedback_pop);
+    popup_s.create(feedback_pop);
     const {id,description} = await api('get_beta');
-    const about_pop = DOM.create('popup',{
+    const about_pop = DOM.create('popup_s',{
         attributes: {
             about: ""
         },
@@ -56,7 +56,7 @@
             })
         ]
     });
-    popup.create(about_pop);
+    popup_s.create(about_pop);
     const bar = document.documentElement.appendChild(DOM.create('beta-bar',{
         children: [
             DOM.create('text',{
@@ -65,13 +65,13 @@
             DOM.create('a',{
                 innerHTML: "About",
                 listeners: {
-                    click: () => popup.open(about_pop)
+                    click: () => popup_s.open(about_pop)
                 }
             }),
             DOM.create('a',{
                 innerHTML: "Feedback",
                 listeners: {
-                    click: () => popup.open(feedback_pop)
+                    click: () => popup_s.open(feedback_pop)
                 }
             }),
             DOM.create('button',{
@@ -85,7 +85,7 @@
     if (beta_help.includes(id)) {
         return;
     }
-    popup.open(about_pop);
+    popup_s.open(about_pop);
     beta_help.push(id);
     idbKeyval.set("beta_help",JSON.stringify(beta_help));
 })();

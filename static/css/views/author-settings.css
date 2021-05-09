@@ -31,14 +31,14 @@ label.switch {
     display: block;
     margin: 15px 0;
 }
-popup[change_email_confirm] {
+popup_s[change_email_confirm] {
     max-width: 300px;
 }
-popup[change_email_confirm] button {
+popup_s[change_email_confirm] button {
     display: block;
     float: right;
 }
-popup[change_email_confirm] recaptcha > div.g-recaptcha {
+popup_s[change_email_confirm] recaptcha > div.g-recaptcha {
     transform: scale(0.55);
     margin-right: -127px;
 }

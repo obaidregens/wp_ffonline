@@ -31,7 +31,7 @@
             "js\/components\/recaptcha",
             "js\/components\/text-input",
             "js\/components\/toast",
-            "js\/components\/popup",
+            "js\/components\/popup_s",
             "js\/views\/global-login"
         ],
         "css": [
@@ -42,7 +42,7 @@
             "css\/components\/buttons",
             "css\/js-components\/text-input",
             "css\/js-components\/toast",
-            "css\/js-components\/popup",
+            "css\/js-components\/popup_s",
             "css\/views\/global-login"
         ]
     },
@@ -68,7 +68,7 @@
             "css\/components\/dropdown",
             "css\/js-components\/text-input",
             "css\/js-components\/toast",
-            "css\/js-components\/popup",
+            "css\/js-components\/popup_s",
             "css\/js-components\/next-screen",
             "css\/views\/global-Glogin",
             "css\/views\/global-login",
@@ -86,7 +86,7 @@
             "js\/components\/recaptcha",
             "js\/components\/text-input",
             "js\/components\/toast",
-            "js\/components\/popup",
+            "js\/components\/popup_s",
             "js\/components\/next-screen",
             "js\/views\/global-Glogin",
             "js\/views\/global-login",

@@ -1,61 +1,61 @@
 /* General Popups */
-popup[login],
-popup[signup],
-popup[forgot],
-popup[email_code],
-popup[create_username] {
+popup_s[login],
+popup_s[signup],
+popup_s[forgot],
+popup_s[email_code],
+popup_s[create_username] {
     max-width: 300px;
     text-align: center;
 }
-popup[login] > form,
-popup[signup] > form,
-popup[forgot] > form,
-popup[email_code] > form,
-popup[create_username] > form {
+popup_s[login] > form,
+popup_s[signup] > form,
+popup_s[forgot] > form,
+popup_s[email_code] > form,
+popup_s[create_username] > form {
     display: flex;
     flex-direction: column;
     text-align: left;
     margin-bottom: 15px;
 }
-popup[login] > form > text-input,
-popup[signup] > form > text-input,
-popup[forgot] > form > text-input,
-popup[email_code] > form > text-input,
-popup[create_username] > form > text-input {
+popup_s[login] > form > text-input,
+popup_s[signup] > form > text-input,
+popup_s[forgot] > form > text-input,
+popup_s[email_code] > form > text-input,
+popup_s[create_username] > form > text-input {
     margin: 20px 0;
 }
-popup[login] > form > recaptcha > div,
-popup[signup] > form > recaptcha > div,
-popup[forgot] > form > recaptcha > div,
-popup[email_code] > form > recaptcha > div,
-popup[create_username] > form > recaptcha > div {
+popup_s[login] > form > recaptcha > div,
+popup_s[signup] > form > recaptcha > div,
+popup_s[forgot] > form > recaptcha > div,
+popup_s[email_code] > form > recaptcha > div,
+popup_s[create_username] > form > recaptcha > div {
     transform: scale(0.55);
     margin-right: -127px;
 }
-popup[login] > form > button,
-popup[signup] > form > button,
-popup[forgot] > form > button,
-popup[email_code] > form > button,
-popup[create_username] > form > button {
+popup_s[login] > form > button,
+popup_s[signup] > form > button,
+popup_s[forgot] > form > button,
+popup_s[email_code] > form > button,
+popup_s[create_username] > form > button {
     width: 100%;
     margin: 0;
 }
-popup[login] > a::before,
-popup[signup] > a::before,
-popup[forgot] > a::before,
-popup[email_code] > a::before,
-popup[create_username] > a::before {
+popup_s[login] > a::before,
+popup_s[signup] > a::before,
+popup_s[forgot] > a::before,
+popup_s[email_code] > a::before,
+popup_s[create_username] > a::before {
     font-size: 85%;
     font-weight: bold;
     content: attr(label);
 }
 /* Login Popup */
-popup[login] > a:first-of-type::after {
+popup_s[login] > a:first-of-type::after {
     content: ' - ';
     cursor: default;
 }
 /* Forgot Popup */
-popup[forgot] > form::before {
+popup_s[forgot] > form::before {
     display: block;
     text-align: center;
     content: 'A One-Time PIN will be sent to your email.';

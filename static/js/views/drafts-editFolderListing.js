@@ -1,6 +1,6 @@
 // Folder Listing
 let OPT_REMOVE_FILES_CLICK = true;
-const folder_listing_pop = DOM.create('popup',{
+const folder_listing_pop = DOM.create('popup_s',{
     attributes: {
         prompt_location_save: ""
     },
@@ -16,7 +16,7 @@ const folder_listing_pop = DOM.create('popup',{
         })
     ]
 });
-popup.create(folder_listing_pop);
+popup_s.create(folder_listing_pop);
 function newFileSavePopup() {
     return new Promise((resolve, reject) => {
         folder_listing_pop.querySelector('button[label="Save"]').replaceWith(DOM.create('button',{
@@ -31,12 +31,12 @@ function newFileSavePopup() {
                         return;
                     }
                     resolve([current_path,draftName]);
-                    popup.close();
+                    popup_s.close();
                 },
                 onAfterClose: () => reject(false)
             },
         }));
-        popup.open(folder_listing_pop);
+        popup_s.open(folder_listing_pop);
     });
 }
 window.addEventListener('load',event => {

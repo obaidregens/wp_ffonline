@@ -23,7 +23,7 @@ button[label="Reply"] {
     display: block;
     margin-left: auto;
 }
-popup[change_question] > button {
+popup_s[change_question] > button {
     display: block;
     margin-left: auto;
 }

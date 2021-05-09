@@ -32,7 +32,7 @@ if (beta::is()) {
     $app->beta_bundle->js('js/DOM');
     $app->beta_bundle->js('js/components/helpers');
     $app->beta_bundle->js('js/components/text-input');
-    $app->beta_bundle->js('js/components/popup');
+    $app->beta_bundle->js('js/components/popup_s');
     $app->beta_bundle->js('js/components/toast');
     $app->beta_bundle->js('beta/beta');
     $app->beta_bundle->css('beta/beta');

@@ -146,7 +146,7 @@ class Router {
         <script>
         window.onload = function(){
             window.expose.prompt_login();
-            document.querySelector('popup-overlay').style.pointerEvents = 'none';
+            document.querySelector('popup_s-overlay').style.pointerEvents = 'none';
         }
         </script>
         <?php

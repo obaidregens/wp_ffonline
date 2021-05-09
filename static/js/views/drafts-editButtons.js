@@ -85,9 +85,9 @@
                     new toast("This draft is empty!");             
                     return;
                 }
-                let _p = DOM.q('popup[share_draft]');
+                let _p = DOM.q('popup_s[share_draft]');
                 if (_p) {
-                    popup.open(_p);
+                    popup_s.open(_p);
                     return;
                 }
                 const share_is = event.target.getAttribute('initial-share');
@@ -110,7 +110,7 @@
                                     click: function() {
                                         _.copyText(this.previousElementSibling.href);
                                         new toast('Copied link');
-                                        popup.close();
+                                        popup_s.close();
                                     }
                                 },
                                 attributes: {
@@ -169,14 +169,14 @@
                         ]
                     })
                 ]
-                _p = DOM.create('popup',{
+                _p = DOM.create('popup_s',{
                     attributes: {
                         share_draft: ''
                     },
                     children
                 });
-                popup.create(_p);
-                popup.open(_p);
+                popup_s.create(_p);
+                popup_s.open(_p);
             }
         }
     }));

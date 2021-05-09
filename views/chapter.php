@@ -90,17 +90,17 @@ $finished = $track['num'] === count($all_chapters) && $track['para'] === 0 && !$
 	<text>Reviews are closed.</text>
 <?php } ?>
 <reviews-wrapper></reviews-wrapper>
-<popup class="chapter-index">
+<popup_s class="chapter-index">
 	<?= $app->template('/subviews/chapter-index'); ?>
-</popup>
-<popup class="search-story">
+</popup_s>
+<popup_s class="search-story">
 	<form>
 		<text-input label="Search"></text-input>
 		<button></button>
 	</form>
 	<results></results>
 	<loader medium></loader>
-</popup>
+</popup_s>
 <?php
 $bundle = new bundle('react-ps');
 $bundle->mix('react');

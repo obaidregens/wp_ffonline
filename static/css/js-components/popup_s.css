@@ -1,4 +1,4 @@
-popup-overlay {
+popup_s-overlay {
     opacity: 0;
     width: 100%;
     height: 100%;
@@ -13,16 +13,16 @@ popup-overlay {
     will-change: opacity;
     pointer-events: none;
 }
-popup-overlay.show {
+popup_s-overlay.show {
     pointer-events: all;
     transition: opacity 0.4s;
     opacity: 0.5;
 }
-.popup {
+.popup_s {
     z-index: 54;
 }
 /* Normal Popup */
-popup {
+popup_s {
     display: block;
     overflow-y: auto;
     padding: 20px;
@@ -42,7 +42,7 @@ popup {
     /* Transition */
     will-change: transform, opacity;
 }
-popup:not(.bottom) {
+popup_s:not(.bottom) {
     top: 0;
     width: 80%;
     border-radius: 5px;
@@ -54,7 +54,7 @@ popup:not(.bottom) {
         background-color var(--theme-change) ease-in
     ;
 }
-popup:not(.bottom).show {
+popup_s:not(.bottom).show {
     transform: scale(1);
     opacity: 1;
     transition:
@@ -65,7 +65,7 @@ popup:not(.bottom).show {
     ;
 }
 /* Bottom Popup */
-popup.bottom {
+popup_s.bottom {
     width: 100%;
     border-radius: 10px 10px 0 0;
     transform-origin: bottom;
@@ -78,7 +78,7 @@ popup.bottom {
         background-color var(--theme-change) ease-in
     ;
 }
-popup.bottom.show {
+popup_s.bottom.show {
     opacity: 1;
     transition:
         transform 0.35s

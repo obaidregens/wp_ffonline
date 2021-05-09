@@ -53,5 +53,5 @@ DOM.q("folder-listing").addEventListener("click",({target}) => {
         next_screen.create(n);
         next_screen.open(n);
     });
-    popup.close();
+    popup_s.close();
 });

@@ -19,7 +19,7 @@
     margin-block-end: calc( var(--paragraphHeight) * 0.5em);
 	margin-block-start: calc( var(--paragraphHeight) * 0.5em);
 }
-.acs-popup {
+.acs-popup_s {
 	width: 240px !important;
 }
 /* Accessibility */
