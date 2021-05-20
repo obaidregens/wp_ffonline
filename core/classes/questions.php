@@ -22,7 +22,7 @@ class questions {
         ],$args);
         $e = new err;
         if ( trim($args['email']) !== "" && !filter_var($args['email'], FILTER_VALIDATE_EMAIL)){
-            $error->add('email','Invalid Format.');
+            $e->add('email','Invalid Format.');
         }
         $e->one_of('is_anonymous',$args['is_anonymous'],[0,1]);
         $e->one_of('status',$args['status'],['pending','public']);
@@ -54,17 +54,11 @@ class questions {
                 return false;
             }
             if ($q->email !== ""){
-                $mail = new email([
-                    'subject'       => "Your question has been answered in the FAQ's",
-                    'txtparams'     => [
-                        "###LINK###"      => "https://fanfiction.online/faq/" . $link->ID
-                    ],
-                    'template'      => 'faq_alert'
+                $mail = new SendGrid("faq_alert",[
+                    "link"  => "https://fanfiction.online/faq/{$link->ID}"
                 ]);
-                try {
-                    $mail->send($q->email);
-                } catch(Exception $e) {}
-                $mail->close();
+                try { $mail->send([$q->email]); }
+                catch(Exception $e) {}
             }
             $rows = $wpdb->update(self::$table,[
                 'status'    => 'linked',
@@ -90,18 +84,11 @@ class questions {
             ]
         );
         if ($q->email !== ""){
-            $mail = new email([
-                'subject'       => "Your question has been answered in the FAQ's",
-                'txtparams'     => [
-                    "###LINK###"      => "https://fanfiction.online/faq/" . $question_id
-                ],
-                'template'      => 'faq_alert'
+            $mail = new SendGrid("faq_alert",[
+                "link"  => "https://fanfiction.online/faq/$question_id"
             ]);
-            try {
-                $mail->send($q->email);
-            } catch(Exception $e) {
-            }
-            $mail->close();
+            try { $mail->send([$q->email]); }
+            catch(Exception $e) { }
         }
     }
     static function delete($question_id) {

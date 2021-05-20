@@ -340,43 +340,25 @@ class user_settings extends user {
 class mail_user extends user {
     protected static function signup_mail($user_id,$code){
         $user = user::get_by( 'ID', $user_id , true );
-        email( [
-            'to'        => $user->user_email,
-            'template'  => 'signup',
-            'subject'   => 'Welcome to Fanfiction Online!',
-            'params'    => [
-                '###SUBJECT###' => 'Welcome to Fanfiction Online!',
-                '###SETTINGS_URL###' => "https://fanfiction.online/" . '@' . $user->user_login . '/settings',
-                '###USERNAME###'=> '@' . $user->user_login,
-                '###CODE###'    => strtoupper($code),
-            ],
-        ] );
+        (new SendGrid("signup",[
+            'settings_url'  => "https://fanfiction.online/@{$user->user_login}/settings",
+            'username'      => "@{$user->user_login}",
+            'code'          => strtoupper($code),
+        ]))->send([$user->user_email]);
     }
     protected static function login_code_mail($user,$code){
-        email( [
-            'to'        => $user->user_email,
-            'template'  =>'OTP',
-            'subject'   => 'Here\'s your One-Time PIN',
-            'params'    => [
-                '###SUBJECT###' => 'Here\'s your One-Time PIN',
-                '###USERNAME###'=> "@" . $user->user_login,
-                '###CODE###'    => strtoupper($code),
-            ],
-        ] );
+        (new SendGrid("OTP",[
+            'settings_url'  => "https://fanfiction.online/@{$user->user_login}/settings",
+            'username'      => "@{$user->user_login}",
+            'code'          => strtoupper($code),
+        ]))->send([$user->user_email]);
     }
     public static function change_email($user_id,$new_email,$code) {
         $user = user::get($user_id);
-        $a = [
-            'to'        => $new_email,
-            'template'  =>'change-email',
-            'subject'   => "Confirm your email change",
-            'params'    => [
-                '###SUBJECT###' => "Confirm your email change",
-                '###USERNAME###'=> "@" . $user->user_login,
-                '###CODE###'    => strtoupper($code),
-            ],
-        ];
-        email( $a );
+        (new SendGrid("change-email",[
+            'username'      => "@{$user->user_login}",
+            'code'          => strtoupper($code),
+        ]))->send([$new_email]);
     }
 }
 class v_user extends user {
@@ -524,7 +506,7 @@ class GoogleAuth {
             ]
         );
         if ($exists_email) {
-            self::internal_login($exists_email->ID);
+            user::internal_login($exists_email->ID);
             return ['action'=>'login'];
         }
         return ['action'=>'signup','ID'=>$wpdb->insert_id];

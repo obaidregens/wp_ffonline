@@ -69,7 +69,8 @@ if (empty($by_users)) {
     echo 'No notifications';
     exit();
 }
-$mail = new email;
+$unsent = 0;
+$sent = 0;
 foreach ($by_users as $user_id => $notifications) {
     $user = $users[$user_id] ?? null;
     if ($user === null) {continue;}
@@ -86,16 +87,17 @@ foreach ($by_users as $user_id => $notifications) {
     if (empty($prioritized) && $more_messages <= 0) {
         continue;
     }
+
+    $mail_params = [
+        "username"              => "@{$user->user_login}",
+        "description"           => "",
+        "more_notifications"    => ""
+    ];
+
     $msg_s = $more_messages > 1 ? "s" : "";
     if (empty($prioritized)) {
-        $mail->subject = "You have $more_messages new message$msg_s!";
-        $mail->txtparams = [
-            '###USERNAME###'                    => "@" . $user->user_login,
-            '###NOTIFICATION###'                => $mail->subject,
-            '###NOTIFICATION_DESCRIPTION###'    => "",
-            '###NOTIFICATION_LINK###'           => "https://fanfiction.online/inbox",
-            '###MORE_NOTIFICATIONS###'          => "",
-        ];
+        $mail_params["notification"] = "You have $more_messages new message$msg_s!";
+        $mail_params["notification_link"] = "https://fanfiction.online/inbox";
     }
     else {
         ksort($prioritized);
@@ -104,7 +106,6 @@ foreach ($by_users as $user_id => $notifications) {
         $notification = $prioritized[0];
     
         $total = count($prioritized);
-        $mail->subject = $notification['message'];
         $user = $users[$not->user_id] ?? null;
         if ($user === null) {continue;}
         // More string
@@ -117,16 +118,20 @@ foreach ($by_users as $user_id => $notifications) {
             $more_str .= $more_messages > 0 ? "$more_messages new message$msg_s " : "";
             $more_str .= 'waiting for you.';
         }
-        $mail->txtparams = [
-            '###USERNAME###'                    => "@" . $user->user_login,
-            '###NOTIFICATION###'                => $notification['message'],
-            '###NOTIFICATION_LINK###'           => $notification['link'],
-            '###NOTIFICATION_DESCRIPTION###'    => $notification['description'],
-            '###MORE_NOTIFICATIONS###'          => $more_str,
-        ];    
+
+        $mail_params["notification"] = $notification['message'];
+        $mail_params["notification_link"] = $notification['link'];
+        $mail_params["description"] = $notification['description'];
+        $mail_params["more_notifications"] = $more_str;
     }
-    $mail->setTemplate('notification');
-    $mail->send($user->user_email);
+    try {
+        (new SendGrid("notification",$mail_params))
+        ->send([$user->user_email]);
+        $sent += 1;
+    } catch (\Exception $e) {
+        $unsent += 1;
+    }
+    
     if (!empty($prioritized)) {
         $query = $wpdb->prepare("
         UPDATE notifications
@@ -136,7 +141,6 @@ foreach ($by_users as $user_id => $notifications) {
         $wpdb->query($query);
     }
 }
-$mail->close();
 echo "Completed <br>\n";
-echo "Sent: {$mail->sent}<br>\n";
-echo "Unsent: {$mail->unsent}<br>\n";
+echo "Sent: {$sent}<br>\n";
+echo "Unsent: {$unsent}<br>\n";

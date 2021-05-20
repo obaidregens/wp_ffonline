@@ -1,110 +1,52 @@
 <?php
-require_once __DIR__ . '/PHPMailer/PHPMailer.php';
-require_once __DIR__ . '/PHPMailer/SMTP.php';
-require_once __DIR__ . '/PHPMailer/Exception.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-
-function email(array $args) {
-    $mail = new email($args);
-    $id = $mail->send($args['to']);
-    $mail->close();
-    return $id;
+class RequestPOST {
+    function __construct($url,$data,$content_type = "application/json"){
+        $this->url = $url;
+        $this->data = $data;
+        $this->content_type = $content_type;
+    }
+    function send() {
+        $options = [
+            'http' => [
+                'header'  => [
+                    "Content-type: {$this->content_type}",
+                    
+                ],
+                'method'  => "POST",
+                'content' => http_build_query($this->data)
+            ]
+        ];
+        $context  = stream_context_create($options);
+        $result = file_get_contents($this->url, false, $context);
+        if ($result === FALSE) { 
+            return false;
+        }
+        return true;
+    }
 }
 
-class email {
-    protected $from;
-    protected $template = false;
-    protected $mail;
-    function __construct(array $args = []) {
-        $this->sent = 0;
-        $this->unsent = 0;
 
-        $this->subject = $args['subject'] ?? 'Message from Fanfiction Online';
-        $this->params = $args['params'] ?? [];
-        $this->txtparams = $args['txtparams'] ?? [];
-        $this->htmlparams = $args['htmlparams'] ?? [];
-        // Mailer
-        $this->createMailer();
-        $this->setFrom($args['from'] ?? 'noreply');
-        $this->setReply($args['reply-to'] ?? '');
-        $this->setTemplate($args['template'] ?? '');
-    }
-    protected function createMailer() {
-        $this->mail = new PHPMailer(true);
-        $this->mail->CharSet="UTF-8";
-        $this->mail->isSMTP();
-        $this->mail->SMTPDebug = defined("SMTP_DEBUG") ? SMTP_DEBUG : 0;
-        $this->mail->Host = defined("SMTP_HOST") ? SMTP_HOST : "";
-        $this->mail->SMTPAuth = defined("SMTP_AUTH") ? SMTP_AUTH : true;
-        $this->mail->Port = defined("SMTP_PORT") ? SMTP_PORT : 0;
-        $this->mail->SMTPSecure = defined("SMTP_SECURE") ? SMTP_SECURE : "tls";
-        $this->mail->SMTPKeepAlive = true;
-    }
-    function setTemplate($template) {
-        ob_start();
-        $html_template = file_get_contents(__DIR__ . '/templates/' . $template . '.html');
-        $txt_template = file_get_contents(__DIR__ . '/templates/' . $template . '.txt');
-        ob_end_clean();
-        if ( $txt_template === false ){
-            return false;
-        }
-        foreach ( ($html_template === false ? [] : $this->htmlparams) as $k => $v) {
-            $html_template = str_replace($k,$v,$html_template);
-        }
-        foreach ($this->txtparams as $k => $v) {
-            $txt_template = str_replace($k,$v,$txt_template);
-        }
-        foreach ($this->params as $k => $v) {
-            if ($html_template !== false) {
-                $html_template = str_replace($k,$v,$html_template);
-            }
-            $txt_template = str_replace($k,$v,$txt_template);
-        }
+class SendGrid {
+    protected static $template_ids = [
+
+    ];
+    function __construct(string $template, array $params = [], string $from = SENDGRID_noreply) {
+        $this->from = $from;
         $this->template = $template;
-        $this->mail->isHTML($html_template === false ? false : true);
-        if ($html_template === false) {
-            $this->mail->Body = $txt_template;
-        }
-        else {
-            $this->mail->Body = $html_template;
-            $this->mail->AltBody = $txt_template;
-        }
+        $this->$params = $params;
     }
-    function setReply($mailId) {
-        $this->mail->clearCustomHeaders();
-        if (trim($mailId) !== "") {
-            $this->mail->addCustomHeader('References', $mailId);
-            $this->mail->addCustomHeader('In-Reply-To', $mailId);
-        }
-    }
-    function setFrom($from) {
-        global $email_creds;
-        $this->from = $email_creds[$from] ?? null;
-        if ($this->from === null) {
-            return false;
-        }
-        $this->mail->Username = $this->from['email'];
-        $this->mail->Password = $this->from['pass'];
-        $this->mail->setFrom($this->from['email'], $this->from['name']);
-        $this->mail->addReplyTo($this->from['email'], $this->from['name']);
-    }
-    function send($to) {
-        $to = (array) $to;
-        $this->mail->Subject = $this->subject;
-        foreach ($to as $to_email ) {
-            $this->mail->clearAddresses();
-            $this->mail->addAddress( $to_email );
-            try {
-                $this->mail->send();
-                $this->sent++;
-            } catch(Exception $e) {
-                $this->unsent++;
-            }
-        }
-        return $this->mail->getLastMessageID();
-    }
-    function close() {
-        $this->mail->SmtpClose();
+    function send(array $to) {
+        new RequestPOST("https://api.sendgrid.com/v3/mail/send",[
+            "from" => [
+                "email" => $this->from,
+            ],
+            "personalizations" => [
+                "to" => [
+                    ["email"    => $to]
+                ],
+                "dynamic_template_data" => $this->params
+            ],
+            "template_id" => self::$template_ids[$this->template]
+        ]);
     }
 }

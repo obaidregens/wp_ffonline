@@ -26,20 +26,10 @@ function api_reply_to_contact() {
         }
         $subject = "Re: " . $subject;
     }
+    $template = "contact";
     $email_params = [
-        'to'        => $d['to'],
-        'from'      => 'contact',
-        'template'  => 'contact',
-        'subject'   => $subject,
-        'params'    => [
-            '###SUBJECT###' => 'Reply from Fanfiction Online',
-        ],
-        'txtparams'    => [
-            '###MESSAGE###' => $d['message'],
-        ],
-        'htmlparams'    => [
-            '###MESSAGE###' => str_replace(["\r\n", "\r", "\n"], "<br/>", $d['message']),
-        ],
+        "txt_message"       => $d["message"],
+        "html_message"      => str_replace(["\r\n", "\r", "\n"], "<br/>", $d['message']),
     ];
     if (empty($r)) {
         $all_from = $wpdb->get_results($wpdb->prepare(
@@ -47,14 +37,16 @@ function api_reply_to_contact() {
         , [$d['to']] ))[0] ?? false;
         if ($all_from !== false) {
             $email_params['template'] = 'contact-first';
-            $email_params['txtparams']['###PREV_MESSAGE###'] = $all_from->message;
-            $email_params['htmlparams']['###PREV_MESSAGE###'] = str_replace(["\r\n","\r","\n"], "<br/>", $all_from->message);    
+            $email_params['txt_prev_message'] = $all_from->message;
+            $email_params['html_prev_message'] = str_replace(["\r\n","\r","\n"], "<br/>", $all_from->message);    
         }
     }
-    if (! empty($r)) {
-        $email_params['reply-to'] = $r[0]->message_id;
-    }
-    $id = email($email_params);
+    // if (! empty($r)) {
+    //     $email_params['reply-to'] = $r[0]->message_id;
+    // }
+    
+    $id = (new SendGrid($template,$email_params,SENDGRID_contact))->send([$d['to']]);
+
     $wpdb->insert(
         'contact',
         [
