@@ -54,7 +54,7 @@ class questions {
                 return false;
             }
             if ($q->email !== ""){
-                $mail = new SendGrid("faq_alert",[
+                $mail = new SendGrid("faq-alert",[
                     "link"  => "https://fanfiction.online/faq/{$link->ID}"
                 ]);
                 try { $mail->send([$q->email]); }
@@ -84,7 +84,7 @@ class questions {
             ]
         );
         if ($q->email !== ""){
-            $mail = new SendGrid("faq_alert",[
+            $mail = new SendGrid("faq-alert",[
                 "link"  => "https://fanfiction.online/faq/$question_id"
             ]);
             try { $mail->send([$q->email]); }

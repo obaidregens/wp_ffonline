@@ -905,6 +905,10 @@ $app->listen('/help/guides',function($self){
     $self->footer();
     exit();
 });
+$app->listen("/grid-mail", function($self) {
+    $self->template("/scripts/contact-mail");
+});
+
 // $app->listen('/feed',function($self){
 //     $self->login();
 //     $self->type = 'feed';

@@ -1,47 +1,34 @@
 <?php
-$maindir = rtrim(explode('content',__DIR__,2)[0],'/\\') . '/';
-$base_load = $maindir . "/content/php_includes/mail/PhpMimeMailParser/";
-$files = [
-    "Contracts/CharsetManager.php",
-    "Contracts/Middleware.php",
-    "Charset.php",
-    "MimePart.php",
-    "Attachment.php",
-    "Exception.php",
-    "Middleware.php",
-    "MiddlewareStack.php",
-    "Parser.php"
-];
-foreach ($files as $f) {
-    require_once $base_load . $f;
-}
-$parser = new PhpMimeMailParser\Parser();
-$parser->setStream(fopen("php://stdin", "r"));
+assert_options(ASSERT_BAIL,1);
 
-// empty vars
-$from = $parser->getAddresses('from')[0]['address'];
-$to = $parser->getAddresses('to')[0]['address'];
-$subject = $subject = $parser->getHeader('subject');
-$headers = json_encode($parser->getHeaders());
-$plaintext = $parser->getMessageBody('text');
-$html = $parser->getMessageBody('html');
-$splittingheaders = true;
-// Insert
-define('WP_USE_THEMES', false);
-$wp_dir = $maindir . '/content/wp/';
-require( $wp_dir . 'wp-load.php');
+assert($_GET["secret"] === "jnqdit9drxetnrkbosew5slfp9t9j0e63idsl3uj");
+
+assert(filter_var($_POST['to'], FILTER_VALIDATE_EMAIL));
+assert(filter_var($_POST['from'], FILTER_VALIDATE_EMAIL));
+
+$messageid = "";
+foreach (explode("\n",$_POST["headers"]) as $line) {
+    $h = explode(": ",$line,2);
+    if (strtolower($h[0]) === "message-id") {
+        $messageid = $h[1];
+    }
+}
+for ($i=0; $i < explode("\n",$_POST["headers"]); $i++) { 
+    
+}
+
 global $wpdb;
 $wpdb->insert(
     'contact',
     [
         'user_id'       => 0,
-        'from'          => $from,
-        'to'            => $to,
+        'from'          => $_POST["from"],
+        'to'            => $_POST['to'],
         'received_time' => microtime(true),
-        'subject'       => $subject,
-        'headers'       => $headers,
-        'message'       => $html,
-        'message_id'    => $parser->getHeader('Message-ID'),
+        'subject'       => $_POST["subject"],
+        'headers'       => $_POST["headers"],
+        'message'       => $_POST["html"],
+        'message_id'    => $messageid,
         'vfs'           => "",
     ]
 );
