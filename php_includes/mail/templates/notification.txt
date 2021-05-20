@@ -1,6 +1,5 @@
-Hi ###USERNAME###,
+{{{notification}}}
 
-###NOTIFICATION###
-###NOTIFICATION_LINK###
+Check it out: {{{notification_link}}}
 
-###MORE_NOTIFICATIONS###
+{{{more_notifications}}}

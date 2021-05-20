@@ -1,11 +1,9 @@
-###SUBJECT###
+Confirm your email change
 
-Hi ###USERNAME###!
+Hi {{{username}}}!
 
 You recently requested that your email be changed. Here's the pin to confirm it:
 
-###CODE###
+{{{code}}}
 
-This code is valid for only 60 minutes. 
-
-Fanfiction Online
+This code is valid for only 60 minutes.

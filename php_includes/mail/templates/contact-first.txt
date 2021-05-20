@@ -1,9 +1,9 @@
-###SUBJECT###
+Reply from Fanfiction Online
 
 Your query:
-###PREV_MESSAGE###
+{{{txt_prev_message}}}
 
 Reply:
-###MESSAGE###
+{{{txt_message}}}
 
 You can reply to this email if you have any other queries.

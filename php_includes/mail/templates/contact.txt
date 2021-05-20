@@ -1,5 +1,6 @@
-###SUBJECT###
+Reply from Fanfiction Online
 
-###MESSAGE###
+Reply:
+{{{txt_message}}}
 
 You can reply to this email if you have any other queries.

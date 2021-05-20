@@ -1,9 +1,7 @@
-###SUBJECT###
+Here's your One-Time PIN
 
 Login with this One-Time PIN:
 
-###CODE###
+{{{code}}}
 
 This code is valid for only 60 minutes. 
-
-Fanfiction Online

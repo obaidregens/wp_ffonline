@@ -1,12 +1,9 @@
-Hi ###USERNAME###,
 Welcome to Fanfiction Online!
 
 You can signup with the code below:
 
-###CODE###
+{{{code}}}
 
 This code is valid for only 60 minutes. 
 
 You can set your password from settings after signing up.
-
-Fanfiction Online

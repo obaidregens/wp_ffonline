@@ -1,4 +1,3 @@
-Hi,
+Your question was answered in the FAQ's
 
-Your question has been answered in the FAQ's
-###LINK###
+See the reply: {{{link}}}
